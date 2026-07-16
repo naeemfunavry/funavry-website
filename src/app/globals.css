@@ -1,0 +1,432 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: auto;
+    /* Hold the scrollbar gutter open so locking scroll for an overlay doesn't
+       shift the page underneath it. */
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    background: #f5f6f4;
+    color: #2e3436;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    font-feature-settings: "ss01", "cv01";
+  }
+
+  :focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px #f5f6f4,
+      0 0 0 4px #449ed8;
+  }
+
+  ::selection {
+    background: #449ed8;
+    color: #ffffff;
+  }
+
+  /* The crosshair cursor replaces the pointer on fine-pointer devices. */
+  @media (hover: hover) and (pointer: fine) {
+    body.has-cursor,
+    body.has-cursor * {
+      cursor: none;
+    }
+  }
+}
+
+@layer utilities {
+  /* Engineering paper. Two grids: a fine one, a heavier every-5th. */
+  .grid-paper {
+    background-image:
+      linear-gradient(to right, rgba(46, 52, 54, 0.038) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(46, 52, 54, 0.038) 1px, transparent 1px),
+      linear-gradient(to right, rgba(46, 52, 54, 0.055) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(46, 52, 54, 0.055) 1px, transparent 1px);
+    background-size:
+      24px 24px,
+      24px 24px,
+      120px 120px,
+      120px 120px;
+  }
+
+  /* The same engineering paper, inverted for the dark hero stage. */
+  .grid-paper-dark {
+    background-image:
+      linear-gradient(
+        to right,
+        rgba(245, 246, 244, 0.028) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        rgba(245, 246, 244, 0.028) 1px,
+        transparent 1px
+      ),
+      linear-gradient(to right, rgba(245, 246, 244, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(245, 246, 244, 0.05) 1px, transparent 1px);
+    background-size:
+      24px 24px,
+      24px 24px,
+      120px 120px,
+      120px 120px;
+  }
+
+  /* Film grain. The turbulence is inlined, so nothing is fetched for it. */
+  .grain {
+    background-image: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='140' height='140' filter='url(%23g)'/></svg>");
+    background-size: 140px 140px;
+  }
+
+  .grid-fine {
+    background-image:
+      linear-gradient(to right, rgba(46, 52, 54, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(46, 52, 54, 0.05) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  .dot-paper {
+    background-image: radial-gradient(
+      rgba(46, 52, 54, 0.16) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+  }
+
+  /* The logo's own sweep: azure into charcoal. */
+  .text-sweep {
+    background: linear-gradient(
+      102deg,
+      #449ed8 0%,
+      #3e80ab 26%,
+      #376079 54%,
+      #2e3436 92%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* The same sweep on the dark stage: azure resolves into paper, not charcoal. */
+  .text-sweep-dark {
+    background: linear-gradient(
+      102deg,
+      #449ed8 0%,
+      #6fb6e3 28%,
+      #a9c6d6 60%,
+      #f5f6f4 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-sweep {
+    background: linear-gradient(
+      102deg,
+      #449ed8 0%,
+      #3e80ab 30%,
+      #376079 62%,
+      #2e3436 100%
+    );
+  }
+
+  /* Phase ribbon: build -> automate -> operate. */
+  .bg-phases {
+    background: linear-gradient(
+      90deg,
+      #449ed8 0%,
+      #449ed8 33%,
+      #f59f13 50%,
+      #376079 78%,
+      #2e3436 100%
+    );
+  }
+
+  /* Outline numerals used as section watermarks. */
+  .type-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(46, 52, 54, 0.14);
+  }
+
+  /* Current running along the live trace on the technology board. */
+  .trace-flow {
+    stroke-dasharray: 5 12;
+    animation: trace-flow 1.4s linear infinite;
+  }
+
+  @keyframes trace-flow {
+    to {
+      stroke-dashoffset: -34;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .trace-flow {
+      animation: none;
+    }
+  }
+
+  .marquee-mask {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 10%,
+      black 90%,
+      transparent
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 10%,
+      black 90%,
+      transparent
+    );
+  }
+
+  .glass {
+    background: rgba(245, 246, 244, 0.72);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  }
+
+  /* Paper glass over the dark hero would read as a muddy grey bar. */
+  .glass-dark {
+    background: rgba(33, 38, 42, 0.62);
+    backdrop-filter: blur(14px) saturate(1.2);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  body.has-cursor,
+  body.has-cursor * {
+    cursor: auto;
+  }
+}
+
+/* ── Scroll cue ─────────────────────────────────────────────────────────────
+   A pulse running down a wire and arriving at a terminal prompt. The prompt is
+   unlit until the signal reaches it: it sits grey for the whole run, takes its
+   colour at the moment of arrival, then decays back to grey while the next
+   pulse sets off. The wire, the prompt and the flare all run on the same 3s
+   clock, and the caret blinks on 1s — a whole multiple of it — so arrival
+   always lands on a blink boundary and nothing can drift out of phase. */
+
+.scroll-cue {
+  --cue-idle: #fff;
+}
+
+.scroll-cue-wire {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 1px;
+  overflow: hidden;
+  background: rgba(245, 246, 244, 0.16);
+  transition: background-color 300ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.scroll-cue:hover .scroll-cue-wire {
+  background: rgba(245, 246, 244, 0.3);
+}
+
+/* The pulse is a full-width layer whose bright head sits on its own right
+   edge. Sliding it from -100% to 0 walks that head across the wire and parks
+   it exactly on the prompt — no width maths, and it never leaves the
+   compositor. `overflow: hidden` above keeps the tail off the copy to the
+   left while the head is still crossing. */
+.scroll-cue-wire::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(245, 159, 19, 0) 0%,
+    rgba(245, 159, 19, 0) 78%,
+    rgba(245, 159, 19, 0.5) 93%,
+    #f59f13 100%
+  );
+  transform: translateX(-100%);
+  animation: scroll-cue-signal 3s linear infinite;
+}
+
+@keyframes scroll-cue-signal {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  86% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+}
+
+/* Grey for the run; amber on arrival, with the flare. 100% and 0% are the same
+   frame, so the light appears exactly as the head reaches the prompt and then
+   bleeds off over the first 14% of the next lap. */
+.scroll-cue-arrow {
+  color: var(--cue-idle);
+  transition:
+    color 300ms cubic-bezier(0.19, 1, 0.22, 1),
+    text-shadow 300ms cubic-bezier(0.19, 1, 0.22, 1);
+  animation: scroll-cue-arrow 3s linear infinite;
+}
+
+@keyframes scroll-cue-arrow {
+  0% {
+    color: #f59f13;
+    text-shadow: 0 0 14px rgba(245, 159, 19, 0.6);
+  }
+  14% {
+    color: var(--cue-idle);
+    text-shadow: 0 0 0 rgba(245, 159, 19, 0);
+  }
+  92% {
+    color: var(--cue-idle);
+    text-shadow: 0 0 0 rgba(245, 159, 19, 0);
+  }
+  100% {
+    color: #f59f13;
+    text-shadow: 0 0 14px rgba(245, 159, 19, 0.6);
+  }
+}
+
+/* The command lights a beat behind the caret it sits before — azure, not
+   amber, so the arrival reads as a two-tone landing rather than one flash. */
+.scroll-cue-text {
+  color: var(--cue-idle);
+  transition: color 300ms cubic-bezier(0.19, 1, 0.22, 1);
+  animation: scroll-cue-text 3s linear infinite;
+}
+
+@keyframes scroll-cue-text {
+  0% {
+    color: #449ed8;
+  }
+  16% {
+    color: var(--cue-idle);
+  }
+  94% {
+    color: var(--cue-idle);
+  }
+  100% {
+    color: #449ed8;
+  }
+}
+
+/* Two animations, two clocks: the blink is opacity on 1s, the charge is colour
+   on 3s. They compose because they touch different properties. */
+.scroll-cue-caret {
+  display: inline-block;
+  width: 7px;
+  height: 15px;
+  background-color: var(--cue-idle);
+  transition: background-color 300ms cubic-bezier(0.19, 1, 0.22, 1);
+  animation:
+    scroll-cue-blink 1s steps(2, jump-none) infinite,
+    scroll-cue-caret 3s linear infinite;
+}
+
+/* Hover holds the prompt in its landed state instead of making you wait for
+   the next signal. The charge keyframes have to be dropped for the colours
+   below to show at all — an animation outranks a normal declaration — so the
+   caret is re-declared with only its blink, and the transitions above carry
+   the handover in both directions. The wire keeps pulsing underneath. */
+.scroll-cue:hover .scroll-cue-arrow {
+  animation: none;
+  color: #f59f13;
+  text-shadow: 0 0 14px rgba(245, 159, 19, 0.6);
+}
+
+.scroll-cue:hover .scroll-cue-text {
+  animation: none;
+  color: #449ed8;
+}
+
+.scroll-cue:hover .scroll-cue-caret {
+  animation: scroll-cue-blink 1s steps(2, jump-none) infinite;
+  background-color: #f59f13;
+}
+
+/* Two steps, held: on for 500ms, half for 500ms. */
+@keyframes scroll-cue-blink {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.5;
+  }
+}
+
+@keyframes scroll-cue-caret {
+  0% {
+    background-color: #f59f13;
+  }
+  14% {
+    background-color: var(--cue-idle);
+  }
+  92% {
+    background-color: var(--cue-idle);
+  }
+  100% {
+    background-color: #f59f13;
+  }
+}
+
+/* Later in the file than the global reduce block, so these !importants win.
+   No pulse and no blink, so nothing is left to light the prompt on arrival —
+   it's shown in its landed state instead: lit, solid, still. */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue-wire::after {
+    display: none;
+  }
+
+  .scroll-cue-arrow,
+  .scroll-cue-text,
+  .scroll-cue-caret {
+    animation: none !important;
+  }
+
+  .scroll-cue-arrow {
+    color: #f59f13;
+    text-shadow: none;
+  }
+
+  .scroll-cue-text {
+    color: #449ed8;
+  }
+
+  .scroll-cue-caret {
+    background-color: #f59f13;
+    opacity: 1;
+  }
+}
