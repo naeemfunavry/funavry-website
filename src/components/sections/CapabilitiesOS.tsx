@@ -1,13 +1,23 @@
 "use client";
 
 import {
+  Fragment,
   useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
 } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import {
+  animate,
+  AnimatePresence,
+  motion,
+  useAnimationFrame,
+  useMotionValue,
+  useReducedMotion,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -309,22 +319,122 @@ const GROUP_LABEL = {
   gbs: "Global Business Services",
 } as const;
 
+/* --------------------------------------------------------------------------
+   The core's scene
+
+   Every coordinate below comes out of one camera, and that is the whole trick:
+   the scene is projected from 18° above the horizon with a 12° yaw and a mild
+   perspective, so the pyramid, the three orbits around it and the cube inside
+   it are one object rather than stacked 2D art. Because the camera never moves,
+   the projection is solved once and baked — there is no runtime maths, and no
+   Three.js to ship for four static shapes.
+
+   All of it lives in the core's own 200×200 viewBox, which the connection fan
+   also measures against.
+   -------------------------------------------------------------------------- */
+
+/** The glass pyramid. `v0` is the near vertex, so the two faces that meet at
+    the apex→v0 edge are the ones facing us; the third face and the base are
+    seen *through* the glass, which is what sells it as transparent. */
+const PYRAMID = {
+  hull: "M 100 44.6 L 137 109.8 L 113.1 147.4 L 50.4 116.6 Z",
+  faceLeft: "M 100 44.6 L 50.4 116.6 L 113.1 147.4 Z",
+  faceRight: "M 100 44.6 L 113.1 147.4 L 137 109.8 Z",
+  faceBack: "M 100 44.6 L 50.4 116.6 L 137 109.8 Z",
+  base: "M 113.1 147.4 L 50.4 116.6 L 137 109.8 Z",
+  edgeFront: "M 100 44.6 L 113.1 147.4",
+  edgeBase: "M 50.4 116.6 L 137 109.8",
+  /** The same hull, as percentages — a clip-path can't read a viewBox, and the
+      backdrop-filter pane that does the actual frosting is an HTML element. */
+  clip: "polygon(50% 22.3%, 68.5% 54.9%, 56.6% 73.7%, 25.2% 58.3%)",
+  clipRight: "polygon(50% 22.3%, 56.6% 73.7%, 68.5% 54.9%)",
+} as const;
+
+/** The luminous cube suspended in the glass, low in the body where the pyramid
+    is wide enough to clear it by ~7 units on every face. It carries its own 38°
+    yaw on top of the scene's, so it presents a corner rather than a flat side.
+    The three faces here are the three that survive back-face culling — the two
+    that meet at the near vertical edge, plus the top, because the camera is
+    above. Between them they tile the whole silhouette; drop one and the cube
+    falls open. Centre projects to (100, 102.8), which is where the mark goes. */
+const CUBE = {
+  top: "M 101.65 96.67 L 117.88 90.32 L 98.5 85.47 L 81.98 91.3 Z",
+  faceLeft: "M 101.65 96.67 L 101.61 121.38 L 82.36 115.09 L 81.98 91.3 Z",
+  faceRight: "M 101.65 96.67 L 117.88 90.32 L 117.5 113.94 L 101.61 121.38 Z",
+} as const;
+
 /**
- * The core's three rings are the delivery chain, outermost first: Build, then
+ * The three orbits are the delivery chain, outermost first: Build, then
  * Automate, then Operate. Each service declares which phase it lives in, so
- * hovering a card lights the ring it belongs to — the rings aren't decoration,
+ * hovering a card lights the orbit it belongs to — they aren't decoration,
  * they're the legend.
+ *
+ * Each is a real horizontal circle on the pyramid's axis, sized to clear the
+ * body at the height it rides. Under an 18° camera a horizontal circle projects
+ * to an ellipse with `ry = rx·sin 18°`, and its far half is the *upper* half —
+ * which is why every orbit is drawn twice, once behind the glass and once in
+ * front of it.
  */
 const PHASE_RINGS = [
-  { phase: "Build", r: 88, hex: "#449ED8", spin: 34, reverse: false },
-  { phase: "Automate", r: 68, hex: "#F59F13", spin: 26, reverse: true },
-  { phase: "Operate", r: 48, hex: "#376079", spin: 20, reverse: false },
+  {
+    phase: "Build",
+    hex: "#449ED8",
+    cy: 123,
+    rx: 70.8,
+    ry: 21.9,
+    spin: 26,
+    reverse: false,
+  },
+  {
+    phase: "Automate",
+    hex: "#F59F13",
+    cy: 90,
+    rx: 48.9,
+    ry: 15.1,
+    spin: 19,
+    reverse: true,
+  },
+  {
+    /* Graphite rather than the brand's steel. Steel (#376079) is a dark
+       desaturated blue, and three rings on white read as two blues and an
+       amber — the eye files Build and Operate together, which is exactly
+       backwards for a chain whose whole point is that they're distinct
+       phases. A true neutral separates cleanly and is calmer besides. */
+    phase: "Operate",
+    hex: "#5A6265",
+    cy: 65.2,
+    rx: 33,
+    ry: 10.2,
+    spin: 34,
+    reverse: false,
+  },
 ] as const;
 
-/** A circle as a path, starting at nine o'clock and running clockwise — so
-    `startOffset: 25%` puts a label upright at the top of the ring. */
-const ringPath = (r: number) =>
-  `M ${100 - r} 100 a ${r} ${r} 0 1 1 ${r * 2} 0 a ${r} ${r} 0 1 1 ${-r * 2} 0`;
+/** Loose motes on their own orbits. Same camera — every `ry` is `rx · sin 18°`,
+    so they sit in the same space as the rings; the far half of each pass goes
+    behind the glass and softens. Widths are tuned so nothing exceeds ~6px at
+    the 440px desktop core: a mote that reads as a bead rather than a speck
+    stops being atmosphere and starts competing with the cube. */
+const PARTICLES = [
+  { id: "p0", cy: 106, rx: 78, ry: 24.1, w: 2.2, spin: 30, reverse: false },
+  { id: "p1", cy: 88, rx: 58, ry: 17.9, w: 1.4, spin: 38, reverse: true },
+  { id: "p2", cy: 122, rx: 88, ry: 27.2, w: 2.8, spin: 46, reverse: false },
+  { id: "p3", cy: 72, rx: 42, ry: 13, w: 1.2, spin: 34, reverse: true },
+  { id: "p4", cy: 134, rx: 92, ry: 28.4, w: 1.8, spin: 54, reverse: true },
+  { id: "p5", cy: 98, rx: 68, ry: 21, w: 1.1, spin: 42, reverse: false },
+  { id: "p6", cy: 58, rx: 30, ry: 9.3, w: 1, spin: 28, reverse: true },
+] as const;
+
+/** An orbit as a closed path, opening at nine o'clock and running clockwise —
+    so the first half is the far side, matching how the far/near clips split. */
+const orbitPath = (rx: number, ry: number, cy: number) =>
+  `M ${100 - rx} ${cy} a ${rx} ${ry} 0 1 1 ${rx * 2} 0 a ${rx} ${ry} 0 1 1 ${-rx * 2} 0`;
+
+/** The far (upper) and near (lower) halves of an orbit, as open arcs. */
+const farArc = (rx: number, ry: number, cy: number) =>
+  `M ${100 - rx} ${cy} A ${rx} ${ry} 0 0 1 ${100 + rx} ${cy}`;
+const nearArc = (rx: number, ry: number, cy: number) =>
+  `M ${100 + rx} ${cy} A ${rx} ${ry} 0 0 1 ${100 - rx} ${cy}`;
 
 const SPRING = {
   type: "spring",
@@ -527,6 +637,83 @@ function ConnectionNetwork({
    AI core — permanently visible, never replaced by a selection.
    -------------------------------------------------------------------------- */
 
+/**
+ * One clock drives every orbit in the core.
+ *
+ * Hovering has to lean on the whole system's speed at once, and speed is the
+ * one thing a declarative animation cannot change without flinching: hand
+ * Framer a new `duration` mid-flight and the keyframes restart, so all seven
+ * motes snap back to their starting points. Accumulating phase instead makes
+ * hover a change of *rate*, which is continuous — the motes just lean forward.
+ */
+function useOrbitClock(hot: boolean, reduce: boolean | null) {
+  const clock = useMotionValue(0);
+  const rate = useMotionValue(1);
+
+  useAnimationFrame((_, delta) => {
+    if (reduce) return;
+    // Never wrapped: a double holds a day of seconds without losing the
+    // fraction the motes are actually positioned by.
+    clock.set(clock.get() + (delta / 1000) * rate.get());
+  });
+
+  useEffect(() => {
+    const controls = animate(rate, hot ? 2.4 : 1, {
+      duration: 0.5,
+      ease: EXPO,
+    });
+    return () => controls.stop();
+  }, [hot, rate]);
+
+  return clock;
+}
+
+/** A single mote riding an orbit, as a round dash travelling a path. Rendered
+    once per depth layer against a far/near clip, so the same dot passes behind
+    the glass and back out in front of it without ever being two dots. */
+function Mote({
+  clock,
+  d,
+  spin,
+  reverse,
+  hex,
+  width,
+  opacity,
+  clip,
+}: {
+  clock: MotionValue<number>;
+  d: string;
+  spin: number;
+  reverse: boolean;
+  hex: string;
+  width: number;
+  opacity: number;
+  clip: string;
+}) {
+  const offset = useTransform(clock, (t) => {
+    const p = (t / spin) % 1;
+    return reverse ? p : 1 - p;
+  });
+
+  return (
+    <motion.path
+      d={d}
+      pathLength={1}
+      fill="none"
+      stroke={hex}
+      strokeWidth={width}
+      strokeOpacity={opacity}
+      strokeLinecap="round"
+      // A dash of very nearly nothing: the round cap is what draws the mote, so
+      // it stays a dot instead of stretching into a capsule the way a dash long
+      // enough to see would.
+      strokeDasharray="0.0006 0.9994"
+      clipPath={clip}
+      style={{ strokeDashoffset: offset, transition: "stroke-opacity 500ms" }}
+    />
+  );
+}
+
 const AICore = ({
   innerRef,
   active,
@@ -534,26 +721,37 @@ const AICore = ({
 }: {
   innerRef: React.RefObject<HTMLDivElement>;
   active: "tech" | "gbs" | null;
-  /** Which ring the hovered or open service sits on. */
+  /** Which orbit the hovered or open service sits on. */
   phase: Service["phase"] | null;
 }) => {
   const reduce = useReducedMotion();
-  const spin = (duration: number, reverse = false) =>
-    reduce
-      ? {}
-      : {
-          animate: { rotate: reverse ? -360 : 360 },
-          transition: { duration, repeat: Infinity, ease: "linear" as const },
-        };
+  const [hot, setHot] = useState(false);
+  const clock = useOrbitClock(hot, reduce);
 
-  const accent = active ? HUE[active].hex : null;
+  const accent = active ? HUE[active] : null;
+  /** Every orbit that carries a mote, by the only two things a clip needs. */
+  const orbits = [
+    ...PHASE_RINGS.map((r) => ({ id: r.phase, cy: r.cy })),
+    ...PARTICLES.map((p) => ({ id: p.id, cy: p.cy })),
+  ];
 
   return (
+    /* This box is measured. `buildLinks` reads it to place sixteen connectors
+       on a circle at its own half-width, so it never moves and never scales —
+       the float and the hover lift live on wrappers inside it.
+
+       The centre column is `auto` in the grid, so every pixel here is taken
+       from the two card columns. That's affordable at xl (they keep ~408px)
+       but not at lg, where a 1024px viewport leaves them ~254px and the
+       two-line practice names start truncating — so the desktop size lands on
+       xl and lg holds at the tablet size. */
     <div
       ref={innerRef}
-      className="relative aspect-square w-[250px] shrink-0 sm:w-[300px] lg:w-[340px] xl:w-[380px]"
+      onMouseEnter={() => setHot(true)}
+      onMouseLeave={() => setHot(false)}
+      className="relative aspect-square w-[260px] shrink-0 sm:w-[320px] lg:w-[340px] xl:w-[440px]"
     >
-      {/* Lighting. */}
+      {/* Key light, top left; a colder fill from the lower right. */}
       <div
         aria-hidden
         className="absolute -inset-[38%] rounded-full opacity-70 blur-3xl"
@@ -563,24 +761,36 @@ const AICore = ({
         }}
       />
 
-      {/* Glass disc. */}
+      {/* The horizon every connection lands on. It stays a circle because the
+          fan is aimed at a circle — but it's down to a hairline now, so the
+          pyramid reads as floating on the page rather than sitting on a disc. */}
       <div
-        className="absolute inset-0 rounded-full border border-white/70 bg-white/55 shadow-[0_40px_100px_-30px_rgba(46,52,54,0.35),0_2px_10px_rgba(46,52,54,0.05)] backdrop-blur-xl"
-        style={{
-          backgroundImage:
-            "linear-gradient(150deg, rgba(255,255,255,0.9), rgba(255,255,255,0.35))",
-        }}
-      />
-
-      {/* The ring every connection lands on. */}
-      <div
+        aria-hidden
         className="absolute inset-0 rounded-full border transition-colors duration-500"
         style={{
           borderColor: accent
-            ? `rgba(${HUE[active!].rgb},0.55)`
-            : "rgba(46,52,54,0.12)",
+            ? `rgba(${accent.rgb},0.5)`
+            : "rgba(46,52,54,0.1)",
         }}
       />
+
+      <motion.svg
+        aria-hidden
+        viewBox="0 0 200 200"
+        className="absolute inset-0 h-full w-full"
+        animate={reduce ? {} : { rotate: 360 }}
+        transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+      >
+        <circle
+          cx="100"
+          cy="100"
+          r="96"
+          fill="none"
+          stroke="rgba(46,52,54,0.14)"
+          strokeWidth="1"
+          strokeDasharray="1.5 9"
+        />
+      </motion.svg>
 
       {/* Selection pulse — the core answers the click, but never changes shape. */}
       <AnimatePresence>
@@ -598,111 +808,525 @@ const AICore = ({
         )}
       </AnimatePresence>
 
-      {/* The delivery chain, as three rings. */}
-      <svg
+      {/* Ground: contact shadow, ambient bounce and a caustic pool. It does not
+          float with the pyramid — it answers it, tightening and darkening as
+          the pyramid settles back down, which is what makes the gap read. */}
+      <motion.svg
         aria-hidden
         viewBox="0 0 200 200"
         className="absolute inset-0 h-full w-full"
+        style={{ originX: 0.5, originY: 0.8 }}
+        animate={
+          reduce ? {} : { scale: [0.94, 1.06, 0.94], opacity: [0.72, 1, 0.72] }
+        }
+        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
       >
         <defs>
-          {PHASE_RINGS.map((ring) => (
-            <path
-              key={ring.phase}
-              id={`core-ring-${ring.phase}`}
-              d={ringPath(ring.r)}
-              fill="none"
-            />
-          ))}
+          <radialGradient id="core-shadow">
+            <stop offset="0%" stopColor="#2E3436" stopOpacity="0.3" />
+            <stop offset="55%" stopColor="#2E3436" stopOpacity="0.12" />
+            <stop offset="100%" stopColor="#2E3436" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="core-caustic">
+            <stop offset="0%" stopColor="#56A7FF" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#56A7FF" stopOpacity="0" />
+          </radialGradient>
         </defs>
+        <ellipse cx="102" cy="162" rx="56" ry="17" fill="url(#core-shadow)" />
+        {/* Light that made it through the glass, pooled under the base. Breathes
+            on scale rather than on `rx`: an animated geometry attribute is
+            undefined on the frame before Framer takes it over, and the browser
+            drops the shape for it. */}
+        <motion.ellipse
+          cx="97"
+          cy="158"
+          rx="26"
+          ry="8"
+          fill="url(#core-caustic)"
+          style={{ originX: "97px", originY: "158px" }}
+          animate={
+            reduce ? {} : { scaleX: [1, 1.28, 1], opacity: [0.75, 1, 0.75] }
+          }
+          transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </motion.svg>
 
-        {/* Outer tick ring — the only purely decorative one left. */}
-        <motion.g style={{ originX: "100px", originY: "100px" }} {...spin(46)}>
-          <circle
-            cx="100"
-            cy="100"
-            r="96"
-            stroke="rgba(46,52,54,0.16)"
-            strokeWidth="1"
-            strokeDasharray="2 8"
-            fill="none"
+      {/* ---- Everything below floats together. -------------------------------
+          Outer wrapper answers the pointer, inner wrapper does the idle drift,
+          so the hover lift never fights the float's own keyframes. */}
+      <motion.div
+        className="absolute inset-0"
+        animate={{ y: hot ? -6 : 0, scale: hot ? 1.03 : 1 }}
+        transition={{ duration: 0.5, ease: EXPO }}
+      >
+        <motion.div
+          className="absolute inset-0 will-change-transform"
+          style={{ transformPerspective: 1000 }}
+          animate={reduce ? {} : { y: [-8, 8, -8], rotateY: [-6, 6, -6] }}
+          transition={{
+            // Different periods, so the drift never visibly repeats.
+            y: { duration: 9, repeat: Infinity, ease: "easeInOut" },
+            rotateY: { duration: 13, repeat: Infinity, ease: "easeInOut" },
+          }}
+        >
+          {/* ---- Behind the glass. ---- */}
+          <svg
+            aria-hidden
+            viewBox="0 0 200 200"
+            className="absolute inset-0 h-full w-full"
+          >
+            <defs>
+              {/* One clip pair per orbit, splitting it at its own horizon: an
+                  orbit's far half is its upper half under this camera. Both
+                  halves draw the same mote at the same place, so it crosses the
+                  seam without a join. */}
+              {orbits.map((o) => (
+                <Fragment key={o.id}>
+                  <clipPath id={`core-far-${o.id}`}>
+                    <rect x="0" y="0" width="200" height={o.cy} />
+                  </clipPath>
+                  <clipPath id={`core-near-${o.id}`}>
+                    <rect x="0" y={o.cy} width="200" height={200 - o.cy} />
+                  </clipPath>
+                </Fragment>
+              ))}
+              <linearGradient
+                id="core-glass-back"
+                gradientUnits="userSpaceOnUse"
+                x1="46"
+                y1="34"
+                x2="150"
+                y2="152"
+              >
+                <stop offset="0%" stopColor="#56A7FF" stopOpacity="0.06" />
+                <stop offset="100%" stopColor="#56A7FF" stopOpacity="0.02" />
+              </linearGradient>
+            </defs>
+
+            {/* The pyramid's own far geometry. Painted here so the glass pane
+                above frosts it — the back face and the hidden base edge go soft
+                exactly the way they would through 40mm of glass. */}
+            <path d={PYRAMID.base} fill="url(#core-glass-back)" />
+            <path d={PYRAMID.faceBack} fill="url(#core-glass-back)" />
+            {/* The base's hidden back edge. Carrying it at all is the single
+                strongest cue that the pyramid is transparent, and it has to
+                survive the frosting above — hence heavier than it would be if
+                it were drawn in the open. */}
+            <path
+              d={PYRAMID.edgeBase}
+              fill="none"
+              stroke="#449ED8"
+              strokeOpacity="0.5"
+              strokeWidth="1.2"
+            />
+
+            {PHASE_RINGS.map((ring) => {
+              const lit = phase === ring.phase;
+              return (
+                <g key={ring.phase}>
+                  <path
+                    d={farArc(ring.rx, ring.ry, ring.cy)}
+                    fill="none"
+                    stroke={ring.hex}
+                    strokeOpacity={lit ? 0.6 : 0.22}
+                    strokeWidth={lit ? 1.5 : 0.9}
+                    style={{
+                      transition: "stroke-opacity 500ms, stroke-width 500ms",
+                    }}
+                  />
+                  <Mote
+                    clock={clock}
+                    d={orbitPath(ring.rx, ring.ry, ring.cy)}
+                    spin={ring.spin}
+                    reverse={ring.reverse}
+                    hex={ring.hex}
+                    width={lit ? 4.4 : 3}
+                    opacity={lit ? 0.85 : 0.5}
+                    clip={`url(#core-far-${ring.phase})`}
+                  />
+                </g>
+              );
+            })}
+
+            {PARTICLES.map((p) => (
+              <Mote
+                key={p.id}
+                clock={clock}
+                d={orbitPath(p.rx, p.ry, p.cy)}
+                spin={p.spin}
+                reverse={p.reverse}
+                hex="#449ED8"
+                width={p.w}
+                opacity={hot ? 0.4 : 0.2}
+                clip={`url(#core-far-${p.id})`}
+              />
+            ))}
+          </svg>
+
+          {/* ---- The glass itself. ----
+              A clip-path'd backdrop-filter is the only way to get real frosting
+              out of an SVG silhouette, and it's what makes the far orbits blur
+              as they pass behind. The second pane doubles up on the narrow
+              right face: we look through more glass there, so it frosts harder.
+              That difference is the thickness. */}
+          <div
+            aria-hidden
+            className="absolute inset-0 transition-[backdrop-filter] duration-500"
+            style={{
+              clipPath: PYRAMID.clip,
+              // Enough to soften what's behind, not enough to erase it: past
+              // ~4px the back edge and the far orbits stop reading at all, and
+              // the pyramid goes opaque.
+              backdropFilter: `blur(${hot ? 5 : 3.5}px) saturate(1.3)`,
+              WebkitBackdropFilter: `blur(${hot ? 5 : 3.5}px) saturate(1.3)`,
+              background: "rgba(255,255,255,0.18)",
+            }}
           />
-        </motion.g>
+          <div
+            aria-hidden
+            className="absolute inset-0"
+            style={{
+              clipPath: PYRAMID.clipRight,
+              backdropFilter: "blur(9px)",
+              WebkitBackdropFilter: "blur(9px)",
+              background: "rgba(86,167,255,0.03)",
+            }}
+          />
 
-        {PHASE_RINGS.map((ring) => {
-          const lit = phase === ring.phase;
-
-          return (
-            <g key={ring.phase}>
-              <circle
+          {/* ---- The cube, inside the glass. ----
+              Suspended, not mounted: it carries its own drift on periods that
+              share no factor with the scene's 9s and 13s, so it never settles
+              into lockstep with the pyramid and reads as floating *within* it
+              rather than moulded into it. The amplitude is deliberately tiny —
+              the cube clears the glass by ~7 units, and 3.5px at the 440px core
+              is ~1.6 units, so it can never appear to touch a face. The mark
+              rides in the same wrapper or it would slide off the cube it's
+              supposed to be suspended inside. */}
+          <motion.div
+            className="absolute inset-0"
+            animate={
+              reduce ? {} : { y: [-3.5, 3.5, -3.5], x: [-1.5, 1.5, -1.5] }
+            }
+            transition={{
+              y: { duration: 6.5, repeat: Infinity, ease: "easeInOut" },
+              x: { duration: 11, repeat: Infinity, ease: "easeInOut" },
+            }}
+          >
+            <svg
+              aria-hidden
+              viewBox="0 0 200 200"
+              className="absolute inset-0 h-full w-full"
+            >
+              <defs>
+                <radialGradient id="core-cube-glow">
+                  <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.6" />
+                  <stop offset="45%" stopColor="#B9DDF6" stopOpacity="0.34" />
+                  <stop offset="100%" stopColor="#56A7FF" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+              <motion.ellipse
                 cx="100"
-                cy="100"
-                r={ring.r}
-                fill="none"
-                stroke={ring.hex}
-                strokeOpacity={lit ? 0.9 : 0.3}
-                strokeWidth={lit ? 1.8 : 1}
-                style={{
-                  transition: "stroke-opacity 400ms, stroke-width 400ms",
+                cy="102.8"
+                rx="42"
+                ry="40"
+                fill="url(#core-cube-glow)"
+                animate={
+                  reduce
+                    ? {}
+                    : {
+                        opacity: hot ? 1 : [0.72, 0.9, 0.72],
+                        scale: hot ? 1.08 : 1,
+                      }
+                }
+                style={{ originX: "100px", originY: "102.8px" }}
+                transition={{
+                  opacity: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+                  scale: { duration: 0.5, ease: EXPO },
                 }}
               />
-
-              {/* A mote riding each ring, so the chain reads as running. */}
-              <motion.g
-                style={{ originX: "100px", originY: "100px" }}
-                {...spin(ring.spin, ring.reverse)}
-              >
-                <circle
-                  cx="100"
-                  cy={100 - ring.r}
-                  r={lit ? 2.8 : 1.8}
-                  fill={ring.hex}
-                  fillOpacity={lit ? 1 : 0.75}
-                  style={{ transition: "r 400ms, fill-opacity 400ms" }}
+              {/* Lit from the same top-left key as the glass. The three faces are
+                held a long way apart in value on purpose, and each is outlined:
+                at 35 units across, that separation and those edges are the only
+                things telling the eye this is a solid and not a white shard.
+                Stroking the faces rather than a hull draws every visible edge
+                without anyone having to work out which ones they are. */}
+              <g strokeWidth="0.5" strokeLinejoin="round">
+                <path
+                  d={CUBE.top}
+                  fill="#FFFFFF"
+                  fillOpacity="0.9"
+                  stroke="#FFFFFF"
                 />
-              </motion.g>
+                <path
+                  d={CUBE.faceLeft}
+                  fill="#DCEEFB"
+                  fillOpacity="0.8"
+                  stroke="#EAF5FD"
+                />
+                <path
+                  d={CUBE.faceRight}
+                  fill="#79B2DA"
+                  fillOpacity="0.72"
+                  stroke="#9FCBE7"
+                />
+              </g>
+            </svg>
 
-              {/* The ring's name, set on the ring itself. The white stroke is
-                  painted under the fill, so the label knocks a clean gap in the
-                  line rather than sitting on top of it. */}
-              <text
-                fontSize="6.4"
-                letterSpacing="1.7"
-                fontWeight={500}
-                textAnchor="middle"
-                fill={ring.hex}
-                fillOpacity={lit ? 1 : 0.8}
-                stroke="#FFFFFF"
-                strokeWidth="3"
-                paintOrder="stroke"
-                strokeLinejoin="round"
-                className="font-mono uppercase"
-                style={{ transition: "fill-opacity 400ms" }}
+            {/* The mark sits between the cube and the pyramid's front faces, so
+              the glass paints over it — which is what "embedded" is. Placed on
+              the cube's projected centre rather than the box's: the cube rides
+              low in the body, where the glass is wide enough to hold it. */}
+            <FMark className="absolute left-1/2 top-[51.4%] h-[9.5%] w-auto -translate-x-1/2 -translate-y-1/2 text-steel/75" />
+          </motion.div>
+
+          {/* ---- In front of the glass. ---- */}
+          <svg
+            aria-hidden
+            viewBox="0 0 200 200"
+            className="absolute inset-0 h-full w-full"
+          >
+            <defs>
+              {/* One light field, sampled by every face — a key at the top left
+                  resolving into a blue body and a warm rim at the lower right.
+                  Shared, so the faces can't disagree about where the light is. */}
+              <linearGradient
+                id="core-key"
+                gradientUnits="userSpaceOnUse"
+                x1="46"
+                y1="34"
+                x2="150"
+                y2="152"
               >
-                <textPath href={`#core-ring-${ring.phase}`} startOffset="25%">
-                  {ring.phase}
-                </textPath>
-              </text>
-            </g>
-          );
-        })}
-      </svg>
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.6" />
+                <stop offset="38%" stopColor="#FFFFFF" stopOpacity="0.12" />
+                <stop offset="74%" stopColor="#56A7FF" stopOpacity="0.1" />
+                <stop offset="100%" stopColor="#F5B347" stopOpacity="0.13" />
+              </linearGradient>
+              <linearGradient
+                id="core-streak"
+                gradientUnits="objectBoundingBox"
+                x1="0"
+                y1="0"
+                x2="1"
+                y2="0"
+              >
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
+                <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
+              </linearGradient>
+              <clipPath id="core-pyr-hull">
+                <path d={PYRAMID.hull} />
+              </clipPath>
+              <clipPath id="core-pyr-left">
+                <path d={PYRAMID.faceLeft} />
+              </clipPath>
+              <clipPath id="core-pyr-right">
+                <path d={PYRAMID.faceRight} />
+              </clipPath>
+            </defs>
 
-      {/* Nucleus. */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-        <motion.div
-          className="flex h-12 w-12 items-center justify-center rounded-full bg-sweep shadow-[0_10px_30px_-8px_rgba(68,158,216,0.7)] lg:h-14 lg:w-14"
-          animate={reduce ? {} : { scale: [1, 1.06, 1] }}
-          transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <FMark className="h-6 w-auto text-white lg:h-7" />
+            <path d={PYRAMID.faceLeft} fill="url(#core-key)" />
+            <path d={PYRAMID.faceRight} fill="url(#core-key)" />
+            {/* Extra density on the narrow face — same glass, more of it. */}
+            <path d={PYRAMID.faceRight} fill="#56A7FF" fillOpacity="0.05" />
+
+            {/* Streaks crossing the two front faces, each clipped to its own.
+                They travel at different rates and rest for different beats, so
+                the two faces never flash together — a single sweep across the
+                whole silhouette would read as a highlight painted on top of the
+                pyramid, where two independent ones read as light moving through
+                two panes that happen to meet. The right face is narrower and we
+                look through more glass there, so its streak is thinner, dimmer
+                and slower. */}
+            {!reduce && (
+              <>
+                <g clipPath="url(#core-pyr-left)">
+                  <g transform="rotate(18 100 100)">
+                    <motion.rect
+                      y="-10"
+                      width="11"
+                      height="220"
+                      fill="url(#core-streak)"
+                      opacity={0.3}
+                      animate={{ x: [22, 132] }}
+                      transition={{
+                        duration: 7,
+                        repeat: Infinity,
+                        repeatDelay: 4,
+                        ease: "easeInOut",
+                      }}
+                    />
+                  </g>
+                </g>
+                <g clipPath="url(#core-pyr-right)">
+                  <g transform="rotate(18 100 100)">
+                    <motion.rect
+                      y="-10"
+                      width="7"
+                      height="220"
+                      fill="url(#core-streak)"
+                      opacity={0.22}
+                      animate={{ x: [78, 158] }}
+                      transition={{
+                        duration: 9,
+                        repeat: Infinity,
+                        repeatDelay: 6.5,
+                        delay: 2.5,
+                        ease: "easeInOut",
+                      }}
+                    />
+                  </g>
+                </g>
+              </>
+            )}
+
+            {/* Polished edges. On white paper a white rim is invisible, so the
+                silhouette carries the darker refracted line real glass shows at
+                a grazing angle, and the white goes *inside* it as a bevel —
+                stroke centred on the hull, clipped to the hull, so only its
+                inner half survives. */}
+            <g clipPath="url(#core-pyr-hull)">
+              <path
+                d={PYRAMID.hull}
+                fill="none"
+                stroke="#FFFFFF"
+                strokeOpacity={hot ? 0.85 : 0.55}
+                strokeWidth="3"
+                strokeLinejoin="round"
+                style={{ transition: "stroke-opacity 500ms" }}
+              />
+            </g>
+            <path
+              d={PYRAMID.hull}
+              fill="none"
+              stroke="#376079"
+              strokeOpacity="0.34"
+              strokeWidth="0.9"
+              strokeLinejoin="round"
+            />
+            {/* The near edge, where the two front faces meet: a soft refracted
+                bloom with a fine white core riding it. It catches, but it stays
+                glass — any heavier and it reads as a seam, and the pyramid looks
+                folded out of paper. */}
+            <path
+              d={PYRAMID.edgeFront}
+              fill="none"
+              stroke="#56A7FF"
+              strokeOpacity="0.22"
+              strokeWidth="2.6"
+              strokeLinecap="round"
+            />
+            <path
+              d={PYRAMID.edgeFront}
+              fill="none"
+              stroke="#FFFFFF"
+              strokeOpacity={hot ? 0.7 : 0.45}
+              strokeWidth="0.9"
+              strokeLinecap="round"
+              style={{ transition: "stroke-opacity 500ms" }}
+            />
+
+            {/* Refracted specks — where the edges catch. */}
+            {!reduce &&
+              [
+                { cx: 100, cy: 47, r: 1.5, d: 0 },
+                { cx: 112.4, cy: 141, r: 1.1, d: 1.4 },
+                { cx: 134.4, cy: 111.6, r: 0.9, d: 2.6 },
+              ].map((s) => (
+                <motion.circle
+                  key={`${s.cx}-${s.cy}`}
+                  cx={s.cx}
+                  cy={s.cy}
+                  r={s.r}
+                  fill="#FFFFFF"
+                  animate={{ opacity: [0.25, 0.9, 0.25] }}
+                  transition={{
+                    duration: 3.4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: s.d,
+                  }}
+                />
+              ))}
+
+            {PHASE_RINGS.map((ring) => {
+              const lit = phase === ring.phase;
+              return (
+                <g key={ring.phase}>
+                  <path
+                    d={nearArc(ring.rx, ring.ry, ring.cy)}
+                    fill="none"
+                    stroke={ring.hex}
+                    strokeOpacity={lit ? 0.95 : 0.42}
+                    strokeWidth={lit ? 1.6 : 1}
+                    style={{
+                      transition: "stroke-opacity 500ms, stroke-width 500ms",
+                    }}
+                  />
+                  <Mote
+                    clock={clock}
+                    d={orbitPath(ring.rx, ring.ry, ring.cy)}
+                    spin={ring.spin}
+                    reverse={ring.reverse}
+                    hex={ring.hex}
+                    width={lit ? 4.4 : 3}
+                    opacity={lit ? 1 : 0.8}
+                    clip={`url(#core-near-${ring.phase})`}
+                  />
+                </g>
+              );
+            })}
+
+            {PARTICLES.map((p) => (
+              <Mote
+                key={p.id}
+                clock={clock}
+                d={orbitPath(p.rx, p.ry, p.cy)}
+                spin={p.spin}
+                reverse={p.reverse}
+                hex="#449ED8"
+                width={p.w}
+                opacity={hot ? 0.45 : 0.2}
+                clip={`url(#core-near-${p.id})`}
+              />
+            ))}
+          </svg>
+
+          {/* The chain, named — each label pinned to the widest point of the
+              orbit it belongs to, which under this camera is `(100 ± rx, cy)`.
+              The right extremity is the only one that works for all three: the
+              glass never reaches it, the fan lands outside the core, and the
+              three stack diagonally because the orbits narrow as they rise.
+
+              Inside the float, so a name rides its ring instead of sliding
+              across it. */}
+          {PHASE_RINGS.map((ring) => {
+            const lit = phase === ring.phase;
+            return (
+              <span
+                key={ring.phase}
+                className="pointer-events-none absolute flex -translate-y-1/2 items-center gap-1.5 whitespace-nowrap"
+                style={{
+                  left: `${((100 + ring.rx) / 200) * 100}%`,
+                  top: `${(ring.cy / 200) * 100}%`,
+                }}
+              >
+                <span
+                  aria-hidden
+                  className="h-[3px] w-[3px] flex-none rounded-full transition-opacity duration-500"
+                  style={{ background: ring.hex, opacity: lit ? 1 : 0.4 }}
+                />
+                <span
+                  className="font-mono text-[7.5px] uppercase leading-none tracking-[0.16em] transition-colors duration-500 sm:text-[8.5px] sm:tracking-[0.18em] xl:text-[10px]"
+                  style={{ color: lit ? ring.hex : "#868C8E" }}
+                >
+                  {ring.phase}
+                </span>
+              </span>
+            );
+          })}
         </motion.div>
-        <span className="mt-1 font-mono text-[9.5px] uppercase tracking-[0.22em] text-ink-400">
-          Funavry Core
-        </span>
-        {/* <span className="text-[12.5px] font-medium tracking-[-0.01em] text-ink">
-          16 practices, one chain
-        </span> */}
-      </div>
+      </motion.div>
     </div>
   );
 };
