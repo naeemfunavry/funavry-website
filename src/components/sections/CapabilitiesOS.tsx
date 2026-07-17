@@ -323,76 +323,129 @@ const GROUP_LABEL = {
    The core's scene
 
    Every coordinate below comes out of one camera, and that is the whole trick:
-   the scene is projected from 18° above the horizon with a 12° yaw and a mild
-   perspective, so the pyramid, the three orbits around it and the cube inside
-   it are one object rather than stacked 2D art. Because the camera never moves,
-   the projection is solved once and baked — there is no runtime maths, and no
-   Three.js to ship for four static shapes.
+   the scene is projected from 33.2° above the horizon with no yaw, so the
+   pyramid, the three orbits around it and the cube inside it are one object
+   rather than stacked 2D art. Because the camera never moves, the projection is
+   solved once and baked — there is no runtime maths, and no Three.js to ship
+   for four static shapes.
+
+   The square base is turned 45°, so a base *corner* faces us rather than an
+   edge. That is what makes the silhouette symmetric about x=100 and puts a
+   single vertical edge down the middle, and it's the whole reason the shape
+   reads as architecture instead of as a signpost.
+
+   Two numbers fix everything: sin 33.2° = 0.548 and cos 33.2° = 0.836. A
+   horizontal circle of radius r projects to an ellipse of `ry = r · 0.548`, and
+   a height h drops to `h · 0.836` on screen. Every ring, mote and vertex below
+   obeys those two, which is why they share a space.
 
    All of it lives in the core's own 200×200 viewBox, which the connection fan
    also measures against.
    -------------------------------------------------------------------------- */
 
-/** The glass pyramid. `v0` is the near vertex, so the two faces that meet at
-    the apex→v0 edge are the ones facing us; the third face and the base are
-    seen *through* the glass, which is what sells it as transparent. */
+/** The glass pyramid, corner-on. `N` is the near base corner at the bottom, so
+    the two faces meeting at the apex→N edge — the vertical centre line — are
+    the ones facing us. The far corner `F` projects onto that same centre line
+    higher up, and the two back faces and the base are seen *through* the glass,
+    which is what sells it as transparent. */
 const PYRAMID = {
-  hull: "M 100 44.6 L 137 109.8 L 113.1 147.4 L 50.4 116.6 Z",
-  faceLeft: "M 100 44.6 L 50.4 116.6 L 113.1 147.4 Z",
-  faceRight: "M 100 44.6 L 113.1 147.4 L 137 109.8 Z",
-  faceBack: "M 100 44.6 L 50.4 116.6 L 137 109.8 Z",
-  base: "M 113.1 147.4 L 50.4 116.6 L 137 109.8 Z",
-  edgeFront: "M 100 44.6 L 113.1 147.4",
-  edgeBase: "M 50.4 116.6 L 137 109.8",
+  // apex (100,48) · L (45,140.8) · N (100,170.9) · R (155,140.8) · F (100,110.7)
+  hull: "M 100 48 L 45 140.8 L 100 170.9 L 155 140.8 Z",
+  faceLeft: "M 100 48 L 100 170.9 L 45 140.8 Z",
+  faceRight: "M 100 48 L 155 140.8 L 100 170.9 Z",
+  faceBackLeft: "M 100 48 L 45 140.8 L 100 110.7 Z",
+  faceBackRight: "M 100 48 L 100 110.7 L 155 140.8 Z",
+  base: "M 45 140.8 L 100 170.9 L 155 140.8 L 100 110.7 Z",
+  /** The vertical centre edge, where the two front faces meet. */
+  edgeFront: "M 100 48 L 100 170.9",
+  /** The base's two hidden back edges, L→F→R. */
+  edgeBase: "M 45 140.8 L 100 110.7 L 155 140.8",
+  /** A reduced copy of the silhouette on the same base plane — scaled 0.7 about
+      the base centre (100, 140.8). Solid glass viewed corner-on throws a
+      smaller image of its own outline back at you off the inner faces, and this
+      is that. It is the cheapest thing in the whole scene that reads as
+      *thickness* rather than as a tinted outline, which is the difference
+      between a glass solid and a paper cut-out. */
+  innerHull: "M 100 75.8 L 61.5 140.8 L 100 161.9 L 138.5 140.8 Z",
+  innerEdge: "M 100 75.8 L 100 161.9",
   /** The same hull, as percentages — a clip-path can't read a viewBox, and the
       backdrop-filter pane that does the actual frosting is an HTML element. */
-  clip: "polygon(50% 22.3%, 68.5% 54.9%, 56.6% 73.7%, 25.2% 58.3%)",
-  clipRight: "polygon(50% 22.3%, 56.6% 73.7%, 68.5% 54.9%)",
+  clip: "polygon(50% 24%, 22.5% 70.4%, 50% 85.45%, 77.5% 70.4%)",
+  clipRight: "polygon(50% 24%, 77.5% 70.4%, 50% 85.45%)",
 } as const;
 
-/** The luminous cube suspended in the glass, low in the body where the pyramid
-    is wide enough to clear it by ~7 units on every face. It carries its own 38°
-    yaw on top of the scene's, so it presents a corner rather than a flat side.
-    The three faces here are the three that survive back-face culling — the two
-    that meet at the near vertical edge, plus the top, because the camera is
-    above. Between them they tile the whole silhouette; drop one and the cube
-    falls open. Centre projects to (100, 102.8), which is where the mark goes. */
+/** The luminous cube suspended in the glass, sitting mid-body where the pyramid
+    is wide enough to clear it by ~10 units at the tightest corner. It takes the
+    same 45° turn as the base, so it presents a corner to us exactly as the
+    pyramid does — the two shapes agree about where the viewer is, and that
+    agreement is most of what makes the cube read as *inside* rather than as a
+    sticker on the front. The three faces here are the ones that survive
+    back-face culling: the two meeting at the near vertical edge, plus the top,
+    because the camera is above. Between them they tile the whole silhouette;
+    drop one and the cube falls open.
+
+    Side 33.1, so the horizontal half-diagonal is 23.4 and the vertical edge
+    drops 27.6. Centre projects to (100, 118.2). */
 const CUBE = {
-  top: "M 101.65 96.67 L 117.88 90.32 L 98.5 85.47 L 81.98 91.3 Z",
-  faceLeft: "M 101.65 96.67 L 101.61 121.38 L 82.36 115.09 L 81.98 91.3 Z",
-  faceRight: "M 101.65 96.67 L 117.88 90.32 L 117.5 113.94 L 101.61 121.38 Z",
+  //  F' (100,91.6) · R' (123.4,104.4) · N' (100,117.2) · L' (76.6,104.4)
+  top: "M 100 91.6 L 123.4 104.4 L 100 117.2 L 76.6 104.4 Z",
+  faceLeft: "M 76.6 104.4 L 100 117.2 L 100 144.8 L 76.6 132 Z",
+  faceRight: "M 100 117.2 L 123.4 104.4 L 123.4 132 L 100 144.8 Z",
+  /** The two front faces, as CSS matrices that lay a flat element onto them.
+      Each maps a unit box's x-axis onto the face's receding top edge and leaves
+      its y-axis vertical, which is what the projection does to anything painted
+      on that face — so the mark lands on the glass rather than floating in
+      front of it. Both determinants are positive: the F skews, never mirrors. */
+  markLeft: {
+    left: "38.3%",
+    top: "52.2%",
+    transform: "skewY(28.7deg) scaleX(0.877)",
+  },
+  markRight: {
+    left: "50%",
+    top: "58.6%",
+    transform: "skewY(-28.7deg) scaleX(0.877)",
+  },
 } as const;
 
 /**
- * The three orbits are the delivery chain, outermost first: Build, then
- * Automate, then Operate. Each service declares which phase it lives in, so
- * hovering a card lights the orbit it belongs to — they aren't decoration,
- * they're the legend.
+ * The three orbits are the delivery chain, top down: Build, then Automate, then
+ * Operate. Each service declares which phase it lives in, so hovering a card
+ * lights the orbit it belongs to — they aren't decoration, they're the legend.
  *
- * Each is a real horizontal circle on the pyramid's axis, sized to clear the
- * body at the height it rides. Under an 18° camera a horizontal circle projects
- * to an ellipse with `ry = rx·sin 18°`, and its far half is the *upper* half —
- * which is why every orbit is drawn twice, once behind the glass and once in
- * front of it.
+ * Each is a real horizontal circle on the pyramid's axis, so `ry = rx · 0.548`
+ * on every one of them, and the far half of each is its *upper* half — which is
+ * why every orbit is drawn twice, once behind the glass and once in front of
+ * it. They do not hug the body: they're orbits, not contour lines, so Build
+ * rides high and wide of a pyramid that is barely 21 units across up there.
+ *
+ * `label` is where the name sits. Build reads flat above the apex; the other
+ * two are set on their own orbit's near arc, so the type inherits the ring's
+ * curve and the whole thing reads as one drawing. `at` is a fraction of that
+ * arc's length, picked so each name lands where the tangent is around 20–25°
+ * off horizontal — steep enough to look like it belongs to a ring in
+ * perspective, shallow enough to stay comfortably readable.
  */
 const PHASE_RINGS = [
   {
     phase: "Build",
     hex: "#449ED8",
-    cy: 123,
-    rx: 70.8,
-    ry: 21.9,
+    cy: 66,
+    rx: 54,
+    ry: 29.6,
     spin: 26,
     reverse: false,
+    label: { kind: "flat", x: 100, y: 28 },
   },
   {
     phase: "Automate",
     hex: "#F59F13",
-    cy: 90,
-    rx: 48.9,
-    ry: 15.1,
+    cy: 112,
+    rx: 78,
+    ry: 42.7,
     spin: 19,
     reverse: true,
+    label: { kind: "arc", at: "18%" },
   },
   {
     /* Graphite rather than the brand's steel. Steel (#376079) is a dark
@@ -402,27 +455,32 @@ const PHASE_RINGS = [
        phases. A true neutral separates cleanly and is calmer besides. */
     phase: "Operate",
     hex: "#5A6265",
-    cy: 65.2,
-    rx: 33,
-    ry: 10.2,
+    cy: 140,
+    rx: 66,
+    ry: 36.2,
     spin: 34,
     reverse: false,
+    label: { kind: "arc", at: "68%" },
   },
 ] as const;
 
-/** Loose motes on their own orbits. Same camera — every `ry` is `rx · sin 18°`,
+/** Loose motes on their own orbits. Same camera — every `ry` is `rx · 0.548`,
     so they sit in the same space as the rings; the far half of each pass goes
     behind the glass and softens. Widths are tuned so nothing exceeds ~6px at
     the 440px desktop core: a mote that reads as a bead rather than a speck
-    stops being atmosphere and starts competing with the cube. */
+    stops being atmosphere and starts competing with the cube.
+
+    Every orbit here also stays inside r=96 of the box centre at its furthest
+    point, which is where the connection fan lands — a mote that strayed past
+    that would cross sixteen curves on its way round. */
 const PARTICLES = [
-  { id: "p0", cy: 106, rx: 78, ry: 24.1, w: 2.2, spin: 30, reverse: false },
-  { id: "p1", cy: 88, rx: 58, ry: 17.9, w: 1.4, spin: 38, reverse: true },
-  { id: "p2", cy: 122, rx: 88, ry: 27.2, w: 2.8, spin: 46, reverse: false },
-  { id: "p3", cy: 72, rx: 42, ry: 13, w: 1.2, spin: 34, reverse: true },
-  { id: "p4", cy: 134, rx: 92, ry: 28.4, w: 1.8, spin: 54, reverse: true },
-  { id: "p5", cy: 98, rx: 68, ry: 21, w: 1.1, spin: 42, reverse: false },
-  { id: "p6", cy: 58, rx: 30, ry: 9.3, w: 1, spin: 28, reverse: true },
+  { id: "p0", cy: 100, rx: 84, ry: 46, w: 2.2, spin: 30, reverse: false },
+  { id: "p1", cy: 78, rx: 62, ry: 34, w: 1.4, spin: 38, reverse: true },
+  { id: "p2", cy: 128, rx: 86, ry: 47.1, w: 2.8, spin: 46, reverse: false },
+  { id: "p3", cy: 60, rx: 46, ry: 25.2, w: 1.2, spin: 34, reverse: true },
+  { id: "p4", cy: 146, rx: 78, ry: 42.7, w: 1.8, spin: 54, reverse: true },
+  { id: "p5", cy: 92, rx: 72, ry: 39.5, w: 1.1, spin: 42, reverse: false },
+  { id: "p6", cy: 54, rx: 34, ry: 18.6, w: 1, spin: 28, reverse: true },
 ] as const;
 
 /** An orbit as a closed path, opening at nine o'clock and running clockwise —
@@ -436,6 +494,12 @@ const farArc = (rx: number, ry: number, cy: number) =>
 const nearArc = (rx: number, ry: number, cy: number) =>
   `M ${100 + rx} ${cy} A ${rx} ${ry} 0 0 1 ${100 - rx} ${cy}`;
 
+/** The near half again, but running left→right instead of right→left. `nearArc`
+    is drawn the way the motes travel; type set on it would hang underneath and
+    read upside down. Same curve, opposite direction, used only by the labels. */
+const labelArc = (rx: number, ry: number, cy: number) =>
+  `M ${100 - rx} ${cy} A ${rx} ${ry} 0 0 0 ${100 + rx} ${cy}`;
+
 const SPRING = {
   type: "spring",
   stiffness: 260,
@@ -448,9 +512,19 @@ const EXPO = [0.19, 1, 0.22, 1] as const;
    Connection network
 
    Endpoints are measured, never guessed: each card reports its inner edge and
-   the core reports its centre, so a path always lands exactly on the ring.
-   Cards map in reading order onto an arc, which is what keeps the fan
-   symmetric and stops any two curves from crossing.
+   the core reports its box, so a path always lands exactly where it should.
+
+   Every connector lands on the orbit for its own phase — a Build card runs to
+   the Build ring, and hovering it lights that ring at the far end of its own
+   line. That is the whole point of the picture: the orbits stop being scenery
+   and become the thing the network plugs into. It is also why the orbits had to
+   stop floating, over in `AICore` — a ring that drifted would drag its
+   endpoints off the lines that land on it.
+
+   The cost is that the fan no longer guarantees a non-crossing layout. Cards sit
+   in reading order, phases don't, so a Build card below an Operate card sends
+   its line up and over. Sorting the columns by phase would fix it and is not
+   on the table — the card order is the card order.
    -------------------------------------------------------------------------- */
 
 type Link = {
@@ -463,13 +537,10 @@ type Link = {
 type Geometry = {
   w: number;
   h: number;
-  cx: number;
-  cy: number;
-  r: number;
   links: Link[];
 };
 
-/** Half-angle of the arc each column fans across, in degrees. */
+/** Half-angle of the arc each phase group fans across, in degrees. */
 const ARC = 56;
 
 function buildLinks(
@@ -477,54 +548,81 @@ function buildLinks(
   wrap: DOMRect,
   core: DOMRect,
 ): Geometry {
-  const cx = core.left + core.width / 2 - wrap.left;
-  const cy = core.top + core.height / 2 - wrap.top;
-  const r = core.width / 2;
+  // The core's 200-unit viewBox expressed in wrapper pixels. Every orbit lives
+  // in that space, so this is the only bridge the fan needs to reach them.
+  const k = core.width / 200;
+  const ox = core.left - wrap.left;
+  const oy = core.top - wrap.top;
 
   const links: Link[] = [];
 
   for (const column of [TECH, GBS]) {
     const side = column[0].group === "tech" ? -1 : 1; // which side of the core
-    const last = Math.max(column.length - 1, 1);
 
-    column.forEach((service, i) => {
-      const el = cards.get(service.n);
-      if (!el) return;
+    // Bucket by phase, keeping reading order inside each bucket.
+    const byPhase = new Map<Service["phase"], Service[]>();
+    for (const service of column) {
+      const bucket = byPhase.get(service.phase);
+      if (bucket) bucket.push(service);
+      else byPhase.set(service.phase, [service]);
+    }
 
-      const box = el.getBoundingClientRect();
-      // Leave from the edge that faces the core.
-      const x0 = (side === -1 ? box.right : box.left) - wrap.left;
-      const y0 = box.top + box.height / 2 - wrap.top;
+    for (const [phaseName, bucket] of byPhase) {
+      const ring = PHASE_RINGS.find(
+        (candidate) => candidate.phase === phaseName,
+      );
+      if (!ring) continue;
+      const last = Math.max(bucket.length - 1, 1);
 
-      // Top card lands high on the ring, bottom card low — order preserved,
-      // so the curves never trade places.
-      const t = i / last;
-      const spread = (-ARC + t * 2 * ARC) * (Math.PI / 180);
-      const theta = side === -1 ? Math.PI - spread : spread;
-      const nx = Math.cos(theta);
-      const ny = Math.sin(theta);
-      const x1 = cx + r * nx;
-      const y1 = cy + r * ny;
+      bucket.forEach((service, i) => {
+        const el = cards.get(service.n);
+        if (!el) return;
 
-      const dx = Math.abs(x1 - x0);
-      // Leave the card horizontally, arrive along the ring's normal.
-      const c1x = x0 - side * dx * 0.5;
-      const c1y = y0;
-      const ext = Math.min(Math.max(dx * 0.32, 44), 150);
-      const c2x = x1 + nx * ext;
-      const c2y = y1 + ny * ext;
+        const box = el.getBoundingClientRect();
+        // Leave from the edge that faces the core.
+        const x0 = (side === -1 ? box.right : box.left) - wrap.left;
+        const y0 = box.top + box.height / 2 - wrap.top;
 
-      links.push({
-        n: service.n,
-        group: service.group,
-        x1,
-        y1,
-        d: `M ${x0.toFixed(1)} ${y0.toFixed(1)} C ${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(1)} ${c2y.toFixed(1)}, ${x1.toFixed(1)} ${y1.toFixed(1)}`,
+        // Fan this phase's cards across its own orbit, on the side they live on.
+        // A lone card takes the ring's widest point rather than one end of the
+        // arc, so a group of one still looks aimed rather than parked.
+        const t = bucket.length === 1 ? 0.5 : i / last;
+        const spread = ((-ARC + t * 2 * ARC) * Math.PI) / 180;
+        const theta = side === -1 ? Math.PI - spread : spread;
+
+        const x1 = ox + (100 + ring.rx * Math.cos(theta)) * k;
+        const y1 = oy + (ring.cy + ring.ry * Math.sin(theta)) * k;
+
+        // An ellipse's outward normal at θ is (ry·cosθ, rx·sinθ), NOT the
+        // circle's (cosθ, sinθ) — the radius vector and the normal only agree on
+        // a circle. These orbits are flattened to 0.548, so using the radius
+        // here would meet the ring at a visible kink on every card.
+        const rawX = ring.ry * Math.cos(theta);
+        const rawY = ring.rx * Math.sin(theta);
+        const len = Math.hypot(rawX, rawY) || 1;
+        const nx = rawX / len;
+        const ny = rawY / len;
+
+        const dx = Math.abs(x1 - x0);
+        // Leave the card horizontally, arrive along the orbit's normal.
+        const c1x = x0 - side * dx * 0.5;
+        const c1y = y0;
+        const ext = Math.min(Math.max(dx * 0.32, 44), 150);
+        const c2x = x1 + nx * ext;
+        const c2y = y1 + ny * ext;
+
+        links.push({
+          n: service.n,
+          group: service.group,
+          x1,
+          y1,
+          d: `M ${x0.toFixed(1)} ${y0.toFixed(1)} C ${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(1)} ${c2y.toFixed(1)}, ${x1.toFixed(1)} ${y1.toFixed(1)}`,
+        });
       });
-    });
+    }
   }
 
-  return { w: wrap.width, h: wrap.height, cx, cy, r, links };
+  return { w: wrap.width, h: wrap.height, links };
 }
 
 /** Stable per-link jitter, so idle particles don't march in lockstep. */
@@ -751,62 +849,25 @@ const AICore = ({
       onMouseLeave={() => setHot(false)}
       className="relative aspect-square w-[260px] shrink-0 sm:w-[320px] lg:w-[340px] xl:w-[440px]"
     >
-      {/* Key light, top left; a colder fill from the lower right. */}
-      <div
+      {/* Ambient halo. Blurred past any edge of its own, so it reads as light in
+          the air rather than as a disc — the pyramid sits on open paper now.
+
+          It also carries the selection. The hairline horizon and the pulse ring
+          used to be how the core answered a hovered card; with both gone, that
+          job falls here, and the glow simply warms toward the hovered half of
+          the network. Same signal, no geometry. */}
+      <motion.div
         aria-hidden
-        className="absolute -inset-[38%] rounded-full opacity-70 blur-3xl"
+        className="absolute -inset-[38%] rounded-full blur-3xl"
+        animate={{ opacity: hot || accent ? 0.95 : 0.7 }}
+        transition={{ duration: 0.6, ease: EXPO }}
         style={{
-          background:
-            "radial-gradient(closest-side, rgba(68,158,216,0.16), rgba(245,159,19,0.07) 58%, transparent 78%)",
+          background: accent
+            ? `radial-gradient(closest-side, rgba(${accent.rgb},0.22), rgba(${accent.rgb},0.08) 58%, transparent 78%)`
+            : "radial-gradient(closest-side, rgba(68,158,216,0.16), rgba(245,159,19,0.07) 58%, transparent 78%)",
+          transition: "background 500ms",
         }}
       />
-
-      {/* The horizon every connection lands on. It stays a circle because the
-          fan is aimed at a circle — but it's down to a hairline now, so the
-          pyramid reads as floating on the page rather than sitting on a disc. */}
-      <div
-        aria-hidden
-        className="absolute inset-0 rounded-full border transition-colors duration-500"
-        style={{
-          borderColor: accent
-            ? `rgba(${accent.rgb},0.5)`
-            : "rgba(46,52,54,0.1)",
-        }}
-      />
-
-      <motion.svg
-        aria-hidden
-        viewBox="0 0 200 200"
-        className="absolute inset-0 h-full w-full"
-        animate={reduce ? {} : { rotate: 360 }}
-        transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
-      >
-        <circle
-          cx="100"
-          cy="100"
-          r="96"
-          fill="none"
-          stroke="rgba(46,52,54,0.14)"
-          strokeWidth="1"
-          strokeDasharray="1.5 9"
-        />
-      </motion.svg>
-
-      {/* Selection pulse — the core answers the click, but never changes shape. */}
-      <AnimatePresence>
-        {active && !reduce && (
-          <motion.span
-            key={active}
-            aria-hidden
-            className="absolute inset-0 rounded-full border-2"
-            style={{ borderColor: HUE[active].hex }}
-            initial={{ opacity: 0.5, scale: 1 }}
-            animate={{ opacity: 0, scale: 1.28 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
-          />
-        )}
-      </AnimatePresence>
 
       {/* Ground: contact shadow, ambient bounce and a caustic pool. It does not
           float with the pyramid — it answers it, tightening and darkening as
@@ -832,18 +893,21 @@ const AICore = ({
             <stop offset="100%" stopColor="#56A7FF" stopOpacity="0" />
           </radialGradient>
         </defs>
-        <ellipse cx="102" cy="162" rx="56" ry="17" fill="url(#core-shadow)" />
+        {/* Centred on the axis now that the camera has no yaw: the pyramid is
+            symmetric about x=100, so anything it casts must be too. Sits just
+            under the near corner at y=170.9. */}
+        <ellipse cx="100" cy="181" rx="54" ry="15" fill="url(#core-shadow)" />
         {/* Light that made it through the glass, pooled under the base. Breathes
             on scale rather than on `rx`: an animated geometry attribute is
             undefined on the frame before Framer takes it over, and the browser
             drops the shape for it. */}
         <motion.ellipse
-          cx="97"
-          cy="158"
-          rx="26"
-          ry="8"
+          cx="100"
+          cy="178"
+          rx="24"
+          ry="7"
           fill="url(#core-caustic)"
-          style={{ originX: "97px", originY: "158px" }}
+          style={{ originX: "100px", originY: "178px" }}
           animate={
             reduce ? {} : { scaleX: [1, 1.28, 1], opacity: [0.75, 1, 0.75] }
           }
@@ -854,6 +918,82 @@ const AICore = ({
       {/* ---- Everything below floats together. -------------------------------
           Outer wrapper answers the pointer, inner wrapper does the idle drift,
           so the hover lift never fights the float's own keyframes. */}
+      {/* ---- The orbits: far halves. ------------------------------------------
+          These sit OUTSIDE the float on purpose, and that is now load-bearing
+          rather than a detail. Sixteen connectors are measured once and land on
+          these rings; a ring that drifted ±8px and yawed 6° would slide out from
+          under its own endpoints every few seconds, and the fan would visibly
+          come unstuck. So the orbits hold still and the pyramid breathes inside
+          them — which is also the more honest reading: an orbit is a fixed frame,
+          and the thing it encloses is what moves.
+
+          Still painted before the glass pane, so the frosting above catches them
+          exactly as it did when they lived inside the float. */}
+      <svg
+        aria-hidden
+        viewBox="0 0 200 200"
+        className="absolute inset-0 h-full w-full"
+      >
+        <defs>
+          {/* One clip pair per orbit, splitting it at its own horizon: an
+              orbit's far half is its upper half under this camera. Both halves
+              draw the same mote at the same place, so it crosses the seam
+              without a join. */}
+          {orbits.map((o) => (
+            <Fragment key={o.id}>
+              <clipPath id={`core-far-${o.id}`}>
+                <rect x="0" y="0" width="200" height={o.cy} />
+              </clipPath>
+              <clipPath id={`core-near-${o.id}`}>
+                <rect x="0" y={o.cy} width="200" height={200 - o.cy} />
+              </clipPath>
+            </Fragment>
+          ))}
+        </defs>
+
+        {PHASE_RINGS.map((ring) => {
+          const lit = phase === ring.phase;
+          return (
+            <g key={ring.phase}>
+              <path
+                d={farArc(ring.rx, ring.ry, ring.cy)}
+                fill="none"
+                stroke={ring.hex}
+                strokeOpacity={lit ? 0.6 : 0.22}
+                strokeWidth={lit ? 1.5 : 0.9}
+                style={{
+                  transition: "stroke-opacity 500ms, stroke-width 500ms",
+                }}
+              />
+              <Mote
+                clock={clock}
+                d={orbitPath(ring.rx, ring.ry, ring.cy)}
+                spin={ring.spin}
+                reverse={ring.reverse}
+                hex={ring.hex}
+                width={lit ? 4.4 : 3}
+                opacity={lit ? 0.85 : 0.5}
+                clip={`url(#core-far-${ring.phase})`}
+              />
+            </g>
+          );
+        })}
+
+        {PARTICLES.map((p) => (
+          <Mote
+            key={p.id}
+            clock={clock}
+            d={orbitPath(p.rx, p.ry, p.cy)}
+            spin={p.spin}
+            reverse={p.reverse}
+            hex="#449ED8"
+            width={p.w}
+            opacity={hot ? 0.4 : 0.2}
+            clip={`url(#core-far-${p.id})`}
+          />
+        ))}
+      </svg>
+
       <motion.div
         className="absolute inset-0"
         animate={{ y: hot ? -6 : 0, scale: hot ? 1.03 : 1 }}
@@ -876,27 +1016,13 @@ const AICore = ({
             className="absolute inset-0 h-full w-full"
           >
             <defs>
-              {/* One clip pair per orbit, splitting it at its own horizon: an
-                  orbit's far half is its upper half under this camera. Both
-                  halves draw the same mote at the same place, so it crosses the
-                  seam without a join. */}
-              {orbits.map((o) => (
-                <Fragment key={o.id}>
-                  <clipPath id={`core-far-${o.id}`}>
-                    <rect x="0" y="0" width="200" height={o.cy} />
-                  </clipPath>
-                  <clipPath id={`core-near-${o.id}`}>
-                    <rect x="0" y={o.cy} width="200" height={200 - o.cy} />
-                  </clipPath>
-                </Fragment>
-              ))}
               <linearGradient
                 id="core-glass-back"
                 gradientUnits="userSpaceOnUse"
-                x1="46"
-                y1="34"
+                x1="50"
+                y1="40"
                 x2="150"
-                y2="152"
+                y2="170"
               >
                 <stop offset="0%" stopColor="#56A7FF" stopOpacity="0.06" />
                 <stop offset="100%" stopColor="#56A7FF" stopOpacity="0.02" />
@@ -904,63 +1030,43 @@ const AICore = ({
             </defs>
 
             {/* The pyramid's own far geometry. Painted here so the glass pane
-                above frosts it — the back face and the hidden base edge go soft
-                exactly the way they would through 40mm of glass. */}
+                above frosts it — the back faces and the hidden base edges go
+                soft exactly the way they would through 40mm of glass. */}
             <path d={PYRAMID.base} fill="url(#core-glass-back)" />
-            <path d={PYRAMID.faceBack} fill="url(#core-glass-back)" />
-            {/* The base's hidden back edge. Carrying it at all is the single
-                strongest cue that the pyramid is transparent, and it has to
-                survive the frosting above — hence heavier than it would be if
-                it were drawn in the open. */}
+            <path d={PYRAMID.faceBackLeft} fill="url(#core-glass-back)" />
+            <path d={PYRAMID.faceBackRight} fill="url(#core-glass-back)" />
+            {/* The base's two hidden back edges, running L→F→R behind the body.
+                Carrying them at all is the single strongest cue that the pyramid
+                is transparent, and they have to survive the frosting above —
+                hence heavier than they would be if drawn in the open. */}
             <path
               d={PYRAMID.edgeBase}
               fill="none"
               stroke="#449ED8"
               strokeOpacity="0.5"
               strokeWidth="1.2"
+              strokeLinejoin="round"
             />
-
-            {PHASE_RINGS.map((ring) => {
-              const lit = phase === ring.phase;
-              return (
-                <g key={ring.phase}>
-                  <path
-                    d={farArc(ring.rx, ring.ry, ring.cy)}
-                    fill="none"
-                    stroke={ring.hex}
-                    strokeOpacity={lit ? 0.6 : 0.22}
-                    strokeWidth={lit ? 1.5 : 0.9}
-                    style={{
-                      transition: "stroke-opacity 500ms, stroke-width 500ms",
-                    }}
-                  />
-                  <Mote
-                    clock={clock}
-                    d={orbitPath(ring.rx, ring.ry, ring.cy)}
-                    spin={ring.spin}
-                    reverse={ring.reverse}
-                    hex={ring.hex}
-                    width={lit ? 4.4 : 3}
-                    opacity={lit ? 0.85 : 0.5}
-                    clip={`url(#core-far-${ring.phase})`}
-                  />
-                </g>
-              );
-            })}
-
-            {PARTICLES.map((p) => (
-              <Mote
-                key={p.id}
-                clock={clock}
-                d={orbitPath(p.rx, p.ry, p.cy)}
-                spin={p.spin}
-                reverse={p.reverse}
-                hex="#449ED8"
-                width={p.w}
-                opacity={hot ? 0.4 : 0.2}
-                clip={`url(#core-far-${p.id})`}
-              />
-            ))}
+            {/* The body's own reflection, thrown back off the inner faces. Kept
+                to a whisper and left to the frosting above to soften: at full
+                strength it stops being an artefact of thick glass and becomes a
+                second pyramid, and the eye starts trying to read it as an
+                object. */}
+            <path
+              d={PYRAMID.innerHull}
+              fill="none"
+              stroke="#8FCAEB"
+              strokeOpacity="0.4"
+              strokeWidth="0.8"
+              strokeLinejoin="round"
+            />
+            <path
+              d={PYRAMID.innerEdge}
+              fill="none"
+              stroke="#8FCAEB"
+              strokeOpacity="0.26"
+              strokeWidth="0.7"
+            />
           </svg>
 
           {/* ---- The glass itself. ----
@@ -998,10 +1104,10 @@ const AICore = ({
               share no factor with the scene's 9s and 13s, so it never settles
               into lockstep with the pyramid and reads as floating *within* it
               rather than moulded into it. The amplitude is deliberately tiny —
-              the cube clears the glass by ~7 units, and 3.5px at the 440px core
-              is ~1.6 units, so it can never appear to touch a face. The mark
-              rides in the same wrapper or it would slide off the cube it's
-              supposed to be suspended inside. */}
+              the cube clears the glass by ~10 units at the tightest corner, and
+              3.5px at the 440px core is ~1.6 units, so it can never appear to
+              touch a face. The marks ride in the same wrapper or they'd slide
+              off the cube they're painted on. */}
           <motion.div
             className="absolute inset-0"
             animate={
@@ -1026,9 +1132,9 @@ const AICore = ({
               </defs>
               <motion.ellipse
                 cx="100"
-                cy="102.8"
-                rx="42"
-                ry="40"
+                cy="118.2"
+                rx="46"
+                ry="44"
                 fill="url(#core-cube-glow)"
                 animate={
                   reduce
@@ -1038,7 +1144,7 @@ const AICore = ({
                         scale: hot ? 1.08 : 1,
                       }
                 }
-                style={{ originX: "100px", originY: "102.8px" }}
+                style={{ originX: "100px", originY: "118.2px" }}
                 transition={{
                   opacity: { duration: 4, repeat: Infinity, ease: "easeInOut" },
                   scale: { duration: 0.5, ease: EXPO },
@@ -1046,7 +1152,7 @@ const AICore = ({
               />
               {/* Lit from the same top-left key as the glass. The three faces are
                 held a long way apart in value on purpose, and each is outlined:
-                at 35 units across, that separation and those edges are the only
+                at 47 units across, that separation and those edges are the only
                 things telling the eye this is a solid and not a white shard.
                 Stroking the faces rather than a hull draws every visible edge
                 without anyone having to work out which ones they are. */}
@@ -1072,11 +1178,30 @@ const AICore = ({
               </g>
             </svg>
 
-            {/* The mark sits between the cube and the pyramid's front faces, so
-              the glass paints over it — which is what "embedded" is. Placed on
-              the cube's projected centre rather than the box's: the cube rides
-              low in the body, where the glass is wide enough to hold it. */}
-            <FMark className="absolute left-1/2 top-[51.4%] h-[9.5%] w-auto -translate-x-1/2 -translate-y-1/2 text-steel/75" />
+            {/* The mark, once per front face. It sits between the cube and the
+                pyramid's front faces, so the glass paints over it — which is
+                what "embedded" is.
+
+                Each box is exactly one face: 26.7 units along the receding top
+                edge by 27.6 down, which is 13.35% × 13.8% of a 200-unit square.
+                The skew lays it onto the face; the mark inside inherits it, so
+                the F sits *on* the glass rather than hovering in front of it.
+                Carrying it on both faces is what makes the cube read as a solid
+                the mark is cut into, rather than a panel with a logo on it. */}
+            {[CUBE.markLeft, CUBE.markRight].map((face, i) => (
+              <div
+                key={i}
+                aria-hidden
+                className="absolute h-[13.8%] w-[13.35%] origin-top-left"
+                style={{
+                  left: face.left,
+                  top: face.top,
+                  transform: face.transform,
+                }}
+              >
+                <FMark className="absolute left-1/2 top-1/2 h-[68%] w-auto -translate-x-1/2 -translate-y-1/2 text-white/90" />
+              </div>
+            ))}
           </motion.div>
 
           {/* ---- In front of the glass. ---- */}
@@ -1092,10 +1217,10 @@ const AICore = ({
               <linearGradient
                 id="core-key"
                 gradientUnits="userSpaceOnUse"
-                x1="46"
-                y1="34"
+                x1="50"
+                y1="40"
                 x2="150"
-                y2="152"
+                y2="170"
               >
                 <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.6" />
                 <stop offset="38%" stopColor="#FFFFFF" stopOpacity="0.12" />
@@ -1123,12 +1248,63 @@ const AICore = ({
               <clipPath id="core-pyr-right">
                 <path d={PYRAMID.faceRight} />
               </clipPath>
+              {/* Fresnel. Glass goes bright where you graze it and stays clear
+                  where you look straight through, and that falloff — not the
+                  tint, not the blur — is the thing the eye actually reads as
+                  "solid transparent object". Centred low and wide, because the
+                  body is thickest there and the silhouette is furthest from the
+                  axis. Without this the faces are flat washes and the whole
+                  pyramid reads as a decal. */}
+              <radialGradient
+                id="core-fresnel"
+                gradientUnits="userSpaceOnUse"
+                cx="100"
+                cy="126"
+                r="66"
+              >
+                <stop offset="48%" stopColor="#FFFFFF" stopOpacity="0" />
+                <stop offset="80%" stopColor="#FFFFFF" stopOpacity="0.13" />
+                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.4" />
+              </radialGradient>
+              {/* Everything the two front faces gather, ending up at the one
+                  point they all run to. */}
+              <radialGradient id="core-vertex">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.85" />
+                <stop offset="35%" stopColor="#CFE8FA" stopOpacity="0.34" />
+                <stop offset="100%" stopColor="#56A7FF" stopOpacity="0" />
+              </radialGradient>
             </defs>
 
             <path d={PYRAMID.faceLeft} fill="url(#core-key)" />
             <path d={PYRAMID.faceRight} fill="url(#core-key)" />
             {/* Extra density on the narrow face — same glass, more of it. */}
             <path d={PYRAMID.faceRight} fill="#56A7FF" fillOpacity="0.05" />
+            <path d={PYRAMID.hull} fill="url(#core-fresnel)" />
+
+            {/* The caustic at the near vertex. Two faces of glass funnel down to
+                a single corner, so that corner is the brightest thing on the
+                object — it is where the light has nowhere left to go. Breathes
+                against the cube's own pulse rather than with it. */}
+            <motion.ellipse
+              cx="100"
+              cy="164"
+              rx="20"
+              ry="13"
+              fill="url(#core-vertex)"
+              style={{ originX: "100px", originY: "164px" }}
+              animate={
+                reduce
+                  ? {}
+                  : {
+                      opacity: hot ? 1 : [0.6, 0.85, 0.6],
+                      scale: hot ? 1.1 : 1,
+                    }
+              }
+              transition={{
+                opacity: { duration: 5.5, repeat: Infinity, ease: "easeInOut" },
+                scale: { duration: 0.5, ease: EXPO },
+              }}
+            />
 
             {/* Streaks crossing the two front faces, each clipped to its own.
                 They travel at different rates and rest for different beats, so
@@ -1141,14 +1317,14 @@ const AICore = ({
             {!reduce && (
               <>
                 <g clipPath="url(#core-pyr-left)">
-                  <g transform="rotate(18 100 100)">
+                  <g transform="rotate(14 100 100)">
                     <motion.rect
-                      y="-10"
+                      y="-20"
                       width="11"
-                      height="220"
+                      height="240"
                       fill="url(#core-streak)"
                       opacity={0.3}
-                      animate={{ x: [22, 132] }}
+                      animate={{ x: [30, 108] }}
                       transition={{
                         duration: 7,
                         repeat: Infinity,
@@ -1159,14 +1335,14 @@ const AICore = ({
                   </g>
                 </g>
                 <g clipPath="url(#core-pyr-right)">
-                  <g transform="rotate(18 100 100)">
+                  <g transform="rotate(14 100 100)">
                     <motion.rect
-                      y="-10"
+                      y="-20"
                       width="7"
-                      height="220"
+                      height="240"
                       fill="url(#core-streak)"
                       opacity={0.22}
-                      animate={{ x: [78, 158] }}
+                      animate={{ x: [92, 168] }}
                       transition={{
                         duration: 9,
                         repeat: Infinity,
@@ -1226,12 +1402,14 @@ const AICore = ({
               style={{ transition: "stroke-opacity 500ms" }}
             />
 
-            {/* Refracted specks — where the edges catch. */}
+            {/* Refracted specks — one on each corner of the hull, where the
+                edges catch. Off-beat delays, so they never blink together. */}
             {!reduce &&
               [
-                { cx: 100, cy: 47, r: 1.5, d: 0 },
-                { cx: 112.4, cy: 141, r: 1.1, d: 1.4 },
-                { cx: 134.4, cy: 111.6, r: 0.9, d: 2.6 },
+                { cx: 100, cy: 50, r: 1.5, d: 0 },
+                { cx: 100, cy: 168.4, r: 1.1, d: 1.4 },
+                { cx: 152.6, cy: 139.5, r: 0.9, d: 2.6 },
+                { cx: 47.4, cy: 139.5, r: 0.9, d: 3.7 },
               ].map((s) => (
                 <motion.circle
                   key={`${s.cx}-${s.cy}`}
@@ -1248,85 +1426,116 @@ const AICore = ({
                   }}
                 />
               ))}
-
-            {PHASE_RINGS.map((ring) => {
-              const lit = phase === ring.phase;
-              return (
-                <g key={ring.phase}>
-                  <path
-                    d={nearArc(ring.rx, ring.ry, ring.cy)}
-                    fill="none"
-                    stroke={ring.hex}
-                    strokeOpacity={lit ? 0.95 : 0.42}
-                    strokeWidth={lit ? 1.6 : 1}
-                    style={{
-                      transition: "stroke-opacity 500ms, stroke-width 500ms",
-                    }}
-                  />
-                  <Mote
-                    clock={clock}
-                    d={orbitPath(ring.rx, ring.ry, ring.cy)}
-                    spin={ring.spin}
-                    reverse={ring.reverse}
-                    hex={ring.hex}
-                    width={lit ? 4.4 : 3}
-                    opacity={lit ? 1 : 0.8}
-                    clip={`url(#core-near-${ring.phase})`}
-                  />
-                </g>
-              );
-            })}
-
-            {PARTICLES.map((p) => (
-              <Mote
-                key={p.id}
-                clock={clock}
-                d={orbitPath(p.rx, p.ry, p.cy)}
-                spin={p.spin}
-                reverse={p.reverse}
-                hex="#449ED8"
-                width={p.w}
-                opacity={hot ? 0.45 : 0.2}
-                clip={`url(#core-near-${p.id})`}
-              />
-            ))}
           </svg>
-
-          {/* The chain, named — each label pinned to the widest point of the
-              orbit it belongs to, which under this camera is `(100 ± rx, cy)`.
-              The right extremity is the only one that works for all three: the
-              glass never reaches it, the fan lands outside the core, and the
-              three stack diagonally because the orbits narrow as they rise.
-
-              Inside the float, so a name rides its ring instead of sliding
-              across it. */}
-          {PHASE_RINGS.map((ring) => {
-            const lit = phase === ring.phase;
-            return (
-              <span
-                key={ring.phase}
-                className="pointer-events-none absolute flex -translate-y-1/2 items-center gap-1.5 whitespace-nowrap"
-                style={{
-                  left: `${((100 + ring.rx) / 200) * 100}%`,
-                  top: `${(ring.cy / 200) * 100}%`,
-                }}
-              >
-                <span
-                  aria-hidden
-                  className="h-[3px] w-[3px] flex-none rounded-full transition-opacity duration-500"
-                  style={{ background: ring.hex, opacity: lit ? 1 : 0.4 }}
-                />
-                <span
-                  className="font-mono text-[7.5px] uppercase leading-none tracking-[0.16em] transition-colors duration-500 sm:text-[8.5px] sm:tracking-[0.18em] xl:text-[10px]"
-                  style={{ color: lit ? ring.hex : "#868C8E" }}
-                >
-                  {ring.phase}
-                </span>
-              </span>
-            );
-          })}
         </motion.div>
       </motion.div>
+
+      {/* ---- The orbits: near halves, and the chain named. --------------------
+          The other side of the sandwich. The pyramid floats between this layer
+          and the far one, so a mote passes behind the glass, out in front of it,
+          and round again without ever being two dots.
+
+          Static, for the same reason the far halves are: this is the half the
+          fan actually lands on.
+
+          The names are SVG rather than HTML because Automate and Operate are
+          *set on their own orbits* — a <textPath> on the ring's near arc gives
+          the type the ring's curve for free, and no amount of CSS will bend a
+          line of text along an ellipse. Build has no such problem; it reads flat
+          above the apex, where the only thing near it is its own ring. Out here
+          they no longer yaw with the float either, which is pure gain: small
+          type held still is small type you can read. */}
+      <svg
+        viewBox="0 0 200 200"
+        className="pointer-events-none absolute inset-0 h-full w-full"
+        fill="none"
+      >
+        <defs>
+          {PHASE_RINGS.map((ring) =>
+            ring.label.kind === "arc" ? (
+              <path
+                key={ring.phase}
+                id={`core-label-${ring.phase}`}
+                d={labelArc(ring.rx, ring.ry, ring.cy)}
+              />
+            ) : null,
+          )}
+        </defs>
+
+        {PHASE_RINGS.map((ring) => {
+          const lit = phase === ring.phase;
+          return (
+            <g key={ring.phase}>
+              <path
+                d={nearArc(ring.rx, ring.ry, ring.cy)}
+                fill="none"
+                stroke={ring.hex}
+                strokeOpacity={lit ? 0.95 : 0.42}
+                strokeWidth={lit ? 1.6 : 1}
+                style={{
+                  transition: "stroke-opacity 500ms, stroke-width 500ms",
+                }}
+              />
+              <Mote
+                clock={clock}
+                d={orbitPath(ring.rx, ring.ry, ring.cy)}
+                spin={ring.spin}
+                reverse={ring.reverse}
+                hex={ring.hex}
+                width={lit ? 4.4 : 3}
+                opacity={lit ? 1 : 0.8}
+                clip={`url(#core-near-${ring.phase})`}
+              />
+            </g>
+          );
+        })}
+
+        {PARTICLES.map((p) => (
+          <Mote
+            key={p.id}
+            clock={clock}
+            d={orbitPath(p.rx, p.ry, p.cy)}
+            spin={p.spin}
+            reverse={p.reverse}
+            hex="#449ED8"
+            width={p.w}
+            opacity={hot ? 0.45 : 0.2}
+            clip={`url(#core-near-${p.id})`}
+          />
+        ))}
+
+        {PHASE_RINGS.map((ring) => {
+          const lit = phase === ring.phase;
+          const common = {
+            className: "font-mono uppercase",
+            fontSize: 5.2,
+            letterSpacing: 0.9,
+            fill: lit ? ring.hex : "#868C8E",
+            style: { transition: "fill 500ms" },
+          };
+
+          return ring.label.kind === "flat" ? (
+            <text
+              key={ring.phase}
+              {...common}
+              x={ring.label.x}
+              y={ring.label.y}
+              textAnchor="middle"
+            >
+              {ring.phase}
+            </text>
+          ) : (
+            <text key={ring.phase} {...common}>
+              <textPath
+                href={`#core-label-${ring.phase}`}
+                startOffset={ring.label.at}
+              >
+                {ring.phase}
+              </textPath>
+            </text>
+          );
+        })}
+      </svg>
     </div>
   );
 };
