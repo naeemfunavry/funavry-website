@@ -1,5 +1,6 @@
 import Container from "@/components/ui/Container";
 import Logo from "@/components/ui/Logo";
+import { OFFICES } from "@/lib/offices";
 import { SOCIALS } from "@/lib/socials";
 
 /** The footer index mirrors the delivery model, not a generic sitemap. */
@@ -58,38 +59,6 @@ const COLUMNS: {
       { label: "Technology", href: "#technology" },
       { label: "Careers", href: "#careers" },
       { label: "Blog & News", href: "#insights" },
-    ],
-  },
-];
-
-/** The offices, with the addresses supplied by the company. */
-const OFFICES = [
-  {
-    flag: "/flags/pk.svg",
-    country: "Pakistan",
-    role: "Global Delivery Center",
-    address: [
-      "Plot B, 281 Ghazi Rd,",
-      "Khuda Buksh Colony",
-      "KB Society, Lahore,",
-      "Punjab",
-    ],
-  },
-  {
-    flag: "/flags/us.svg",
-    country: "USA",
-    role: "Regional Office",
-    address: ["18 S 2nd Street #120", "San Jose, CA, 95113,", "United States"],
-  },
-  {
-    flag: "/flags/ae.svg",
-    country: "UAE",
-    role: "Regional Office",
-    address: [
-      "34HW+5J5 - Parkside",
-      "Retail Level - Cluster R",
-      "- Jumeirah Lakes",
-      "Towers - Dubai",
     ],
   },
 ];

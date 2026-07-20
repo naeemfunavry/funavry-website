@@ -444,7 +444,8 @@ function GroupRow({ group, index }: { group: Group; index: number }) {
             <TechIcon
               name={item.name}
               mono={item.mono}
-              className="h-8 w-8 flex-none object-contain transition-transform duration-300 ease-expo group-hover/t:scale-110"
+              className="flex-none transition-transform duration-300 ease-expo group-hover/t:scale-110"
+              size={30}
               monoClassName="flex h-6 min-w-[34px] flex-none items-center justify-center rounded-md bg-ink/[0.06] px-1.5 font-mono text-xs font-semibold uppercase leading-none tracking-tight text-ink/55"
             />
             <span className="truncate text-[12.5px] leading-tight text-ink-600">

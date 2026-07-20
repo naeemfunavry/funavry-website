@@ -44,13 +44,28 @@ function Row({ ariaHidden = false }: { ariaHidden?: boolean }) {
             key={`${client.name}-${i}`}
             className="group/cell relative flex h-[128px] w-[180px] flex-none items-center justify-center border-r border-line px-8 lg:w-[220px]"
           >
+            {/* From /clients/optimized, not /clients/webp. The delivered files
+                are all 120x120 and look uniform, but the ink inside them runs
+                from 21% of the canvas to 85% — so at identical CSS they rendered
+                4.1x apart. `scripts/normalize-client-logos.mjs` trims each one to
+                its own ink and rescales it to a constant ink AREA, which is what
+                the eye actually measures. That leaves nothing for this element to
+                decide: one fixed box, every mark already the same weight inside
+                it.
+
+                The box is deliberately half the canvas (100x56 of 200x112), so
+                the strip is drawing these at 2x on a retina screen. The old
+                `lg:max-h-[100px]` asked a 120px file for 200 device pixels and
+                got a 1.67x upscale — that was the blur. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={`/clients/webp/${client.file}`}
+              src={`/clients/optimized/${client.file}`}
               alt={ariaHidden ? "" : client.name}
               title={client.name}
               loading="lazy"
-              className="max-h-[36px] w-auto max-w-[140px] object-contain lg:max-h-[100px]"
+              width={200}
+              height={112}
+              className="h-[40px] w-[72px] object-contain lg:h-[100px] lg:w-[130px]"
             />
 
             {/* Amber underline — static on the accented cells, drawn in on hover

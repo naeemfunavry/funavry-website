@@ -42,8 +42,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import Container from "@/components/ui/Container";
-import Logo from "@/components/ui/Logo";
 import FMark from "@/components/ui/FMark";
+import Globe from "@/components/ui/Globe";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
 import { lockScroll, unlockScroll } from "@/lib/scroll-lock";
 import { SERVICES, type Service } from "@/lib/services";
@@ -67,106 +67,6 @@ const ICONS: Record<string, LucideIcon> = {
   GitBranch,
   Users,
 };
-
-/** A stylised wireframe globe with two orbits — decorative, sits behind the
-    card's middle. Static, so this stays a server component. */
-function GlobeMotif() {
-  return (
-    <svg viewBox="0 0 420 420" width="360" height="360" fill="none" aria-hidden>
-      <defs>
-        <pattern
-          id="pf-dots"
-          width="8.5"
-          height="8.5"
-          patternUnits="userSpaceOnUse"
-        >
-          <circle cx="1.4" cy="1.4" r="1.15" fill="#63696B" fillOpacity="0.3" />
-        </pattern>
-        <clipPath id="pf-globe">
-          <circle cx="210" cy="210" r="132" />
-        </clipPath>
-      </defs>
-
-      {/* Dotted sphere. */}
-      <g clipPath="url(#pf-globe)">
-        <rect x="78" y="78" width="264" height="264" fill="url(#pf-dots)" />
-      </g>
-      <circle cx="210" cy="210" r="132" stroke="#CDD2C9" strokeWidth="1" />
-
-      {/* Meridians. */}
-      <ellipse
-        cx="210"
-        cy="210"
-        rx="52"
-        ry="132"
-        stroke="#8FCAEB"
-        strokeWidth="1"
-        opacity="0.6"
-      />
-      <ellipse
-        cx="210"
-        cy="210"
-        rx="104"
-        ry="132"
-        stroke="#8FCAEB"
-        strokeWidth="1"
-        opacity="0.4"
-      />
-      {/* Parallels. */}
-      <ellipse
-        cx="210"
-        cy="210"
-        rx="132"
-        ry="40"
-        stroke="#8FCAEB"
-        strokeWidth="1"
-        opacity="0.5"
-      />
-      <ellipse
-        cx="210"
-        cy="170"
-        rx="118"
-        ry="30"
-        stroke="#8FCAEB"
-        strokeWidth="1"
-        opacity="0.35"
-      />
-      <ellipse
-        cx="210"
-        cy="250"
-        rx="118"
-        ry="30"
-        stroke="#8FCAEB"
-        strokeWidth="1"
-        opacity="0.35"
-      />
-
-      {/* Orbits + nodes. */}
-      <ellipse
-        cx="210"
-        cy="210"
-        rx="188"
-        ry="88"
-        stroke="#8FCAEB"
-        strokeWidth="1"
-        opacity="0.55"
-        transform="rotate(-24 210 210)"
-      />
-      <ellipse
-        cx="210"
-        cy="210"
-        rx="176"
-        ry="66"
-        stroke="#F9C777"
-        strokeWidth="1"
-        opacity="0.45"
-        transform="rotate(20 210 210)"
-      />
-      <circle cx="366" cy="150" r="4.5" fill="#449ED8" />
-      <circle cx="66" cy="256" r="4" fill="#F59F13" />
-    </svg>
-  );
-}
 
 /**
  * Presentation-only metadata for the OS view: the short label a card can carry
@@ -664,6 +564,7 @@ function ConnectionNetwork({
         return (
           <motion.g
             key={link.n}
+            initial={{ opacity: dimmed ? 0.2 : 1 }}
             animate={{ opacity: dimmed ? 0.2 : 1 }}
             transition={{ duration: 0.35, ease: EXPO }}
           >
@@ -721,6 +622,7 @@ function ConnectionNetwork({
               cx={link.x1}
               cy={link.y1}
               fill={hue.hex}
+              initial={{ r: active ? 3.4 : 1.8, fillOpacity: active ? 1 : 0.4 }}
               animate={{ r: active ? 3.4 : 1.8, fillOpacity: active ? 1 : 0.4 }}
               transition={{ duration: 0.35, ease: EXPO }}
             />
@@ -2204,32 +2106,30 @@ export default function CapabilitiesOS() {
               {column(GBS)}
 
               {/* The GBS column is four cards shorter than the technology one,
-                  which leaves a hole under it at lg. A colour logo dropped in
-                  that hole just reads as a stray logo, so the mark is drained to
-                  grey and embossed instead — a hairline, a line of type, and the
-                  mark sunk into the paper behind them. It fills the space as a
-                  stamp on the drawing rather than as a second brand impression.
-                  Only where the hole exists: below lg the columns stack and there
-                  is none. */}
+                  which leaves a hole under it at lg. The globe fills it, and
+                  earns the space rather than just occupying it: this section's
+                  claim is a single delivery chain run across four continents, so
+                  the planet is the one motif here that is actually load-bearing.
+                  It also gives the fan somewhere to travel to — the whole right
+                  side resolves downward into it instead of stopping at the last
+                  card.
 
-              <div
-                aria-hidden
-                className="pointer-events-none relative mt-12 hidden select-none flex-col items-end lg:flex"
-              >
-                <div className="pointer-events-none absolute left-1/2 top-1/2 mt-28 hidden -translate-x-1/2 -translate-y-1/2 opacity-50 lg:block">
-                  <GlobeMotif />
-                </div>
-                {/* <span className="h-px w-full bg-gradient-to-l from-line-strong to-transparent" />
+                  Bleeds past the column and is allowed to run under the section's
+                  right edge (the section clips), because a globe that fits neatly
+                  inside a column reads as an illustration in a box. Only where
+                  the hole exists: below lg the columns stack and there is none —
+                  which also matches the connection fan's own 1024px gate, so the
+                  two interactive layers appear together or not at all.
 
-                <Logo
-                  className="mt-6 h-auto w-[74%] max-w-[300px] text-ink opacity-[0.09] grayscale"
-                  onDark={false}
-                />
+                  The globe answers to hover now, so this is NOT aria-hidden or
+                  pointer-events-none any more. `w-[122%]` sits on the wrapper
+                  rather than on the svg: the globe positions its markers as
+                  percentages of the svg's box, so the relative parent has to be
+                  that same box or every marker lands in the wrong place. */}
 
-                <span className="mt-5 font-mono text-[9.5px] uppercase tracking-[0.22em] text-ink-400/70">
-                  Build · Automate · Operate
-                </span> */}
-              </div>
+              {/* <div className="relative mt-6 hidden w-[122%] max-w-none opacity-90 lg:block">
+                <Globe />
+              </div> */}
             </div>
           </div>
         </div>

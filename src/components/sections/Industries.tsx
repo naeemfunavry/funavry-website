@@ -1,16 +1,23 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { useCallback, useEffect, useRef } from "react";
+import { useReducedMotion } from "framer-motion";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import { KineticWords, Wipe, Rule } from "@/components/ui/Kinetic";
 import { INDUSTRIES, type Industry } from "@/lib/industries";
 import { cn } from "@/lib/utils";
 
-/** One row at rest. The rest sit behind the button. */
-const VISIBLE = 4;
+/* All ten ride the deck now — nothing hides behind a button. Rendered twice so
+   the track loops without a seam: advancing past the last tile scrolls on into
+   the copy, then resets to the matching real tile with no animation. */
+const N = INDUSTRIES.length;
+const SLIDES = [...INDUSTRIES, ...INDUSTRIES];
+
+/** How long a tile holds before the deck advances itself. Quicker than the case
+    study deck's 7s — these are glanceable tiles, not a page of prose. */
+const DWELL = 3800;
 
 /* Azure, the same datum colour `Frame` marks every other card with — the ticks
    are the site's language, not this card's. */
@@ -29,7 +36,7 @@ function Tile({ industry, index }: { industry: Industry; index: number }) {
           src={industry.image}
           alt=""
           loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover grayscale-[0.55] transition-all duration-700 ease-expo group-hover:scale-[1.06] group-hover:grayscale-0"
+          className="absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-expo group-hover:scale-[1.06] group-hover:grayscale-[0.55]"
         />
 
         {/* The scrim does two jobs: it holds the heading legible over whatever
@@ -104,11 +111,96 @@ function Tile({ industry, index }: { industry: Industry; index: number }) {
 }
 
 export default function Industries() {
-  const [expanded, setExpanded] = useState(false);
   const reduce = useReducedMotion();
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const settleRef = useRef<ReturnType<typeof setTimeout>>();
 
-  const shown = expanded ? INDUSTRIES : INDUSTRIES.slice(0, VISIBLE);
-  const rest = INDUSTRIES.length - VISIBLE;
+  /* The scroll step is one tile plus the gap — read off the laid-out DOM so it
+     stays right at every breakpoint, where the tile count per view changes. */
+  const stepOf = useCallback(() => {
+    const vp = viewportRef.current;
+    if (!vp) return 0;
+    const a = vp.children[0] as HTMLElement | undefined;
+    const b = vp.children[1] as HTMLElement | undefined;
+    if (a && b) return b.offsetLeft - a.offsetLeft;
+    return a?.offsetWidth ?? vp.clientWidth;
+  }, []);
+
+  const scrollTo = useCallback(
+    (i: number, smooth: boolean) => {
+      const vp = viewportRef.current;
+      if (!vp) return;
+      vp.scrollTo({
+        left: i * stepOf(),
+        behavior: smooth && !reduce ? "smooth" : "auto",
+      });
+    },
+    [reduce, stepOf],
+  );
+
+  const go = useCallback(
+    (d: -1 | 1) => {
+      const vp = viewportRef.current;
+      const step = stepOf();
+      if (!vp || !step) return;
+      const cur = Math.round(vp.scrollLeft / step);
+      const target = cur + d;
+      if (target < 0) {
+        /* Going back off the front: hop into the copy (visually identical),
+           then step left from there so the motion reads as a seamless wrap. */
+        scrollTo(cur + N, false);
+        requestAnimationFrame(() => scrollTo(cur + N - 1, true));
+        return;
+      }
+      /* Forward past the last real tile lands in the copy; the settle handler
+         below normalises it back to the real tile once the scroll stops. */
+      scrollTo(target, true);
+    },
+    [stepOf, scrollTo],
+  );
+
+  /* Native scroll-snap track: touch and trackpad drag it directly. Once a
+     scroll comes to rest inside the copy we jump it back to the real set. */
+  const onScroll = useCallback(() => {
+    clearTimeout(settleRef.current);
+    settleRef.current = setTimeout(() => {
+      const vp = viewportRef.current;
+      const step = stepOf();
+      if (!vp || !step) return;
+      const cur = Math.round(vp.scrollLeft / step);
+      if (cur >= N) scrollTo(cur - N, false);
+    }, 160);
+  }, [stepOf, scrollTo]);
+
+  /* Autoplay, pausable. Held in a ref so hovering or touching doesn't restart
+     the timer — the deck pauses where it stands and resumes from there. */
+  const paused = useRef(false);
+
+  useEffect(() => {
+    if (reduce) return;
+    const id = setInterval(() => {
+      if (paused.current || document.hidden) return;
+      go(1);
+    }, DWELL);
+    return () => clearInterval(id);
+  }, [reduce, go]);
+
+  /* Touch: pause while a finger is down, resume shortly after it lifts. */
+  const resumeTimer = useRef<ReturnType<typeof setTimeout>>();
+  const holdTouch = () => {
+    clearTimeout(resumeTimer.current);
+    paused.current = true;
+  };
+  const releaseTouch = () => {
+    resumeTimer.current = setTimeout(() => (paused.current = false), 900);
+  };
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(settleRef.current);
+      clearTimeout(resumeTimer.current);
+    };
+  }, []);
 
   return (
     <section
@@ -133,49 +225,65 @@ export default function Industries() {
             </h2>
           </div>
 
-          <Wipe delay={0.2}>
-            <p className="text-[16px] leading-[1.75] text-ink-500">
-              Ten industries, five hundred delivered projects. We speak the
-              regulatory language, the data models, and the operational reality
-              of each.
-            </p>
-          </Wipe>
+          <div className="flex flex-col gap-8">
+            <Wipe delay={0.2}>
+              <p className="text-[16px] leading-[1.75] text-ink-500">
+                Ten industries, five hundred delivered projects. We speak the
+                regulatory language, the data models, and the operational
+                reality of each.
+              </p>
+            </Wipe>
+
+            {/* Deck controls, parked at the top right of the section. */}
+            <div className="flex flex-none items-center lg:justify-end">
+              <button
+                type="button"
+                onClick={() => go(-1)}
+                aria-label="Previous industry"
+                aria-controls="industries-track"
+                className="flex h-12 w-12 items-center justify-center border border-line-strong text-ink-500 transition-colors duration-300 hover:bg-ink hover:text-paper"
+              >
+                <ArrowLeft size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={() => go(1)}
+                aria-label="Next industry"
+                aria-controls="industries-track"
+                className="-ml-px flex h-12 w-12 items-center justify-center border border-line-strong text-ink-500 transition-colors duration-300 hover:bg-ink hover:text-paper"
+              >
+                <ArrowRight size={16} />
+              </button>
+            </div>
+          </div>
         </div>
 
         <Rule className="mt-14 lg:mt-16" />
 
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:mt-12 lg:grid-cols-4">
-          <AnimatePresence initial={false}>
-            {shown.map((industry, i) => (
-              <motion.div
-                key={industry.name}
-                layout={!reduce}
-                initial={i < VISIBLE ? false : { opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
-                transition={{
-                  duration: 0.5,
-                  ease: [0.19, 1, 0.22, 1],
-                  // The revealed rows arrive in sequence, not all at once.
-                  delay: expanded ? ((i - VISIBLE) % 4) * 0.06 : 0,
-                }}
-              >
-                <Tile industry={industry} index={i} />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
-
-        <div className="mt-10 flex justify-center">
-          <Button
-            variant="primary"
-            size="lg"
-            aria-expanded={expanded}
-            onClick={() => setExpanded((v) => !v)}
-            arrow
-          >
-            {expanded ? "Show fewer industries" : `Explore more industries`}
-          </Button>
+        {/* Hovering or touching the deck takes the wheel from the autoplay. */}
+        <div
+          id="industries-track"
+          ref={viewportRef}
+          onScroll={onScroll}
+          onMouseEnter={() => (paused.current = true)}
+          onMouseLeave={() => (paused.current = false)}
+          onFocusCapture={() => (paused.current = true)}
+          onBlurCapture={() => (paused.current = false)}
+          onTouchStart={holdTouch}
+          onTouchEnd={releaseTouch}
+          className="scrollbar-hide mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth lg:mt-12"
+        >
+          {SLIDES.map((industry, i) => (
+            <div
+              key={`${industry.name}-${i}`}
+              /* Four up at lg, two at sm, one-and-a-peek on mobile — the peek
+                 is what tells a thumb the row keeps going. Widths subtract the
+                 gaps so the tiles land on the same rhythm the grid had. */
+              className="w-[78%] shrink-0 snap-start sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-3rem)/4)]"
+            >
+              <Tile industry={industry} index={i} />
+            </div>
+          ))}
         </div>
       </Container>
     </section>

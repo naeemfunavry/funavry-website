@@ -2,14 +2,52 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
-import Image from "next/image";
-import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpRight,
+  BarChart3,
+  ClipboardCheck,
+  ClipboardList,
+  Film,
+  GitBranch,
+  ScanSearch,
+  Scale,
+  Sparkles,
+  Store,
+  TriangleAlert,
+  Users,
+  Video,
+  type LucideIcon,
+} from "lucide-react";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
-import Frame from "@/components/ui/Frame";
+import ProductWindow from "@/components/ui/ProductWindow";
+import Laptop from "@/components/ui/Laptop";
 import { KineticWords } from "@/components/ui/Kinetic";
-import { CASE_PHASE, FEATURED_CASE_STUDIES } from "@/lib/case-studies";
+import {
+  CASE_PHASE,
+  FEATURED_CASE_STUDIES,
+  type CaseStudy,
+} from "@/lib/case-studies";
 import { cn } from "@/lib/utils";
+
+/** Resolves `callouts[].icon` from the data. A callout names a capability, so
+    the icon only ever has to say what kind of thing that capability is. */
+const CALLOUT_ICONS: Record<string, LucideIcon> = {
+  BarChart3,
+  ClipboardCheck,
+  ClipboardList,
+  Film,
+  GitBranch,
+  Scale,
+  ScanSearch,
+  Sparkles,
+  Store,
+  TriangleAlert,
+  Users,
+  Video,
+};
 
 /* The four the home page carries. The rest live on /case-studies. */
 const PROJECTS = FEATURED_CASE_STUDIES;
@@ -22,6 +60,20 @@ const SLIDES = [...PROJECTS, ...PROJECTS];
 
 /** How long a card holds before the deck advances itself. */
 const DWELL = 7000;
+
+/** The body a capture is presented in. `window` is the bare thing, floating;
+    `laptop` mounts the same window in a machine. Nothing below this line knows
+    which — the screen is handed in, so the callouts anchor identically either
+    way. */
+function Body({
+  frame,
+  children,
+}: {
+  frame: CaseStudy["frame"];
+  children: React.ReactNode;
+}) {
+  return frame === "laptop" ? <Laptop>{children}</Laptop> : <>{children}</>;
+}
 
 export default function Work() {
   const reduce = useReducedMotion();
@@ -139,9 +191,10 @@ export default function Work() {
       id="work"
       className="relative overflow-hidden border-t border-line bg-ink text-paper"
     >
-      {/* The opening of the dark 'results' chapter — case studies here, the
-          proof counters directly below. White cards pop on ink; a fine white
-          grid and two soft washes give the ground depth. */}
+      {/* Ink ground, white cards — the section opens the 'results' chapter, and
+          the cards pop off the dark by contrast alone. The washes run at ink
+          strength here; on paper they'd read as stains, which is why they sit
+          this much lower in the light sections. */}
       <div
         aria-hidden
         className="absolute inset-0 opacity-70 grid-paper-dark"
@@ -191,7 +244,7 @@ export default function Work() {
           </div>
         </div>
 
-        <div aria-hidden className="mt-14 h-px w-full bg-paper/15" />
+        <div aria-hidden className="mt-14 h-px w-full bg-paper/10" />
 
         {/* Showcase — a scroll-snap deck of cards. Hovering or touching it takes
             the wheel from the autoplay. */}
@@ -214,62 +267,120 @@ export default function Work() {
                 key={`${project.slug}-${i}`}
                 className="w-[86%] shrink-0 snap-start sm:w-[70%] lg:w-[64%]"
               >
-                <Frame
-                  as="article"
-                  tint={phase.tint}
+                <article
                   className={cn(
-                    "h-full transition-opacity duration-500",
+                    // Not a Frame any more. Frame is a drafting frame — square
+                    // corners and four corner ticks that mark a datum — and ticks
+                    // on a rounded, shadowed card read as chrome that lost its
+                    // corners. It still answers to `group/frame`, because that's
+                    // the hook ProductWindow hangs its hover on.
+                    "group/frame relative h-full overflow-hidden rounded-[20px] bg-paper-white",
+                    "shadow-[0_1px_2px_rgba(46,52,54,0.04),0_18px_44px_-24px_rgba(46,52,54,0.20)]",
+                    "transition-[opacity,box-shadow] duration-500",
+                    "hover:shadow-[0_2px_4px_rgba(46,52,54,0.05),0_30px_70px_-28px_rgba(46,52,54,0.28)]",
                     isActive ? "opacity-100" : "opacity-50",
                   )}
-                  innerClassName="grid h-full gap-8 p-7 sm:p-9 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-10 lg:p-10"
                 >
-                  {/* Left — the story. */}
-                  <div className="flex flex-col">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="border border-amber/40 bg-amber-50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-amber-ink">
-                        {project.sector}
-                      </span>
-                      {/* <span className="flex items-center gap-1.5 border border-line px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-500">
+                  <div className="grid h-full gap-8  lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-10 ">
+                    {/* Left — the story. */}
+                    <div className="flex flex-col pr-0 p-7 sm:p-9 lg:p-10 lg:pr-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="border border-amber/40 bg-amber-50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-amber-ink">
+                          {project.sector}
+                        </span>
+                        {/* <span className="flex items-center gap-1.5 border border-line px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-500">
                         <span
                           aria-hidden
                           className={cn("h-1 w-1 rounded-full", phase.dot)}
                         />
                         {project.phase}
                       </span> */}
+                      </div>
+
+                      <h3 className="mt-7 text-h3 text-ink">{project.title}</h3>
+
+                      <p className="mt-5 text-[15px] leading-[1.75] text-ink-500">
+                        {project.summary}
+                      </p>
+
+                      <a
+                        href="/case-studies"
+                        className="group/view mt-auto inline-flex items-center gap-2 pt-8 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink transition-colors duration-300 hover:text-azure-ink"
+                      >
+                        View
+                        <ArrowUpRight
+                          size={14}
+                          className="transition-transform duration-400 ease-expo group-hover/view:-translate-y-0.5 group-hover/view:translate-x-0.5"
+                        />
+                      </a>
                     </div>
 
-                    <h3 className="mt-7 text-h3 text-ink">{project.title}</h3>
-
-                    <p className="mt-5 text-[15px] leading-[1.75] text-ink-500">
-                      {project.summary}
-                    </p>
-
-                    <a
-                      href="/case-studies"
-                      className="group/view mt-auto inline-flex items-center gap-2 pt-8 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink transition-colors duration-300 hover:text-azure-ink"
-                    >
-                      View
-                      <ArrowUpRight
-                        size={14}
-                        className="transition-transform duration-400 ease-expo group-hover/view:-translate-y-0.5 group-hover/view:translate-x-0.5"
+                    {/* Right — the product, turned on a lit desk. The divider rule
+                      is gone: the card is one continuous white surface now, and
+                      a hairline down the middle of it reads as a seam. */}
+                    <div className="relative pr-7 sm:pr-9 lg:pr-10">
+                      <div
+                        aria-hidden
+                        className="absolute inset-0 opacity-70 transition-opacity duration-700 ease-expo group-hover/frame:opacity-100"
+                        style={{
+                          background: `radial-gradient(120% 85% at 50% -12%, rgba(${phase.tint},0.10), transparent 62%)`,
+                        }}
                       />
-                    </a>
-                  </div>
 
-                  {/* Right — the product. Bleeds to the card's outer edges. */}
-                  <div className="relative overflow-hidden border border-line bg-paper-deep -mx-7 -mb-7 mt-2 sm:-mx-9 sm:-mb-9 lg:-my-10 lg:-mr-10 lg:ml-0 lg:mt-0 lg:border-l lg:border-r-0 lg:border-t-0 lg:border-b-0">
-                    <div className="relative h-full min-h-[200px] w-full">
-                      <Image
-                        src={project.image}
-                        alt={`${project.title} — product interface`}
-                        fill
-                        placeholder="blur"
-                        sizes="(max-width: 1024px) 86vw, 36vw"
-                        className="object-cover object-top"
-                      />
+                      <div
+                        className="relative flex h-full min-h-[200px] items-center"
+                        style={{ perspective: "1600px" }}
+                      >
+                        {/* The turn. 16° with the left edge forward, so the near
+                          corner faces the story it belongs to.
+
+                          Inset to 84% and pushed right at lg, and that number is
+                          the callouts' doing: each chip hangs to the LEFT of its
+                          anchor, and at full width they'd hang straight off the
+                          desk and land on the summary. 84% buys back roughly the
+                          chip's own width, so the annotations live in the desk
+                          and the gap instead of on the prose. */}
+                        <div
+                          className="relative w-full lg:ml-auto lg:w-[100%]"
+                          style={{
+                            transform: "rotateY(-16deg) rotateX(0deg)",
+                            transformStyle: "preserve-3d",
+                          }}
+                        >
+                          <Body frame={project.frame}>
+                            {/* This box is exactly the window, which is what the
+                                callouts below measure against. Wrapping it in a
+                                laptop adds a bezel, a chin and a whole deck — so
+                                the anchors have to be nested in HERE, not out at
+                                the turn, or every `at.y` would be read against a
+                                box that includes the machine around it. */}
+                            <div className="relative">
+                              <ProductWindow
+                                study={project}
+                                sizes="(max-width: 1024px) 86vw, 32vw"
+                              />
+
+                              {/* Callouts. They live INSIDE the turned space, which is
+                            the whole trick: an anchor placed out here in flat
+                            coordinates would miss by ~3.5% of the window's width
+                            once the perspective divide is applied, which at this
+                            size is a whole table row. In here it is glued to the
+                            pixel it names, at any viewport, for free.
+
+                            `top` walks past the 24px chrome first, so `at.y`
+                            stays a fraction of the capture itself rather than of
+                            the window — the anchors are read off the screenshot,
+                            so they should mean the screenshot.
+
+                            Below lg the card stacks and the desk goes full-width;
+                            there is nowhere for a chip to hang, so they don't. */}
+                            </div>
+                          </Body>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </Frame>
+                </article>
               </div>
             );
           })}

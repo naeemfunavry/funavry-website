@@ -27,10 +27,49 @@ export type CaseStudy = {
   sector: string;
   /** Which phase of Build → Automate → Operate the work mostly sat in. */
   phase: "Build" | "Automate" | "Operate";
+  /**
+   * What kind of window the capture belongs in. Every one of these is a desktop
+   * web interface — there are no mobile or tablet captures — so the only honest
+   * distinction left is who the thing was built for: `site` is public and gets
+   * browser chrome, `app` is signed-in and gets an application toolbar. Anything
+   * finer than that would be a device the screenshot never came from.
+   */
+  surface: "site" | "app";
+  /**
+   * What the capture is presented *in* on the home deck. Purely rhythm: a deck
+   * where every card wears the same body reads as a template, so the frames
+   * alternate.
+   *
+   * This is allowed to be an aesthetic choice in a way `surface` is not, and the
+   * line between them is worth keeping straight. A laptop asserts nothing — all
+   * six of these are desktop web apps, and a laptop is exactly where you'd use
+   * one. A phone or tablet frame would assert a product that doesn't exist, and
+   * there are no portrait captures anywhere in this repo to put in one. So:
+   * laptop and window, and nothing that claims a device we never shipped.
+   */
+  frame: "laptop" | "window";
   summary: string;
   /** What the platform does. Never a metric — this work is not counted. */
   capabilities: string[];
   image: StaticImageData;
+  /**
+   * Leader-line callouts over the capture, on the home deck only.
+   *
+   * Two rules, and both are load-bearing:
+   *
+   * `label` must be one of this study's own `capabilities`, verbatim. A callout
+   * is a claim about a client's system printed on a picture of it, so it does
+   * not get its own copy — "AI-Powered Claims Processing" over a claims system
+   * with no AI in it is not a flourish, it's a lie about delivered work.
+   *
+   * `at` is where that capability is actually *visible* in the capture, as a
+   * fraction of the capture itself — so the line lands on the thing it names:
+   * the sidebar rail for role-based queues, the literal Surveyor Assignment nav
+   * item for surveyor assignment. If a capability isn't on screen it doesn't get
+   * a callout. Keep `at.x` under ~0.3: the chip hangs to the *left* of its
+   * anchor, and past that it stops clearing the window and sits on the capture.
+   */
+  callouts?: { label: string; icon: string; at: { x: number; y: number } }[];
   /** The four the home page carries. The rest live on /case-studies. */
   featured?: boolean;
 };
@@ -41,6 +80,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: "QFS — Quality & Food Safety Inspections",
     sector: "Food & Agriculture",
     phase: "Operate",
+    surface: "app",
+    frame: "window",
     summary:
       "Paper inspection forms replaced by a live quality system: deviations raised on the plant floor, corrective actions tracked to closure, and the whole programme visible to QA management as it happens.",
     capabilities: [
@@ -48,6 +89,26 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Deviation tracking",
       "Corrective actions",
       "Live QA dashboards",
+    ],
+    callouts: [
+      // The "Form History" rail item.
+      {
+        label: "Digital inspection forms",
+        icon: "ClipboardList",
+        at: { x: 0.07, y: 0.285 },
+      },
+      // The "573 Deviations (Today)" counter.
+      {
+        label: "Deviation tracking",
+        icon: "TriangleAlert",
+        at: { x: 0.27, y: 0.21 },
+      },
+      // The "Overall Activity Stats" chart.
+      {
+        label: "Live QA dashboards",
+        icon: "BarChart3",
+        at: { x: 0.2, y: 0.8 },
+      },
     ],
     image: qfs,
     featured: true,
@@ -57,6 +118,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: "Global Claims Management System",
     sector: "Supply Chain",
     phase: "Build",
+    surface: "app",
+    frame: "laptop",
     summary:
       "One claim, one workflow, every market. Sales, port QA, procurement, surveyors, and finance each pick the claim up in their own queue and hand it on — submission through to settlement, with the trail intact.",
     capabilities: [
@@ -64,6 +127,19 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Claim lifecycle",
       "Surveyor assignment",
       "Reporting & export",
+    ],
+    callouts: [
+      // The sidebar rail itself — Admin, DM Sales, Port QA, Procurement, Finance.
+      { label: "Role-based queues", icon: "Users", at: { x: 0.12, y: 0.35 } },
+      // The counter row IS the lifecycle: Submitted, In Progress, Rejected,
+      // Completed, Draft. The line lands on its first stage.
+      { label: "Claim lifecycle", icon: "GitBranch", at: { x: 0.25, y: 0.16 } },
+      // The literal "Surveyor Assignment" nav item.
+      {
+        label: "Surveyor assignment",
+        icon: "ClipboardCheck",
+        at: { x: 0.12, y: 0.85 },
+      },
     ],
     image: globalClaims,
     featured: true,
@@ -73,6 +149,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: "Contxtual — Shoppable Video Commerce",
     sector: "Media",
     phase: "Automate",
+    surface: "app",
+    frame: "window",
     summary:
       "Streaming content turned into a storefront. Scenes are indexed frame by frame, the apparel in them matched to buyable products through AI-assisted visual search, and the placements sold as ad inventory.",
     capabilities: [
@@ -80,6 +158,22 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Visual product matching",
       "AI-assisted annotation",
       "Ad inventory",
+    ],
+    callouts: [
+      // The "Annotator" rail item — the one place this set's AI claim is real.
+      {
+        label: "AI-assisted annotation",
+        icon: "Sparkles",
+        at: { x: 0.07, y: 0.415 },
+      },
+      // The indexed-episode card: season, episode, "91% Indexed".
+      { label: "Scene indexing", icon: "Film", at: { x: 0.28, y: 0.245 } },
+      // The scene frame, with its product markers dotted onto the apparel.
+      {
+        label: "Visual product matching",
+        icon: "ScanSearch",
+        at: { x: 0.3, y: 0.66 },
+      },
     ],
     image: contxtual,
     featured: true,
@@ -89,6 +183,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: "SkillYah — Skills Marketplace & Live Classrooms",
     sector: "Education",
     phase: "Build",
+    surface: "app",
+    frame: "laptop",
     summary:
       "A marketplace pairing people who have a skill with people who want it — live video classes and a shared whiteboard in the browser, and the admin, payments, and dispute tooling that keeps the market running.",
     capabilities: [
@@ -96,6 +192,18 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Collaborative whiteboard",
       "Marketplace & bookings",
       "Payments & disputes",
+    ],
+    callouts: [
+      // The "Skillers" rail item — the marketplace's own directory.
+      {
+        label: "Marketplace & bookings",
+        icon: "Store",
+        at: { x: 0.11, y: 0.4 },
+      },
+      // The "Lectures" rail item.
+      { label: "Live classrooms", icon: "Video", at: { x: 0.11, y: 0.645 } },
+      // "Transactions" and "Disputes", which sit together at the rail's foot.
+      { label: "Payments & disputes", icon: "Scale", at: { x: 0.11, y: 0.89 } },
     ],
     image: skillyah,
     featured: true,
@@ -105,6 +213,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: "CNBC Arabia News Portal",
     sector: "Media",
     phase: "Build",
+    surface: "site",
+    frame: "window",
     summary:
       "A right-to-left Arabic business news portal, where live market data — indices, movers, and tickers — is published alongside the newsroom's editorial feed.",
     capabilities: [
@@ -120,6 +230,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: "Smart Municipality — Citizen Services Portal",
     sector: "Public Sector",
     phase: "Build",
+    surface: "site",
+    frame: "window",
     summary:
       "Municipal services in one place: residents apply, file an instant report, and follow an application through to completion, while the municipality works the same cases from a single desk. Bilingual throughout.",
     capabilities: [

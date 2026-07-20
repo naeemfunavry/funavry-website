@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import Frame from "@/components/ui/Frame";
+import ProductWindow from "@/components/ui/ProductWindow";
 import { CASE_PHASE, type CaseStudy } from "@/lib/case-studies";
 import { cn } from "@/lib/utils";
 
@@ -17,34 +17,36 @@ export default function CaseStudyCard({ study }: { study: CaseStudy }) {
       className="h-full"
       innerClassName="flex h-full flex-col p-3 lg:p-4"
     >
-      {/* Every capture is cropped to 16:10 upstream, so the frame is the
-          image's own shape and nothing is cut a second time here. */}
-      <div className="relative overflow-hidden border border-line bg-paper-deep">
-        <div className="relative aspect-[16/10]">
-          <Image
-            src={study.image}
-            alt={`${study.title} — product interface`}
-            fill
-            placeholder="blur"
+      {/* ---- The product, as a window on a lit desk. ----
+          The window sizes itself from its width (chrome + width/1.6), so this
+          box has no aspect and no height: pin either and the capture starts
+          getting cropped a second time at whatever width the grid happens to
+          hand it. */}
+      <div className="relative overflow-hidden border border-line bg-paper-white">
+        {/* The desk: white, with one soft wash in the phase's own colour. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 opacity-70 transition-opacity duration-700 ease-expo group-hover/frame:opacity-100"
+          style={{
+            background: `radial-gradient(120% 85% at 50% -12%, rgba(${phase.tint},0.10), transparent 62%)`,
+          }}
+        />
+
+        <div className="relative p-4 lg:p-5">
+          <ProductWindow
+            study={study}
             sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 640px"
-            className="object-cover object-top transition-transform duration-[900ms] ease-expo group-hover/frame:scale-[1.025]"
           />
         </div>
-
-        {/* Phase seam across the top of the screen, drawn on hover. */}
-        <span
-          aria-hidden
-          className={cn(
-            "absolute inset-x-0 top-0 h-[2px] origin-left scale-x-0 transition-transform duration-700 ease-expo group-hover/frame:scale-x-100",
-            phase.dot,
-          )}
-        />
       </div>
 
       <div className="flex flex-1 flex-col p-4 pt-6 lg:p-5 lg:pt-7">
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-2">
-            <span aria-hidden className={cn("h-1 w-1 rounded-full", phase.dot)} />
+            <span
+              aria-hidden
+              className={cn("h-1 w-1 rounded-full", phase.dot)}
+            />
             <span
               className={cn(
                 "font-mono text-[9.5px] uppercase tracking-[0.16em]",
