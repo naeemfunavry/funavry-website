@@ -2,6 +2,84 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hero entrance — CSS, not JS. The hero's above-the-fold copy is the LCP
+   candidate (measured: the intro <p>), and a Framer Motion entrance can't
+   start until React hydrates. On a throttled mobile CPU that held LCP at
+   ~3.8s even though the text ships in the SSR'd HTML. These animations run
+   from first paint instead, so LCP tracks FCP. Timings are kept short for the
+   same reason: the reveal has to finish inside the LCP budget. Reduced motion
+   drops them to the landed state (below).
+
+   `.hero-rise` — the headline lines, each rising inside an `overflow-hidden`
+   slot (transform only; opacity would re-gate LCP). `.hero-fade` — the copy
+   around it, a short fade-up. `.hero-spin` — the ambient background rings,
+   moved off Framer Motion so the hero ships no JS-driven animation at all. */
+.hero-rise {
+  animation: hero-rise 0.75s cubic-bezier(0.19, 1, 0.22, 1) both;
+}
+
+@keyframes hero-rise {
+  from {
+    transform: translateY(108%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.hero-fade {
+  animation: hero-fade 0.6s cubic-bezier(0.19, 1, 0.22, 1) both;
+}
+
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-spin {
+  animation: hero-spin linear infinite;
+}
+
+@keyframes hero-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Landed and still — no rise, no fade, no spin, no delay flash. */
+  .hero-rise,
+  .hero-fade,
+  .hero-spin {
+    animation: none;
+  }
+}
+
+/* Drifting motes in the Case Studies field — transform/opacity only, so they
+   stay on the compositor. Per-mote duration and delay are set inline; reduced
+   motion drops them entirely at the component (they aren't rendered). */
+.ws-mote {
+  animation: ws-mote 14s ease-in-out infinite;
+}
+
+@keyframes ws-mote {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.22;
+  }
+  50% {
+    transform: translateY(-14px);
+    opacity: 0.5;
+  }
+}
+
 @layer base {
   html {
     scroll-behavior: auto;

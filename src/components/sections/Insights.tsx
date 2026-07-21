@@ -119,7 +119,7 @@ function PostCard({ post }: { post: Post }) {
 export default function Insights() {
   return (
     <section id="insights" className="relative overflow-hidden border-t border-line bg-paper-deep">
-      <Container wide className="relative z-10 py-24 lg:py-32">
+      <Container wide className="relative z-10 py-16 sm:py-24 lg:py-32">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <div className="flex items-center gap-3">

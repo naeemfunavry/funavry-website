@@ -87,7 +87,7 @@ export default function Testimonials() {
     >
       <div aria-hidden className="absolute inset-0 grid-paper opacity-70" />
 
-      <Container wide className="relative z-10 py-24 lg:py-32">
+      <Container wide className="relative z-10 py-16 sm:py-24 lg:py-32">
         {/* Heading — unchanged. */}
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,440px)] lg:items-end lg:gap-20">
           <div>
@@ -138,7 +138,7 @@ export default function Testimonials() {
                     onClick={() => setI(idx)}
                     transition={{ duration: 0.5, ease: EXPO }}
                     className={cn(
-                      "relative -ml-8 flex flex-none items-center justify-center overflow-hidden rounded-full bg-paper-white ring-1 ring-line transition-[filter,opacity] duration-500 first:ml-0",
+                      "relative -ml-4 flex flex-none items-center justify-center overflow-hidden rounded-full bg-paper-white ring-1 ring-line transition-[filter,opacity] duration-500 first:ml-0",
                       isActive
                         ? "z-30 h-28 w-28 opacity-100 shadow-[0_16px_40px_-16px_rgba(20,30,50,0.35)] lg:h-40 lg:w-40"
                         : "z-10 h-20 w-20 opacity-60 grayscale hover:opacity-90",

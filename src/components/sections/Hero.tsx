@@ -1,6 +1,5 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import MagneticButton from "@/components/ui/MagneticButton";
@@ -45,25 +44,6 @@ const VERBS = [
 ];
 
 export default function Hero() {
-  const reduce = useReducedMotion();
-
-  const rise = (delay: number) =>
-    reduce
-      ? {
-          initial: { opacity: 0 },
-          animate: { opacity: 1 },
-          transition: { duration: 0.3 },
-        }
-      : {
-          initial: { opacity: 0, y: 20 },
-          animate: { opacity: 1, y: 0 },
-          transition: {
-            duration: 0.9,
-            ease: [0.19, 1, 0.22, 1] as const,
-            delay,
-          },
-        };
-
   const HEADLINE = ["Building the", "Intelligent Enterprise"];
 
   return (
@@ -106,10 +86,10 @@ export default function Hero() {
           style={{ transform: "rotateX(64deg)" }}
         >
           {RINGS.map((r) => (
-            <motion.div
+            <div
               key={r.size}
               className={cn(
-                "absolute left-1/2 top-1/2 rounded-full border",
+                "hero-spin absolute left-1/2 top-1/2 rounded-full border",
                 r.ring,
               )}
               style={{
@@ -117,9 +97,8 @@ export default function Hero() {
                 height: r.size,
                 marginLeft: -r.size / 2,
                 marginTop: -r.size / 2,
+                animationDuration: `${r.dur}s`,
               }}
-              animate={reduce ? undefined : { rotate: 360 }}
-              transition={{ duration: r.dur, repeat: Infinity, ease: "linear" }}
             >
               {r.dot && (
                 <span
@@ -129,7 +108,7 @@ export default function Hero() {
                   )}
                 />
               )}
-            </motion.div>
+            </div>
           ))}
           {/* The core. */}
           <span className="absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-azure shadow-[0_0_32px_10px_rgba(68,158,216,0.6)]" />
@@ -142,9 +121,9 @@ export default function Hero() {
         <div className="max-w-[860px]">
           <div>
             {/* The single hairline above the headline. */}
-            <motion.div
-              {...rise(0.25)}
-              className="flex items-center gap-4 font-mono text-[10.5px] uppercase tracking-[0.24em] text-paper/60 lg:text-[11px]"
+            <div
+              className="hero-fade flex items-center gap-4 font-mono text-[10.5px] uppercase tracking-[0.24em] text-paper/60 lg:text-[11px]"
+              style={{ animationDelay: "0.05s" }}
             >
               <span className="relative flex h-1.5 w-1.5 flex-none">
                 <span className="absolute inline-flex h-full w-full animate-ping-soft rounded-full bg-azure" />
@@ -155,7 +134,7 @@ export default function Hero() {
                 aria-hidden
                 className="hidden h-px flex-1 bg-paper/15 sm:block"
               />
-            </motion.div>
+            </div>
 
             {/* The headline. Each line is its own clipping slot, so no width cap
             here — a `ch` cap would resolve against the parent's 16px font,
@@ -170,36 +149,40 @@ export default function Hero() {
                   aria-hidden
                   className="-mb-[0.3em] block overflow-hidden pb-[0.7em]"
                 >
-                  <motion.span
-                    className="block text-h1 text-paper"
-                    initial={reduce ? { opacity: 0 } : { y: "108%" }}
-                    animate={reduce ? { opacity: 1 } : { y: 0 }}
-                    transition={{
-                      duration: reduce ? 0.3 : 1.1,
-                      ease: [0.19, 1, 0.22, 1],
-                      delay: 0.4 + i * 0.14,
-                    }}
+                  {/* Entrance is pure CSS (`.hero-rise`), not Framer Motion: a
+                      JS animation can't start until React hydrates, and on a
+                      throttled mobile CPU that's ~3s in. The headline is the
+                      largest element on the page, so once it lands it sets LCP
+                      — CSS lets it start rising at first paint and the timing
+                      is kept short so it lands inside the LCP budget.
+                      `prefers-reduced-motion` lands it still, no delay flash. */}
+                  <span
+                    className="hero-rise block text-h1 text-paper"
+                    style={{ animationDelay: `${0.1 + i * 0.09}s` }}
                   >
                     {i === 1 ? (
                       <span className="text-sweep-dark">{line}</span>
                     ) : (
                       line
                     )}
-                  </motion.span>
+                  </span>
                 </span>
               ))}
             </h1>
 
-            <motion.p
-              {...rise(0.95)}
-              className="mt-8 max-w-[50ch] text-[19px] leading-[1.6] text-paper/65 lg:text-[22px]"
+            {/* Measured LCP element. Kept on a short, early CSS fade so it's
+                painted well inside the LCP budget — a Framer Motion fade held
+                it at opacity 0 until hydration, which put LCP at ~3.8s. */}
+            <p
+              className="hero-fade mt-8 max-w-[50ch] text-[19px] leading-[1.6] text-paper/65 lg:text-[22px]"
+              style={{ animationDelay: "0.24s" }}
             >
               Where AI, engineering, and business transformation converge.
-            </motion.p>
+            </p>
 
-            <motion.div
-              {...rise(1.1)}
-              className="mt-10 flex flex-wrap items-center gap-3"
+            <div
+              className="hero-fade mt-10 flex flex-wrap items-center gap-3"
+              style={{ animationDelay: "0.34s" }}
             >
               {/* <MagneticButton href="#contact" variant="accent" arrow size="lg">
                 Tell Us Your Idea
@@ -208,9 +191,9 @@ export default function Hero() {
                 Tell Us Your Idea
               </Button>
               <Button variant="outline" size="lg" href="#work" arrow>
-                Exprore Our Case Studies
+                Explore Our Case Studies
               </Button>
-            </motion.div>
+            </div>
           </div>
 
           {/* The ecosystem visual is commented out; the ambient 3D orbit in the
@@ -232,9 +215,9 @@ export default function Hero() {
         </div>
 
         {/* The operating model, stated once, as a footing rule. */}
-        <motion.div
-          {...rise(1.3)}
-          className="mt-16 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-paper/15 pt-6 lg:mt-24"
+        <div
+          className="hero-fade mt-16 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-paper/15 pt-6 lg:mt-24"
+          style={{ animationDelay: "0.44s" }}
         >
           {VERBS.map((verb, i) => (
             <span key={verb.text} className="flex items-center gap-5">
@@ -252,7 +235,7 @@ export default function Hero() {
               wire the pulse runs down *is* the line between the verbs and the
               prompt. */}
           <ScrollCue href="#capabilities" />
-        </motion.div>
+        </div>
       </Container>
     </section>
   );

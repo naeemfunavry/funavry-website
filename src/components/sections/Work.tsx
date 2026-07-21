@@ -30,6 +30,7 @@ import {
   FEATURED_CASE_STUDIES,
   type CaseStudy,
 } from "@/lib/case-studies";
+import { useInView } from "@/lib/use-in-view";
 import { cn } from "@/lib/utils";
 
 /** Resolves `callouts[].icon` from the data. A callout names a capability, so
@@ -81,6 +82,7 @@ export default function Work() {
   const viewportRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef(0);
   const settleRef = useRef<ReturnType<typeof setTimeout>>();
+  const [sectionRef, inView] = useInView<HTMLElement>();
 
   /* The scroll step is one card plus the gap between cards — read off the
      laid-out DOM so it stays right at every breakpoint. */
@@ -154,15 +156,22 @@ export default function Work() {
   const paused = useRef(false);
 
   useEffect(() => {
-    if (reduce) return;
+    // No timer at all while the section is off screen — see `useInView`. This
+    // deck is the expensive one: every advance re-renders eight slides, each
+    // carrying a full-size product capture.
+    if (reduce || !inView) return;
     const id = setInterval(() => {
       if (paused.current || document.hidden) return;
       go(1);
     }, DWELL);
     return () => clearInterval(id);
-  }, [reduce, go]);
+  }, [reduce, inView, go]);
 
   useEffect(() => {
+    // Only while the deck is actually on screen. This is a window-level
+    // listener, so unguarded it spent the whole page driving a carousel the
+    // reader had long since scrolled past.
+    if (!inView) return;
     function onKey(e: KeyboardEvent) {
       const el = document.activeElement;
       if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement)
@@ -172,7 +181,7 @@ export default function Work() {
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [go]);
+  }, [inView, go]);
 
   /* Touch: pause while a finger is down, resume shortly after it lifts. */
   const resumeTimer = useRef<ReturnType<typeof setTimeout>>();
@@ -188,6 +197,7 @@ export default function Work() {
 
   return (
     <section
+      ref={sectionRef}
       id="work"
       className="relative overflow-hidden border-t border-line bg-ink text-paper"
     >
@@ -208,7 +218,7 @@ export default function Work() {
         className="absolute -bottom-[20%] right-[4%] h-[460px] w-[460px] rounded-full bg-amber/[0.08] blur-[140px]"
       />
 
-      <Container wide className="relative z-10 py-24 lg:py-32">
+      <Container wide className="relative z-10 py-16 sm:py-24 lg:py-32">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <div className="flex items-center gap-3">
@@ -224,23 +234,34 @@ export default function Work() {
             </h2>
           </div>
 
-          <div className="flex flex-none items-center">
-            <button
-              type="button"
-              onClick={() => go(-1)}
-              aria-label="Previous project"
-              className="flex h-12 w-12 items-center justify-center border border-paper/20 text-paper/60 transition-colors duration-300 hover:bg-paper hover:text-ink"
-            >
-              <ArrowLeft size={16} />
-            </button>
-            <button
-              type="button"
-              onClick={() => go(1)}
-              aria-label="Next project"
-              className="-ml-px flex h-12 w-12 items-center justify-center border border-paper/20 text-paper/60 transition-colors duration-300 hover:bg-paper hover:text-ink"
-            >
-              <ArrowRight size={16} />
-            </button>
+          {/* Deck controls and the way out of the section, together at the top
+              right. `flex-wrap` rather than a fixed row: at the narrow end of
+              tablet the button and the two arrows don't fit beside a heading
+              this size, and wrapping the button above them keeps both usable
+              instead of squeezing the label. */}
+          <div className="flex flex-none flex-wrap items-center gap-x-5 gap-y-4">
+            <Button href="/case-studies" variant="primary" size="md" arrow>
+              Explore more case studies
+            </Button>
+
+            <div className="flex items-center">
+              <button
+                type="button"
+                onClick={() => go(-1)}
+                aria-label="Previous project"
+                className="flex h-12 w-12 items-center justify-center border border-paper/20 text-paper/60 transition-colors duration-300 hover:bg-paper hover:text-ink"
+              >
+                <ArrowLeft size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={() => go(1)}
+                aria-label="Next project"
+                className="-ml-px flex h-12 w-12 items-center justify-center border border-paper/20 text-paper/60 transition-colors duration-300 hover:bg-paper hover:text-ink"
+              >
+                <ArrowRight size={16} />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -276,9 +297,13 @@ export default function Work() {
                     // the hook ProductWindow hangs its hover on.
                     "group/frame relative h-full overflow-hidden rounded-[20px] bg-paper-white",
                     "shadow-[0_1px_2px_rgba(46,52,54,0.04),0_18px_44px_-24px_rgba(46,52,54,0.20)]",
-                    "transition-[opacity,box-shadow] duration-500",
+                    "transition-[filter,box-shadow] duration-500",
                     "hover:shadow-[0_2px_4px_rgba(46,52,54,0.05),0_30px_70px_-28px_rgba(46,52,54,0.28)]",
-                    isActive ? "opacity-100" : "opacity-50",
+                    // Inactive slides are de-emphasised by desaturation, not by
+                    // `opacity`: a 50% opacity card blends its text into the page
+                    // and collapses contrast (axe flagged the sector badge at
+                    // 1.43:1). Grayscale keeps luminance contrast intact.
+                    isActive ? "grayscale-0" : "grayscale",
                   )}
                 >
                   <div className="grid h-full gap-8  lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-10 ">
@@ -395,20 +420,21 @@ export default function Work() {
               onClick={() => scrollTo(i, true)}
               aria-label={`Go to ${project.title.split("—")[0].trim()}`}
               aria-current={activeDot === i}
-              className={cn(
-                "h-1.5 rounded-full transition-all duration-500 ease-expo",
-                activeDot === i
-                  ? "w-7 bg-amber"
-                  : "w-1.5 bg-paper/25 hover:bg-paper/50",
-              )}
-            />
+              /* 24px hit area (WCAG 2.5.8 target size) wrapping the small visual
+                 bar — the dot itself stays 6px, the tappable button doesn't. */
+              className="group flex h-6 min-w-[24px] items-center justify-center"
+            >
+              <span
+                aria-hidden
+                className={cn(
+                  "block h-1.5 rounded-full transition-all duration-500 ease-expo",
+                  activeDot === i
+                    ? "w-7 bg-amber"
+                    : "w-1.5 bg-paper/25 group-hover:bg-paper/50",
+                )}
+              />
+            </button>
           ))}
-        </div>
-
-        <div className="mt-12 flex justify-center">
-          <Button href="/case-studies" variant="primary" size="md" arrow>
-            Explore more case studies
-          </Button>
         </div>
       </Container>
     </section>

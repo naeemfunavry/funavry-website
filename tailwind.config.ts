@@ -21,7 +21,11 @@ const config: Config = {
           900: "#21262A",
           700: "#2E3436",
           500: "#63696B",
-          400: "#868C8E",
+          /* Darkened from #868C8E to meet WCAG AA (4.5:1) for normal text on
+             the light paper backgrounds — the old value measured 3.1:1 and was
+             the single largest source of contrast failures. Still the lightest
+             step of the ink ramp, just now an accessible one. */
+          400: "#656B6D",
         },
         /* Logo azure — structure, the BUILD phase. */
         azure: {

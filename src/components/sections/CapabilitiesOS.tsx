@@ -2,22 +2,15 @@
 
 import {
   Fragment,
+  memo,
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
-import {
-  animate,
-  AnimatePresence,
-  motion,
-  useAnimationFrame,
-  useMotionValue,
-  useReducedMotion,
-  useTransform,
-  type MotionValue,
-} from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -25,6 +18,7 @@ import {
   BarChart3,
   Blocks,
   Bot,
+  Boxes,
   BrainCircuit,
   Building2,
   Calculator,
@@ -42,11 +36,14 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import Container from "@/components/ui/Container";
-import FMark from "@/components/ui/FMark";
-import Globe from "@/components/ui/Globe";
+// The globe that used to fill the hole under the GBS column. Its markup is
+// still below, commented out — the import stays commented with it, or the
+// whole 400-line component ships to every visitor for nothing.
+// import Globe from "@/components/ui/Globe";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
 import { lockScroll, unlockScroll } from "@/lib/scroll-lock";
 import { SERVICES, type Service } from "@/lib/services";
+import { useInView } from "@/lib/use-in-view";
 import { cn } from "@/lib/utils";
 
 const ICONS: Record<string, LucideIcon> = {
@@ -222,183 +219,153 @@ const GROUP_LABEL = {
 /* --------------------------------------------------------------------------
    The core's scene
 
-   Every coordinate below comes out of one camera, and that is the whole trick:
-   the scene is projected from 33.2° above the horizon with no yaw, so the
-   pyramid, the three orbits around it and the cube inside it are one object
-   rather than stacked 2D art. Because the camera never moves, the projection is
-   solved once and baked — there is no runtime maths, and no Three.js to ship
-   for four static shapes.
-
-   The square base is turned 45°, so a base *corner* faces us rather than an
-   edge. That is what makes the silhouette symmetric about x=100 and puts a
-   single vertical edge down the middle, and it's the whole reason the shape
-   reads as architecture instead of as a signpost.
-
-   Two numbers fix everything: sin 33.2° = 0.548 and cos 33.2° = 0.836. A
-   horizontal circle of radius r projects to an ellipse of `ry = r · 0.548`, and
-   a height h drops to `h · 0.836` on screen. Every ring, mote and vertex below
-   obeys those two, which is why they share a space.
-
-   All of it lives in the core's own 200×200 viewBox, which the connection fan
-   also measures against.
+   A plain frontal pyramid now, not a projected 3D object — the corner-on
+   camera, the glass and the orbiting rings are gone in favour of the simpler
+   thing the reference actually shows: a flat triangle, cut into three solid
+   trapezoids, seen straight on. Everything still lives in one 200×200
+   viewBox, which the connection fan still measures against.
    -------------------------------------------------------------------------- */
 
-/** The glass pyramid, corner-on. `N` is the near base corner at the bottom, so
-    the two faces meeting at the apex→N edge — the vertical centre line — are
-    the ones facing us. The far corner `F` projects onto that same centre line
-    higher up, and the two back faces and the base are seen *through* the glass,
-    which is what sells it as transparent. */
-const PYRAMID = {
-  // apex (100,48) · L (45,140.8) · N (100,170.9) · R (155,140.8) · F (100,110.7)
-  hull: "M 100 48 L 45 140.8 L 100 170.9 L 155 140.8 Z",
-  faceLeft: "M 100 48 L 100 170.9 L 45 140.8 Z",
-  faceRight: "M 100 48 L 155 140.8 L 100 170.9 Z",
-  faceBackLeft: "M 100 48 L 45 140.8 L 100 110.7 Z",
-  faceBackRight: "M 100 48 L 100 110.7 L 155 140.8 Z",
-  base: "M 45 140.8 L 100 170.9 L 155 140.8 L 100 110.7 Z",
-  /** The vertical centre edge, where the two front faces meet. */
-  edgeFront: "M 100 48 L 100 170.9",
-  /** The base's two hidden back edges, L→F→R. */
-  edgeBase: "M 45 140.8 L 100 110.7 L 155 140.8",
-  /** A reduced copy of the silhouette on the same base plane — scaled 0.7 about
-      the base centre (100, 140.8). Solid glass viewed corner-on throws a
-      smaller image of its own outline back at you off the inner faces, and this
-      is that. It is the cheapest thing in the whole scene that reads as
-      *thickness* rather than as a tinted outline, which is the difference
-      between a glass solid and a paper cut-out. */
-  innerHull: "M 100 75.8 L 61.5 140.8 L 100 161.9 L 138.5 140.8 Z",
-  innerEdge: "M 100 75.8 L 100 161.9",
-  /** The same hull, as percentages — a clip-path can't read a viewBox, and the
-      backdrop-filter pane that does the actual frosting is an HTML element. */
-  clip: "polygon(50% 24%, 22.5% 70.4%, 50% 85.45%, 77.5% 70.4%)",
-  clipRight: "polygon(50% 24%, 77.5% 70.4%, 50% 85.45%)",
-} as const;
+type Band = {
+  phase: Service["phase"];
+  icon: LucideIcon;
+  /** Front face, straight on, in the core's 200×200 viewBox. */
+  top: number;
+  bottom: number;
+  halfTop: number;
+  halfBottom: number;
+  /** How far this slab's top surface recedes behind its front edge. 0 for
+      the tip, which has no top face to show. */
+  depth: number;
+  /** Front face gradient, top stop then bottom stop. */
+  face: [string, string];
+  /** The top surface — always lighter than the face, because it points at
+      the light rather than away from it. */
+  crown: string;
+  caption: [string, string];
+  /** Where the icon/label/caption cluster sits, as a percentage of the core's
+      own box. Each is pushed low in its own slab, where the taper has opened
+      up enough to hold a full line of caption. */
+  label: { top: string; width: string };
+};
 
-/** The luminous cube suspended in the glass, sitting mid-body where the pyramid
-    is wide enough to clear it by ~10 units at the tightest corner. It takes the
-    same 45° turn as the base, so it presents a corner to us exactly as the
-    pyramid does — the two shapes agree about where the viewer is, and that
-    agreement is most of what makes the cube read as *inside* rather than as a
-    sticker on the front. The three faces here are the ones that survive
-    back-face culling: the two meeting at the near vertical edge, plus the top,
-    because the camera is above. Between them they tile the whole silhouette;
-    drop one and the cube falls open.
+/** The three delivery-chain slabs, tip to base: Operate is the small outcome
+    everyone sees first, Build is the wide foundation the other two stand on.
 
-    Side 33.1, so the horizontal half-diagonal is 23.4 and the vertical edge
-    drops 27.6. Centre projects to (100, 118.2). */
-const CUBE = {
-  //  F' (100,91.6) · R' (123.4,104.4) · N' (100,117.2) · L' (76.6,104.4)
-  top: "M 100 91.6 L 123.4 104.4 L 100 117.2 L 76.6 104.4 Z",
-  faceLeft: "M 76.6 104.4 L 100 117.2 L 100 144.8 L 76.6 132 Z",
-  faceRight: "M 100 117.2 L 123.4 104.4 L 123.4 132 L 100 144.8 Z",
-  /** The two front faces, as CSS matrices that lay a flat element onto them.
-      Each maps a unit box's x-axis onto the face's receding top edge and leaves
-      its y-axis vertical, which is what the projection does to anything painted
-      on that face — so the mark lands on the glass rather than floating in
-      front of it. Both determinants are positive: the F skews, never mirrors. */
-  markLeft: {
-    left: "38.3%",
-    top: "52.2%",
-    transform: "skewY(28.7deg) scaleX(0.877)",
-  },
-  markRight: {
-    left: "50%",
-    top: "58.6%",
-    transform: "skewY(-28.7deg) scaleX(0.877)",
-  },
-} as const;
-
-/**
- * The three orbits are the delivery chain, top down: Build, then Automate, then
- * Operate. Each service declares which phase it lives in, so hovering a card
- * lights the orbit it belongs to — they aren't decoration, they're the legend.
- *
- * Each is a real horizontal circle on the pyramid's axis, so `ry = rx · 0.548`
- * on every one of them, and the far half of each is its *upper* half — which is
- * why every orbit is drawn twice, once behind the glass and once in front of
- * it. They do not hug the body: they're orbits, not contour lines, so Build
- * rides high and wide of a pyramid that is barely 21 units across up there.
- *
- * `label` is where the name sits. Build reads flat above the apex; the other
- * two are set on their own orbit's near arc, so the type inherits the ring's
- * curve and the whole thing reads as one drawing. `at` is a fraction of that
- * arc's length, picked so each name lands where the tangent is around 20–25°
- * off horizontal — steep enough to look like it belongs to a ring in
- * perspective, shallow enough to stay comfortably readable.
- */
-const PHASE_RINGS = [
+    Colours are the reference's, not the brand ramp's. This graphic reads as a
+    single object — a bright tip on two dark masses — and dropping the brand's
+    amber into the middle of it broke that read completely: it made the middle
+    slab look like a different material from the two around it. The phase
+    colours still hold everywhere they're type rather than mass (`Hero.tsx`,
+    `Footer.tsx`, this section's own subtitle), which is where they actually
+    do their job. */
+const BANDS: Band[] = [
   {
-    phase: "Build",
-    hex: "#449ED8",
-    cy: 66,
-    rx: 54,
-    ry: 29.6,
-    spin: 26,
-    reverse: false,
-    label: { kind: "flat", x: 100, y: 28 },
+    phase: "Operate",
+    icon: Users,
+    top: 12,
+    bottom: 90,
+    halfTop: 0,
+    halfBottom: 47,
+    depth: 0,
+    face: ["#4FA3FF", "#1B76EF"],
+    crown: "#6FB6FF",
+    caption: [
+      "Managed Services · Workforce Solutions",
+      "GCC Enablement · Operational Excellence",
+    ],
+    label: { top: "25%", width: "42%" },
   },
   {
     phase: "Automate",
-    hex: "#F59F13",
-    cy: 112,
-    rx: 78,
-    ry: 42.7,
-    spin: 19,
-    reverse: true,
-    label: { kind: "arc", at: "18%" },
+    icon: BrainCircuit,
+    top: 97,
+    bottom: 145,
+    halfTop: 53,
+    halfBottom: 77,
+    depth: 8,
+    face: ["#2C5B87", "#13304C"],
+    crown: "#3C6E9C",
+    caption: [
+      "AI Agents · Intelligent Automation",
+      "Document Intelligence · Process Optimization",
+    ],
+    label: { top: "50%", width: "64%" },
   },
   {
-    /* Graphite rather than the brand's steel. Steel (#376079) is a dark
-       desaturated blue, and three rings on white read as two blues and an
-       amber — the eye files Build and Operate together, which is exactly
-       backwards for a chain whose whole point is that they're distinct
-       phases. A true neutral separates cleanly and is calmer besides. */
-    phase: "Operate",
-    hex: "#5A6265",
-    cy: 140,
-    rx: 66,
-    ry: 36.2,
-    spin: 34,
-    reverse: false,
-    label: { kind: "arc", at: "68%" },
+    phase: "Build",
+    icon: Boxes,
+    top: 152,
+    bottom: 198,
+    halfTop: 80,
+    halfBottom: 96,
+    depth: 8,
+    face: ["#38434F", "#1D2530"],
+    crown: "#47535F",
+    caption: [
+      "AI Solutions · Digital Engineering · Data",
+      "Cloud · Cybersecurity · Emerging Technologies",
+    ],
+    label: { top: "77%", width: "82%" },
   },
+];
+
+/** Corner radius. Rounded corners come from stroking each face in its own
+    fill colour with `strokeLinejoin="round"`: the stroke rounds every join
+    and grows the shape by half its width, so the geometry below is inset by
+    `R` first and comes back out at exactly the right size. Cheaper than
+    splicing four arcs by hand, and the fill and the rounding can't drift out
+    of sync because they're the same path. */
+const R = 3.5;
+
+/** A slab's front face — a triangle at the tip, a trapezoid below it. */
+const facePath = (b: Band) => {
+  const y0 = b.top + R;
+  const y1 = b.bottom - R;
+  const hb = b.halfBottom - R;
+  if (b.halfTop < 1)
+    return `M 100 ${y0} L ${100 + hb} ${y1} L ${100 - hb} ${y1} Z`;
+  const ht = b.halfTop - R;
+  return `M ${100 - ht} ${y0} L ${100 + ht} ${y0} L ${100 + hb} ${y1} L ${100 - hb} ${y1} Z`;
+};
+
+/** A slab's top surface, narrowing as it recedes. Most of it ends up hidden
+    behind the slab sitting on it — the sliver that survives around the edges
+    is the entire reason the stack reads as solid rather than as three flat
+    shapes. */
+const crownPath = (b: Band) => {
+  const back = b.top - b.depth;
+  const hf = b.halfTop;
+  const hk = b.halfTop * 0.93;
+  return `M ${100 - hf} ${b.top} L ${100 + hf} ${b.top} L ${100 + hk} ${back} L ${100 - hk} ${back} Z`;
+};
+
+/** Where the connection fan's sixteen lines aim — one ellipse per phase, read
+    by `buildLinks` below. Never drawn: the lines fade out well before they
+    reach these, exactly as they do in the reference. They exist only to give
+    each phase's cards an arc to spread across, sized for a clean spread
+    rather than pinned to its slab's own edge. */
+const PHASE_ANCHORS = [
+  { phase: "Operate", cy: 56, rx: 46, ry: 30 },
+  { phase: "Automate", cy: 112, rx: 74, ry: 40 },
+  { phase: "Build", cy: 168, rx: 86, ry: 40 },
 ] as const;
 
-/** Loose motes on their own orbits. Same camera — every `ry` is `rx · 0.548`,
-    so they sit in the same space as the rings; the far half of each pass goes
-    behind the glass and softens. Widths are tuned so nothing exceeds ~6px at
-    the 440px desktop core: a mote that reads as a bead rather than a speck
-    stops being atmosphere and starts competing with the cube.
-
-    Every orbit here also stays inside r=96 of the box centre at its furthest
-    point, which is where the connection fan lands — a mote that strayed past
-    that would cross sixteen curves on its way round. */
-const PARTICLES = [
-  { id: "p0", cy: 100, rx: 84, ry: 46, w: 2.2, spin: 30, reverse: false },
-  { id: "p1", cy: 78, rx: 62, ry: 34, w: 1.4, spin: 38, reverse: true },
-  { id: "p2", cy: 128, rx: 86, ry: 47.1, w: 2.8, spin: 46, reverse: false },
-  { id: "p3", cy: 60, rx: 46, ry: 25.2, w: 1.2, spin: 34, reverse: true },
-  { id: "p4", cy: 146, rx: 78, ry: 42.7, w: 1.8, spin: 54, reverse: true },
-  { id: "p5", cy: 92, rx: 72, ry: 39.5, w: 1.1, spin: 42, reverse: false },
-  { id: "p6", cy: 54, rx: 34, ry: 18.6, w: 1, spin: 28, reverse: true },
+/** The faint rings behind the pyramid. Two concentric circles and a scatter
+    of motes, all fading out toward the edges of the box. */
+const RINGS = [
+  { r: 92, dash: "1.5 4" },
+  { r: 72, dash: "" },
 ] as const;
 
-/** An orbit as a closed path, opening at nine o'clock and running clockwise —
-    so the first half is the far side, matching how the far/near clips split. */
-const orbitPath = (rx: number, ry: number, cy: number) =>
-  `M ${100 - rx} ${cy} a ${rx} ${ry} 0 1 1 ${rx * 2} 0 a ${rx} ${ry} 0 1 1 ${-rx * 2} 0`;
-
-/** The far (upper) and near (lower) halves of an orbit, as open arcs. */
-const farArc = (rx: number, ry: number, cy: number) =>
-  `M ${100 - rx} ${cy} A ${rx} ${ry} 0 0 1 ${100 + rx} ${cy}`;
-const nearArc = (rx: number, ry: number, cy: number) =>
-  `M ${100 + rx} ${cy} A ${rx} ${ry} 0 0 1 ${100 - rx} ${cy}`;
-
-/** The near half again, but running left→right instead of right→left. `nearArc`
-    is drawn the way the motes travel; type set on it would hang underneath and
-    read upside down. Same curve, opposite direction, used only by the labels. */
-const labelArc = (rx: number, ry: number, cy: number) =>
-  `M ${100 - rx} ${cy} A ${rx} ${ry} 0 0 0 ${100 + rx} ${cy}`;
+const RING_MOTES = [
+  { a: -164, r: 92 },
+  { a: -118, r: 92 },
+  { a: -46, r: 92 },
+  { a: -14, r: 92 },
+  { a: -142, r: 72 },
+  { a: -38, r: 72 },
+] as const;
 
 const SPRING = {
   type: "spring",
@@ -414,34 +381,63 @@ const EXPO = [0.19, 1, 0.22, 1] as const;
    Endpoints are measured, never guessed: each card reports its inner edge and
    the core reports its box, so a path always lands exactly where it should.
 
-   Every connector lands on the orbit for its own phase — a Build card runs to
-   the Build ring, and hovering it lights that ring at the far end of its own
-   line. That is the whole point of the picture: the orbits stop being scenery
-   and become the thing the network plugs into. It is also why the orbits had to
-   stop floating, over in `AICore` — a ring that drifted would drag its
-   endpoints off the lines that land on it.
+   Routing is orthogonal, not curved: out of the card horizontally, one turn
+   down or up, one turn back in toward the core — with the corners rounded off.
+   Every line then fades to nothing before it arrives, so the fan reads as
+   circuitry disappearing under the pyramid rather than as sixteen wires
+   plugged into it.
 
-   The cost is that the fan no longer guarantees a non-crossing layout. Cards sit
-   in reading order, phases don't, so a Build card below an Operate card sends
-   its line up and over. Sorting the columns by phase would fix it and is not
-   on the table — the card order is the card order.
+   Each phase still aims at its own anchor arc, so a Build card and an Operate
+   card leave for visibly different heights. The cost is that the fan doesn't
+   guarantee a non-crossing layout — cards sit in reading order, phases don't,
+   so a Build card below an Operate card sends its line up and over. Sorting
+   the columns by phase would fix it and is not on the table: the card order is
+   the card order.
    -------------------------------------------------------------------------- */
 
 type Link = {
   n: string;
   group: "tech" | "gbs";
   d: string;
-  x1: number;
-  y1: number;
+  /** The card end, where the line gets its solid dot. */
+  x0: number;
+  y0: number;
 };
 type Geometry = {
   w: number;
   h: number;
+  /** Core centre, in wrapper pixels — the point every line fades toward. */
+  cx: number;
   links: Link[];
 };
 
 /** Half-angle of the arc each phase group fans across, in degrees. */
 const ARC = 56;
+
+/** A right-angled connector with rounded corners: horizontal out of the card
+    to `mx`, vertical to the target row, horizontal in to the target. Falls
+    back to a straight line when a leg is too short to round. */
+const elbow = (x0: number, y0: number, mx: number, x1: number, y1: number) => {
+  const sy = Math.sign(y1 - y0) || 1;
+  const s1 = Math.sign(mx - x0) || 1;
+  const s2 = Math.sign(x1 - mx) || 1;
+  const r = Math.min(
+    12,
+    Math.abs(y1 - y0) / 2,
+    Math.abs(mx - x0),
+    Math.abs(x1 - mx),
+  );
+  const f = (n: number) => n.toFixed(1);
+  if (r < 1.5) return `M ${f(x0)} ${f(y0)} L ${f(x1)} ${f(y1)}`;
+  return [
+    `M ${f(x0)} ${f(y0)}`,
+    `L ${f(mx - s1 * r)} ${f(y0)}`,
+    `Q ${f(mx)} ${f(y0)} ${f(mx)} ${f(y0 + sy * r)}`,
+    `L ${f(mx)} ${f(y1 - sy * r)}`,
+    `Q ${f(mx)} ${f(y1)} ${f(mx + s2 * r)} ${f(y1)}`,
+    `L ${f(x1)} ${f(y1)}`,
+  ].join(" ");
+};
 
 function buildLinks(
   cards: Map<string, HTMLElement>,
@@ -468,7 +464,7 @@ function buildLinks(
     }
 
     for (const [phaseName, bucket] of byPhase) {
-      const ring = PHASE_RINGS.find(
+      const ring = PHASE_ANCHORS.find(
         (candidate) => candidate.phase === phaseName,
       );
       if (!ring) continue;
@@ -483,9 +479,9 @@ function buildLinks(
         const x0 = (side === -1 ? box.right : box.left) - wrap.left;
         const y0 = box.top + box.height / 2 - wrap.top;
 
-        // Fan this phase's cards across its own orbit, on the side they live on.
-        // A lone card takes the ring's widest point rather than one end of the
-        // arc, so a group of one still looks aimed rather than parked.
+        // Fan this phase's cards across its own anchor arc, on the side they
+        // live on. A lone card takes the arc's widest point rather than one
+        // end of it, so a group of one still looks aimed rather than parked.
         const t = bucket.length === 1 ? 0.5 : i / last;
         const spread = ((-ARC + t * 2 * ARC) * Math.PI) / 180;
         const theta = side === -1 ? Math.PI - spread : spread;
@@ -493,40 +489,29 @@ function buildLinks(
         const x1 = ox + (100 + ring.rx * Math.cos(theta)) * k;
         const y1 = oy + (ring.cy + ring.ry * Math.sin(theta)) * k;
 
-        // An ellipse's outward normal at θ is (ry·cosθ, rx·sinθ), NOT the
-        // circle's (cosθ, sinθ) — the radius vector and the normal only agree on
-        // a circle. These orbits are flattened to 0.548, so using the radius
-        // here would meet the ring at a visible kink on every card.
-        const rawX = ring.ry * Math.cos(theta);
-        const rawY = ring.rx * Math.sin(theta);
-        const len = Math.hypot(rawX, rawY) || 1;
-        const nx = rawX / len;
-        const ny = rawY / len;
-
-        const dx = Math.abs(x1 - x0);
-        // Leave the card horizontally, arrive along the orbit's normal.
-        const c1x = x0 - side * dx * 0.5;
-        const c1y = y0;
-        const ext = Math.min(Math.max(dx * 0.32, 44), 150);
-        const c2x = x1 + nx * ext;
-        const c2y = y1 + ny * ext;
+        // Where the line makes its turn. Staggered per card so that sixteen
+        // vertical runs don't pile onto the same few columns — with a fixed
+        // offset the lines in a bucket would overlap into one thick bar.
+        const mx = x0 - side * (26 + i * 15);
 
         links.push({
           n: service.n,
           group: service.group,
-          x1,
-          y1,
-          d: `M ${x0.toFixed(1)} ${y0.toFixed(1)} C ${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(1)} ${c2y.toFixed(1)}, ${x1.toFixed(1)} ${y1.toFixed(1)}`,
+          x0,
+          y0,
+          d: elbow(x0, y0, mx, x1, y1),
         });
       });
     }
   }
 
-  return { w: wrap.width, h: wrap.height, links };
+  return {
+    w: wrap.width,
+    h: wrap.height,
+    cx: ox + 100 * k,
+    links,
+  };
 }
-
-/** Stable per-link jitter, so idle particles don't march in lockstep. */
-const drift = (n: string) => ((parseInt(n, 10) * 37) % 100) / 100;
 
 function ConnectionNetwork({
   geom,
@@ -545,14 +530,37 @@ function ConnectionNetwork({
       fill="none"
     >
       <defs>
-        {/* Comet head points at the core: solid where the path ends. */}
-        <linearGradient id="os-flow-tech" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor={HUE.tech.hex} stopOpacity="0" />
-          <stop offset="100%" stopColor={HUE.tech.hex} stopOpacity="1" />
+        {/* The fade. Each side runs from its own card column toward the core
+            centre and dies before it gets there, so no line ever visibly
+            touches the pyramid — it just thins out under it. Laid out in user
+            space rather than per-path bounding boxes so all eight lines on a
+            side fade at the same screen x, which is what makes them read as
+            one field rather than eight independent strokes. */}
+        <linearGradient
+          id="os-fade-tech"
+          gradientUnits="userSpaceOnUse"
+          x1="0"
+          y1="0"
+          x2={geom.cx}
+          y2="0"
+        >
+          <stop offset="0%" stopColor={HUE.tech.hex} stopOpacity="0.85" />
+          <stop offset="62%" stopColor={HUE.tech.hex} stopOpacity="0.7" />
+          <stop offset="88%" stopColor={HUE.tech.hex} stopOpacity="0.12" />
+          <stop offset="100%" stopColor={HUE.tech.hex} stopOpacity="0" />
         </linearGradient>
-        <linearGradient id="os-flow-gbs" x1="1" y1="0" x2="0" y2="0">
-          <stop offset="0%" stopColor={HUE.gbs.hex} stopOpacity="0" />
-          <stop offset="100%" stopColor={HUE.gbs.hex} stopOpacity="1" />
+        <linearGradient
+          id="os-fade-gbs"
+          gradientUnits="userSpaceOnUse"
+          x1={geom.w}
+          y1="0"
+          x2={geom.cx}
+          y2="0"
+        >
+          <stop offset="0%" stopColor={HUE.gbs.hex} stopOpacity="0.85" />
+          <stop offset="62%" stopColor={HUE.gbs.hex} stopOpacity="0.7" />
+          <stop offset="88%" stopColor={HUE.gbs.hex} stopOpacity="0.12" />
+          <stop offset="100%" stopColor={HUE.gbs.hex} stopOpacity="0" />
         </linearGradient>
       </defs>
 
@@ -564,66 +572,47 @@ function ConnectionNetwork({
         return (
           <motion.g
             key={link.n}
-            initial={{ opacity: dimmed ? 0.2 : 1 }}
-            animate={{ opacity: dimmed ? 0.2 : 1 }}
+            initial={{ opacity: dimmed ? 0.25 : 1 }}
+            animate={{ opacity: dimmed ? 0.25 : 1 }}
             transition={{ duration: 0.35, ease: EXPO }}
           >
-            {/* Resting hairline. */}
             <path
               d={link.d}
-              stroke={hue.hex}
-              strokeOpacity={active ? 0.5 : 0.24}
-              strokeWidth={active ? 1.6 : 1}
-              style={{ transition: "stroke-width 300ms, stroke-opacity 300ms" }}
+              stroke={`url(#os-fade-${link.group})`}
+              strokeWidth={active ? 1.8 : 1.1}
+              strokeLinecap="round"
+              style={{ transition: "stroke-width 300ms" }}
             />
 
-            {/* Idle traffic: one dot drifting toward the core. */}
-            {!reduce && (
-              <motion.path
-                d={link.d}
-                pathLength={1}
-                stroke={hue.hex}
-                strokeOpacity={0.75}
-                strokeWidth={2.6}
-                strokeLinecap="round"
-                strokeDasharray="0.014 0.986"
-                initial={{ strokeDashoffset: 1 }}
-                animate={{ strokeDashoffset: 0 }}
-                transition={{
-                  duration: 5.5 + drift(link.n) * 5,
-                  repeat: Infinity,
-                  ease: "linear",
-                  delay: drift(link.n) * 6,
-                }}
-              />
-            )}
-
-            {/* Hover: a gradient sweep runs the line into the core. */}
+            {/* Hover: one bright dot runs the line in and disappears into the
+                fade with it. */}
             {active && !reduce && (
               <motion.path
                 d={link.d}
                 pathLength={1}
-                stroke={`url(#os-flow-${link.group})`}
-                strokeWidth={2.4}
+                stroke={`url(#os-fade-${link.group})`}
+                strokeWidth={3.4}
                 strokeLinecap="round"
-                strokeDasharray="0.3 0.7"
+                strokeDasharray="0.05 0.95"
                 initial={{ strokeDashoffset: 1 }}
                 animate={{ strokeDashoffset: 0 }}
-                transition={{
-                  duration: 1.35,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
+                transition={{ duration: 1.6, repeat: Infinity, ease: "linear" }}
               />
             )}
 
-            {/* Where the path meets the ring. */}
+            {/* The solid dot at the card end, where the line is fully opaque. */}
             <motion.circle
-              cx={link.x1}
-              cy={link.y1}
+              cx={link.x0}
+              cy={link.y0}
               fill={hue.hex}
-              initial={{ r: active ? 3.4 : 1.8, fillOpacity: active ? 1 : 0.4 }}
-              animate={{ r: active ? 3.4 : 1.8, fillOpacity: active ? 1 : 0.4 }}
+              initial={{
+                r: active ? 3.4 : 2.2,
+                fillOpacity: active ? 1 : 0.85,
+              }}
+              animate={{
+                r: active ? 3.4 : 2.2,
+                fillOpacity: active ? 1 : 0.85,
+              }}
               transition={{ duration: 0.35, ease: EXPO }}
             />
           </motion.g>
@@ -637,103 +626,24 @@ function ConnectionNetwork({
    AI core — permanently visible, never replaced by a selection.
    -------------------------------------------------------------------------- */
 
-/**
- * One clock drives every orbit in the core.
- *
- * Hovering has to lean on the whole system's speed at once, and speed is the
- * one thing a declarative animation cannot change without flinching: hand
- * Framer a new `duration` mid-flight and the keyframes restart, so all seven
- * motes snap back to their starting points. Accumulating phase instead makes
- * hover a change of *rate*, which is continuous — the motes just lean forward.
- */
-function useOrbitClock(hot: boolean, reduce: boolean | null) {
-  const clock = useMotionValue(0);
-  const rate = useMotionValue(1);
-
-  useAnimationFrame((_, delta) => {
-    if (reduce) return;
-    // Never wrapped: a double holds a day of seconds without losing the
-    // fraction the motes are actually positioned by.
-    clock.set(clock.get() + (delta / 1000) * rate.get());
-  });
-
-  useEffect(() => {
-    const controls = animate(rate, hot ? 2.4 : 1, {
-      duration: 0.5,
-      ease: EXPO,
-    });
-    return () => controls.stop();
-  }, [hot, rate]);
-
-  return clock;
-}
-
-/** A single mote riding an orbit, as a round dash travelling a path. Rendered
-    once per depth layer against a far/near clip, so the same dot passes behind
-    the glass and back out in front of it without ever being two dots. */
-function Mote({
-  clock,
-  d,
-  spin,
-  reverse,
-  hex,
-  width,
-  opacity,
-  clip,
-}: {
-  clock: MotionValue<number>;
-  d: string;
-  spin: number;
-  reverse: boolean;
-  hex: string;
-  width: number;
-  opacity: number;
-  clip: string;
-}) {
-  const offset = useTransform(clock, (t) => {
-    const p = (t / spin) % 1;
-    return reverse ? p : 1 - p;
-  });
-
-  return (
-    <motion.path
-      d={d}
-      pathLength={1}
-      fill="none"
-      stroke={hex}
-      strokeWidth={width}
-      strokeOpacity={opacity}
-      strokeLinecap="round"
-      // A dash of very nearly nothing: the round cap is what draws the mote, so
-      // it stays a dot instead of stretching into a capsule the way a dash long
-      // enough to see would.
-      strokeDasharray="0.0006 0.9994"
-      clipPath={clip}
-      style={{ strokeDashoffset: offset, transition: "stroke-opacity 500ms" }}
-    />
-  );
-}
-
 const AICore = ({
   innerRef,
   active,
   phase,
+  /** False while the section is off screen — the idle drift stops entirely
+      rather than holding a composited layer alive down the whole page. */
+  animate,
 }: {
   innerRef: React.RefObject<HTMLDivElement>;
   active: "tech" | "gbs" | null;
-  /** Which orbit the hovered or open service sits on. */
+  /** Which band the hovered or open service sits on. */
   phase: Service["phase"] | null;
+  animate: boolean;
 }) => {
   const reduce = useReducedMotion();
   const [hot, setHot] = useState(false);
-  const clock = useOrbitClock(hot, reduce);
-
   const accent = active ? HUE[active] : null;
-  /** Every orbit that carries a mote, by the only two things a clip needs. */
-  const orbits = [
-    ...PHASE_RINGS.map((r) => ({ id: r.phase, cy: r.cy })),
-    ...PARTICLES.map((p) => ({ id: p.id, cy: p.cy })),
-  ];
+  const idle = animate && !reduce;
 
   return (
     /* This box is measured. `buildLinks` reads it to place sixteen connectors
@@ -749,695 +659,244 @@ const AICore = ({
       ref={innerRef}
       onMouseEnter={() => setHot(true)}
       onMouseLeave={() => setHot(false)}
-      className="relative aspect-square w-[260px] shrink-0 sm:w-[320px] lg:w-[340px] xl:w-[440px]"
+      className="relative aspect-square w-[300px] shrink-0 sm:w-[400px] lg:w-[340px] xl:w-[460px]"
     >
-      {/* Ambient halo. Blurred past any edge of its own, so it reads as light in
-          the air rather than as a disc — the pyramid sits on open paper now.
-
-          It also carries the selection. The hairline horizon and the pulse ring
-          used to be how the core answered a hovered card; with both gone, that
-          job falls here, and the glow simply warms toward the hovered half of
-          the network. Same signal, no geometry. */}
+      {/* Ambient halo, and the one place a selection still shows on the core
+          itself: the glow simply warms toward the hovered half of the
+          network. Blurred past any edge of its own, so it reads as light in
+          the air rather than as a disc. */}
       <motion.div
         aria-hidden
-        className="absolute -inset-[38%] rounded-full blur-3xl"
-        animate={{ opacity: hot || accent ? 0.95 : 0.7 }}
+        className="absolute -inset-[30%] rounded-full blur-3xl"
+        animate={{ opacity: hot || accent ? 0.9 : 0.6 }}
         transition={{ duration: 0.6, ease: EXPO }}
         style={{
           background: accent
-            ? `radial-gradient(closest-side, rgba(${accent.rgb},0.22), rgba(${accent.rgb},0.08) 58%, transparent 78%)`
-            : "radial-gradient(closest-side, rgba(68,158,216,0.16), rgba(245,159,19,0.07) 58%, transparent 78%)",
+            ? `radial-gradient(closest-side, rgba(${accent.rgb},0.18), rgba(${accent.rgb},0.06) 58%, transparent 78%)`
+            : "radial-gradient(closest-side, rgba(68,158,216,0.14), transparent 74%)",
           transition: "background 500ms",
         }}
       />
 
-      {/* Ground: contact shadow, ambient bounce and a caustic pool. It does not
-          float with the pyramid — it answers it, tightening and darkening as
-          the pyramid settles back down, which is what makes the gap read. */}
-      <motion.svg
-        aria-hidden
-        viewBox="0 0 200 200"
-        className="absolute inset-0 h-full w-full"
-        style={{ originX: 0.5, originY: 0.8 }}
-        animate={
-          reduce ? {} : { scale: [0.94, 1.06, 0.94], opacity: [0.72, 1, 0.72] }
-        }
-        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <defs>
-          <radialGradient id="core-shadow">
-            <stop offset="0%" stopColor="#2E3436" stopOpacity="0.3" />
-            <stop offset="55%" stopColor="#2E3436" stopOpacity="0.12" />
-            <stop offset="100%" stopColor="#2E3436" stopOpacity="0" />
-          </radialGradient>
-          <radialGradient id="core-caustic">
-            <stop offset="0%" stopColor="#56A7FF" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="#56A7FF" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        {/* Centred on the axis now that the camera has no yaw: the pyramid is
-            symmetric about x=100, so anything it casts must be too. Sits just
-            under the near corner at y=170.9. */}
-        <ellipse cx="100" cy="181" rx="54" ry="15" fill="url(#core-shadow)" />
-        {/* Light that made it through the glass, pooled under the base. Breathes
-            on scale rather than on `rx`: an animated geometry attribute is
-            undefined on the frame before Framer takes it over, and the browser
-            drops the shape for it. */}
-        <motion.ellipse
-          cx="100"
-          cy="178"
-          rx="24"
-          ry="7"
-          fill="url(#core-caustic)"
-          style={{ originX: "100px", originY: "178px" }}
-          animate={
-            reduce ? {} : { scaleX: [1, 1.28, 1], opacity: [0.75, 1, 0.75] }
-          }
-          transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
-        />
-      </motion.svg>
-
-      {/* ---- Everything below floats together. -------------------------------
-          Outer wrapper answers the pointer, inner wrapper does the idle drift,
-          so the hover lift never fights the float's own keyframes. */}
-      {/* ---- The orbits: far halves. ------------------------------------------
-          These sit OUTSIDE the float on purpose, and that is now load-bearing
-          rather than a detail. Sixteen connectors are measured once and land on
-          these rings; a ring that drifted ±8px and yawed 6° would slide out from
-          under its own endpoints every few seconds, and the fan would visibly
-          come unstuck. So the orbits hold still and the pyramid breathes inside
-          them — which is also the more honest reading: an orbit is a fixed frame,
-          and the thing it encloses is what moves.
-
-          Still painted before the glass pane, so the frosting above catches them
-          exactly as it did when they lived inside the float. */}
+      {/* ---- The rings. ----
+          Two faint circles and a scatter of motes, sitting behind the
+          pyramid and fading out toward the edges of the box. The fade is a
+          mask rather than a flat opacity: a ring at uniform 8% still draws a
+          hard closed curve the eye follows all the way round, which fights
+          the pyramid for attention. Fading the ends leaves only the arcs
+          either side of the body, which is what the reference shows. */}
       <svg
         aria-hidden
         viewBox="0 0 200 200"
         className="absolute inset-0 h-full w-full"
       >
         <defs>
-          {/* One clip pair per orbit, splitting it at its own horizon: an
-              orbit's far half is its upper half under this camera. Both halves
-              draw the same mote at the same place, so it crosses the seam
-              without a join. */}
-          {orbits.map((o) => (
-            <Fragment key={o.id}>
-              <clipPath id={`core-far-${o.id}`}>
-                <rect x="0" y="0" width="200" height={o.cy} />
-              </clipPath>
-              <clipPath id={`core-near-${o.id}`}>
-                <rect x="0" y={o.cy} width="200" height={200 - o.cy} />
-              </clipPath>
-            </Fragment>
-          ))}
+          <radialGradient id="core-ring-fade">
+            <stop offset="30%" stopColor="#FFFFFF" stopOpacity="1" />
+            <stop offset="76%" stopColor="#FFFFFF" stopOpacity="0.75" />
+            <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
+          </radialGradient>
+          <mask id="core-ring-mask">
+            <rect width="200" height="200" fill="url(#core-ring-fade)" />
+          </mask>
         </defs>
-
-        {PHASE_RINGS.map((ring) => {
-          const lit = phase === ring.phase;
-          return (
-            <g key={ring.phase}>
-              <path
-                d={farArc(ring.rx, ring.ry, ring.cy)}
-                fill="none"
-                stroke={ring.hex}
-                strokeOpacity={lit ? 0.6 : 0.22}
-                strokeWidth={lit ? 1.5 : 0.9}
-                style={{
-                  transition: "stroke-opacity 500ms, stroke-width 500ms",
-                }}
+        <g mask="url(#core-ring-mask)">
+          {RINGS.map((ring) => (
+            <circle
+              key={ring.r}
+              cx="100"
+              cy="104"
+              r={ring.r}
+              fill="none"
+              stroke="#8FA9B8"
+              strokeOpacity="0.42"
+              strokeWidth="0.6"
+              strokeDasharray={ring.dash || undefined}
+            />
+          ))}
+          {RING_MOTES.map((m) => {
+            const rad = (m.a * Math.PI) / 180;
+            return (
+              <circle
+                key={`${m.a}-${m.r}`}
+                cx={100 + m.r * Math.cos(rad)}
+                cy={104 + m.r * Math.sin(rad)}
+                r="1.1"
+                fill="#8FA9B8"
+                fillOpacity="0.55"
               />
-              <Mote
-                clock={clock}
-                d={orbitPath(ring.rx, ring.ry, ring.cy)}
-                spin={ring.spin}
-                reverse={ring.reverse}
-                hex={ring.hex}
-                width={lit ? 4.4 : 3}
-                opacity={lit ? 0.85 : 0.5}
-                clip={`url(#core-far-${ring.phase})`}
-              />
-            </g>
-          );
-        })}
-
-        {PARTICLES.map((p) => (
-          <Mote
-            key={p.id}
-            clock={clock}
-            d={orbitPath(p.rx, p.ry, p.cy)}
-            spin={p.spin}
-            reverse={p.reverse}
-            hex="#449ED8"
-            width={p.w}
-            opacity={hot ? 0.4 : 0.2}
-            clip={`url(#core-far-${p.id})`}
-          />
-        ))}
+            );
+          })}
+        </g>
       </svg>
 
+      {/* Everything below bobs together on one gentle vertical drift — no 3D
+          tilt, because the pyramid is drawn straight on rather than
+          projected. */}
       <motion.div
         className="absolute inset-0"
-        animate={{ y: hot ? -6 : 0, scale: hot ? 1.03 : 1 }}
+        animate={{ y: hot ? -5 : 0 }}
         transition={{ duration: 0.5, ease: EXPO }}
       >
         <motion.div
-          className="absolute inset-0 will-change-transform"
-          style={{ transformPerspective: 1000 }}
-          animate={reduce ? {} : { y: [-8, 8, -8], rotateY: [-6, 6, -6] }}
-          transition={{
-            // Different periods, so the drift never visibly repeats.
-            y: { duration: 9, repeat: Infinity, ease: "easeInOut" },
-            rotateY: { duration: 13, repeat: Infinity, ease: "easeInOut" },
-          }}
+          className="absolute inset-0"
+          animate={idle ? { y: [-4, 4, -4] } : { y: 0 }}
+          transition={
+            idle
+              ? { duration: 9, repeat: Infinity, ease: "easeInOut" }
+              : { duration: 0.4, ease: EXPO }
+          }
         >
-          {/* ---- Behind the glass. ---- */}
+          {/* ---- The slabs. ----
+              Painted bottom-up, each as a crown (its top surface) then a
+              front face, so every slab covers the inner part of the crown
+              belonging to the one below it. What's left showing is the rim,
+              and that rim is the whole 3D read. */}
           <svg
             aria-hidden
             viewBox="0 0 200 200"
             className="absolute inset-0 h-full w-full"
           >
             <defs>
-              <linearGradient
-                id="core-glass-back"
-                gradientUnits="userSpaceOnUse"
-                x1="50"
-                y1="40"
-                x2="150"
-                y2="170"
-              >
-                <stop offset="0%" stopColor="#56A7FF" stopOpacity="0.06" />
-                <stop offset="100%" stopColor="#56A7FF" stopOpacity="0.02" />
-              </linearGradient>
-            </defs>
-
-            {/* The pyramid's own far geometry. Painted here so the glass pane
-                above frosts it — the back faces and the hidden base edges go
-                soft exactly the way they would through 40mm of glass. */}
-            <path d={PYRAMID.base} fill="url(#core-glass-back)" />
-            <path d={PYRAMID.faceBackLeft} fill="url(#core-glass-back)" />
-            <path d={PYRAMID.faceBackRight} fill="url(#core-glass-back)" />
-            {/* The base's two hidden back edges, running L→F→R behind the body.
-                Carrying them at all is the single strongest cue that the pyramid
-                is transparent, and they have to survive the frosting above —
-                hence heavier than they would be if drawn in the open. */}
-            <path
-              d={PYRAMID.edgeBase}
-              fill="none"
-              stroke="#449ED8"
-              strokeOpacity="0.5"
-              strokeWidth="1.2"
-              strokeLinejoin="round"
-            />
-            {/* The body's own reflection, thrown back off the inner faces. Kept
-                to a whisper and left to the frosting above to soften: at full
-                strength it stops being an artefact of thick glass and becomes a
-                second pyramid, and the eye starts trying to read it as an
-                object. */}
-            <path
-              d={PYRAMID.innerHull}
-              fill="none"
-              stroke="#8FCAEB"
-              strokeOpacity="0.4"
-              strokeWidth="0.8"
-              strokeLinejoin="round"
-            />
-            <path
-              d={PYRAMID.innerEdge}
-              fill="none"
-              stroke="#8FCAEB"
-              strokeOpacity="0.26"
-              strokeWidth="0.7"
-            />
-          </svg>
-
-          {/* ---- The glass itself. ----
-              A clip-path'd backdrop-filter is the only way to get real frosting
-              out of an SVG silhouette, and it's what makes the far orbits blur
-              as they pass behind. The second pane doubles up on the narrow
-              right face: we look through more glass there, so it frosts harder.
-              That difference is the thickness. */}
-          <div
-            aria-hidden
-            className="absolute inset-0 transition-[backdrop-filter] duration-500"
-            style={{
-              clipPath: PYRAMID.clip,
-              // Enough to soften what's behind, not enough to erase it: past
-              // ~4px the back edge and the far orbits stop reading at all, and
-              // the pyramid goes opaque.
-              backdropFilter: `blur(${hot ? 5 : 3.5}px) saturate(1.3)`,
-              WebkitBackdropFilter: `blur(${hot ? 5 : 3.5}px) saturate(1.3)`,
-              background: "rgba(255,255,255,0.18)",
-            }}
-          />
-          <div
-            aria-hidden
-            className="absolute inset-0"
-            style={{
-              clipPath: PYRAMID.clipRight,
-              backdropFilter: "blur(9px)",
-              WebkitBackdropFilter: "blur(9px)",
-              background: "rgba(86,167,255,0.03)",
-            }}
-          />
-
-          {/* ---- The cube, inside the glass. ----
-              Suspended, not mounted: it carries its own drift on periods that
-              share no factor with the scene's 9s and 13s, so it never settles
-              into lockstep with the pyramid and reads as floating *within* it
-              rather than moulded into it. The amplitude is deliberately tiny —
-              the cube clears the glass by ~10 units at the tightest corner, and
-              3.5px at the 440px core is ~1.6 units, so it can never appear to
-              touch a face. The marks ride in the same wrapper or they'd slide
-              off the cube they're painted on. */}
-          <motion.div
-            className="absolute inset-0"
-            animate={
-              reduce ? {} : { y: [-3.5, 3.5, -3.5], x: [-1.5, 1.5, -1.5] }
-            }
-            transition={{
-              y: { duration: 6.5, repeat: Infinity, ease: "easeInOut" },
-              x: { duration: 11, repeat: Infinity, ease: "easeInOut" },
-            }}
-          >
-            <svg
-              aria-hidden
-              viewBox="0 0 200 200"
-              className="absolute inset-0 h-full w-full"
-            >
-              <defs>
-                <radialGradient id="core-cube-glow">
-                  <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.6" />
-                  <stop offset="45%" stopColor="#B9DDF6" stopOpacity="0.34" />
-                  <stop offset="100%" stopColor="#56A7FF" stopOpacity="0" />
-                </radialGradient>
-              </defs>
-              <motion.ellipse
-                cx="100"
-                cy="118.2"
-                rx="46"
-                ry="44"
-                fill="url(#core-cube-glow)"
-                animate={
-                  reduce
-                    ? {}
-                    : {
-                        opacity: hot ? 1 : [0.72, 0.9, 0.72],
-                        scale: hot ? 1.08 : 1,
-                      }
-                }
-                style={{ originX: "100px", originY: "118.2px" }}
-                transition={{
-                  opacity: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-                  scale: { duration: 0.5, ease: EXPO },
-                }}
-              />
-              {/* Lit from the same top-left key as the glass. The three faces are
-                held a long way apart in value on purpose, and each is outlined:
-                at 47 units across, that separation and those edges are the only
-                things telling the eye this is a solid and not a white shard.
-                Stroking the faces rather than a hull draws every visible edge
-                without anyone having to work out which ones they are. */}
-              <g strokeWidth="0.5" strokeLinejoin="round">
-                <path
-                  d={CUBE.top}
-                  fill="#FFFFFF"
-                  fillOpacity="0.9"
-                  stroke="#FFFFFF"
-                />
-                <path
-                  d={CUBE.faceLeft}
-                  fill="#DCEEFB"
-                  fillOpacity="0.8"
-                  stroke="#EAF5FD"
-                />
-                <path
-                  d={CUBE.faceRight}
-                  fill="#79B2DA"
-                  fillOpacity="0.72"
-                  stroke="#9FCBE7"
-                />
-              </g>
-            </svg>
-
-            {/* The mark, once per front face. It sits between the cube and the
-                pyramid's front faces, so the glass paints over it — which is
-                what "embedded" is.
-
-                Each box is exactly one face: 26.7 units along the receding top
-                edge by 27.6 down, which is 13.35% × 13.8% of a 200-unit square.
-                The skew lays it onto the face; the mark inside inherits it, so
-                the F sits *on* the glass rather than hovering in front of it.
-                Carrying it on both faces is what makes the cube read as a solid
-                the mark is cut into, rather than a panel with a logo on it. */}
-            {[CUBE.markLeft, CUBE.markRight].map((face, i) => (
-              <div
-                key={i}
-                aria-hidden
-                className="absolute h-[13.8%] w-[13.35%] origin-top-left"
-                style={{
-                  left: face.left,
-                  top: face.top,
-                  transform: face.transform,
-                }}
-              >
-                <FMark className="absolute left-1/2 top-1/2 h-[68%] w-auto -translate-x-1/2 -translate-y-1/2 text-white/90" />
-              </div>
-            ))}
-          </motion.div>
-
-          {/* ---- In front of the glass. ---- */}
-          <svg
-            aria-hidden
-            viewBox="0 0 200 200"
-            className="absolute inset-0 h-full w-full"
-          >
-            <defs>
-              {/* One light field, sampled by every face — a key at the top left
-                  resolving into a blue body and a warm rim at the lower right.
-                  Shared, so the faces can't disagree about where the light is. */}
-              <linearGradient
-                id="core-key"
-                gradientUnits="userSpaceOnUse"
-                x1="50"
-                y1="40"
-                x2="150"
-                y2="170"
-              >
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.6" />
-                <stop offset="38%" stopColor="#FFFFFF" stopOpacity="0.12" />
-                <stop offset="74%" stopColor="#56A7FF" stopOpacity="0.1" />
-                <stop offset="100%" stopColor="#F5B347" stopOpacity="0.13" />
-              </linearGradient>
-              <linearGradient
-                id="core-streak"
-                gradientUnits="objectBoundingBox"
-                x1="0"
-                y1="0"
-                x2="1"
-                y2="0"
-              >
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
-                <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
-              </linearGradient>
-              <clipPath id="core-pyr-hull">
-                <path d={PYRAMID.hull} />
-              </clipPath>
-              <clipPath id="core-pyr-left">
-                <path d={PYRAMID.faceLeft} />
-              </clipPath>
-              <clipPath id="core-pyr-right">
-                <path d={PYRAMID.faceRight} />
-              </clipPath>
-              {/* Fresnel. Glass goes bright where you graze it and stays clear
-                  where you look straight through, and that falloff — not the
-                  tint, not the blur — is the thing the eye actually reads as
-                  "solid transparent object". Centred low and wide, because the
-                  body is thickest there and the silhouette is furthest from the
-                  axis. Without this the faces are flat washes and the whole
-                  pyramid reads as a decal. */}
-              <radialGradient
-                id="core-fresnel"
-                gradientUnits="userSpaceOnUse"
-                cx="100"
-                cy="126"
-                r="66"
-              >
-                <stop offset="48%" stopColor="#FFFFFF" stopOpacity="0" />
-                <stop offset="80%" stopColor="#FFFFFF" stopOpacity="0.13" />
-                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.4" />
-              </radialGradient>
-              {/* Everything the two front faces gather, ending up at the one
-                  point they all run to. */}
-              <radialGradient id="core-vertex">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.85" />
-                <stop offset="35%" stopColor="#CFE8FA" stopOpacity="0.34" />
-                <stop offset="100%" stopColor="#56A7FF" stopOpacity="0" />
-              </radialGradient>
-            </defs>
-
-            <path d={PYRAMID.faceLeft} fill="url(#core-key)" />
-            <path d={PYRAMID.faceRight} fill="url(#core-key)" />
-            {/* Extra density on the narrow face — same glass, more of it. */}
-            <path d={PYRAMID.faceRight} fill="#56A7FF" fillOpacity="0.05" />
-            <path d={PYRAMID.hull} fill="url(#core-fresnel)" />
-
-            {/* The caustic at the near vertex. Two faces of glass funnel down to
-                a single corner, so that corner is the brightest thing on the
-                object — it is where the light has nowhere left to go. Breathes
-                against the cube's own pulse rather than with it. */}
-            <motion.ellipse
-              cx="100"
-              cy="164"
-              rx="20"
-              ry="13"
-              fill="url(#core-vertex)"
-              style={{ originX: "100px", originY: "164px" }}
-              animate={
-                reduce
-                  ? {}
-                  : {
-                      opacity: hot ? 1 : [0.6, 0.85, 0.6],
-                      scale: hot ? 1.1 : 1,
-                    }
-              }
-              transition={{
-                opacity: { duration: 5.5, repeat: Infinity, ease: "easeInOut" },
-                scale: { duration: 0.5, ease: EXPO },
-              }}
-            />
-
-            {/* Streaks crossing the two front faces, each clipped to its own.
-                They travel at different rates and rest for different beats, so
-                the two faces never flash together — a single sweep across the
-                whole silhouette would read as a highlight painted on top of the
-                pyramid, where two independent ones read as light moving through
-                two panes that happen to meet. The right face is narrower and we
-                look through more glass there, so its streak is thinner, dimmer
-                and slower. */}
-            {!reduce && (
-              <>
-                <g clipPath="url(#core-pyr-left)">
-                  <g transform="rotate(14 100 100)">
-                    <motion.rect
-                      y="-20"
-                      width="11"
-                      height="240"
-                      fill="url(#core-streak)"
-                      opacity={0.3}
-                      animate={{ x: [30, 108] }}
-                      transition={{
-                        duration: 7,
-                        repeat: Infinity,
-                        repeatDelay: 4,
-                        ease: "easeInOut",
-                      }}
-                    />
-                  </g>
-                </g>
-                <g clipPath="url(#core-pyr-right)">
-                  <g transform="rotate(14 100 100)">
-                    <motion.rect
-                      y="-20"
-                      width="7"
-                      height="240"
-                      fill="url(#core-streak)"
-                      opacity={0.22}
-                      animate={{ x: [92, 168] }}
-                      transition={{
-                        duration: 9,
-                        repeat: Infinity,
-                        repeatDelay: 6.5,
-                        delay: 2.5,
-                        ease: "easeInOut",
-                      }}
-                    />
-                  </g>
-                </g>
-              </>
-            )}
-
-            {/* Polished edges. On white paper a white rim is invisible, so the
-                silhouette carries the darker refracted line real glass shows at
-                a grazing angle, and the white goes *inside* it as a bevel —
-                stroke centred on the hull, clipped to the hull, so only its
-                inner half survives. */}
-            <g clipPath="url(#core-pyr-hull)">
-              <path
-                d={PYRAMID.hull}
-                fill="none"
-                stroke="#FFFFFF"
-                strokeOpacity={hot ? 0.85 : 0.55}
-                strokeWidth="3"
-                strokeLinejoin="round"
-                style={{ transition: "stroke-opacity 500ms" }}
-              />
-            </g>
-            <path
-              d={PYRAMID.hull}
-              fill="none"
-              stroke="#376079"
-              strokeOpacity="0.34"
-              strokeWidth="0.9"
-              strokeLinejoin="round"
-            />
-            {/* The near edge, where the two front faces meet: a soft refracted
-                bloom with a fine white core riding it. It catches, but it stays
-                glass — any heavier and it reads as a seam, and the pyramid looks
-                folded out of paper. */}
-            <path
-              d={PYRAMID.edgeFront}
-              fill="none"
-              stroke="#56A7FF"
-              strokeOpacity="0.22"
-              strokeWidth="2.6"
-              strokeLinecap="round"
-            />
-            <path
-              d={PYRAMID.edgeFront}
-              fill="none"
-              stroke="#FFFFFF"
-              strokeOpacity={hot ? 0.7 : 0.45}
-              strokeWidth="0.9"
-              strokeLinecap="round"
-              style={{ transition: "stroke-opacity 500ms" }}
-            />
-
-            {/* Refracted specks — one on each corner of the hull, where the
-                edges catch. Off-beat delays, so they never blink together. */}
-            {!reduce &&
-              [
-                { cx: 100, cy: 50, r: 1.5, d: 0 },
-                { cx: 100, cy: 168.4, r: 1.1, d: 1.4 },
-                { cx: 152.6, cy: 139.5, r: 0.9, d: 2.6 },
-                { cx: 47.4, cy: 139.5, r: 0.9, d: 3.7 },
-              ].map((s) => (
-                <motion.circle
-                  key={`${s.cx}-${s.cy}`}
-                  cx={s.cx}
-                  cy={s.cy}
-                  r={s.r}
-                  fill="#FFFFFF"
-                  animate={{ opacity: [0.25, 0.9, 0.25] }}
-                  transition={{
-                    duration: 3.4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: s.d,
-                  }}
-                />
+              {BANDS.map((band) => (
+                <linearGradient
+                  key={band.phase}
+                  id={`core-face-${band.phase}`}
+                  gradientUnits="userSpaceOnUse"
+                  x1="30"
+                  y1={band.top}
+                  x2="170"
+                  y2={band.bottom}
+                >
+                  <stop offset="0%" stopColor={band.face[0]} />
+                  <stop offset="100%" stopColor={band.face[1]} />
+                </linearGradient>
               ))}
+              {/* The contact shadow each slab drops onto the one beneath it. */}
+              <linearGradient id="core-drop" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#0B1520" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#0B1520" stopOpacity="0" />
+              </linearGradient>
+              {/* Soft blobs as radial gradients rather than blurred shapes.
+                  These were three `feGaussianBlur` filters, which is the most
+                  expensive way to ask for exactly this: an SVG filter
+                  rasterises its subtree off the fast path, and these sat
+                  inside a wrapper on an infinite transform, so the cost was
+                  being paid against a moving layer. A gradient is a texture
+                  lookup — same soft edge, none of the filter machinery. */}
+              <radialGradient id="core-ground">
+                <stop offset="35%" stopColor="#0B1520" stopOpacity="0.2" />
+                <stop offset="100%" stopColor="#0B1520" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="core-bloom">
+                <stop offset="20%" stopColor="#3E97FF" stopOpacity="0.6" />
+                <stop offset="60%" stopColor="#3E97FF" stopOpacity="0.22" />
+                <stop offset="100%" stopColor="#3E97FF" stopOpacity="0" />
+              </radialGradient>
+            </defs>
+
+            {/* Ground shadow under the whole stack. */}
+            <ellipse cx="100" cy="199" rx="96" ry="13" fill="url(#core-ground)" />
+
+            {/* Operate's glow, which the reference carries as a distinct blue
+                bloom spilling onto the slab below it. */}
+            <ellipse cx="100" cy="89" rx="58" ry="16" fill="url(#core-bloom)" />
+
+            {[...BANDS].reverse().map((band) => {
+              const lit = phase === band.phase;
+              const dim = phase !== null && !lit;
+              return (
+                <motion.g
+                  key={band.phase}
+                  animate={{ opacity: dim ? 0.62 : 1 }}
+                  transition={{ duration: 0.35, ease: EXPO }}
+                >
+                  {/* Cast onto whatever is underneath, before this slab's own
+                      surfaces go down over it. The `core-drop` gradient does
+                      the softening on its own — this used to carry a blur
+                      filter on top of an already-graded fill, which is paying
+                      twice for one soft edge. */}
+                  {band.depth > 0 && (
+                    <path
+                      d={crownPath(band)}
+                      fill="url(#core-drop)"
+                      transform="translate(0,-6)"
+                      opacity="0.75"
+                    />
+                  )}
+                  {band.depth > 0 && (
+                    <path
+                      d={crownPath(band)}
+                      fill={band.crown}
+                      stroke={band.crown}
+                      strokeWidth={R * 2}
+                      strokeLinejoin="round"
+                    />
+                  )}
+                  <path
+                    d={facePath(band)}
+                    fill={`url(#core-face-${band.phase})`}
+                    stroke={`url(#core-face-${band.phase})`}
+                    strokeWidth={R * 2}
+                    strokeLinejoin="round"
+                  />
+                  {/* The "this one's lit" wash, over the slab's own fill. */}
+                  <motion.path
+                    d={facePath(band)}
+                    fill="#FFFFFF"
+                    stroke="#FFFFFF"
+                    strokeWidth={R * 2}
+                    strokeLinejoin="round"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: lit ? 0.12 : 0 }}
+                    transition={{ duration: 0.35, ease: EXPO }}
+                  />
+                </motion.g>
+              );
+            })}
           </svg>
+
+          {/* ---- Icon, label and caption, one cluster per slab. ----
+              HTML rather than SVG: this text only has to wrap and stay crisp
+              at every core size, and percentage positioning against the same
+              box the SVG fills lands each cluster on its own slab without
+              restating the geometry in a second coordinate system. */}
+          {BANDS.map((band) => {
+            const Icon = band.icon;
+            const lit = phase === band.phase;
+            return (
+              <motion.div
+                key={band.phase}
+                aria-hidden
+                className="pointer-events-none absolute left-1/2 flex -translate-x-1/2 flex-col items-center text-center"
+                style={{ top: band.label.top, width: band.label.width }}
+                animate={{ opacity: phase && !lit ? 0.72 : 1 }}
+                transition={{ duration: 0.35, ease: EXPO }}
+              >
+                <Icon
+                  className="h-4 w-4 text-white sm:h-5 sm:w-5 lg:h-7 lg:w-7"
+                  strokeWidth={1.5}
+                />
+                <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.06em] text-white sm:text-[13px] lg:text-[15px]">
+                  {band.phase}
+                </p>
+                {/* Dropped below `sm`, not merely shrunk. The core is 300px
+                    wide on a phone, and a two-line caption inside a tapering
+                    slab that narrow lands around 5px — small enough that it
+                    reads as texture rather than words, while still costing
+                    layout. The icon and the phase name carry the diagram at
+                    that size; the captions come back as soon as there's room
+                    to set them at a legible size. */}
+                <p className="mt-1 hidden text-[7px] leading-[1.5] text-white/85 sm:block sm:text-[7.5px] lg:text-[9px]">
+                  {band.caption[0]}
+                  <br />
+                  {band.caption[1]}
+                </p>
+              </motion.div>
+            );
+          })}
         </motion.div>
       </motion.div>
-
-      {/* ---- The orbits: near halves, and the chain named. --------------------
-          The other side of the sandwich. The pyramid floats between this layer
-          and the far one, so a mote passes behind the glass, out in front of it,
-          and round again without ever being two dots.
-
-          Static, for the same reason the far halves are: this is the half the
-          fan actually lands on.
-
-          The names are SVG rather than HTML because Automate and Operate are
-          *set on their own orbits* — a <textPath> on the ring's near arc gives
-          the type the ring's curve for free, and no amount of CSS will bend a
-          line of text along an ellipse. Build has no such problem; it reads flat
-          above the apex, where the only thing near it is its own ring. Out here
-          they no longer yaw with the float either, which is pure gain: small
-          type held still is small type you can read. */}
-      <svg
-        viewBox="0 0 200 200"
-        className="pointer-events-none absolute inset-0 h-full w-full"
-        fill="none"
-      >
-        <defs>
-          {PHASE_RINGS.map((ring) =>
-            ring.label.kind === "arc" ? (
-              <path
-                key={ring.phase}
-                id={`core-label-${ring.phase}`}
-                d={labelArc(ring.rx, ring.ry, ring.cy)}
-              />
-            ) : null,
-          )}
-        </defs>
-
-        {PHASE_RINGS.map((ring) => {
-          const lit = phase === ring.phase;
-          return (
-            <g key={ring.phase}>
-              <path
-                d={nearArc(ring.rx, ring.ry, ring.cy)}
-                fill="none"
-                stroke={ring.hex}
-                strokeOpacity={lit ? 0.95 : 0.42}
-                strokeWidth={lit ? 1.6 : 1}
-                style={{
-                  transition: "stroke-opacity 500ms, stroke-width 500ms",
-                }}
-              />
-              <Mote
-                clock={clock}
-                d={orbitPath(ring.rx, ring.ry, ring.cy)}
-                spin={ring.spin}
-                reverse={ring.reverse}
-                hex={ring.hex}
-                width={lit ? 4.4 : 3}
-                opacity={lit ? 1 : 0.8}
-                clip={`url(#core-near-${ring.phase})`}
-              />
-            </g>
-          );
-        })}
-
-        {PARTICLES.map((p) => (
-          <Mote
-            key={p.id}
-            clock={clock}
-            d={orbitPath(p.rx, p.ry, p.cy)}
-            spin={p.spin}
-            reverse={p.reverse}
-            hex="#449ED8"
-            width={p.w}
-            opacity={hot ? 0.45 : 0.2}
-            clip={`url(#core-near-${p.id})`}
-          />
-        ))}
-
-        {PHASE_RINGS.map((ring) => {
-          const lit = phase === ring.phase;
-          const common = {
-            className: "font-mono uppercase",
-            fontSize: 5.2,
-            letterSpacing: 0.9,
-            fill: lit ? ring.hex : "#868C8E",
-            style: { transition: "fill 500ms" },
-          };
-
-          return ring.label.kind === "flat" ? (
-            <text
-              key={ring.phase}
-              {...common}
-              x={ring.label.x}
-              y={ring.label.y}
-              textAnchor="middle"
-            >
-              {ring.phase}
-            </text>
-          ) : (
-            <text key={ring.phase} {...common}>
-              <textPath
-                href={`#core-label-${ring.phase}`}
-                startOffset={ring.label.at}
-              >
-                {ring.phase}
-              </textPath>
-            </text>
-          );
-        })}
-      </svg>
     </div>
   );
 };
@@ -1486,7 +945,10 @@ function CapabilityCard({
         onClick={() => onSelect(service.n)}
         onFocus={() => onHover(service.n)}
         onBlur={() => onHover(null)}
-        aria-label={`Open ${service.title}`}
+        /* No aria-label: the button's visible text (the practice name plus the
+           phase/count line) is its accessible name. An `aria-label` here used
+           the full `service.title`, which didn't contain the shortened visible
+           label — a WCAG 2.5.3 name/label mismatch for voice-control users. */
         className={cn(
           "relative flex w-full items-center gap-3.5 rounded-[14px] border px-4 py-3.5 text-left",
           "bg-white/70 backdrop-blur-md",
@@ -1620,6 +1082,13 @@ function CapabilityCard({
   );
 }
 
+/* Memoised, and the three callbacks it takes are all `useCallback`-stable, so
+   a card only re-renders when its own `state` flips. Without this, hovering
+   any one of the sixteen re-rendered all sixteen — plus the core — on every
+   pointer entry and exit, which is the most-repeated interaction in the
+   section. */
+const CapabilityCardMemo = memo(CapabilityCard);
+
 /* --------------------------------------------------------------------------
    Side drawer
    -------------------------------------------------------------------------- */
@@ -1634,22 +1103,51 @@ function Drawer({
   const Icon = ICONS[service.icon];
   const hue = HUE[service.group];
   const meta = META[service.n];
-  const [mobile, setMobile] = useState(false);
+  /* Read before the first paint, not after it.
+
+     This used to start `false` and correct itself in the effect below, which
+     stranded the panel off screen on every phone. Framer reads `initial` on
+     the first render, so the sheet mounted with the desktop hidden state
+     (`x: 100%`) and began sliding in from the right. The effect then flipped
+     `mobile` to true, `animate` became `{ y: 0 }`, and `x` — no longer named
+     in the target — was simply abandoned wherever it had got to. Around 100%
+     to the right, i.e. just off the edge of the screen, which is exactly what
+     it looked like.
+
+     The drawer only ever mounts on a click, well after hydration, so reading
+     `matchMedia` in the initialiser is safe; the `typeof window` guard is
+     belt-and-braces for any future server render. */
+  const [mobile, setMobile] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 639px)").matches,
+  );
 
   useEffect(() => {
-    setMobile(window.matchMedia("(max-width: 639px)").matches);
+    // Keep it honest through an orientation change, which crosses this
+    // breakpoint on most tablets.
+    const mq = window.matchMedia("(max-width: 639px)");
+    const onChange = (e: MediaQueryListEvent) => setMobile(e.matches);
+    mq.addEventListener("change", onChange);
 
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
     lockScroll();
     return () => {
+      mq.removeEventListener("change", onChange);
       window.removeEventListener("keydown", onKey);
       unlockScroll();
     };
   }, [onClose]);
 
-  const hidden = mobile ? { y: "100%" } : { x: "100%" };
-  const shown = mobile ? { y: 0 } : { x: 0 };
+  /* Both axes are always named, even though only one ever moves. A target that
+     mentions just the axis in play leaves the other wherever it happens to be,
+     so any swap between these two shapes mid-flight — an orientation change
+     across the breakpoint — abandons the old axis at a non-zero offset and
+     parks the panel off screen. Pinning both costs nothing and removes the
+     failure mode. */
+  const hidden = mobile ? { x: 0, y: "100%" } : { x: "100%", y: 0 };
+  const shown = { x: 0, y: 0 };
 
   const stagger = (i: number) => ({
     initial: { opacity: 0, y: 14 },
@@ -1948,15 +1446,22 @@ export default function CapabilitiesOS() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const coreRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef(new Map<string, HTMLElement>());
+  const [sectionRef, inView] = useInView<HTMLElement>();
 
   const [geom, setGeom] = useState<Geometry | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
   const [openId, setOpenId] = useState<string | null>(null);
 
-  const open = SERVICES.find((s) => s.n === openId) ?? null;
+  const open = useMemo(
+    () => SERVICES.find((s) => s.n === openId) ?? null,
+    [openId],
+  );
   // A click keeps the line lit while the drawer is up; hover lights it too.
   const activeId = hovered ?? openId;
-  const activeService = SERVICES.find((s) => s.n === activeId) ?? null;
+  const activeService = useMemo(
+    () => SERVICES.find((s) => s.n === activeId) ?? null,
+    [activeId],
+  );
   const activeGroup = activeService?.group ?? null;
   const activePhase = activeService?.phase ?? null;
 
@@ -2002,11 +1507,15 @@ export default function CapabilitiesOS() {
     activeId === n ? "active" : activeId ? "muted" : "idle";
 
   /* Two-up on a phone and tablet, a single vertical rail from lg — which is
-     also the only breakpoint where the connection fan exists to attach to. */
+     also the only breakpoint where the connection fan exists to attach to.
+
+     `setHovered`/`setOpenId` are setState functions and `register` is a
+     `useCallback`, so every prop but `state` is referentially stable across
+     renders — which is what lets the memo on the card actually hold. */
   const column = (services: Service[]) => (
     <div className="grid gap-2.5 sm:grid-cols-2 lg:flex lg:flex-col lg:justify-center">
       {services.map((service) => (
-        <CapabilityCard
+        <CapabilityCardMemo
           key={service.n}
           service={service}
           state={cardState(service.n)}
@@ -2020,6 +1529,7 @@ export default function CapabilitiesOS() {
 
   return (
     <section
+      ref={sectionRef}
       id="capabilities"
       className="relative overflow-hidden border-t border-line bg-white"
     >
@@ -2040,7 +1550,7 @@ export default function CapabilitiesOS() {
         className="absolute inset-0 bg-[radial-gradient(75%_60%_at_50%_50%,transparent,white_95%)]"
       />
 
-      <Container wide className="relative z-10 py-24 lg:py-32">
+      <Container wide className="relative z-10 py-16 sm:py-24 lg:py-32">
         {/* Header. */}
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)] lg:items-end lg:gap-20">
           <div>
@@ -2062,7 +1572,11 @@ export default function CapabilitiesOS() {
           </div>
 
           <Wipe delay={0.2}>
-            <p className="text-[16px] leading-[1.75] text-ink-500 text-justify">
+            {/* Justified only once there's column width to justify into. On a
+                phone this measure is ~40 characters, and justifying that
+                stretches word spacing into visible rivers — the one place
+                justified text reliably looks worse than ragged-right. */}
+            <p className="text-[16px] leading-[1.75] text-ink-500 lg:text-justify">
               Engineering and Global Business Services, mapped to a single
               delivery chain. Each practice sits where it creates value across{" "}
               <span className="font-medium text-azure">build</span>,{" "}
@@ -2089,6 +1603,7 @@ export default function CapabilitiesOS() {
                 innerRef={coreRef}
                 active={activeGroup}
                 phase={activePhase}
+                animate={inView}
               />
             </div>
 
@@ -2130,6 +1645,30 @@ export default function CapabilitiesOS() {
               {/* <div className="relative mt-6 hidden w-[122%] max-w-none opacity-90 lg:block">
                 <Globe />
               </div> */}
+              {/* The chain, named once under the whole picture. The pyramid reads
+              bottom-up as a stack; the line beneath it reads left-to-right as
+              a sequence, and between them they say the same thing twice in
+              the two ways people look at a diagram like this. */}
+              <div className="mt-4 lg:mt-10">
+                {/* <p className="flex items-start justify-start gap-3 text-[15px] font-semibold tracking-[0.02em] text-ink lg:gap-4 lg:text-[19px]">
+                  {(["Build", "Automate", "Operate"] as const).map(
+                    (name, i) => (
+                      <Fragment key={name}>
+                        {i > 0 && (
+                          <span aria-hidden className="text-azure">
+                            ·
+                          </span>
+                        )}
+                        <span>{name}</span>
+                      </Fragment>
+                    ),
+                  )}
+                </p> */}
+                <p className="mt-2 text-base leading-[1.7] text-ink-500">
+                  A unified approach to build, automate and operate smarter
+                  enterprises for the future.
+                </p>
+              </div>
             </div>
           </div>
         </div>

@@ -26,30 +26,53 @@ export default function Cursor() {
     const eased = { x: -100, y: -100 };
     let raf = 0;
 
-    const onMove = (e: PointerEvent) => {
-      target.x = e.clientX;
-      target.y = e.clientY;
-      if (dot.current) {
-        dot.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
-      }
-      const el = e.target as HTMLElement | null;
-      setActive(!!el?.closest('a, button, [role="tab"], input, select, textarea'));
-    };
-
+    /* Parks itself once the ring has caught up. This used to run for the life
+       of the page, easing a value that had already converged — a wakeup every
+       frame, forever, to move nothing. An idle pointer now costs zero frames,
+       and `onMove` restarts the loop. */
     const tick = () => {
-      eased.x += (target.x - eased.x) * 0.18;
-      eased.y += (target.y - eased.y) * 0.18;
+      const dx = target.x - eased.x;
+      const dy = target.y - eased.y;
+      if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
+        raf = 0;
+        return;
+      }
+      eased.x += dx * 0.18;
+      eased.y += dy * 0.18;
       if (ring.current) {
         ring.current.style.transform = `translate3d(${eased.x}px, ${eased.y}px, 0)`;
       }
       raf = requestAnimationFrame(tick);
     };
 
+    const onMove = (e: PointerEvent) => {
+      target.x = e.clientX;
+      target.y = e.clientY;
+      if (dot.current) {
+        dot.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+      }
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+
+    /* The hit test used to live in `onMove` — a `closest()` walk up the DOM
+       tree on every pointermove, 120+ times a second on a high-refresh
+       display, to answer a question whose answer only changes when the
+       pointer crosses an element boundary. `pointerover` fires on exactly
+       those crossings, so the same state costs a few walks per second. */
+    const onOver = (e: PointerEvent) => {
+      const el = e.target as HTMLElement | null;
+      setActive(
+        !!el?.closest('a, button, [role="tab"], input, select, textarea'),
+      );
+    };
+
     window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerover", onOver, { passive: true });
     raf = requestAnimationFrame(tick);
 
     return () => {
       window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerover", onOver);
       cancelAnimationFrame(raf);
       document.body.classList.remove("has-cursor");
     };
@@ -59,11 +82,15 @@ export default function Cursor() {
 
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 z-[100]">
-      {/* Centre dot — pinned exactly to the pointer. */}
+      {/* Centre dot — pinned exactly to the pointer. Fixed at the larger of
+          the two sizes and scaled down at rest: the previous version swapped
+          `h`/`w`/`ml`/`mt` between states, so every hover ran layout on a
+          `transition-all` that had to diff every animatable property. Same
+          1px → 1.5px result, on the compositor. */}
       <div ref={dot} className="absolute left-0 top-0">
         <span
-          className={`absolute block rounded-full bg-azure transition-all duration-300 ease-expo ${
-            active ? "-ml-[3px] -mt-[3px] h-1.5 w-1.5" : "-ml-[2px] -mt-[2px] h-1 w-1"
+          className={`absolute -ml-[3px] -mt-[3px] block h-1.5 w-1.5 rounded-full bg-azure transition-transform duration-300 ease-expo ${
+            active ? "scale-100" : "scale-[0.667]"
           }`}
         />
       </div>
@@ -72,7 +99,7 @@ export default function Cursor() {
       <div ref={ring} className="absolute left-0 top-0">
         <svg
           viewBox="0 0 40 40"
-          className={`absolute -left-5 -top-5 h-10 w-10 transition-all duration-500 ease-expo ${
+          className={`absolute -left-5 -top-5 h-10 w-10 transition-[transform,opacity] duration-500 ease-expo ${
             active ? "scale-100 opacity-100" : "scale-[0.55] opacity-40"
           }`}
         >

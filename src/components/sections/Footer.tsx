@@ -157,10 +157,13 @@ export default function Footer() {
           </p>
           <div className="mt-8 grid gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-16">
             {OFFICES.map((o) => (
-              <div key={o.country}>
-                <div className="flex items-center gap-2.5">
+              /* Headed by city, not country. There are two Pakistani offices
+                 now, and country alone both repeated the heading and collided
+                 the keys — the flag and the address carry the country. */
+              <div key={o.city}>
+                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
                   <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
-                    {o.country}
+                    {o.city}
                   </h3>
                   <span className="text-[13px] text-ink-400">({o.role})</span>
                   {/* eslint-disable-next-line @next/next/no-img-element */}

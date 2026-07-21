@@ -62,9 +62,11 @@ export default function CaseStudyCard({ study }: { study: CaseStudy }) {
           </span>
         </div>
 
-        <h3 className="mt-4 text-[19px] font-medium leading-snug tracking-[-0.02em] text-ink lg:text-[21px]">
+        {/* h2, not h3: these cards sit directly under the page's single <h1>,
+            so an h3 would skip a level (axe: heading-order). */}
+        <h2 className="mt-4 text-[19px] font-medium leading-snug tracking-[-0.02em] text-ink lg:text-[21px]">
           {study.title}
-        </h3>
+        </h2>
 
         <p className="mt-3.5 text-[14px] leading-[1.7] text-ink-500">
           {study.summary}

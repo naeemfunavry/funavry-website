@@ -4,18 +4,37 @@ import { cn } from "@/lib/utils";
 /* The trusted-partner marks, from /public/clients/webp. Names were read off the
    artwork, not off the filenames — several of those lie: `mental.webp` is Metal
    World, `solution.webp` is solutions by stc, `system.webp` is Systems Limited.
+   The later batch caught two more: `amd.webp` is AMD Telecom and not the chip
+   company, and `aljazeera.webp` is Al Jazeera Finance and not the broadcaster.
+   Naming either from its filename would have put a claim on the page that
+   isn't true, so every mark here was opened and read before it was listed.
+   `intensivate` and `skillyah` are the two with no wordmark at all — those
+   names come from the filename because there is nothing in the artwork to
+   check them against.
+
    Strongest marks lead, so the first thing entering the frame is the most
    recognisable. Shown in their own colours — no plate, no filter. */
 const CLIENTS: { name: string; file: string }[] = [
   { name: "Amazon Web Services", file: "aws.webp" },
   { name: "EY", file: "ey.webp" },
+  { name: "Dubai World Trade Centre", file: "dwtc.webp" },
   { name: "solutions by stc", file: "solution.webp" },
+  { name: "Manchester Metropolitan University", file: "manchester.webp" },
   { name: "Systems Limited", file: "system.webp" },
+  { name: "Al Jazeera Finance", file: "aljazeera.webp" },
+  { name: "Jazz", file: "jazz.webp" },
   { name: "Wateen Telecom", file: "wateen.webp" },
   { name: "Pakistan Software Export Board", file: "pseb.webp" },
   { name: "P@SHA", file: "pasha.webp" },
   { name: "FAST", file: "fast.webp" },
   { name: "Ministry of Health & Wellness", file: "mohw-logo.webp" },
+  { name: "TechVista", file: "techvista.webp" },
+  { name: "LodgeiT", file: "lodgeit.webp" },
+  { name: "VNClagoon", file: "vnc.webp" },
+  { name: "PiñaTech", file: "pinatech.webp" },
+  { name: "Intensivate", file: "intensivate.webp" },
+  { name: "AMD Telecom", file: "amd.webp" },
+  { name: "SkillYah", file: "skillyah.webp" },
   { name: "GZ Tech", file: "gz.webp" },
   { name: "Nexsys", file: "nexsys.webp" },
   { name: "NxEnter", file: "nxenter.webp" },
@@ -65,7 +84,7 @@ function Row({ ariaHidden = false }: { ariaHidden?: boolean }) {
               loading="lazy"
               width={200}
               height={112}
-              className="h-[40px] w-[72px] object-contain lg:h-[100px] lg:w-[130px]"
+              className="h-[40px] w-[72px] object-contain lg:h-[112px] lg:w-[150px]"
             />
 
             {/* Amber underline — static on the accented cells, drawn in on hover
@@ -106,11 +125,16 @@ function Row({ ariaHidden = false }: { ariaHidden?: boolean }) {
     than as a band of its own. */
 export function TrustedStrip() {
   return (
-    <div className="flex items-stretch border-t border-line">
+    /* Stacks below sm. As a row at every width, the plate is `flex-none` with
+       no cap under `lg`, so it sizes to its own text — on a 375px phone that
+       is most of the line, and the marquee it sits next to gets squeezed into
+       a sliver too narrow to read a logo in. Above the marks instead, each
+       gets the full width. */
+    <div className="flex flex-col items-stretch border-t border-line sm:flex-row">
       {/* The fixed plate. */}
-      <div className="flex flex-none items-center border-r border-line px-6 py-8 sm:px-10 lg:max-w-[300px]">
+      <div className="flex flex-none items-center border-b border-line pr-5 py-6 sm:border-b-0 sm:border-r sm:pr-10 sm:py-8 lg:max-w-[300px]">
         <p className="text-[14px] font-medium leading-[1.55] text-ink lg:text-[15px]">
-          Trusted by <span className="text-amber">enterprise teams</span>
+          Trusted by <span className="text-amber-ink">enterprise teams</span>
           <br className="hidden sm:block" /> across four continents
         </p>
       </div>

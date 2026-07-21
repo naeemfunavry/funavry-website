@@ -1,12 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
+import Image from "next/image";
 import { useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import { KineticWords, Wipe, Rule } from "@/components/ui/Kinetic";
 import { INDUSTRIES, type Industry } from "@/lib/industries";
+import { useInView } from "@/lib/use-in-view";
 import { cn } from "@/lib/utils";
 
 /* All ten ride the deck now — nothing hides behind a button. Rendered twice so
@@ -20,9 +22,16 @@ const SLIDES = [...INDUSTRIES, ...INDUSTRIES];
 const DWELL = 3800;
 
 /* Azure, the same datum colour `Frame` marks every other card with — the ticks
-   are the site's language, not this card's. */
+   are the site's language, not this card's.
+
+   Held at the open size and scaled down at rest, rather than growing `h`/`w`
+   on hover. The old version ran `transition-all` over width and height, which
+   is layout on every frame of a 500ms transition — and there are four of these
+   per tile across twenty tiles, so hovering anywhere in the deck put eighty
+   layout-animated boxes on the compositor's plate. Each instance supplies its
+   own `origin-*` so the corner it's pinned to stays put as it scales. */
 const TICK =
-  "pointer-events-none absolute h-2 w-2 border-azure/0 transition-all duration-500 ease-expo group-hover:h-3.5 group-hover:w-3.5 group-hover:border-azure";
+  "pointer-events-none absolute h-3.5 w-3.5 scale-[0.571] border-azure/0 transition-[transform,border-color] duration-500 ease-expo group-hover:scale-100 group-hover:border-azure";
 
 function Tile({ industry, index }: { industry: Industry; index: number }) {
   return (
@@ -31,37 +40,69 @@ function Tile({ industry, index }: { industry: Industry; index: number }) {
           corner ticks under a full-bleed photo. Same drafting language, drawn
           over the image in paper so it reads against the picture. */}
       <article className="group relative h-[300px] overflow-hidden border border-line bg-ink-900 lg:h-[340px]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        {/* `next/image`, not a bare `<img>`. These are ~110KB JPEGs apiece and
+            the deck renders every one of them twice for the loop, so the raw
+            tag was shipping the full-resolution original — twenty times over,
+            no WebP, no responsive size — to fill a tile that is never wider
+            than about a quarter of the viewport. `sizes` is what lets Next
+            pick a variant that matches the tile instead of the file.
+
+            Hover moves scale only. It used to be `transition-all` alongside a
+            `grayscale` filter, which re-filters the whole photo every frame
+            of a 700ms transition on every hover — expensive, and on a
+            full-bleed image it is the most expensive kind of repaint there
+            is. The zoom carries the interaction on its own. */}
+        <Image
           src={industry.image}
           alt=""
-          loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-expo group-hover:scale-[1.06] group-hover:grayscale-[0.55]"
+          fill
+          sizes="(max-width: 640px) 78vw, (max-width: 1024px) 50vw, 25vw"
+          className="object-cover transition-transform duration-700 ease-expo group-hover:scale-[1.06]"
         />
 
         {/* The scrim does two jobs: it holds the heading legible over whatever
             the photo happens to be, and it deepens on hover to carry the
-            paragraph that appears under it. */}
+            paragraph that appears under it.
+
+            Two stacked gradients cross-faded on opacity, rather than one
+            gradient transitioning its own colour stops. Interpolating a stop
+            means re-rasterising the whole gradient every frame, and this one
+            covers the full tile — 700ms of full-bleed repaint per hover. Two
+            static gradients rasterise once each and the compositor blends
+            them for free. */}
         <div
           aria-hidden
-          className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/45 to-ink-900/10 transition-all duration-700 ease-expo group-hover:via-ink-900/75 group-hover:to-ink-900/35"
+          className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/45 to-ink-900/10 transition-opacity duration-700 ease-expo group-hover:opacity-0"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/75 to-ink-900/35 opacity-0 transition-opacity duration-700 ease-expo group-hover:opacity-100"
         />
 
         <span
           aria-hidden
-          className={cn(TICK, "left-0 top-0 border-l border-t")}
+          className={cn(TICK, "left-0 top-0 origin-top-left border-l border-t")}
         />
         <span
           aria-hidden
-          className={cn(TICK, "right-0 top-0 border-r border-t")}
+          className={cn(
+            TICK,
+            "right-0 top-0 origin-top-right border-r border-t",
+          )}
         />
         <span
           aria-hidden
-          className={cn(TICK, "bottom-0 left-0 border-b border-l")}
+          className={cn(
+            TICK,
+            "bottom-0 left-0 origin-bottom-left border-b border-l",
+          )}
         />
         <span
           aria-hidden
-          className={cn(TICK, "bottom-0 right-0 border-b border-r")}
+          className={cn(
+            TICK,
+            "bottom-0 right-0 origin-bottom-right border-b border-r",
+          )}
         />
 
         {/* <span className="absolute left-4 top-4 border border-paper/20 bg-ink-900/50 px-2 py-1 font-mono text-[9.5px] uppercase tracking-[0.16em] text-paper backdrop-blur-sm">
@@ -114,6 +155,7 @@ export default function Industries() {
   const reduce = useReducedMotion();
   const viewportRef = useRef<HTMLDivElement>(null);
   const settleRef = useRef<ReturnType<typeof setTimeout>>();
+  const [sectionRef, inView] = useInView<HTMLElement>();
 
   /* The scroll step is one tile plus the gap — read off the laid-out DOM so it
      stays right at every breakpoint, where the tile count per view changes. */
@@ -177,13 +219,14 @@ export default function Industries() {
   const paused = useRef(false);
 
   useEffect(() => {
-    if (reduce) return;
+    // No timer at all while the section is off screen — see `useInView`.
+    if (reduce || !inView) return;
     const id = setInterval(() => {
       if (paused.current || document.hidden) return;
       go(1);
     }, DWELL);
     return () => clearInterval(id);
-  }, [reduce, go]);
+  }, [reduce, inView, go]);
 
   /* Touch: pause while a finger is down, resume shortly after it lifts. */
   const resumeTimer = useRef<ReturnType<typeof setTimeout>>();
@@ -204,12 +247,13 @@ export default function Industries() {
 
   return (
     <section
+      ref={sectionRef}
       id="industries"
       className="relative overflow-hidden border-t border-line"
     >
       <div aria-hidden className="absolute inset-0 grid-paper opacity-70" />
 
-      <Container wide className="relative z-10 py-24 lg:py-32">
+      <Container wide className="relative z-10 py-16 sm:py-24 lg:py-32">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] lg:items-end lg:gap-20">
           <div>
             <div className="flex items-center gap-3">

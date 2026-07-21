@@ -29,7 +29,10 @@ const sizeClasses = {
 
 const variants: Record<Variant, string> = {
   ink: "bg-ink text-paper hover:bg-ink-900",
-  primary: "bg-azure text-white hover:bg-azure-600",
+  // Dark ink on the bright azure (5.3:1), mirroring the amber `accent` variant.
+  // White-on-azure measured 2.94:1 and failed WCAG AA; hover lightens the azure
+  // so the dark text stays well clear of the threshold.
+  primary: "bg-azure text-ink-900 hover:bg-azure-300",
   accent: "bg-amber text-ink-900 hover:bg-amber-600",
   secondary: "border border-line-strong bg-transparent text-ink hover:border-ink hover:bg-paper-white",
   ghost: "bg-transparent text-ink-500 hover:text-ink",

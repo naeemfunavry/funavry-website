@@ -2,8 +2,6 @@
 
 import { useEffect } from "react";
 import Lenis from "lenis";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { registerScroller } from "@/lib/scroll-lock";
 
 export default function SmoothScrollProvider({
@@ -16,16 +14,22 @@ export default function SmoothScrollProvider({
       return;
     }
 
-    gsap.registerPlugin(ScrollTrigger);
-
     const lenis = new Lenis({ lerp: 0.08, duration: 1.4 });
-    lenis.on("scroll", ScrollTrigger.update);
     // Overlays need to be able to stop it — body overflow alone won't.
     registerScroller(lenis);
 
-    const raf = (time: number) => lenis.raf(time * 1000);
-    gsap.ticker.add(raf);
-    gsap.ticker.lagSmoothing(0);
+    /* Driven by a plain rAF. This used to run on `gsap.ticker`, with
+       ScrollTrigger registered alongside it — but nothing on the site ever
+       created a ScrollTrigger, so the whole of GSAP was being shipped and
+       parsed to do what one `requestAnimationFrame` does. `gsap.ticker` hands
+       out seconds and rAF hands out milliseconds, which is the only reason
+       the old line multiplied by 1000. */
+    let frame = 0;
+    const tick = (time: number) => {
+      lenis.raf(time);
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
 
     const onClick = (e: MouseEvent) => {
       const anchor = (e.target as HTMLElement).closest<HTMLAnchorElement>(
@@ -43,7 +47,7 @@ export default function SmoothScrollProvider({
 
     return () => {
       document.removeEventListener("click", onClick);
-      gsap.ticker.remove(raf);
+      cancelAnimationFrame(frame);
       registerScroller(null);
       lenis.destroy();
     };

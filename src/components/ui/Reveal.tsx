@@ -40,7 +40,11 @@ export default function Reveal({
       className={cn(className)}
       initial={reduce ? { opacity: 0 } : { opacity: 0, x, y }}
       whileInView={reduce ? { opacity: 1 } : { opacity: 1, x: 0, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
+      /* Fires on any part being on screen. Like the other reveals on the site,
+         this one's resting state is `opacity: 0` — a trigger that never lands
+         means content that never appears, and a negative margin makes that
+         much likelier on a short viewport. */
+      viewport={{ once: true, amount: 0 }}
       transition={{
         duration: reduce ? 0.2 : duration,
         ease: [0.16, 1, 0.3, 1],

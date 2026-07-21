@@ -18,7 +18,12 @@ export default function CountUp({
   format?: (n: number) => string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
+  /* No negative margin here. This one fails worse than the wipes do: the
+     display sits at 0 until the observer fires, so a trigger that never lands
+     doesn't hide the stat — it shows a confidently wrong one. Firing as soon
+     as any part of the number is on screen costs nothing and can't
+     misreport. */
+  const inView = useInView(ref, { once: true, amount: 0 });
   const reduce = useReducedMotion();
   const [display, setDisplay] = useState(reduce ? value : 0);
 

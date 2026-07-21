@@ -2,7 +2,7 @@ import {
   Briefcase,
   Users,
   Building2,
-  Globe,
+  CalendarDays,
   type LucideIcon,
 } from "lucide-react";
 import Container from "@/components/ui/Container";
@@ -19,6 +19,10 @@ type Stat = {
   unit?: string;
   label: string;
   desc: string;
+  /** Counts up from zero unless this says otherwise. A year isn't a quantity —
+      rolling 0 → 2018 reads as a tally of something rather than a date, and
+      spends two seconds showing years the company didn't exist in. */
+  count?: boolean;
 };
 
 const STATS: Stat[] = [
@@ -45,11 +49,12 @@ const STATS: Stat[] = [
     desc: "State-of-the-art delivery & innovation center.",
   },
   {
-    icon: Globe,
-    value: 4,
+    icon: CalendarDays,
+    value: 2018,
     suffix: "",
-    label: "Continents Served",
-    desc: "Global presence across four continents.",
+    count: false,
+    label: "Founded",
+    desc: "Building and running enterprise platforms since 2018.",
   },
 ];
 
@@ -161,7 +166,7 @@ export default function Proof() {
     >
       <div aria-hidden className="absolute inset-0 grid-paper opacity-70" />
 
-      <Container wide className="relative z-10 py-20 lg:py-24">
+      <Container wide className="relative z-10 py-14 sm:py-20 lg:py-24">
         <div className="relative overflow-hidden bg-paper p-8 pb-0 shadow-[0_2px_28px_-14px_rgba(20,30,50,0.16)] lg:p-14 lg:pb-0">
           {/* Globe motif behind the middle. */}
           <div className="pointer-events-none absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 opacity-50 lg:block xl:left-[46%]">
@@ -219,7 +224,11 @@ export default function Proof() {
                       </span> */}
                       <span className="flex items-baseline gap-1.5">
                         <span className="text-[clamp(30px,3.4vw,46px)] font-semibold leading-none tracking-[-0.03em] text-ink">
-                          <CountUp value={stat.value} suffix={stat.suffix} />
+                          {stat.count === false ? (
+                            `${stat.value}${stat.suffix}`
+                          ) : (
+                            <CountUp value={stat.value} suffix={stat.suffix} />
+                          )}
                         </span>
                         {stat.unit && (
                           <span className="text-[15px] font-medium text-ink-400">

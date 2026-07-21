@@ -34,7 +34,7 @@ export default function CaseStudiesPage() {
                     Case Studies
                   </span>
                 </div>
-                <h2 className="mt-6 text-h1 text-ink">
+                <h1 className="mt-6 text-h1 text-ink">
                   <KineticWords text="Platforms in production," trigger="mount" />
                   <br />
                   <KineticWords
@@ -42,7 +42,7 @@ export default function CaseStudiesPage() {
                     delay={0.12}
                     trigger="mount"
                   />
-                </h2>
+                </h1>
               </div>
 
               <Wipe delay={0.2}>

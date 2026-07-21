@@ -61,7 +61,7 @@ export default function Contact() {
         className="absolute -bottom-[220px] right-[5%] h-[480px] w-[480px] rounded-full bg-amber/[0.08] blur-[140px]"
       />
 
-      <Container wide className="relative z-10 py-24 lg:py-32">
+      <Container wide className="relative z-10 py-16 sm:py-24 lg:py-32">
         <div className="grid gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)] lg:gap-24">
           {/* Left — the closing statement. */}
           <div>
@@ -108,9 +108,12 @@ export default function Contact() {
 
             {/* Compliance, set as a drafted list rather than badges. */}
             <Wipe delay={0.34}>
-              <dl className="mt-16 grid max-w-[480px] grid-cols-2 gap-px bg-paper/10">
+              {/* A list of compliance items, not term/definition pairs — a
+                  <ul>, not a <dl>. The old <dl> held <dt>s with no <dd>, which
+                  is invalid definition-list markup (axe: definition-list). */}
+              <ul className="mt-16 grid max-w-[480px] grid-cols-2 gap-px bg-paper/10">
                 {CREDENTIALS.map((cred) => (
-                  <div
+                  <li
                     key={cred}
                     className="flex items-center gap-3 bg-ink px-4 py-4"
                   >
@@ -119,12 +122,12 @@ export default function Contact() {
                       strokeWidth={2.5}
                       className="flex-none text-azure"
                     />
-                    <dt className="font-mono text-[11px] uppercase tracking-[0.14em] text-paper/70">
+                    <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-paper/70">
                       {cred}
-                    </dt>
-                  </div>
+                    </span>
+                  </li>
                 ))}
-              </dl>
+              </ul>
             </Wipe>
           </div>
 

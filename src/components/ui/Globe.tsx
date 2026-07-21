@@ -92,7 +92,7 @@ export default function Globe({ className }: { className?: string }) {
   /* A click pins a country so it stays faced while you read it; hover still
      drives it otherwise. Same idiom the cards and the pyramid already share. */
   const shown = hovered ?? pinned;
-  const office = OFFICES.find((o) => o.country === shown) ?? null;
+  const office = OFFICES.find((o) => o.city === shown) ?? null;
 
   const svgRef = useRef<SVGSVGElement>(null);
   const markRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -325,18 +325,18 @@ export default function Globe({ className }: { className?: string }) {
           duplicate of the legend below, which is the accessible interface, so
           they stay out of the tree for assistive tech. */}
         {OFFICES.map((o, i) => {
-          const on = shown === o.country;
+          const on = shown === o.city;
           return (
             <div
-              key={o.country}
+              key={o.city}
               aria-hidden
               ref={(el) => {
                 markRef.current[i] = el;
               }}
-              onMouseEnter={() => setHovered(o.country)}
+              onMouseEnter={() => setHovered(o.city)}
               onMouseLeave={() => setHovered(null)}
               onClick={() =>
-                setPinned((p) => (p === o.country ? null : o.country))
+                setPinned((p) => (p === o.city ? null : o.city))
               }
               className="absolute z-10 cursor-pointer"
               style={{
@@ -377,19 +377,19 @@ export default function Globe({ className }: { className?: string }) {
           hover, so it works from the keyboard. */}
       <ul className="mt-1 flex flex-wrap justify-end gap-1.5">
         {OFFICES.map((o) => {
-          const on = shown === o.country;
+          const on = shown === o.city;
           return (
-            <li key={o.country}>
+            <li key={o.city}>
               <button
                 type="button"
-                onMouseEnter={() => setHovered(o.country)}
+                onMouseEnter={() => setHovered(o.city)}
                 onMouseLeave={() => setHovered(null)}
-                onFocus={() => setHovered(o.country)}
+                onFocus={() => setHovered(o.city)}
                 onBlur={() => setHovered(null)}
                 onClick={() =>
-                  setPinned((p) => (p === o.country ? null : o.country))
+                  setPinned((p) => (p === o.city ? null : o.city))
                 }
-                aria-pressed={pinned === o.country}
+                aria-pressed={pinned === o.city}
                 className={cn(
                   "flex items-center gap-2 rounded-full border px-2.5 py-1.5 transition-colors duration-300 ease-expo",
                   on
@@ -405,7 +405,7 @@ export default function Globe({ className }: { className?: string }) {
                   className="h-3 w-[18px] flex-none object-cover ring-1 ring-line-strong/70"
                 />
                 <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-ink-500">
-                  {o.country}
+                  {o.city}
                 </span>
                 <span className="sr-only">— {o.role}</span>
               </button>

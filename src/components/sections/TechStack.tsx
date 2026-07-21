@@ -446,7 +446,7 @@ function GroupRow({ group, index }: { group: Group; index: number }) {
               mono={item.mono}
               className="flex-none transition-transform duration-300 ease-expo group-hover/t:scale-110"
               size={30}
-              monoClassName="flex h-6 min-w-[34px] flex-none items-center justify-center rounded-md bg-ink/[0.06] px-1.5 font-mono text-xs font-semibold uppercase leading-none tracking-tight text-ink/55"
+              monoClassName="flex h-6 min-w-[34px] flex-none items-center justify-center rounded-md bg-ink/[0.06] px-1.5 font-mono text-xs font-semibold uppercase leading-none tracking-tight text-ink-500"
             />
             <span className="truncate text-[12.5px] leading-tight text-ink-600">
               {item.name}
@@ -464,17 +464,44 @@ export default function TechStack() {
   const domain = ORDERED[active];
 
   return (
-    <section
-      id="technology"
-      className="relative overflow-hidden border-t border-line bg-paper"
-    >
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute -left-[8%] top-[4%] h-[44%] w-[44vw] rounded-full bg-azure/[0.06] blur-[130px]" />
-        <div className="absolute -right-[10%] bottom-[6%] h-[44%] w-[40vw] rounded-full bg-amber/[0.05] blur-[130px]" />
-      </div>
-      <div aria-hidden className="absolute inset-0 grid-paper opacity-[0.04]" />
+    <section id="technology" className="relative overflow-hidden  bg-paper">
+      {/* Minimal field: soft radial lift behind the device, a whisper of the
+          engineering grid, and a few drifting motes. */}
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(120% 80% at 50% 8%, rgba(68,158,216,0.06), transparent 60%), radial-gradient(90% 70% at 80% 100%, rgba(245,159,19,0.05), transparent 65%)",
+        }}
+      />
+      <div aria-hidden className="absolute inset-0 grid-paper opacity-[0.5]" />
+      {!reduce && (
+        <div aria-hidden className="absolute inset-0 overflow-hidden">
+          {[
+            { l: "12%", t: "26%", s: 6, d: 13, delay: 0 },
+            { l: "84%", t: "20%", s: 5, d: 16, delay: 1.5 },
+            { l: "70%", t: "72%", s: 7, d: 15, delay: 0.8 },
+            { l: "22%", t: "68%", s: 5, d: 18, delay: 2.2 },
+            { l: "48%", t: "14%", s: 4, d: 20, delay: 1 },
+          ].map((p, i) => (
+            <span
+              key={i}
+              className="ws-mote absolute rounded-full bg-ink/20"
+              style={{
+                left: p.l,
+                top: p.t,
+                width: p.s,
+                height: p.s,
+                animationDuration: `${p.d}s`,
+                animationDelay: `${p.delay}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
 
-      <Container wide className="relative z-10 py-24 lg:py-32">
+      <Container wide className="relative z-10 py-16 sm:py-24 lg:py-32">
         {/* Heading — the section's own, kept as it was. */}
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] lg:items-end lg:gap-20">
           <div>
