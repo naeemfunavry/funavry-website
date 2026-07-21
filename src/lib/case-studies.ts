@@ -176,7 +176,6 @@ export const CASE_STUDIES: CaseStudy[] = [
       },
     ],
     image: contxtual,
-    featured: true,
   },
   {
     slug: "skillyah",
@@ -206,7 +205,6 @@ export const CASE_STUDIES: CaseStudy[] = [
       { label: "Payments & disputes", icon: "Scale", at: { x: 0.11, y: 0.89 } },
     ],
     image: skillyah,
-    featured: true,
   },
   {
     slug: "cnbc-arabia",
@@ -224,6 +222,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "High-traffic delivery",
     ],
     image: cnbcArabia,
+    featured: true,
   },
   {
     slug: "smart-municipality",
@@ -241,6 +240,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Arabic & English",
     ],
     image: smartMunicipality,
+    featured: true,
   },
 ];
 

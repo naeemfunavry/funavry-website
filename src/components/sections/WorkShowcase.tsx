@@ -177,7 +177,8 @@ function TabletPage({
                   src={study.image}
                   alt={`${study.title} — product interface`}
                   fill
-                  sizes="(max-width: 1024px) 64vw, 760px"
+                  sizes="(max-width: 768px) 88vw, (max-width: 1280px) 55vw, 840px"
+                  quality={90}
                   placeholder="blur"
                   className="object-cover object-top w-full h-full"
                 />
