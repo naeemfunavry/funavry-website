@@ -236,7 +236,7 @@ export default function WorkShowcase() {
             <div className="flex items-center gap-3">
               <span aria-hidden className="h-px w-10 flex-none bg-azure" />
               <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-ink-500">
-                Case Studies
+                Our Work
               </span>
             </div>
             <h2 className="mt-6 text-h1 text-ink">
@@ -256,7 +256,7 @@ export default function WorkShowcase() {
 
             <div className="flex flex-wrap items-center gap-4 lg:justify-end">
               <Button href="/case-studies" variant="primary" size="md" arrow>
-                View All Case Studies
+                View All Work
               </Button>
               <div className="flex flex-none items-center">
                 <button
@@ -287,7 +287,7 @@ export default function WorkShowcase() {
           id="work-carousel"
           role="group"
           aria-roledescription="carousel"
-          aria-label="Case studies"
+          aria-label="Our Work"
           onKeyDown={onKeyDown}
           onMouseEnter={pause}
           onMouseLeave={resume}

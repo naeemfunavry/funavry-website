@@ -19,16 +19,18 @@ type Link = {
   mega?: "services" | "industries";
   /** A small self-contained dropdown. */
   children?: { label: string; href: string; desc: string }[];
+  /** Opens in a new tab. */
+  newTab?: boolean;
 };
 
 /* Rooted at "/", not bare fragments: the bar also flies over /case-studies, and
    "#work" from there scrolls to nothing. On the home page a same-document
    fragment still resolves as a jump, so nothing changes there. */
 const LINKS: Link[] = [
-  { label: "Services", href: "/#capabilities", mega: "services" },
-  { label: "Industries", href: "/#industries", mega: "industries" },
-  { label: "Work", href: "/#work" },
-  { label: "Case Studies", href: "/case-studies" },
+  { label: "Services", href: "/services", mega: "services" },
+  { label: "Industries", href: "/industries", mega: "industries" },
+  { label: "Our Work", href: "/case-studies", newTab: true },
+  // { label: "Case Studies", href: "/case-studies" },
   {
     label: "Company",
     href: "/#insights",
@@ -50,9 +52,9 @@ function subItemsFor(link: Link): { label: string; href: string }[] | null {
   if (link.children)
     return link.children.map((c) => ({ label: c.label, href: c.href }));
   if (link.mega === "services")
-    return SERVICES.map((s) => ({ label: s.title, href: "/#capabilities" }));
+    return SERVICES.map((s) => ({ label: s.title, href: "/services" }));
   if (link.mega === "industries")
-    return INDUSTRIES.map((i) => ({ label: i.name, href: "/#industries" }));
+    return INDUSTRIES.map((i) => ({ label: i.name, href: "/industries" }));
   return null;
 }
 
@@ -80,7 +82,7 @@ function MegaGroup({
         {items.map((s) => (
           <li key={s.n}>
             <a
-              href="/#capabilities"
+              href="/services"
               onClick={onNavigate}
               className="group flex items-start gap-2.5 py-1.5"
             >
@@ -117,7 +119,7 @@ function ServicesMega({ onNavigate }: { onNavigate: () => void }) {
             business services.
           </p>
           <a
-            href="/#capabilities"
+            href="/services"
             onClick={onNavigate}
             className="group mt-6 inline-flex items-center gap-1.5 text-[13px] font-medium text-azure-ink"
           >
@@ -160,7 +162,7 @@ function IndustriesMega({ onNavigate }: { onNavigate: () => void }) {
             Five hundred delivered projects across the sectors we know cold.
           </p>
           <a
-            href="/#industries"
+            href="/industries"
             onClick={onNavigate}
             className="group mt-6 inline-flex items-center gap-1.5 text-[13px] font-medium text-azure-ink"
           >
@@ -175,7 +177,7 @@ function IndustriesMega({ onNavigate }: { onNavigate: () => void }) {
           {INDUSTRIES.map((ind) => (
             <li key={ind.name}>
               <a
-                href="/#industries"
+                href="/industries"
                 onClick={onNavigate}
                 className="group block"
               >
@@ -449,6 +451,8 @@ export default function Nav() {
               <a
                 key={link.href}
                 href={link.href}
+                target={link.newTab ? "_blank" : undefined}
+                rel={link.newTab ? "noopener noreferrer" : undefined}
                 className="group relative py-2"
               >
                 <span
@@ -636,6 +640,8 @@ export default function Nav() {
                     ) : (
                       <a
                         href={link.href}
+                        target={link.newTab ? "_blank" : undefined}
+                        rel={link.newTab ? "noopener noreferrer" : undefined}
                         onClick={() => setOpen(false)}
                         className="block py-6 text-[28px] font-medium tracking-[-0.03em] text-ink"
                       >
