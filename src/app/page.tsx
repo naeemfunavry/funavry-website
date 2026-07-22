@@ -18,12 +18,10 @@ import Testimonials from "@/components/sections/Testimonials";
 // import Insights from "@/components/sections/Insights";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/sections/Footer";
-import Cursor from "@/components/ui/Cursor";
 
 export default function Home() {
   return (
     <>
-      <Cursor />
       <Nav />
       <main>
         <Hero />

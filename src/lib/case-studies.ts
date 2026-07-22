@@ -70,6 +70,17 @@ export type CaseStudy = {
    * anchor, and past that it stops clearing the window and sits on the capture.
    */
   callouts?: { label: string; icon: string; at: { x: number; y: number } }[];
+  /**
+   * Portfolio highlights, taken verbatim from Section 03 of the corporate deck
+   * (`Funavry_Corporate_Deck_v3.0`). These are the one place a metric is allowed
+   * on the home deck: they are approved facts from the deck, not numbers invented
+   * for the site. Shown as the floating stat cards on the Work showcase — `value`
+   * is the headline, `detail` the context line beneath it. Featured studies only.
+   */
+  highlights?: { value: string; detail: string }[];
+  /** The delivery footprint the deck prints beside each engagement. */
+  client?: string;
+  team?: string;
   /** The four the home page carries. The rest live on /case-studies. */
   featured?: boolean;
 };
@@ -110,6 +121,13 @@ export const CASE_STUDIES: CaseStudy[] = [
         at: { x: 0.2, y: 0.8 },
       },
     ],
+    highlights: [
+      { value: "14 Plants", detail: "US + MENA" },
+      { value: "No-Code Forms", detail: "Per-Facility Config" },
+      { value: "Offline Mobile", detail: "Field Inspection" },
+    ],
+    client: "US · UAE · KSA",
+    team: "10+ Engineers",
     image: qfs,
     featured: true,
   },
@@ -141,6 +159,13 @@ export const CASE_STUDIES: CaseStudy[] = [
         at: { x: 0.12, y: 0.85 },
       },
     ],
+    highlights: [
+      { value: "End-to-End", detail: "Claim Lifecycle" },
+      { value: "Approval Matrix", detail: "Multi-Level Routing" },
+      { value: "Global Rollout", detail: "Regions · Sites" },
+    ],
+    client: "United States",
+    team: "6+ Engineers",
     image: globalClaims,
     featured: true,
   },
@@ -221,6 +246,13 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Editorial publishing",
       "High-traffic delivery",
     ],
+    highlights: [
+      { value: "1M+", detail: "Hits per Day" },
+      { value: "Live Market Data", detail: "Tickers · Indices" },
+      { value: "Elasticsearch", detail: "Instant Search" },
+    ],
+    client: "United States",
+    team: "10+ Engineers",
     image: cnbcArabia,
     featured: true,
   },
@@ -239,6 +271,13 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Case management",
       "Arabic & English",
     ],
+    highlights: [
+      { value: "Bilingual", detail: "Arabic · English" },
+      { value: "Citizen CRM", detail: "Multi-Level Workflow" },
+      { value: "App + Web", detail: "Online Services" },
+    ],
+    client: "United Arab Emirates",
+    team: "10+ Engineers",
     image: smartMunicipality,
     featured: true,
   },

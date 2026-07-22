@@ -108,14 +108,6 @@
     background: #449ed8;
     color: #ffffff;
   }
-
-  /* The crosshair cursor replaces the pointer on fine-pointer devices. */
-  @media (hover: hover) and (pointer: fine) {
-    body.has-cursor,
-    body.has-cursor * {
-      cursor: none;
-    }
-  }
 }
 
 @layer utilities {
@@ -297,11 +289,6 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-
-  body.has-cursor,
-  body.has-cursor * {
-    cursor: auto;
   }
 }
 

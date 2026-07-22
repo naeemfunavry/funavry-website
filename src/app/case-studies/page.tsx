@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
 import Contact from "@/components/sections/Contact";
-import Cursor from "@/components/ui/Cursor";
 import Container from "@/components/ui/Container";
 import CaseStudyCard from "@/components/ui/CaseStudyCard";
 import { KineticWords, Wipe, Rule } from "@/components/ui/Kinetic";
@@ -17,7 +16,6 @@ export const metadata: Metadata = {
 export default function CaseStudiesPage() {
   return (
     <>
-      <Cursor />
       <Nav />
       <main>
         {/* The bar sits on the dark hero on the home page; here there is no

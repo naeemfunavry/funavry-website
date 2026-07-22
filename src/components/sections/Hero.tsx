@@ -215,7 +215,7 @@ export default function Hero() {
         </div>
 
         {/* The operating model, stated once, as a footing rule. */}
-        <div
+        {/* <div
           className="hero-fade mt-16 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-paper/15 pt-6 lg:mt-24"
           style={{ animationDelay: "0.44s" }}
         >
@@ -231,11 +231,9 @@ export default function Hero() {
               )}
             </span>
           ))}
-          {/* The cue carries its own rule, so the row's spacer is gone: the
-              wire the pulse runs down *is* the line between the verbs and the
-              prompt. */}
+         
           <ScrollCue href="#capabilities" />
-        </div>
+        </div> */}
       </Container>
     </section>
   );

@@ -11,206 +11,148 @@ import {
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
-import { KineticWords, Wipe, Rule } from "@/components/ui/Kinetic";
+import { KineticWords, Wipe } from "@/components/ui/Kinetic";
 import { FEATURED_CASE_STUDIES } from "@/lib/case-studies";
 import { useInView } from "@/lib/use-in-view";
 import { cn } from "@/lib/utils";
 
-/* The Case Studies section, presented as a premium product reveal: each study
-   lives inside a floating tablet, advanced through a carousel. See the note at
-   the foot of the file on why the tablet floats rather than being held, and why
-   the on-screen content carries no invented metrics. */
+/* The Case Studies section, reworked as a Stripe-style product reveal: each
+   study's real capture floats in a browser window over a phase-tinted gradient
+   stage, ringed by stat cards that lift in one after another. The cards carry
+   the deck's own portfolio HIGHLIGHTS (see `highlights` in @/lib/case-studies) —
+   the only metrics on the home page, and they are approved facts, not invented.
+   A carousel steps through the four featured studies; every step re-staggers
+   the cards. See the note at the foot of the file. */
 
 const STUDIES = FEATURED_CASE_STUDIES;
 
-/* On the tablet's navy screen the light-background `-ink` phase colours are
-   unreadable, so the on-dark tints are used instead — same three phase hues the
-   rest of the site runs on. `rgb` drives the screen's ambient glow. */
+/* Each phase keeps the three logo hues it wears everywhere else. `dot` tints the
+   card's accent bar; `stage` is the gradient field the browser floats on — a
+   diagonal wash in the phase hue lit from the opposite corner by the warm amber
+   glow, so the field reads rich (Stripe-like) without leaving our palette. */
 const PHASE = {
-  Build: { accent: "text-azure", dot: "bg-azure", rgb: "68,158,216" },
-  Automate: { accent: "text-amber", dot: "bg-amber", rgb: "245,159,19" },
+  Build: {
+    accent: "text-azure-ink",
+    dot: "bg-azure",
+    stage:
+      "radial-gradient(120% 120% at 88% 92%, rgba(245,159,19,0.22), transparent 58%), linear-gradient(135deg, #EFF7FC 0%, #DDEEF9 34%, #8FCAEB 100%)",
+  },
+  Automate: {
+    accent: "text-amber-ink",
+    dot: "bg-amber",
+    stage:
+      "radial-gradient(120% 120% at 90% 88%, rgba(68,158,216,0.20), transparent 58%), linear-gradient(135deg, #FEF6E8 0%, #FDEBCF 34%, #F9C777 100%)",
+  },
   Operate: {
-    accent: "text-steel-300",
-    dot: "bg-steel-300",
-    rgb: "143,169,184",
+    accent: "text-steel-ink",
+    dot: "bg-steel",
+    stage:
+      "radial-gradient(120% 120% at 88% 90%, rgba(68,158,216,0.20), transparent 58%), linear-gradient(135deg, #EFF3F5 0%, #DBE3E8 34%, #8FA9B8 100%)",
   },
 } as const;
 
 const EXPO = [0.19, 1, 0.22, 1] as const;
 
-/* The device is a photographic tablet-in-hands mockup (`public/work/hands.webp`);
-   the case study renders *into* its white screen region rather than onto a
-   CSS-drawn tablet. `screen` is that region as a percentage of the image
-   (1536×1024) — the only thing to retune if the asset is swapped. On md-down
-   the photo is hidden and the case study shows in a plain floating frame, so
-   the hands never appear on mobile. */
-const DEVICE = {
-  src: "/work/hands.webp",
-  aspect: 1536 / 1024,
-  /** How much empty space to clip off the top of the photo (% of image height),
-      so the tablet sits tight under the header instead of floating low. */
-  cropTopPct: 25,
-  /* The screen rectangle, as a % of the image. Sized to slightly overshoot the
-     white screen on every side: the extra bleeds onto the dark bezel (invisible,
-     dark on dark) and guarantees no white edge peeks through. */
-  screen: { leftPct: 18.4, topPct: 29.7, widthPct: 63.4, heightPct: 52.9 },
-} as const;
+type Study = (typeof STUDIES)[number];
+type Stat = { value: string; detail: string };
 
-/* ── The page rendered inside the tablet ──────────────────────────────────────
-   Sized entirely in container-query units (`cqi` = 1% of the screen's own
-   width), so the whole layout scales with the device at any breakpoint without
-   a single fixed pixel or a media query. */
-function TabletPage({
-  study,
-  direction,
-  reduce,
+/* The four floating cards for a study: its three deck highlights, then the
+   delivery-footprint card (team above, client beneath). */
+function statsFor(study: Study): Stat[] {
+  const h = study.highlights ?? [];
+  return [...h, { value: study.team ?? "", detail: study.client ?? "" }].slice(
+    0,
+    4,
+  );
+}
+
+/* Where each of the four cards sits on the desktop stage. Laid out like the
+   Stripe reference: two hang off the browser's left edge (upper, lower), two off
+   the right (top, lower-middle), each pulled in far enough to overlap the capture.
+   Index order matches statsFor. */
+const CARD_POS = [
+  "top-[24%] left-[11%]",
+  "top-[9%] right-[10%]",
+  "bottom-[15%] left-[13%]",
+  "bottom-[22%] right-[9%]",
+] as const;
+
+/* A single stat card — small: a phase accent dot, the headline, and the mono
+   context line. Same body in both layouts, floated on desktop, gridded on mobile. */
+function StatCard({
+  stat,
+  dot,
+  className,
 }: {
-  study: (typeof STUDIES)[number];
-  direction: number;
-  reduce: boolean | null;
+  stat: Stat;
+  dot: string;
+  className?: string;
 }) {
-  const phase = PHASE[study.phase];
-
-  const variants: Variants = {
-    enter: (dir: number) => ({
-      opacity: 0,
-      x: reduce ? 0 : `${dir > 0 ? 5 : -5}%`,
-    }),
-    center: { opacity: 1, x: "0%" },
-    exit: (dir: number) => ({
-      opacity: 0,
-      x: reduce ? 0 : `${dir > 0 ? -5 : 5}%`,
-    }),
-  };
-
+  if (!stat.value) return null;
   return (
-    <motion.div
-      key={study.slug}
-      custom={direction}
-      variants={variants}
-      initial="enter"
-      animate="center"
-      exit="exit"
-      transition={{ duration: reduce ? 0.35 : 0.8, ease: "easeInOut" }}
-      className="absolute inset-0"
+    <div
+      className={cn(
+        "rounded-lg border border-ink/[0.06] bg-paper-white/90 px-3 py-2.5 backdrop-blur-md shadow-[0_18px_38px_-22px_rgba(20,30,50,0.55)]",
+        className,
+      )}
     >
-      {/* Screen field: deep navy with an ambient phase glow and a faint
-          starfield — subtle, no neon. */}
-      <div className="relative h-full w-full overflow-hidden bg-[linear-gradient(155deg,#252b30_0%,#1a1f22_52%,#14181b_100%)]">
-        <div
-          aria-hidden
-          className="absolute -left-[10%] -top-[14%] h-[70%] w-[70%] rounded-full blur-[8cqi]"
-          style={{
-            background: `radial-gradient(circle, rgba(${phase.rgb},0.28), transparent 70%)`,
-          }}
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 opacity-[0.5]"
-          style={{
-            backgroundImage:
-              "radial-gradient(rgba(245,246,244,0.5) 0.5px, transparent 0.6px)",
-            backgroundSize: "3.4cqi 3.4cqi",
-            maskImage:
-              "radial-gradient(120% 120% at 30% 20%, black, transparent 75%)",
-          }}
-        />
-
-        <div className="relative flex flex-col h-full items-center gap-[2.4cqi] p-[4cqi]">
-          {/* Left — the case study's own words. Text is sized in cqi (relative
-              to the screen region), tuned to sit inside the ~1.8:1 screen
-              without clipping. */}
-          <div className="flex flex-col w-full">
-            <div className="flex  gap-[1.4cqi] font-mono uppercase tracking-[0.16em] text-[1.4cqi] text-paper/55">
-              <span
-                className={cn(
-                  "h-[1.3cqi] w-[1.3cqi] flex-none rounded-full shrink-0",
-                  phase.dot,
-                )}
-              />
-              <span className="truncate">{study.sector}</span>
-              <span className="text-paper/25">/</span>
-              <span className={cn("flex-none", phase.accent)}>
-                {study.phase}
-              </span>
-            </div>
-
-            <h3 className="mt-[2.2cqi]  leading-[1.04] tracking-[-0.02em] text-[4.4cqi] text-paper">
-              {study.title}
-            </h3>
-
-            {/* <p className="mt-[1.8cqi] max-w-[96%] leading-[1.5] text-[2.2cqi] text-paper/60 line-clamp-2">
-              {study.summary}
-            </p> */}
-
-            {/* Tag, heading, paragraph, button — the landing page shows the
-                headline of each study, not its full detail. The button scales
-                with the device (cqi) so it stays in proportion at any size. */}
-            <a
-              href="/case-studies"
-              className="mt-[2.8cqi] inline-flex items-center gap-[1.1cqi] self-start bg-paper px-[2.6cqi] py-[1cqi] tracking-[-0.01em] text-[1.55cqi] text-ink transition-colors duration-300 hover:bg-paper-white"
-            >
-              View Case Study
-              <ArrowRight className="h-[2cqi] w-[2cqi]" />
-            </a>
-          </div>
-
-          {/* Right — the real capture, floated in a browser card, the way the
-              reference floats its dashboard. */}
-          <div className="relative w-full">
-            <div
-              className="overflow-hidden w-full rounded-[1.8cqi] border border-paper/10 bg-[#0f1316] shadow-[0_6cqi_12cqi_-4cqi_rgba(0,0,0,0.6)]"
-              style={{
-                transform: reduce ? undefined : "rotateY(-4deg) rotateX(1deg)",
-              }}
-            >
-              <div className="flex items-center gap-[1cqi] border-b border-paper/8 px-[2cqi] py-[1.4cqi]">
-                <span className="h-[1.2cqi] w-[1.2cqi] rounded-full bg-paper/20" />
-                <span className="h-[1.2cqi] w-[1.2cqi] rounded-full bg-paper/20" />
-                <span className="h-[1.2cqi] w-[1.2cqi] rounded-full bg-paper/20" />
-                <span className="ml-[1.4cqi] flex-1 truncate rounded-full bg-paper/[0.06] px-[2cqi] py-[0.8cqi] font-mono text-[1.4cqi] text-paper/40">
-                  funavry.com/work/{study.slug}
-                </span>
-              </div>
-              <div className="relative aspect-[16/9]">
-                <Image
-                  src={study.image}
-                  alt={`${study.title} — product interface`}
-                  fill
-                  sizes="(max-width: 768px) 88vw, (max-width: 1280px) 55vw, 840px"
-                  quality={90}
-                  placeholder="blur"
-                  className="object-cover object-top w-full h-full"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="flex items-center gap-2">
+        <span className={cn("h-1.5 w-1.5 flex-none rounded-full", dot)} />
+        <span className="text-[13.5px] font-semibold leading-[1.15] tracking-[-0.02em] text-ink">
+          {stat.value}
+        </span>
       </div>
-    </motion.div>
+      <div className="mt-1 pl-[14px] font-mono text-[8.5px] uppercase tracking-[0.14em] text-ink-500">
+        {stat.detail}
+      </div>
+    </div>
+  );
+}
+
+/* The capture in a browser window — three dots, a URL pill, and the real
+   screenshot. Reused by both layouts. */
+function BrowserWindow({ study }: { study: Study }) {
+  return (
+    <div className="overflow-hidden rounded-xl border border-ink/[0.08] bg-paper-white shadow-[0_40px_80px_-32px_rgba(20,30,50,0.55)]">
+      <div className="flex items-center gap-1.5 border-b border-line-soft bg-paper px-3 py-2">
+        <span className="h-2 w-2 rounded-full bg-ink/15" />
+        <span className="h-2 w-2 rounded-full bg-ink/15" />
+        <span className="h-2 w-2 rounded-full bg-ink/15" />
+        <span className="ml-2 flex-1 truncate rounded-full bg-ink/[0.05] px-3 py-1 font-mono text-[10.5px] text-ink-500">
+          funavry.com/work/{study.slug}
+        </span>
+      </div>
+      <div className="relative aspect-[16/9]">
+        <Image
+          src={study.image}
+          alt={`${study.title} — product interface`}
+          fill
+          sizes="(max-width: 1024px) 88vw, 680px"
+          quality={90}
+          placeholder="blur"
+          className="h-full w-full object-cover object-top"
+        />
+      </div>
+    </div>
   );
 }
 
 export default function WorkShowcase() {
   const reduce = useReducedMotion();
   const [sectionRef, inView] = useInView<HTMLElement>();
-  const [[index, direction], setState] = useState<[number, number]>([0, 0]);
+  const [index, setIndex] = useState(0);
   const study = STUDIES[index];
-
-  /* The visible aspect after clipping the photo's empty top: the full image is
-     bottom-anchored inside this shorter box, so the top is cropped while the
-     screen-region overlay keeps its true (full-image) coordinates. */
-  const outerAspect = DEVICE.aspect / (1 - DEVICE.cropTopPct / 100);
+  const phase = PHASE[study.phase];
+  const stats = statsFor(study);
 
   const go = useCallback(
     (dir: number) =>
-      setState(([i]) => [(i + dir + STUDIES.length) % STUDIES.length, dir]),
+      setIndex((i) => (i + dir + STUDIES.length) % STUDIES.length),
     [],
   );
 
-  /* Autoplay: advance on a timer while the section is on screen, paused on
-     hover or touch so a slide is never pulled away mid-read. `paused` is a ref
-     so pausing doesn't restart the interval. */
+  /* Autoplay while on screen, paused on hover/touch so a slide is never pulled
+     away mid-read. `paused` is a ref so pausing doesn't restart the interval. */
   const paused = useRef(false);
   const resumeTimer = useRef<ReturnType<typeof setTimeout>>();
   const pause = () => {
@@ -229,13 +171,12 @@ export default function WorkShowcase() {
     const id = setInterval(() => {
       if (paused.current || document.hidden) return;
       go(1);
-    }, 5200);
+    }, 5600);
     return () => clearInterval(id);
   }, [reduce, inView, go]);
 
   useEffect(() => () => clearTimeout(resumeTimer.current), []);
 
-  /* Arrow keys drive the carousel while focus sits anywhere within it. */
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowRight") {
       e.preventDefault();
@@ -246,14 +187,37 @@ export default function WorkShowcase() {
     }
   };
 
+  /* Content crossfade + card stagger. The browser is the first child (no lift),
+     the four cards follow on a fixed 0.12s cadence — the "same animation delay"
+     Stripe uses to walk its cards on. */
+  const content: Variants = {
+    hidden: {},
+    show: {
+      transition: { staggerChildren: 0.55, delayChildren: reduce ? 0 : 0.15 },
+    },
+    exit: { opacity: 0, transition: { duration: 0.3 } },
+  };
+  const cardIn: Variants = {
+    hidden: { opacity: 0, y: reduce ? 0 : 18, scale: reduce ? 1 : 0.96 },
+    show: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { duration: reduce ? 0.3 : 0.55, ease: EXPO },
+    },
+  };
+  const browserIn: Variants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { duration: reduce ? 0.3 : 0.5 } },
+  };
+
   return (
     <section
       ref={sectionRef}
       id="work"
-      className="relative overflow-hidden bg-paper pt-24 lg:pt-36"
+      className="relative overflow-hidden bg-paper py-14 lg:py-24"
     >
-      {/* Minimal field: soft radial lift behind the device, a whisper of the
-          engineering grid, and a few drifting motes. */}
+      {/* Field: soft radial lift and a whisper of the engineering grid. */}
       <div
         aria-hidden
         className="absolute inset-0"
@@ -263,35 +227,10 @@ export default function WorkShowcase() {
         }}
       />
       <div aria-hidden className="absolute inset-0 grid-paper opacity-[0.5]" />
-      {!reduce && (
-        <div aria-hidden className="absolute inset-0 overflow-hidden">
-          {[
-            { l: "12%", t: "26%", s: 6, d: 13, delay: 0 },
-            { l: "84%", t: "20%", s: 5, d: 16, delay: 1.5 },
-            { l: "70%", t: "72%", s: 7, d: 15, delay: 0.8 },
-            { l: "22%", t: "68%", s: 5, d: 18, delay: 2.2 },
-            { l: "48%", t: "14%", s: 4, d: 20, delay: 1 },
-          ].map((p, i) => (
-            <span
-              key={i}
-              className="ws-mote absolute rounded-full bg-ink/20"
-              style={{
-                left: p.l,
-                top: p.t,
-                width: p.s,
-                height: p.s,
-                animationDuration: `${p.d}s`,
-                animationDelay: `${p.delay}s`,
-              }}
-            />
-          ))}
-        </div>
-      )}
 
       <Container wide className="relative">
-        {/* Header — the site's section header: an azure hairline, the mono tag,
-            and the display heading on the left; the intro and the deck arrows on
-            the right. Same layout as Industries. */}
+        {/* Header — unchanged: azure hairline, mono tag, the display heading on
+            the left; intro and deck arrows on the right. */}
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] lg:items-end lg:gap-20">
           <div>
             <div className="flex items-center gap-3">
@@ -315,7 +254,6 @@ export default function WorkShowcase() {
               </p>
             </Wipe>
 
-            {/* View-all CTA and the deck arrows, together at the top right. */}
             <div className="flex flex-wrap items-center gap-4 lg:justify-end">
               <Button href="/case-studies" variant="primary" size="md" arrow>
                 View All Case Studies
@@ -344,10 +282,7 @@ export default function WorkShowcase() {
           </div>
         </div>
 
-        <Rule className="mt-14 lg:mt-16" />
-
-        {/* Tablet stage — the card fills the container. Hover/touch pauses the
-            autoplay so a slide isn't pulled away while it's being read. */}
+        {/* Stage — the Stripe reveal. Hover/touch pauses the autoplay. */}
         <div
           id="work-carousel"
           role="group"
@@ -358,99 +293,131 @@ export default function WorkShowcase() {
           onMouseLeave={resume}
           onTouchStart={pause}
           onTouchEnd={resumeSoon}
-          /* Full container width; the desktop composite's height is kept in
-             check by cropping the photo's empty top (see `outerAspect`). */
-          className="relative mt-10 w-full lg:mt-14"
+          className="relative mt-10 lg:mt-14"
         >
-          {/* Desktop (md+): the photographic tablet-in-hands, with the case
-              study composited into its white screen region. `mix-blend-multiply`
-              drops the photo's white background into the paper field so only the
-              device and hands read. The outer box clips the photo's empty top
-              (`cropTopPct`) by bottom-anchoring the full image inside it, so the
-              tablet sits tight under the header. */}
           <motion.div
-            initial={{ opacity: 0, y: reduce ? 0 : 56 }}
+            initial={{ opacity: 0, y: reduce ? 0 : 48 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-120px" }}
             transition={{ duration: 0.9, ease: EXPO }}
-            className="relative z-10 hidden w-full md:block"
+            className="relative overflow-hidden rounded-lg"
           >
-            {/* Outer: clips the cropped-off top. */}
-            <div
-              className="relative w-full overflow-hidden"
-              style={{ aspectRatio: `${outerAspect}` }}
-            >
-              {/* Inner: the full image, anchored to the bottom so the top is
-                    what gets clipped. The screen overlay lives here, keeping its
-                    true full-image coordinates. */}
-              <div
-                className="absolute inset-x-0 bottom-0"
-                style={{ aspectRatio: `${DEVICE.aspect}` }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={DEVICE.src}
-                  alt=""
-                  draggable={false}
-                  className="pointer-events-none absolute inset-0 h-full w-full select-none object-contain mix-blend-multiply"
-                />
+            {/* Gradient field — crossfades on phase change so the wash follows
+                the study while the browser and cards animate over it. */}
+            <AnimatePresence>
+              <motion.div
+                key={study.phase}
+                aria-hidden
+                className="absolute inset-0"
+                style={{ background: phase.stage }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+              />
+            </AnimatePresence>
 
-                {/* The screen region — the case study renders here, in its own
-                      container-query context so the layout scales with the device. */}
-                <div
-                  className="absolute overflow-hidden rounded-[1.6cqi]"
-                  style={{
-                    left: `${DEVICE.screen.leftPct}%`,
-                    top: `${DEVICE.screen.topPct}%`,
-                    width: `${DEVICE.screen.widthPct}%`,
-                    height: `${DEVICE.screen.heightPct}%`,
-                    containerType: "inline-size",
-                  }}
-                >
-                  <AnimatePresence
-                    initial={false}
-                    mode="popLayout"
-                    custom={direction}
-                  >
-                    <TabletPage
-                      key={study.slug}
-                      study={study}
-                      direction={direction}
-                      reduce={reduce}
-                    />
-                  </AnimatePresence>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Mobile (md-down): no hands — a plain framed card, full width, so the
-              screen stays large and legible on a phone. */}
-          <motion.div
-            initial={{ opacity: 0, y: reduce ? 0 : 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: EXPO }}
-            className="relative w-full md:hidden"
-          >
-            <div
-              className="relative aspect-[1.35/1] w-full overflow-hidden rounded-2xl bg-ink-900 shadow-[0_28px_64px_-30px_rgba(33,38,42,0.42)]"
-              style={{ containerType: "inline-size" }}
-            >
-              <AnimatePresence
-                initial={false}
-                mode="popLayout"
-                custom={direction}
-              >
-                <TabletPage
+            {/* Desktop stage: browser centred, four cards floated at the
+                corners. Fixed height so the absolute layout has room. */}
+            <div className="relative hidden h-[560px] xl:h-[620px] lg:block">
+              <AnimatePresence mode="wait">
+                <motion.div
                   key={study.slug}
-                  study={study}
-                  direction={direction}
-                  reduce={reduce}
-                />
+                  variants={content}
+                  initial="hidden"
+                  animate="show"
+                  exit="exit"
+                  className="absolute inset-0"
+                >
+                  {/* Browser — centred, overlapped at the edges by the cards. */}
+                  <motion.div
+                    variants={browserIn}
+                    className="absolute left-1/2 top-1/2 w-[60%] max-w-[720px] -translate-x-1/2 -translate-y-1/2"
+                  >
+                    <BrowserWindow study={study} />
+                  </motion.div>
+
+                  {stats.map((stat, i) => (
+                    <motion.div
+                      key={`${study.slug}-${i}`}
+                      variants={cardIn}
+                      className={cn("absolute w-52", CARD_POS[i])}
+                    >
+                      <StatCard stat={stat} dot={phase.dot} />
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Mobile stage: browser, then the stat cards in a 2-up grid. */}
+            <div className="relative px-5 py-8 sm:px-8 sm:py-10 lg:hidden">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={study.slug}
+                  variants={content}
+                  initial="hidden"
+                  animate="show"
+                  exit="exit"
+                >
+                  <motion.div variants={browserIn}>
+                    <BrowserWindow study={study} />
+                  </motion.div>
+                  <div className="mt-6 grid grid-cols-2 gap-3">
+                    {stats.map((stat, i) => (
+                      <motion.div
+                        key={`${study.slug}-m-${i}`}
+                        variants={cardIn}
+                      >
+                        <StatCard stat={stat} dot={phase.dot} />
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
               </AnimatePresence>
             </div>
           </motion.div>
+
+          {/* Caption row — which study is on screen, plus the dot pager. */}
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
+            <a
+              href="/case-studies"
+              className="group flex items-center gap-2.5 text-ink transition-colors hover:text-ink-500"
+            >
+              <span
+                className={cn("h-2 w-2 flex-none rounded-full", phase.dot)}
+              />
+              <span className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-ink-500">
+                {study.sector}
+              </span>
+              <span className="text-ink/25">/</span>
+              <span className="text-[15px] font-medium tracking-[-0.01em]">
+                {study.title}
+              </span>
+              <ArrowRight
+                size={15}
+                className="translate-x-0 transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </a>
+
+            <div className="flex items-center gap-2">
+              {STUDIES.map((s, i) => (
+                <button
+                  key={s.slug}
+                  type="button"
+                  onClick={() => setIndex(i)}
+                  aria-label={`Show case study ${i + 1}: ${s.title}`}
+                  aria-current={i === index}
+                  className={cn(
+                    "h-1.5 rounded-full transition-all duration-300",
+                    i === index
+                      ? "w-6 bg-ink"
+                      : "w-1.5 bg-ink/20 hover:bg-ink/40",
+                  )}
+                />
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Screen-reader announcement of the active slide. */}
@@ -463,15 +430,13 @@ export default function WorkShowcase() {
 }
 
 /* ── Notes ────────────────────────────────────────────────────────────────────
-   Device: on md+ the tablet is the photographic mockup at `public/work/hands.webp`
-   (a tablet-in-hands with a white screen). The case study is composited into its
-   screen via the `DEVICE.screen` rectangle, and `mix-blend-multiply` drops the
-   photo's white background into the paper field. To swap the photo, replace the
-   file and retune `DEVICE.screen` (its white-screen rect, as % of the image).
-   On md-down the photo is hidden and the case study shows in a plain dark frame,
-   so hands never appear on mobile.
+   Layout: a phase-tinted gradient stage carries a browser-window capture with
+   four stat cards floated at its corners (desktop) or gridded beneath it
+   (mobile). The cards lift in on a fixed 0.12s stagger — the same walk-on cadence
+   the Stripe reference uses — and re-run on every carousel step.
 
-   Content: the on-screen copy is drawn only from real fields in
-   `@/lib/case-studies` — title, sector, phase, summary, and the actual capture.
-   No duration, technology list, or outcome percentages are shown, because none
-   exist in the data and the set is deliberately metric-free. */
+   Content: the on-stage numbers are the portfolio HIGHLIGHTS from Section 03 of
+   the corporate deck (`highlights`, `client`, `team` in @/lib/case-studies),
+   shown verbatim. They are the one deliberate exception to the otherwise
+   metric-free set, because they are approved facts from the deck rather than
+   figures invented for the site. */

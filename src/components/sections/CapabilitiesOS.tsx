@@ -219,126 +219,123 @@ const GROUP_LABEL = {
 /* --------------------------------------------------------------------------
    The core's scene
 
-   A plain frontal pyramid now, not a projected 3D object — the corner-on
-   camera, the glass and the orbiting rings are gone in favour of the simpler
-   thing the reference actually shows: a flat triangle, cut into three solid
-   trapezoids, seen straight on. Everything still lives in one 200×200
-   viewBox, which the connection fan still measures against.
+   Three stacked 3D pillars — glossy cylinders, one per delivery phase, seen
+   slightly from above: Operate the blue lid on top, Build the dark foundation
+   at the base. Everything lives in one 200×200 viewBox, which the connection
+   fan still measures against, so the sixteen lines land exactly as before.
    -------------------------------------------------------------------------- */
 
-type Band = {
+type Pillar = {
   phase: Service["phase"];
   icon: LucideIcon;
-  /** Front face, straight on, in the core's 200×200 viewBox. */
-  top: number;
-  bottom: number;
-  halfTop: number;
-  halfBottom: number;
-  /** How far this slab's top surface recedes behind its front edge. 0 for
-      the tip, which has no top face to show. */
-  depth: number;
-  /** Front face gradient, top stop then bottom stop. */
-  face: [string, string];
-  /** The top surface — always lighter than the face, because it points at
-      the light rather than away from it. */
-  crown: string;
+  /** Cylinder geometry in the 200×200 viewBox: vertical centre, body height,
+      half-width, and the ellipse's vertical radius (the perspective squash). */
+  cy: number;
+  h: number;
+  rx: number;
+  ry: number;
+  /** Body gradient across the cylinder: dark edge, lit centre — the shading
+      that makes a flat rect read as round. */
+  edge: string;
+  mid: string;
+  /** The top lid (lighter, it faces the light) and the front rounded base
+      (darker, it faces away). */
+  lid: string;
+  base: string;
+  /** The bright amber pillar takes dark labels; the blue and navy take white. */
+  darkLabel?: boolean;
   caption: [string, string];
-  /** Where the icon/label/caption cluster sits, as a percentage of the core's
-      own box. Each is pushed low in its own slab, where the taper has opened
-      up enough to hold a full line of caption. */
-  label: { top: string; width: string };
 };
 
-/** The three delivery-chain slabs, tip to base: Operate is the small outcome
-    everyone sees first, Build is the wide foundation the other two stand on.
-
-    Colours are the reference's, not the brand ramp's. This graphic reads as a
-    single object — a bright tip on two dark masses — and dropping the brand's
-    amber into the middle of it broke that read completely: it made the middle
-    slab look like a different material from the two around it. The phase
-    colours still hold everywhere they're type rather than mass (`Hero.tsx`,
-    `Footer.tsx`, this section's own subtitle), which is where they actually
-    do their job. */
-const BANDS: Band[] = [
+/** The three delivery pillars, top to base — Operate, Automate, Build. Colours
+    follow the stacked-pillars reference: a bright azure lid, an amber middle,
+    and a dark navy foundation, all within the brand palette. */
+const PILLARS: Pillar[] = [
   {
     phase: "Operate",
     icon: Users,
-    top: 12,
-    bottom: 90,
-    halfTop: 0,
-    halfBottom: 47,
-    depth: 0,
-    face: ["#4FA3FF", "#1B76EF"],
-    crown: "#6FB6FF",
-    caption: [
-      "Managed Services · Workforce Solutions",
-      "GCC Enablement · Operational Excellence",
-    ],
-    label: { top: "25%", width: "42%" },
+    cy: 40,
+    h: 48,
+    rx: 80,
+    ry: 13,
+    edge: "#2A6BA3",
+    mid: "#4FA0D6",
+    lid: "#86C4EE",
+    base: "#1F5580",
+    caption: ["Managed services", "GCC · Excellence"],
   },
   {
     phase: "Automate",
     icon: BrainCircuit,
-    top: 97,
-    bottom: 145,
-    halfTop: 53,
-    halfBottom: 77,
-    depth: 8,
-    face: ["#2C5B87", "#13304C"],
-    crown: "#3C6E9C",
-    caption: [
-      "AI Agents · Intelligent Automation",
-      "Document Intelligence · Process Optimization",
-    ],
-    label: { top: "50%", width: "64%" },
+    cy: 100,
+    h: 48,
+    rx: 80,
+    ry: 13,
+    edge: "#BC7207",
+    mid: "#F2A22C",
+    lid: "#FBC163",
+    base: "#9E5D05",
+    darkLabel: true,
+    caption: ["AI agents · Automation", "Process optimization"],
   },
   {
     phase: "Build",
     icon: Boxes,
-    top: 152,
-    bottom: 198,
-    halfTop: 80,
-    halfBottom: 96,
-    depth: 8,
-    face: ["#38434F", "#1D2530"],
-    crown: "#47535F",
-    caption: [
-      "AI Solutions · Digital Engineering · Data",
-      "Cloud · Cybersecurity · Emerging Technologies",
-    ],
-    label: { top: "77%", width: "82%" },
+    cy: 160,
+    h: 48,
+    rx: 80,
+    ry: 13,
+    edge: "#0F151D",
+    mid: "#2C3A48",
+    lid: "#3B4A58",
+    base: "#0A0E14",
+    caption: ["AI · Engineering · Data", "Cloud · Security"],
   },
 ];
 
-/** Corner radius. Rounded corners come from stroking each face in its own
-    fill colour with `strokeLinejoin="round"`: the stroke rounds every join
-    and grows the shape by half its width, so the geometry below is inset by
-    `R` first and comes back out at exactly the right size. Cheaper than
-    splicing four arcs by hand, and the fill and the rounding can't drift out
-    of sync because they're the same path. */
-const R = 3.5;
-
-/** A slab's front face — a triangle at the tip, a trapezoid below it. */
-const facePath = (b: Band) => {
-  const y0 = b.top + R;
-  const y1 = b.bottom - R;
-  const hb = b.halfBottom - R;
-  if (b.halfTop < 1)
-    return `M 100 ${y0} L ${100 + hb} ${y1} L ${100 - hb} ${y1} Z`;
-  const ht = b.halfTop - R;
-  return `M ${100 - ht} ${y0} L ${100 + ht} ${y0} L ${100 + hb} ${y1} L ${100 - hb} ${y1} Z`;
+/** The fuller copy a pillar reveals on hover — a one-line framing plus the
+    practices that sit in that phase, drawn from the deck's delivery model. */
+const PILLAR_DETAIL: Record<
+  Service["phase"],
+  { blurb: string; items: string[] }
+> = {
+  Build: {
+    blurb: "Engineer the platform.",
+    items: [
+      "AI Solutions",
+      "Digital Engineering",
+      "Data & Business Intelligence",
+      "Cloud & Cybersecurity",
+    ],
+  },
+  Automate: {
+    blurb: "Put AI to work.",
+    items: [
+      "AI Agents & Assistants",
+      "Intelligent Automation",
+      "Document Intelligence",
+      "Process Optimization",
+    ],
+  },
+  Operate: {
+    blurb: "Run it at scale.",
+    items: [
+      "Managed Services",
+      "GCC Enablement",
+      "Workforce Solutions",
+      "Operational Excellence",
+    ],
+  },
 };
 
-/** A slab's top surface, narrowing as it recedes. Most of it ends up hidden
-    behind the slab sitting on it — the sliver that survives around the edges
-    is the entire reason the stack reads as solid rather than as three flat
-    shapes. */
-const crownPath = (b: Band) => {
-  const back = b.top - b.depth;
-  const hf = b.halfTop;
-  const hk = b.halfTop * 0.93;
-  return `M ${100 - hf} ${b.top} L ${100 + hf} ${b.top} L ${100 + hk} ${back} L ${100 - hk} ${back} Z`;
-};
+/** What the delivery chain is for — the deck's four business outcomes (slide
+    10), shown as the card beneath the shorter GBS column. */
+const OUTCOMES = [
+  { title: "Efficiency", desc: "Lower cost, less effort" },
+  { title: "Growth", desc: "Faster time-to-market" },
+  { title: "Innovation", desc: "New digital capabilities" },
+  { title: "Scale", desc: "Grows without friction" },
+] as const;
 
 /** Where the connection fan's sixteen lines aim — one ellipse per phase, read
     by `buildLinks` below. Never drawn: the lines fade out well before they
@@ -349,22 +346,6 @@ const PHASE_ANCHORS = [
   { phase: "Operate", cy: 56, rx: 46, ry: 30 },
   { phase: "Automate", cy: 112, rx: 74, ry: 40 },
   { phase: "Build", cy: 168, rx: 86, ry: 40 },
-] as const;
-
-/** The faint rings behind the pyramid. Two concentric circles and a scatter
-    of motes, all fading out toward the edges of the box. */
-const RINGS = [
-  { r: 92, dash: "1.5 4" },
-  { r: 72, dash: "" },
-] as const;
-
-const RING_MOTES = [
-  { a: -164, r: 92 },
-  { a: -118, r: 92 },
-  { a: -46, r: 92 },
-  { a: -14, r: 92 },
-  { a: -142, r: 72 },
-  { a: -38, r: 72 },
 ] as const;
 
 const SPRING = {
@@ -640,215 +621,172 @@ const AICore = ({
   phase: Service["phase"] | null;
   animate: boolean;
 }) => {
-  const reduce = useReducedMotion();
   const [hot, setHot] = useState(false);
+  /** Which pillar the pointer is over — drives the fade-in details popup. Kept
+      local so it never touches the card/fan logic the section owns. */
+  const [hovered, setHovered] = useState<Service["phase"] | null>(null);
   const accent = active ? HUE[active] : null;
-  const idle = animate && !reduce;
+
+  /** A pillar lights when the pointer is on it, or when a side card in its
+      phase is active; the others dim. */
+  const litPhase = hovered ?? phase;
 
   return (
     /* This box is measured. `buildLinks` reads it to place sixteen connectors
        on a circle at its own half-width, so it never moves and never scales —
-       the float and the hover lift live on wrappers inside it.
-
-       The centre column is `auto` in the grid, so every pixel here is taken
-       from the two card columns. That's affordable at xl (they keep ~408px)
-       but not at lg, where a 1024px viewport leaves them ~254px and the
-       two-line practice names start truncating — so the desktop size lands on
-       xl and lg holds at the tablet size. */
+       the float and the hover lift live on wrappers inside it. */
     <div
       ref={innerRef}
       onMouseEnter={() => setHot(true)}
-      onMouseLeave={() => setHot(false)}
-      className="relative aspect-square w-[300px] shrink-0 sm:w-[400px] lg:w-[340px] xl:w-[460px]"
+      onMouseLeave={() => {
+        setHot(false);
+        setHovered(null);
+      }}
+      className="relative aspect-square w-[310px] shrink-0 sm:w-[400px] lg:w-[350px] xl:w-[480px]"
     >
-      {/* Ambient halo, and the one place a selection still shows on the core
-          itself: the glow simply warms toward the hovered half of the
-          network. Blurred past any edge of its own, so it reads as light in
-          the air rather than as a disc. */}
+      {/* Ambient halo — warms toward the hovered pillar's hue, or the hovered
+          half of the network. Blurred past its own edge, so it reads as light
+          in the air rather than as a disc. */}
       <motion.div
         aria-hidden
-        className="absolute -inset-[30%] rounded-full blur-3xl"
-        animate={{ opacity: hot || accent ? 0.9 : 0.6 }}
+        className="absolute -inset-[26%] rounded-full blur-3xl"
+        initial={false}
+        animate={{ opacity: hot || accent || hovered ? 0.85 : 0.55 }}
         transition={{ duration: 0.6, ease: EXPO }}
         style={{
           background: accent
             ? `radial-gradient(closest-side, rgba(${accent.rgb},0.18), rgba(${accent.rgb},0.06) 58%, transparent 78%)`
-            : "radial-gradient(closest-side, rgba(68,158,216,0.14), transparent 74%)",
+            : "radial-gradient(closest-side, rgba(68,158,216,0.12), transparent 74%)",
           transition: "background 500ms",
         }}
       />
 
-      {/* ---- The rings. ----
-          Two faint circles and a scatter of motes, sitting behind the
-          pyramid and fading out toward the edges of the box. The fade is a
-          mask rather than a flat opacity: a ring at uniform 8% still draws a
-          hard closed curve the eye follows all the way round, which fights
-          the pyramid for attention. Fading the ends leaves only the arcs
-          either side of the body, which is what the reference shows. */}
-      <svg
-        aria-hidden
-        viewBox="0 0 200 200"
-        className="absolute inset-0 h-full w-full"
-      >
-        <defs>
-          <radialGradient id="core-ring-fade">
-            <stop offset="30%" stopColor="#FFFFFF" stopOpacity="1" />
-            <stop offset="76%" stopColor="#FFFFFF" stopOpacity="0.75" />
-            <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
-          </radialGradient>
-          <mask id="core-ring-mask">
-            <rect width="200" height="200" fill="url(#core-ring-fade)" />
-          </mask>
-        </defs>
-        <g mask="url(#core-ring-mask)">
-          {RINGS.map((ring) => (
-            <circle
-              key={ring.r}
-              cx="100"
-              cy="104"
-              r={ring.r}
-              fill="none"
-              stroke="#8FA9B8"
-              strokeOpacity="0.42"
-              strokeWidth="0.6"
-              strokeDasharray={ring.dash || undefined}
-            />
-          ))}
-          {RING_MOTES.map((m) => {
-            const rad = (m.a * Math.PI) / 180;
-            return (
-              <circle
-                key={`${m.a}-${m.r}`}
-                cx={100 + m.r * Math.cos(rad)}
-                cy={104 + m.r * Math.sin(rad)}
-                r="1.1"
-                fill="#8FA9B8"
-                fillOpacity="0.55"
-              />
-            );
-          })}
-        </g>
-      </svg>
-
-      {/* Everything below bobs together on one gentle vertical drift — no 3D
-          tilt, because the pyramid is drawn straight on rather than
-          projected. */}
+      {/* Hover-lift only — the idle bob is gone, so the pillars hold still. */}
       <motion.div
         className="absolute inset-0"
         animate={{ y: hot ? -5 : 0 }}
         transition={{ duration: 0.5, ease: EXPO }}
       >
-        <motion.div
-          className="absolute inset-0"
-          animate={idle ? { y: [-4, 4, -4] } : { y: 0 }}
-          transition={
-            idle
-              ? { duration: 9, repeat: Infinity, ease: "easeInOut" }
-              : { duration: 0.4, ease: EXPO }
-          }
-        >
-          {/* ---- The slabs. ----
-              Painted bottom-up, each as a crown (its top surface) then a
-              front face, so every slab covers the inner part of the crown
-              belonging to the one below it. What's left showing is the rim,
-              and that rim is the whole 3D read. */}
+        <div className="absolute inset-0">
+          {/* ---- The pillars. ----
+              Each is a glossy cylinder: a body rect shaded edge-dark to
+              centre-lit, capped by a lighter top-lid ellipse and a darker
+              rounded base. Painted bottom-up so every pillar and the soft
+              shadow it casts land on top of the one beneath it. */}
           <svg
             aria-hidden
             viewBox="0 0 200 200"
             className="absolute inset-0 h-full w-full"
           >
             <defs>
-              {BANDS.map((band) => (
+              {PILLARS.map((p) => (
                 <linearGradient
-                  key={band.phase}
-                  id={`core-face-${band.phase}`}
+                  key={p.phase}
+                  id={`pil-body-${p.phase}`}
                   gradientUnits="userSpaceOnUse"
-                  x1="30"
-                  y1={band.top}
-                  x2="170"
-                  y2={band.bottom}
+                  x1={100 - p.rx}
+                  y1="0"
+                  x2={100 + p.rx}
+                  y2="0"
                 >
-                  <stop offset="0%" stopColor={band.face[0]} />
-                  <stop offset="100%" stopColor={band.face[1]} />
+                  <stop offset="0%" stopColor={p.edge} />
+                  <stop offset="18%" stopColor={p.mid} />
+                  <stop offset="42%" stopColor={p.lid} />
+                  <stop offset="64%" stopColor={p.mid} />
+                  <stop offset="100%" stopColor={p.edge} />
                 </linearGradient>
               ))}
-              {/* The contact shadow each slab drops onto the one beneath it. */}
-              <linearGradient id="core-drop" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#0B1520" stopOpacity="0.5" />
-                <stop offset="100%" stopColor="#0B1520" stopOpacity="0" />
+              <radialGradient id="pil-shadow">
+                <stop offset="0%" stopColor="#0A1017" stopOpacity="0.45" />
+                <stop offset="70%" stopColor="#0A1017" stopOpacity="0.12" />
+                <stop offset="100%" stopColor="#0A1017" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="pil-ground">
+                <stop offset="30%" stopColor="#0A1017" stopOpacity="0.22" />
+                <stop offset="100%" stopColor="#0A1017" stopOpacity="0" />
+              </radialGradient>
+              <linearGradient id="pil-sheen" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
               </linearGradient>
-              {/* Soft blobs as radial gradients rather than blurred shapes.
-                  These were three `feGaussianBlur` filters, which is the most
-                  expensive way to ask for exactly this: an SVG filter
-                  rasterises its subtree off the fast path, and these sat
-                  inside a wrapper on an infinite transform, so the cost was
-                  being paid against a moving layer. A gradient is a texture
-                  lookup — same soft edge, none of the filter machinery. */}
-              <radialGradient id="core-ground">
-                <stop offset="35%" stopColor="#0B1520" stopOpacity="0.2" />
-                <stop offset="100%" stopColor="#0B1520" stopOpacity="0" />
-              </radialGradient>
-              <radialGradient id="core-bloom">
-                <stop offset="20%" stopColor="#3E97FF" stopOpacity="0.6" />
-                <stop offset="60%" stopColor="#3E97FF" stopOpacity="0.22" />
-                <stop offset="100%" stopColor="#3E97FF" stopOpacity="0" />
-              </radialGradient>
             </defs>
 
             {/* Ground shadow under the whole stack. */}
-            <ellipse cx="100" cy="199" rx="96" ry="13" fill="url(#core-ground)" />
+            <ellipse cx="100" cy="194" rx="86" ry="9" fill="url(#pil-ground)" />
 
-            {/* Operate's glow, which the reference carries as a distinct blue
-                bloom spilling onto the slab below it. */}
-            <ellipse cx="100" cy="89" rx="58" ry="16" fill="url(#core-bloom)" />
-
-            {[...BANDS].reverse().map((band) => {
-              const lit = phase === band.phase;
-              const dim = phase !== null && !lit;
+            {[...PILLARS].reverse().map((p) => {
+              const halfH = p.h / 2;
+              const topY = p.cy - halfH;
+              const botY = p.cy + halfH;
+              const lit = litPhase === p.phase;
+              const dim = litPhase !== null && !lit;
               return (
                 <motion.g
-                  key={band.phase}
-                  animate={{ opacity: dim ? 0.62 : 1 }}
+                  key={p.phase}
+                  initial={false}
+                  animate={{ opacity: dim ? 0.5 : 1 }}
                   transition={{ duration: 0.35, ease: EXPO }}
                 >
-                  {/* Cast onto whatever is underneath, before this slab's own
-                      surfaces go down over it. The `core-drop` gradient does
-                      the softening on its own — this used to carry a blur
-                      filter on top of an already-graded fill, which is paying
-                      twice for one soft edge. */}
-                  {band.depth > 0 && (
-                    <path
-                      d={crownPath(band)}
-                      fill="url(#core-drop)"
-                      transform="translate(0,-6)"
-                      opacity="0.75"
-                    />
-                  )}
-                  {band.depth > 0 && (
-                    <path
-                      d={crownPath(band)}
-                      fill={band.crown}
-                      stroke={band.crown}
-                      strokeWidth={R * 2}
-                      strokeLinejoin="round"
-                    />
-                  )}
-                  <path
-                    d={facePath(band)}
-                    fill={`url(#core-face-${band.phase})`}
-                    stroke={`url(#core-face-${band.phase})`}
-                    strokeWidth={R * 2}
-                    strokeLinejoin="round"
+                  {/* Cast shadow onto the pillar below. */}
+                  <ellipse
+                    cx="100"
+                    cy={botY + 5}
+                    rx={p.rx * 0.86}
+                    ry="7"
+                    fill="url(#pil-shadow)"
                   />
-                  {/* The "this one's lit" wash, over the slab's own fill. */}
-                  <motion.path
-                    d={facePath(band)}
-                    fill="#FFFFFF"
+                  {/* Body. */}
+                  <rect
+                    x={100 - p.rx}
+                    y={topY}
+                    width={p.rx * 2}
+                    height={p.h}
+                    fill={`url(#pil-body-${p.phase})`}
+                  />
+                  {/* Rounded base (front lip). */}
+                  <ellipse
+                    cx="100"
+                    cy={botY}
+                    rx={p.rx}
+                    ry={p.ry}
+                    fill={p.base}
+                  />
+                  {/* Top sheen. */}
+                  <rect
+                    x={100 - p.rx}
+                    y={topY}
+                    width={p.rx * 2}
+                    height={p.h * 0.5}
+                    fill="url(#pil-sheen)"
+                    opacity="0.45"
+                  />
+                  {/* Top lid. */}
+                  <ellipse
+                    cx="100"
+                    cy={topY}
+                    rx={p.rx}
+                    ry={p.ry}
+                    fill={p.lid}
+                  />
+                  <ellipse
+                    cx="100"
+                    cy={topY}
+                    rx={p.rx}
+                    ry={p.ry}
+                    fill="none"
                     stroke="#FFFFFF"
-                    strokeWidth={R * 2}
-                    strokeLinejoin="round"
+                    strokeOpacity="0.3"
+                    strokeWidth="0.6"
+                  />
+                  {/* "This one's lit" wash. */}
+                  <motion.rect
+                    x={100 - p.rx}
+                    y={topY}
+                    width={p.rx * 2}
+                    height={p.h}
+                    fill="#FFFFFF"
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: lit ? 0.12 : 0 }}
+                    animate={{ opacity: lit ? 0.1 : 0 }}
                     transition={{ duration: 0.35, ease: EXPO }}
                   />
                 </motion.g>
@@ -856,47 +794,141 @@ const AICore = ({
             })}
           </svg>
 
-          {/* ---- Icon, label and caption, one cluster per slab. ----
-              HTML rather than SVG: this text only has to wrap and stay crisp
-              at every core size, and percentage positioning against the same
-              box the SVG fills lands each cluster on its own slab without
-              restating the geometry in a second coordinate system. */}
-          {BANDS.map((band) => {
-            const Icon = band.icon;
-            const lit = phase === band.phase;
+          {/* ---- Icon + label per pillar. ---- Icon left, phase and caption
+              to the right, centred on the pillar body — the layout the
+              reference uses. */}
+          {PILLARS.map((p) => {
+            const Icon = p.icon;
+            const lit = litPhase === p.phase;
+            const labelColor = p.darkLabel ? "text-ink-900" : "text-white";
+            const capColor = p.darkLabel ? "text-ink-900" : "text-white/95";
             return (
               <motion.div
-                key={band.phase}
+                key={p.phase}
                 aria-hidden
-                className="pointer-events-none absolute left-1/2 flex -translate-x-1/2 flex-col items-center text-center"
-                style={{ top: band.label.top, width: band.label.width }}
-                animate={{ opacity: phase && !lit ? 0.72 : 1 }}
+                className="pointer-events-none absolute left-1/2 flex w-[88%] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 text-center [text-shadow:0_1px_4px_rgba(0,0,0,0.35)]"
+                style={{ top: `${(p.cy / 200) * 100}%` }}
+                initial={false}
+                animate={{ opacity: litPhase && !lit ? 0.7 : 1 }}
                 transition={{ duration: 0.35, ease: EXPO }}
               >
-                <Icon
-                  className="h-4 w-4 text-white sm:h-5 sm:w-5 lg:h-7 lg:w-7"
-                  strokeWidth={1.5}
-                />
-                <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.06em] text-white sm:text-[13px] lg:text-[15px]">
-                  {band.phase}
-                </p>
-                {/* Dropped below `sm`, not merely shrunk. The core is 300px
-                    wide on a phone, and a two-line caption inside a tapering
-                    slab that narrow lands around 5px — small enough that it
-                    reads as texture rather than words, while still costing
-                    layout. The icon and the phase name carry the diagram at
-                    that size; the captions come back as soon as there's room
-                    to set them at a legible size. */}
-                <p className="mt-1 hidden text-[7px] leading-[1.5] text-white/85 sm:block sm:text-[7.5px] lg:text-[9px]">
-                  {band.caption[0]}
+                <div className="flex items-center gap-2">
+                  <Icon
+                    className={cn(
+                      "h-6 w-6 flex-none sm:h-7 sm:w-7 lg:h-8 lg:w-8 [filter:drop-shadow(0_1px_2px_rgba(0,0,0,0.35))]",
+                      labelColor,
+                    )}
+                    strokeWidth={1.8}
+                  />
+                  <p
+                    className={cn(
+                      "text-[16px] font-extrabold uppercase tracking-[0.08em] sm:text-[19px] lg:text-[23px]",
+                      labelColor,
+                    )}
+                  >
+                    {p.phase}
+                  </p>
+                </div>
+                <p
+                  className={cn(
+                    "hidden text-[9.5px] font-medium leading-[1.4] sm:block sm:text-[10.5px] lg:text-[12.5px]",
+                    capColor,
+                  )}
+                >
+                  {p.caption[0]}
                   <br />
-                  {band.caption[1]}
+                  {p.caption[1]}
                 </p>
               </motion.div>
             );
           })}
-        </motion.div>
+
+          {/* ---- Hover targets. ---- Transparent copies of each body, above
+              everything, so hover lands on the true pillar and rides the same
+              float wrapper as the graphic. */}
+          <svg
+            viewBox="0 0 200 200"
+            className="pointer-events-none absolute inset-0 h-full w-full"
+          >
+            {PILLARS.map((p) => (
+              <rect
+                key={p.phase}
+                x={100 - p.rx}
+                y={p.cy - p.h / 2 - p.ry}
+                width={p.rx * 2}
+                height={p.h + p.ry * 2}
+                fill="transparent"
+                className="pointer-events-auto cursor-pointer"
+                onMouseEnter={() => setHovered(p.phase)}
+              />
+            ))}
+          </svg>
+        </div>
       </motion.div>
+
+      {/* ---- Fade-in details popup. ---- A child of the measured box (not the
+          float), so it holds still and the pointer can travel onto it. Sized
+          under the box width, so it never collides with the side cards. */}
+      <AnimatePresence mode="wait">
+        {hovered && (
+          <motion.div
+            key={hovered}
+            onMouseEnter={() => setHovered(hovered)}
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.97 }}
+            transition={{ duration: 0.3, ease: EXPO }}
+            className="absolute left-1/2 z-40 w-[220px] overflow-hidden -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-line bg-white/95 p-4 shadow-[0_26px_60px_-28px_rgba(20,30,50,0.5)] backdrop-blur-xl"
+            style={{
+              top: `${(PILLARS.find((p) => p.phase === hovered)!.cy / 200) * 100}%`,
+            }}
+          >
+            {(() => {
+              const pop = {
+                Build: "#2E3B4A",
+                Automate: "#B87407",
+                Operate: "#2C74AE",
+              }[hovered];
+              const detail = PILLAR_DETAIL[hovered];
+              return (
+                <>
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-0 top-0 h-[3px] rounded-t-2xl"
+                    style={{ background: pop }}
+                  />
+                  <div className="flex items-baseline justify-between gap-2">
+                    <h4
+                      className="text-[15px] font-semibold tracking-[-0.02em]"
+                      style={{ color: pop }}
+                    >
+                      {hovered}
+                    </h4>
+                    <span className="font-mono text-[8.5px] uppercase tracking-[0.14em] text-ink-400">
+                      {detail.blurb}
+                    </span>
+                  </div>
+                  <ul className="mt-3 space-y-2">
+                    {detail.items.map((item) => (
+                      <li
+                        key={item}
+                        className="flex items-center gap-2.5 text-[12.5px] text-ink"
+                      >
+                        <span
+                          aria-hidden
+                          className="h-1.5 w-1.5 flex-none rounded-full"
+                          style={{ background: pop }}
+                        />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              );
+            })()}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -1016,9 +1048,9 @@ function CapabilityCard({
           <span className="block text-sm font-medium leading-snug tracking-[-0.01em] text-ink line-clamp-2">
             {short(service)}
           </span>
-          <span className="mt-0.5 block font-mono text-[9px] uppercase tracking-[0.16em] text-ink-400">
+          {/* <span className="mt-0.5 block font-mono text-[9px] uppercase tracking-[0.16em] text-ink-400">
             {service.phase} · {service.subs.length} services
-          </span>
+          </span> */}
         </span>
 
         <ChevronRight
@@ -1664,10 +1696,42 @@ export default function CapabilitiesOS() {
                     ),
                   )}
                 </p> */}
-                <p className="mt-2 text-base leading-[1.7] text-ink-500">
-                  A unified approach to build, automate and operate smarter
-                  enterprises for the future.
-                </p>
+                {/* Business Outcomes — what the delivery chain is for. Kept
+                    minimal to sit with the paper theme: the section's own
+                    hairline-and-mono header, then four quiet rows. Fills the
+                    hole under the shorter GBS column. */}
+                <div className="rounded-2xl border border-line bg-paper-white p-6 shadow-[0_2px_20px_-14px_rgba(20,30,50,0.2)]">
+                  <div className="flex items-center gap-3">
+                    <span
+                      aria-hidden
+                      className="h-px w-10 flex-none bg-amber"
+                    />
+                    <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-ink-500">
+                      Business Outcomes
+                    </span>
+                  </div>
+                  <ul className="mt-4 divide-y divide-line/60">
+                    {OUTCOMES.map((o) => (
+                      <li
+                        key={o.title}
+                        className="flex items-baseline gap-3 py-3"
+                      >
+                        <span
+                          aria-hidden
+                          className="h-1.5 w-1.5 flex-none translate-y-[-1px] rounded-full bg-amber"
+                        />
+                        <div className="flex flex-1 flex-wrap items-baseline gap-2">
+                          <span className="text-[14.5px] font-medium text-ink">
+                            {o.title}
+                          </span>
+                          <span className="text-[13px] text-ink-500">
+                            {o.desc}
+                          </span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
