@@ -18,6 +18,7 @@ import Testimonials from "@/components/sections/Testimonials";
 // import Insights from "@/components/sections/Insights";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/sections/Footer";
+import WorkInteractive from "@/components/sections/WorkInteractive";
 
 export default function Home() {
   return (
@@ -28,7 +29,8 @@ export default function Home() {
         {/* <Capabilities /> */}
         <CapabilitiesOS />
         {/* <Work /> */}
-        <WorkShowcase />
+        {/* <WorkShowcase /> */}
+        <WorkInteractive />
         <Proof />
         <Industries />
         <TechStack />

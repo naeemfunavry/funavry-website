@@ -20,6 +20,15 @@ import skillyah from "../../public/case-studies/optimized/skillyah.webp";
 import cnbcArabia from "../../public/case-studies/optimized/cnbc-arabia.webp";
 import smartMunicipality from "../../public/case-studies/optimized/smart-municipality.webp";
 
+/* Portrait captures of the two products that also shipped a mobile surface.
+   Unlike the desktop set these are not produced by crop-case-studies.mjs — its
+   JOBS list is explicit and writes 16:10 only, so these were added to
+   /optimized by hand and the script will neither regenerate nor overwrite them.
+   Add the phone capture there and a `mobileImage` line below; do not add a job
+   for it, or the next run will crop the phone to a landscape frame. */
+import qfsMobile from "../../public/case-studies/optimized/qfs-mobile.webp";
+import cnbcArabiaMobile from "../../public/case-studies/optimized/cnbc-arabia-mobile.webp";
+
 export type CaseStudy = {
   slug: string;
   title: string;
@@ -52,6 +61,17 @@ export type CaseStudy = {
   /** What the platform does. Never a metric — this work is not counted. */
   capabilities: string[];
   image: StaticImageData;
+  /**
+   * The product's mobile surface, where one shipped — a real portrait capture,
+   * never a crop of the desktop one.
+   *
+   * This is the field that earns a phone frame. The note on `frame` above holds:
+   * a device on the page is a claim about what was built, so a study without
+   * this key gets no phone, and nothing stands in for the missing capture. Two
+   * of the six have one today; the other four are desktop-only work and should
+   * look it.
+   */
+  mobileImage?: StaticImageData;
   /**
    * Leader-line callouts over the capture, on the home deck only.
    *
@@ -129,6 +149,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     client: "US · UAE · KSA",
     team: "10+ Engineers",
     image: qfs,
+    mobileImage: qfsMobile,
     featured: true,
   },
   {
@@ -254,6 +275,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     client: "United States",
     team: "10+ Engineers",
     image: cnbcArabia,
+    mobileImage: cnbcArabiaMobile,
     featured: true,
   },
   {

@@ -14,24 +14,45 @@ import { cn } from "@/lib/utils";
  * an application toolbar for the signed-in tools. `study.surface` records which,
  * and a device the screenshot never came from would be a costume.
  *
- * The screen is `aspect-[16/10]` because that is the captures' own shape — every
- * one of them is cropped to it upstream by `scripts/crop-case-studies.mjs`. So
- * `object-cover` here cuts nothing, and this component sizes itself: chrome plus
- * width/1.6. Give it a width; do not give it a height. Anything that pins its
+ * `fit` decides what the screen does with the capture, and the choice matters
+ * more than it looks:
+ *
+ * `"cover"` (the default, and what the card decks want) locks the screen to
+ * `aspect-[16/10]` so a row of cards reads as one set. That was safe while every
+ * capture really was 16:10 — the shape `scripts/crop-case-studies.mjs` writes —
+ * but the optimized set has since drifted: qfs is 1.711, global-claims 1.822 and
+ * cnbc-arabia 2.020, and `object-cover` quietly trims the sides off all three
+ * (21% of CNBC's width). Uniform shape is still the right call for a grid of
+ * cards; just know it is now a crop rather than a no-op.
+ *
+ * `"full"` drops the fixed shape and lets the capture's own aspect ratio set the
+ * window's height, so the whole screenshot is on screen — the thing itself, as
+ * you'd see it open in a browser. Use it wherever one capture is the subject
+ * rather than one of six tiles, and give the surrounding layout room for a
+ * height that varies from study to study.
+ *
+ * Either way: give it a width; do not give it a height. Anything that pins its
  * height is choosing, silently, which edge of a hand-composed crop to throw away.
  *
  * Hover belongs to the enclosing `Frame` (`group/frame`), so the whole card
  * drives it — reaching the window is not a separate gesture from reading the
- * card it belongs to.
+ * card it belongs to. A caller that leaves `group/frame` off gets a still
+ * window, which is what you want when the capture is meant to be read: the
+ * hover scales the window 1.02 and the capture a further 1.025, and a
+ * composited layer resampled by that much lands on exactly the fine table text
+ * these screenshots exist to show.
  */
 export default function ProductWindow({
   study,
   sizes,
+  fit = "cover",
   className,
 }: {
   study: CaseStudy;
-  /** Passed through to `next/image`; the two call sites size very differently. */
+  /** Passed through to `next/image`; the call sites size very differently. */
   sizes: string;
+  /** See the note above — `"full"` shows the whole capture, uncropped. */
+  fit?: "cover" | "full";
   className?: string;
 }) {
   const phase = CASE_PHASE[study.phase];
@@ -99,23 +120,45 @@ export default function ProductWindow({
         )}
       </div>
 
-      {/* The screen — the capture's own 16:10, so nothing is cut twice. */}
-      <div className="relative aspect-[16/10] overflow-hidden bg-paper-deep">
+      {/* The screen. Under `cover` it holds a fixed 16:10 and the capture is
+          cropped to fit; under `full` it has no shape of its own and the
+          capture gives it one. */}
+      <div
+        className={cn(
+          "relative overflow-hidden bg-paper-deep",
+          fit === "cover" && "aspect-[16/10]",
+        )}
+      >
         {/* q90, not Next's default 75. These captures are dashboards, and the
             first thing a 75-quality re-encode spends its budget on is the fine
             table text they exist to show — measured at 39.2dB PSNR against the
             crop script's own output, which is where compression starts to tell
             on type. `images.qualities` in next.config has to list 90 or this
             400s rather than falling back. */}
-        <Image
-          src={study.image}
-          alt={`${study.title} — product interface`}
-          fill
-          quality={90}
-          placeholder="blur"
-          sizes={sizes}
-          className="object-cover object-top transition-transform duration-[900ms] ease-expo group-hover/frame:scale-[1.025]"
-        />
+        {fit === "cover" ? (
+          <Image
+            src={study.image}
+            alt={`${study.title} — product interface`}
+            fill
+            quality={90}
+            placeholder="blur"
+            sizes={sizes}
+            className="object-cover object-top transition-transform duration-[900ms] ease-expo group-hover/frame:scale-[1.025]"
+          />
+        ) : (
+          /* No `fill`: the imported StaticImageData carries the capture's real
+             dimensions, so letting next/image lay it out intrinsically is what
+             makes the window take the screenshot's shape instead of imposing
+             one on it. `w-full h-auto` keeps that ratio while it scales. */
+          <Image
+            src={study.image}
+            alt={`${study.title} — product interface`}
+            quality={90}
+            placeholder="blur"
+            sizes={sizes}
+            className="h-auto w-full transition-transform duration-[900ms] ease-expo group-hover/frame:scale-[1.025]"
+          />
+        )}
 
         {/* Reflection: one specular band lying across the glass, sliding off as
             the window lifts. The light doesn't move — the surface under it does,
