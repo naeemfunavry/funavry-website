@@ -19,7 +19,6 @@ import Testimonials from "@/components/sections/Testimonials";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/sections/Footer";
 import WorkInteractive from "@/components/sections/WorkInteractive";
-import Work from "@/components/sections/Work";
 
 export default function Home() {
   return (
@@ -29,8 +28,8 @@ export default function Home() {
         <Hero />
         {/* <Capabilities /> */}
         <CapabilitiesOS />
-        <Work />
-        <WorkShowcase />
+        {/* <Work /> */}
+        {/* <WorkShowcase /> */}
         <WorkInteractive />
         <Proof />
         <Industries />
