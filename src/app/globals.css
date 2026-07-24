@@ -61,6 +61,43 @@
   }
 }
 
+/* ── Mobile: skip rendering work for off-screen sections ───────────────────
+   Measured on the built home page: the hero is 6KB of markup and 46 nodes; the
+   sections below it are 302KB and ~2,000 more. On a phone every one of those
+   nodes is styled, laid out and painted before the page settles, and none of it
+   is on screen.
+
+   `content-visibility: auto` lets the browser skip style, layout and paint for
+   a subtree until it approaches the viewport, then do the work once. The markup
+   stays in the DOM exactly as it was — this is not `display: none` and not a
+   lazy import — so the HTML Google receives is unchanged, every section is
+   still server-rendered, and in-page anchors and Ctrl+F still find their
+   targets. It only changes WHEN the browser does the work.
+
+   `contain-intrinsic-size: auto <fallback>` is what keeps the scrollbar honest:
+   the fallback is a first guess for a section that has never been rendered, and
+   `auto` tells the browser to remember each section's real height once measured
+   and use that from then on. Without it a skipped section reports zero height
+   and the page collapses.
+
+   Phones only. Desktop paints all of this comfortably in one frame and the
+   brief is explicit that the desktop experience does not change. The hero is
+   deliberately excluded — it is the LCP element's own section and must never be
+   skipped — as are `#capabilities` and the nav, which are at or near the top of
+   the viewport on load. */
+@media (max-width: 1023px) {
+  #work,
+  #proof,
+  #industries,
+  #technology,
+  #testimonials,
+  #contact,
+  footer {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 1200px;
+  }
+}
+
 /* Drifting motes in the Case Studies field — transform/opacity only, so they
    stay on the compositor. Per-mote duration and delay are set inline; reduced
    motion drops them entirely at the component (they aren't rendered). */
@@ -259,17 +296,38 @@
     );
   }
 
+  /* The nav bar's frosting.
+     `backdrop-filter` is the most expensive property on this site's critical
+     path after the hero aurora, and uniquely bad here because the bar is
+     fixed: the backdrop behind it changes on every scroll frame, so the blur
+     is re-rasterised 60 times a second for the entire length of the page. On a
+     phone that is a standing cost on every scroll, and it shows up as dropped
+     frames rather than as a number in Lighthouse.
+
+     Phones therefore get the same bar as a near-opaque fill — the frosting is
+     only legible where content passes under it, which on a narrow viewport is
+     a sliver. Tablet and up keep the real thing unchanged. */
   .glass {
-    background: rgba(245, 246, 244, 0.72);
-    backdrop-filter: blur(14px) saturate(1.4);
-    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    background: rgba(245, 246, 244, 0.94);
   }
 
   /* Paper glass over the dark hero would read as a muddy grey bar. */
   .glass-dark {
-    background: rgba(33, 38, 42, 0.62);
-    backdrop-filter: blur(14px) saturate(1.2);
-    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    background: rgba(33, 38, 42, 0.9);
+  }
+
+  @media (min-width: 1024px) {
+    .glass {
+      background: rgba(245, 246, 244, 0.72);
+      backdrop-filter: blur(14px) saturate(1.4);
+      -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    }
+
+    .glass-dark {
+      background: rgba(33, 38, 42, 0.62);
+      backdrop-filter: blur(14px) saturate(1.2);
+      -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    }
   }
 
   .scrollbar-hide {

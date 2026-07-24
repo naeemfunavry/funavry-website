@@ -22,11 +22,23 @@ const urbanist = Urbanist({
   display: "swap",
 });
 
+/* Not preloaded, unlike Urbanist. `next/font` emits a `<link rel="preload">`
+   for every family by default, so the phone was opening two competing font
+   requests on the critical path — and only one of them draws the LCP element.
+   Urbanist sets the headline and the intro paragraph; JetBrains Mono sets
+   eyebrow labels and small caps, none of which is the LCP candidate.
+
+   Dropping the preload hands that bandwidth and connection back to Urbanist,
+   which is the font LCP actually waits on. Mono still loads, just at normal
+   priority once the stylesheet references it. `display: swap` covers the gap:
+   the eyebrow label renders immediately in the fallback and swaps when the
+   file lands, which is the correct trade for a 10px label. */
 const mono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   variable: "--font-mono",
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {

@@ -53,12 +53,42 @@ export default function Hero() {
     >
       {/* Aurora: three washes in the phase colours, drifting on different
           periods. Blurred far past their own edges, so what reads is the
-          light, not the shape. */}
-      <div aria-hidden className="absolute inset-0 overflow-hidden">
+          light, not the shape.
+
+          Desktop only, and this is the single biggest thing on the phone's
+          critical path. Three layers each ~70vw x 70vh with a 130-140px blur
+          radius have to be rasterised before the hero can paint, and a blur of
+          that radius is not cheap on a mobile GPU — it is the most expensive
+          work between the HTML arriving and the LCP text appearing. They are
+          also animated, so the compositor keeps all three layers alive for the
+          whole visit.
+
+          The phone gets the version below instead: the same three washes baked
+          as static radial gradients on one element. That is not an
+          approximation for its own sake — a circle blurred by 130px IS a radial
+          gradient, so the result reads the same while costing one gradient fill
+          and no blur, no animation, and no extra layers. */}
+      <div
+        aria-hidden
+        className="absolute inset-0 hidden overflow-hidden lg:block"
+      >
         <div className="absolute -left-[15%] -top-[20%] h-[75vh] w-[75vw] animate-aurora-a rounded-full bg-azure/25 blur-[130px]" />
         <div className="absolute -right-[12%] top-[4%] h-[58vh] w-[58vw] animate-aurora-b rounded-full bg-amber/[0.13] blur-[140px]" />
         <div className="absolute -bottom-[25%] left-[22%] h-[65vh] w-[65vw] animate-aurora-c rounded-full bg-steel/35 blur-[130px]" />
       </div>
+
+      {/* The phone's aurora: same light, no blur and no animation. */}
+      <div
+        aria-hidden
+        className="absolute inset-0 lg:hidden"
+        style={{
+          background: [
+            "radial-gradient(78% 58% at 10% 6%, rgba(68,158,216,0.28), transparent 62%)",
+            "radial-gradient(62% 46% at 94% 14%, rgba(245,159,19,0.14), transparent 60%)",
+            "radial-gradient(72% 58% at 46% 104%, rgba(55,96,121,0.38), transparent 66%)",
+          ].join(","),
+        }}
+      />
 
       {/* Grid over the wash, grain over both. */}
       <div aria-hidden className="absolute inset-0 grid-paper-dark" />
