@@ -238,10 +238,10 @@ type Pillar = {
       that makes a flat rect read as round. */
   edge: string;
   mid: string;
-  /** The top lid (lighter, it faces the light) and the front rounded base
-      (darker, it faces away). */
+  /** The top lid — lighter, because it faces the light. There is no base
+      colour: the front lip keeps its curve but is painted in the body's own
+      gradient, so the bottom rounds off without a tonal step. */
   lid: string;
-  base: string;
   /** The bright amber pillar takes dark labels; the blue and navy take white. */
   darkLabel?: boolean;
   caption: [string, string];
@@ -261,7 +261,6 @@ const PILLARS: Pillar[] = [
     edge: "#2A6BA3",
     mid: "#4FA0D6",
     lid: "#86C4EE",
-    base: "#1F5580",
     caption: ["Managed services", "GCC · Excellence"],
   },
   {
@@ -274,7 +273,6 @@ const PILLARS: Pillar[] = [
     edge: "#BC7207",
     mid: "#F2A22C",
     lid: "#FBC163",
-    base: "#9E5D05",
     darkLabel: true,
     caption: ["AI agents · Automation", "Process optimization"],
   },
@@ -288,7 +286,6 @@ const PILLARS: Pillar[] = [
     edge: "#0F151D",
     mid: "#2C3A48",
     lid: "#3B4A58",
-    base: "#0A0E14",
     caption: ["AI · Engineering · Data", "Cloud · Security"],
   },
 ];
@@ -337,16 +334,11 @@ const OUTCOMES = [
   { title: "Scale", desc: "Grows without friction" },
 ] as const;
 
-/** Where the connection fan's sixteen lines aim — one ellipse per phase, read
-    by `buildLinks` below. Never drawn: the lines fade out well before they
-    reach these, exactly as they do in the reference. They exist only to give
-    each phase's cards an arc to spread across, sized for a clean spread
-    rather than pinned to its slab's own edge. */
-const PHASE_ANCHORS = [
-  { phase: "Operate", cy: 56, rx: 46, ry: 30 },
-  { phase: "Automate", cy: 112, rx: 74, ry: 40 },
-  { phase: "Build", cy: 168, rx: 86, ry: 40 },
-] as const;
+/** How far in from a pillar's top and bottom edges the fan may land, as a
+    fraction of the body height. Keeps the outermost lines clear of the lid and
+    base curves, where the silhouette is still turning — a line arriving level
+    with `topY` meets the lid ellipse at its widest and reads as touching air. */
+const PILLAR_INSET = 0.22;
 
 const SPRING = {
   type: "spring",
@@ -364,16 +356,21 @@ const EXPO = [0.19, 1, 0.22, 1] as const;
 
    Routing is orthogonal, not curved: out of the card horizontally, one turn
    down or up, one turn back in toward the core — with the corners rounded off.
-   Every line then fades to nothing before it arrives, so the fan reads as
-   circuitry disappearing under the pyramid rather than as sixteen wires
-   plugged into it.
 
-   Each phase still aims at its own anchor arc, so a Build card and an Operate
-   card leave for visibly different heights. The cost is that the fan doesn't
-   guarantee a non-crossing layout — cards sit in reading order, phases don't,
-   so a Build card below an Operate card sends its line up and over. Sorting
-   the columns by phase would fix it and is not on the table: the card order is
-   the card order.
+   Lines land ON their phase's pillar, at the side face it actually presents:
+   x is the pillar's own `rx`, y is spread down its body. They used to aim at a
+   set of invented anchor ellipses whose geometry matched no pillar, and fade to
+   nothing at the core's centre — a deliberate "circuitry disappearing under the
+   stack" read, but one that left every line stopping in mid-air short of the
+   thing it was describing. The fade now runs to the pillar face and settles
+   there at half strength, so a line is plainly weaker at the core end than at
+   its card without ever losing contact.
+
+   Each phase aims at its own pillar, so a Build card and an Operate card leave
+   for visibly different heights. The cost is that the fan doesn't guarantee a
+   non-crossing layout — cards sit in reading order, phases don't, so a Build
+   card below an Operate card sends its line up and over. Sorting the columns by
+   phase would fix it and is not on the table: the card order is the card order.
    -------------------------------------------------------------------------- */
 
 type Link = {
@@ -387,13 +384,12 @@ type Link = {
 type Geometry = {
   w: number;
   h: number;
-  /** Core centre, in wrapper pixels — the point every line fades toward. */
-  cx: number;
+  /** Where each column's lines terminate: the x of the pillars' side face, in
+      wrapper pixels. The fade gradients run to exactly this point, so the stop
+      that ends the fade and the point the stroke ends are the same place. */
+  edge: { tech: number; gbs: number };
   links: Link[];
 };
-
-/** Half-angle of the arc each phase group fans across, in degrees. */
-const ARC = 56;
 
 /** A right-angled connector with rounded corners: horizontal out of the card
     to `mx`, vertical to the target row, horizontal in to the target. Falls
@@ -445,11 +441,10 @@ function buildLinks(
     }
 
     for (const [phaseName, bucket] of byPhase) {
-      const ring = PHASE_ANCHORS.find(
-        (candidate) => candidate.phase === phaseName,
-      );
-      if (!ring) continue;
+      const pillar = PILLARS.find((candidate) => candidate.phase === phaseName);
+      if (!pillar) continue;
       const last = Math.max(bucket.length - 1, 1);
+      const top = pillar.cy - pillar.h / 2;
 
       bucket.forEach((service, i) => {
         const el = cards.get(service.n);
@@ -460,15 +455,16 @@ function buildLinks(
         const x0 = (side === -1 ? box.right : box.left) - wrap.left;
         const y0 = box.top + box.height / 2 - wrap.top;
 
-        // Fan this phase's cards across its own anchor arc, on the side they
-        // live on. A lone card takes the arc's widest point rather than one
-        // end of it, so a group of one still looks aimed rather than parked.
+        // Land on the face of this phase's pillar, on the side the card lives
+        // on, spread down the body. A lone card takes the middle of the face
+        // rather than one end of it, so a group of one looks aimed rather than
+        // parked.
         const t = bucket.length === 1 ? 0.5 : i / last;
-        const spread = ((-ARC + t * 2 * ARC) * Math.PI) / 180;
-        const theta = side === -1 ? Math.PI - spread : spread;
 
-        const x1 = ox + (100 + ring.rx * Math.cos(theta)) * k;
-        const y1 = oy + (ring.cy + ring.ry * Math.sin(theta)) * k;
+        const x1 = ox + (100 + side * pillar.rx) * k;
+        const y1 =
+          oy +
+          (top + pillar.h * (PILLAR_INSET + t * (1 - 2 * PILLAR_INSET))) * k;
 
         // Where the line makes its turn. Staggered per card so that sixteen
         // vertical runs don't pile onto the same few columns — with a fixed
@@ -486,10 +482,18 @@ function buildLinks(
     }
   }
 
+  // All three pillars present the same side face, so one x per side serves the
+  // whole fan. Taken as the widest rather than PILLARS[0].rx, so a future pillar
+  // with a different width can't quietly leave the gradients aiming short.
+  const faceRx = Math.max(...PILLARS.map((p) => p.rx));
+
   return {
     w: wrap.width,
     h: wrap.height,
-    cx: ox + 100 * k,
+    edge: {
+      tech: ox + (100 - faceRx) * k,
+      gbs: ox + (100 + faceRx) * k,
+    },
     links,
   };
 }
@@ -511,37 +515,43 @@ function ConnectionNetwork({
       fill="none"
     >
       <defs>
-        {/* The fade. Each side runs from its own card column toward the core
-            centre and dies before it gets there, so no line ever visibly
-            touches the pyramid — it just thins out under it. Laid out in user
-            space rather than per-path bounding boxes so all eight lines on a
-            side fade at the same screen x, which is what makes them read as
-            one field rather than eight independent strokes. */}
+        {/* The fade. Each side runs from its own card column to the pillar face
+            its lines terminate on — the gradient's end and the stroke's end are
+            now the same x, which is the whole trick. It used to run to the core
+            CENTRE and hit zero there, which meant every line had already faded
+            out somewhere in the empty space before the pillars: the last thing
+            you saw was a stroke evaporating in mid-air.
+
+            Ending at 0.5 rather than 0 keeps the falloff — a line is still
+            visibly weaker at the core end than at its card — while leaving it
+            plainly in contact with the pillar it belongs to.
+
+            Laid out in user space rather than per-path bounding boxes so all
+            eight lines on a side fade at the same screen x, which is what makes
+            them read as one field rather than eight independent strokes. */}
         <linearGradient
           id="os-fade-tech"
           gradientUnits="userSpaceOnUse"
           x1="0"
           y1="0"
-          x2={geom.cx}
+          x2={geom.edge.tech}
           y2="0"
         >
-          <stop offset="0%" stopColor={HUE.tech.hex} stopOpacity="0.85" />
-          <stop offset="62%" stopColor={HUE.tech.hex} stopOpacity="0.7" />
-          <stop offset="88%" stopColor={HUE.tech.hex} stopOpacity="0.12" />
-          <stop offset="100%" stopColor={HUE.tech.hex} stopOpacity="0" />
+          <stop offset="0%" stopColor={HUE.tech.hex} stopOpacity="0.9" />
+          <stop offset="55%" stopColor={HUE.tech.hex} stopOpacity="0.78" />
+          <stop offset="100%" stopColor={HUE.tech.hex} stopOpacity="0.5" />
         </linearGradient>
         <linearGradient
           id="os-fade-gbs"
           gradientUnits="userSpaceOnUse"
           x1={geom.w}
           y1="0"
-          x2={geom.cx}
+          x2={geom.edge.gbs}
           y2="0"
         >
-          <stop offset="0%" stopColor={HUE.gbs.hex} stopOpacity="0.85" />
-          <stop offset="62%" stopColor={HUE.gbs.hex} stopOpacity="0.7" />
-          <stop offset="88%" stopColor={HUE.gbs.hex} stopOpacity="0.12" />
-          <stop offset="100%" stopColor={HUE.gbs.hex} stopOpacity="0" />
+          <stop offset="0%" stopColor={HUE.gbs.hex} stopOpacity="0.9" />
+          <stop offset="55%" stopColor={HUE.gbs.hex} stopOpacity="0.78" />
+          <stop offset="100%" stopColor={HUE.gbs.hex} stopOpacity="0.5" />
         </linearGradient>
       </defs>
 
@@ -743,13 +753,22 @@ const AICore = ({
                     height={p.h}
                     fill={`url(#pil-body-${p.phase})`}
                   />
-                  {/* Rounded base (front lip). */}
+                  {/* Rounded base (front lip), in the body's OWN gradient
+                      rather than a darker tone of its own — the curve stays,
+                      the shading that made it read as a separate 3D lip goes.
+
+                      A flat fill can't do this job: the gradient runs bright at
+                      the cylinder's centre and dark at its edges, so any single
+                      colour is wrong somewhere along the lip. Filling with the
+                      same paint makes the join invisible at every x, because
+                      `pil-body-*` is `userSpaceOnUse` across exactly this
+                      ellipse's own span. */}
                   <ellipse
                     cx="100"
                     cy={botY}
                     rx={p.rx}
                     ry={p.ry}
-                    fill={p.base}
+                    fill={`url(#pil-body-${p.phase})`}
                   />
                   {/* Top sheen. */}
                   <rect
@@ -778,17 +797,48 @@ const AICore = ({
                     strokeOpacity="0.3"
                     strokeWidth="0.6"
                   />
-                  {/* "This one's lit" wash. */}
-                  <motion.rect
-                    x={100 - p.rx}
-                    y={topY}
-                    width={p.rx * 2}
-                    height={p.h}
-                    fill="#FFFFFF"
+                  {/* "This one's lit" wash — over the lip and the lid as well
+                      as the body, so the whole cylinder brightens as one
+                      object. It used to cover the body rect alone, which was
+                      invisible while the lip carried its own darker tone but
+                      shows plainly now the lip is painted in the body's
+                      gradient: on hover the body lifted 10% and the lip didn't,
+                      putting back the exact tonal step at the join that
+                      matching the fills removed.
+
+                      The opacity sits on the GROUP, not on each shape. These
+                      three overlap by `ry` at both joins, and per-shape alpha
+                      would compound there — two washes over one another read as
+                      20%, drawing a bright band around each join instead of
+                      lighting the cylinder evenly. A group is composited first
+                      and faded once. */}
+                  <motion.g
                     initial={{ opacity: 0 }}
                     animate={{ opacity: lit ? 0.1 : 0 }}
                     transition={{ duration: 0.35, ease: EXPO }}
-                  />
+                  >
+                    <ellipse
+                      cx="100"
+                      cy={botY}
+                      rx={p.rx}
+                      ry={p.ry}
+                      fill="#FFFFFF"
+                    />
+                    <rect
+                      x={100 - p.rx}
+                      y={topY}
+                      width={p.rx * 2}
+                      height={p.h}
+                      fill="#FFFFFF"
+                    />
+                    <ellipse
+                      cx="100"
+                      cy={topY}
+                      rx={p.rx}
+                      ry={p.ry}
+                      fill="#FFFFFF"
+                    />
+                  </motion.g>
                 </motion.g>
               );
             })}
@@ -806,13 +856,28 @@ const AICore = ({
               <motion.div
                 key={p.phase}
                 aria-hidden
-                className="pointer-events-none absolute left-1/2 flex w-[88%] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 text-center [text-shadow:0_1px_4px_rgba(0,0,0,0.35)]"
+                /* Two layouts, because the pillar is two very different heights.
+
+                   sm and up (`block`): only the icon+name row is in flow, so
+                   `-translate-y-1/2` centres THAT on the pillar and the caption
+                   hangs out of flow beneath it. Centring the row and the caption
+                   as one block — what this used to do — let the caption's height
+                   lever the name up off the middle.
+
+                   Below sm (`flex flex-col`): the caption comes back into flow
+                   and the whole group is centred again. It has to be: the core
+                   is 310px there, so the body is only ~74px tall and a caption
+                   hung beneath the row would hang off the bottom of the pillar
+                   and onto the section's white background — where white caption
+                   text is simply invisible. In flow, the group measures ~55px
+                   and sits inside the body with room to spare. */
+                className="pointer-events-none absolute left-1/2 flex w-[88%] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 text-center sm:block sm:gap-0 [text-shadow:0_1px_4px_rgba(0,0,0,0.35)]"
                 style={{ top: `${(p.cy / 200) * 100}%` }}
                 initial={false}
                 animate={{ opacity: litPhase && !lit ? 0.7 : 1 }}
                 transition={{ duration: 0.35, ease: EXPO }}
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center gap-2">
                   <Icon
                     className={cn(
                       "h-6 w-6 flex-none sm:h-7 sm:w-7 lg:h-8 lg:w-8 [filter:drop-shadow(0_1px_2px_rgba(0,0,0,0.35))]",
@@ -829,9 +894,12 @@ const AICore = ({
                     {p.phase}
                   </p>
                 </div>
+                {/* In flow on mobile (see above); out of flow from sm up, hung
+                    directly under the row so its height stops counting toward
+                    what `-translate-y-1/2` is centring. */}
                 <p
                   className={cn(
-                    "hidden text-[9.5px] font-medium leading-[1.4] sm:block sm:text-[10.5px] lg:text-[12.5px]",
+                    "text-[9.5px] font-medium leading-[1.4] sm:absolute sm:inset-x-0 sm:top-full sm:mt-1 sm:text-[10.5px] lg:text-[12.5px]",
                     capColor,
                   )}
                 >
@@ -871,18 +939,43 @@ const AICore = ({
           under the box width, so it never collides with the side cards. */}
       <AnimatePresence mode="wait">
         {hovered && (
+          /* Placement only — and it animates OPACITY ONLY, deliberately.
+             Framer writes the whole `transform` property itself, so the moment
+             this element animated `scale` its inline transform replaced the one
+             Tailwind's `-translate-x-1/2 -translate-y-1/2` had built. The panel
+             lost its centring for the entire animation and settled half its own
+             width to the right and half its height down. Keeping every transform
+             value off this element lets the utility classes hold; the scale
+             moved to the child below, which has no positioning to lose. */
           <motion.div
             key={hovered}
             onMouseEnter={() => setHovered(hovered)}
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.97 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.3, ease: EXPO }}
-            className="absolute left-1/2 z-40 w-[220px] overflow-hidden -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-line bg-white/95 p-4 shadow-[0_26px_60px_-28px_rgba(20,30,50,0.5)] backdrop-blur-xl"
-            style={{
-              top: `${(PILLARS.find((p) => p.phase === hovered)!.cy / 200) * 100}%`,
-            }}
+            className={cn(
+              "absolute left-1/2 z-40 w-[220px] -translate-x-1/2",
+              // Mobile: hung under the whole core. At 310px the panel is most of
+              // the core's width, so centred on its pillar it buried the stack —
+              // you could not see which pillar you had opened.
+              "top-full mt-3",
+              // Tablet and up there is room to sit on the pillar it describes.
+              "sm:top-[var(--pop-y)] sm:mt-0 sm:-translate-y-1/2",
+            )}
+            style={
+              {
+                "--pop-y": `${(PILLARS.find((p) => p.phase === hovered)!.cy / 200) * 100}%`,
+              } as React.CSSProperties
+            }
           >
+            <motion.div
+              initial={{ scale: 0.97 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.97 }}
+              transition={{ duration: 0.3, ease: EXPO }}
+              className="relative overflow-hidden rounded-2xl border border-line bg-white/95 p-4 shadow-[0_26px_60px_-28px_rgba(20,30,50,0.5)] backdrop-blur-xl"
+            >
             {(() => {
               const pop = {
                 Build: "#2E3B4A",
@@ -926,6 +1019,7 @@ const AICore = ({
                 </>
               );
             })()}
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
