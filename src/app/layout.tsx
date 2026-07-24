@@ -90,6 +90,21 @@ export default function RootLayout({
           // Static, build-time JSON from our own constants — no user input.
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
         />
+        {/* Bypass Blocks (WCAG 2.4.1, Level A). The header is a mega-menu with
+            roughly thirty links in it, and without this a keyboard or switch
+            user tabbed the whole thing again on every route before reaching any
+            content. Visually hidden until focused, then it lands as a normal
+            focusable control at the top-left.
+
+            `sr-only` alone would not do: the link has to become visible when it
+            takes focus, or a sighted keyboard user sees focus vanish into
+            nothing. */}
+        <a
+          href="#main"
+          className="sr-only rounded-sm bg-ink px-4 py-3 text-[14px] font-medium text-paper focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100]"
+        >
+          Skip to main content
+        </a>
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
       </body>
     </html>

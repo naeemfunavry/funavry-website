@@ -322,12 +322,46 @@ export default function Nav() {
   };
   useEffect(() => () => window.clearTimeout(megaTimer.current), []);
 
+  /* Lenis drives the page, so this fires on every animation frame of every
+     scroll — it is the most frequently run code on the site and has to do as
+     little as possible.
+
+     Two things it used to do per frame: dispatch `setScrolled` with a freshly
+     computed boolean, and dispatch `setMega(null)` unconditionally. React bails
+     out of an identical value, but the bail-out happens after the dispatch, so
+     both still entered the scheduler ~60 times a second for the ~99% of frames
+     that cross no threshold and have no menu open.
+
+     Now the frame does one `scrollY` read and two comparisons against refs, and
+     touches React only on the frames where something actually changed. */
+  const scrolledRef = useRef(false);
+  const megaRef = useRef<null | "services" | "industries">(null);
+  megaRef.current = mega;
+
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 20);
-      setMega(null);
+    let ticking = false;
+
+    const read = () => {
+      ticking = false;
+      const next = window.scrollY > 20;
+      if (next !== scrolledRef.current) {
+        scrolledRef.current = next;
+        setScrolled(next);
+      }
+      // Scrolling dismisses an open mega menu — but only if one is open.
+      if (megaRef.current !== null) setMega(null);
     };
-    onScroll();
+
+    /* rAF-coalesced: a scroll burst that fires several events inside one frame
+       collapses to a single read, and the read lands in the frame that will
+       paint it rather than ahead of it. */
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(read);
+    };
+
+    read();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);

@@ -2,7 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image, { type StaticImageData } from "next/image";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { ArrowRight, X } from "lucide-react";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
@@ -329,7 +336,6 @@ export default function WorkInteractive() {
      from it: a wrap from the last study to the first is a step forward, and any
      comparison of the two indices reads it as five steps back. */
   const [direction, setDirection] = useState(1);
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [hover, setHover] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -389,18 +395,56 @@ export default function WorkInteractive() {
      Vertical travel tips the stage away from the pointer (hence the negative),
      horizontal turns it toward — the pairing that reads as a solid being
      angled rather than a plane being skewed. Reduced motion opts out entirely:
-     the stage stays flat and the frames keep their resting offsets. */
+     the stage stays flat and the frames keep their resting offsets.
+
+     The tilt is held in motion values, NOT React state, and this is the whole
+     performance story for this section. As state it re-rendered the entire
+     section on every pointer move — the study map, ProductWindow, PhoneFrame
+     and two next/image subtrees — at whatever rate the mouse reports, which on
+     a 120Hz pointer is 120 full reconciliations a second for an effect that
+     only ever changes a transform. Motion values are written straight to the
+     compositor and React never hears about them.
+
+     The stage rect is read once on enter rather than per move. It cannot change
+     while the pointer is inside without a scroll or resize, both of which end
+     the hover — and `getBoundingClientRect` in a move handler is a forced
+     synchronous layout on every event. */
+  const rect = useRef<DOMRect | null>(null);
+  const tiltX = useMotionValue(0);
+  const tiltY = useMotionValue(0);
+
+  /* Springs rather than a `transition`, so the easing lives on the value and
+     survives the fact that nothing here re-renders. */
+  const SPRING = { stiffness: 320, damping: 34, mass: 0.55 };
+  const rotateX = useSpring(tiltX, SPRING);
+  const rotateY = useSpring(tiltY, SPRING);
+  /* The two frames lean by a fraction of the stage's own turn — that offset is
+     what separates them in depth as it moves. */
+  const windowRotate = useTransform(rotateY, (v) => v * 0.15);
+  const phoneRotate = useTransform(rotateY, (v) => v * 0.28);
+
+  const onEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    rect.current = e.currentTarget.getBoundingClientRect();
+    setHover(true);
+    pause();
+  };
+
   const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (reduce) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const px = (e.clientX - rect.left) / rect.width - 0.5;
-    const py = (e.clientY - rect.top) / rect.height - 0.5;
-    setTilt({ x: py * -8, y: px * 10 });
+    const r = rect.current;
+    if (!r) return;
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    tiltX.set(py * -8);
+    tiltY.set(px * 10);
   };
 
   const onLeave = () => {
-    setTilt({ x: 0, y: 0 });
+    tiltX.set(0);
+    tiltY.set(0);
+    rect.current = null;
     setHover(false);
+    resume();
   };
 
   const close = useCallback(() => setOpen(false), []);
@@ -486,15 +530,9 @@ export default function WorkInteractive() {
             Hover and touch hold the deck where it is — a study should never be
             pulled out from under someone who has just leaned into it. */}
         <div
-          onMouseEnter={() => {
-            setHover(true);
-            pause();
-          }}
+          onMouseEnter={onEnter}
           onMouseMove={onMove}
-          onMouseLeave={() => {
-            onLeave();
-            resume();
-          }}
+          onMouseLeave={onLeave}
           onTouchStart={pause}
           onTouchEnd={resumeSoon}
           /* Deliberately NOT `group/frame`. ProductWindow's hover state scales
@@ -526,15 +564,17 @@ export default function WorkInteractive() {
             />
           </AnimatePresence>
 
+          {/* Driven by `style` off the springs above, not by an `animate`
+              target: an animate target is a render-time prop, so the tilt could
+              only move when React re-rendered. On style, the value updates on
+              the animation frame and never enters the render path at all. */}
           <motion.div
             className="relative"
-            animate={{ rotateX: tilt.x, rotateY: tilt.y }}
-            transition={
-              hover
-                ? { duration: 0.06, ease: "linear" }
-                : { duration: 0.5, ease: EXPO }
-            }
-            style={{ transformStyle: "preserve-3d" }}
+            style={{
+              rotateX,
+              rotateY,
+              transformStyle: "preserve-3d",
+            }}
           >
             {/* The slide. `mode="wait"` rather than two slides crossing: they
                 would have to be taken out of flow to overlap, and an absolutely
@@ -598,10 +638,8 @@ export default function WorkInteractive() {
                       whole transform itself, so a hand-written one is
                       overwritten on the first animated frame. */}
                     <motion.div
-                      animate={{
-                        rotate: hover ? tilt.y * 0.15 : 0,
-                        z: hover ? 20 : 0,
-                      }}
+                      style={{ rotate: windowRotate }}
+                      animate={{ z: hover ? 20 : 0 }}
                       transition={{ duration: 0.3, ease: EXPO }}
                       className={study.mobileImage ? "w-[93%]" : "w-full"}
                     >
@@ -614,10 +652,8 @@ export default function WorkInteractive() {
 
                     {study.mobileImage && (
                       <motion.div
-                        animate={{
-                          rotate: hover ? tilt.y * 0.28 : 0,
-                          z: hover ? 55 : 0,
-                        }}
+                        style={{ rotate: phoneRotate }}
+                        animate={{ z: hover ? 55 : 0 }}
                         transition={{ duration: 0.3, ease: EXPO }}
                         className="absolute -bottom-4 right-0 w-[26%] max-w-[152px] sm:-bottom-6 sm:right-2"
                       >

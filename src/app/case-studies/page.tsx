@@ -17,7 +17,7 @@ export default function CaseStudiesPage() {
   return (
     <>
       <Nav />
-      <main>
+      <main id="main">
         {/* The bar sits on the dark hero on the home page; here there is no
             hero, so the section opens under the bar's own height. */}
         <section className="relative overflow-hidden border-b border-line bg-paper-deep pt-[130px]">

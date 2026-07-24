@@ -1617,15 +1617,40 @@ export default function CapabilitiesOS() {
   }, []);
 
   useLayoutEffect(() => {
+    /* `measure` reads eighteen bounding boxes — sixteen cards, the wrapper and
+       the core — and then writes state, so it must run at most once per frame.
+
+       It used to be wired to a ResizeObserver AND a window resize listener,
+       which are not alternatives: a window resize fires both, so every resize
+       frame ran the whole eighteen-rect measurement twice and set state twice.
+       Worse, measuring synchronously inside a ResizeObserver callback reads
+       layout during layout, which is what produces "ResizeObserver loop
+       completed with undelivered notifications" and forces a second pass.
+
+       Both sources now funnel through one rAF-coalesced call: whatever
+       combination fires in a frame, the measurement happens once, after layout
+       has settled. The window listener stays because the observer only watches
+       the wrapper's own box, and a height-only viewport change (a mobile URL
+       bar collapsing) moves the cards without resizing that box. */
+    let queued = 0;
+    const schedule = () => {
+      if (queued) return;
+      queued = requestAnimationFrame(() => {
+        queued = 0;
+        measure();
+      });
+    };
+
     measure();
-    const ro = new ResizeObserver(measure);
+    const ro = new ResizeObserver(schedule);
     if (wrapRef.current) ro.observe(wrapRef.current);
-    window.addEventListener("resize", measure);
+    window.addEventListener("resize", schedule, { passive: true });
     // Webfonts settle after paint and nudge every card's height.
-    document.fonts?.ready.then(measure).catch(() => {});
+    document.fonts?.ready.then(schedule).catch(() => {});
     return () => {
+      if (queued) cancelAnimationFrame(queued);
       ro.disconnect();
-      window.removeEventListener("resize", measure);
+      window.removeEventListener("resize", schedule);
     };
   }, [measure]);
 

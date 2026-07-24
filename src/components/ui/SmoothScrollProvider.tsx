@@ -38,10 +38,26 @@ export default function SmoothScrollProvider({
       if (!anchor) return;
       const id = anchor.getAttribute("href");
       if (!id || id === "#") return;
-      const el = document.querySelector(id);
+      const el = document.querySelector<HTMLElement>(id);
       if (!el) return;
       e.preventDefault();
-      lenis.scrollTo(el as HTMLElement, { offset: -80 });
+      lenis.scrollTo(el, { offset: -80 });
+
+      /* Calling preventDefault takes over the browser's job here, and scrolling
+         is only half of that job — following a fragment link also moves focus
+         to the target. Without this, every in-page link on the site (the skip
+         link, the nav's section links, the hero's "Explore Our Case Studies")
+         moved the viewport while leaving focus back at the link, so the next
+         Tab resumed from the header rather than from the content just scrolled
+         to. That is a WCAG 2.4.3 focus-order failure, and for the skip link it
+         defeats the point of having one.
+
+         Section landmarks aren't focusable by default, so make the target
+         programmatically focusable first. `preventScroll` matters: without it
+         the browser jumps to the element instantly and fights the smooth scroll
+         Lenis is running. */
+      if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
+      el.focus({ preventScroll: true });
     };
     document.addEventListener("click", onClick);
 

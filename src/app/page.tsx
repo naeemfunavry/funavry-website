@@ -7,7 +7,12 @@ import CapabilitiesOS from "@/components/sections/CapabilitiesOS";
 // The previous framed-deck case studies section. Kept for reference while the
 // tablet showcase is reviewed — swap the two lines in <main> to go back.
 // import Work from "@/components/sections/Work";
-import WorkShowcase from "@/components/sections/WorkShowcase";
+// The Stripe-style reveal WorkInteractive replaced. Commented, not left live:
+// this import stayed behind when the JSX below was switched off, so every
+// visitor was downloading and parsing a 442-line section — and the framer,
+// lucide and ProductWindow graph behind it — that never rendered. Exactly the
+// trap the note under Insights warns about.
+// import WorkShowcase from "@/components/sections/WorkShowcase";
 import Proof from "@/components/sections/Proof";
 import Industries from "@/components/sections/Industries";
 import TechStack from "@/components/sections/TechStack";
@@ -24,7 +29,7 @@ export default function Home() {
   return (
     <>
       <Nav />
-      <main>
+      <main id="main">
         <Hero />
         {/* <Capabilities /> */}
         <CapabilitiesOS />
