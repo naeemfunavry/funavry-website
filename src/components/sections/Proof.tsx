@@ -204,8 +204,11 @@ export default function Proof() {
               </div>
             </div>
 
-            {/* Right — the stats, a 2x2 with a hairline cross. */}
-            <div className="grid grid-cols-1 gap-y-8 sm:grid-cols-2 sm:gap-y-0">
+            {/* Right — the stats, a 2x2 with a hairline cross. Two-up on mobile
+                too (was a single tall column): four confident numbers read as a
+                stat block and halve the scroll. The `sm:` rules add the hairline
+                cross back at tablet and up, unchanged. */}
+            <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:gap-y-0">
               {STATS.map((stat, i) => {
                 return (
                   <div

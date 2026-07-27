@@ -210,17 +210,31 @@ export default function Hero() {
               Where AI, engineering, and business transformation converge.
             </p>
 
+            {/* Stacked and full-width on mobile so each CTA is a full thumb
+                target; the inline row returns at `sm` and up, unchanged. */}
             <div
-              className="hero-fade mt-10 flex flex-wrap items-center gap-3"
+              className="hero-fade mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center"
               style={{ animationDelay: "0.34s" }}
             >
               {/* <MagneticButton href="#contact" variant="accent" arrow size="lg">
                 Tell Us Your Idea
               </MagneticButton> */}
-              <Button variant="accent" size="lg" href="#contact" arrow>
+              <Button
+                variant="accent"
+                size="lg"
+                href="#contact"
+                arrow
+                className="w-full sm:w-auto"
+              >
                 Tell Us Your Idea
               </Button>
-              <Button variant="outline" size="lg" href="#work" arrow>
+              <Button
+                variant="outline"
+                size="lg"
+                href="#work"
+                arrow
+                className="w-full sm:w-auto"
+              >
                 Explore Our Case Studies
               </Button>
             </div>

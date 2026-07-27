@@ -65,11 +65,19 @@ const config: Config = {
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       fontSize: {
-        /* One display ramp, used everywhere. Tight tracking, near-1 leading. */
-        display: ["clamp(56px,9vw,132px)", { lineHeight: "0.9", letterSpacing: "-0.045em", fontWeight: "600" }],
-        h1: ["clamp(40px,6.4vw,88px)", { lineHeight: "0.96", letterSpacing: "-0.04em", fontWeight: "600" }],
-        h2: ["clamp(32px,4.6vw,62px)", { lineHeight: "1.0", letterSpacing: "-0.035em", fontWeight: "500" }],
-        h3: ["clamp(22px,2.4vw,32px)", { lineHeight: "1.12", letterSpacing: "-0.025em", fontWeight: "500" }],
+        /* One display ramp, used everywhere. Tight tracking, near-1 leading.
+
+           The clamp floors were tuned for desktop and only ever bind on small
+           phones: `h1`'s 6.4vw crosses 40px at a 625px viewport, so the old
+           floor governed every phone and rendered a 40px, -0.04em heading on a
+           360px screen — three cramped lines that crowd the eyebrow above.
+           Lowering the floors trims only the small-viewport end of each clamp
+           (below ~530-625px); every breakpoint that reaches the vw or cap term
+           is mathematically identical, so desktop is untouched. */
+        display: ["clamp(44px,9vw,132px)", { lineHeight: "0.9", letterSpacing: "-0.045em", fontWeight: "600" }],
+        h1: ["clamp(34px,6.4vw,88px)", { lineHeight: "0.96", letterSpacing: "-0.04em", fontWeight: "600" }],
+        h2: ["clamp(28px,4.6vw,62px)", { lineHeight: "1.0", letterSpacing: "-0.035em", fontWeight: "500" }],
+        h3: ["clamp(20px,2.4vw,32px)", { lineHeight: "1.12", letterSpacing: "-0.025em", fontWeight: "500" }],
       },
       borderRadius: {
         none: "0",

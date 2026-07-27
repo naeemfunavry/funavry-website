@@ -165,8 +165,17 @@ function StudyDialog({
         transition={{ duration: 0.42, ease: EXPO }}
         /* Wider than the copy needs, because this is where the capture is meant
            to actually be read — the stage can only ever be a thumbnail of a
-           dashboard, and this is the view that isn't. */
-        className="relative max-h-[88vh] w-full max-w-[1140px] overflow-y-auto overscroll-contain rounded-[8px] bg-paper-white shadow-[0_50px_100px_-40px_rgba(46,52,54,0.55)]"
+           dashboard, and this is the view that isn't.
+
+           No top margin: the wrapper already centres this with
+           `items-center`, and a `mt-28` on top of it pushed the panel below
+           centre and, on shorter screens, shoved its header off the top past
+           the reach of the internal scroll. The max-height is the viewport
+           minus the wrapper's own padding (1rem each side on mobile, 2rem at
+           sm+), in `svh` so the mobile browser's chrome is counted — so the
+           panel always fits and stays centred on every screen. Desktop keeps
+           its original `88vh` cap. */
+        className="relative max-h-[calc(100svh-2rem)] w-full max-w-[1140px] overflow-y-auto overscroll-contain rounded-[8px] bg-paper-white shadow-[0_50px_100px_-40px_rgba(46,52,54,0.55)] sm:max-h-[88vh]"
       >
         <span aria-hidden className={cn("block h-[3px] w-full", phase.dot)} />
 
@@ -317,7 +326,7 @@ function StudyDialog({
                 arrow
                 className="mt-8 w-full"
               >
-                All Case Studies
+                All Work
               </Button>
             </div>
           </div>
@@ -450,133 +459,137 @@ export default function WorkInteractive() {
   const close = useCallback(() => setOpen(false), []);
 
   return (
-    <section
-      ref={sectionRef}
-      id="work"
-      className="relative overflow-hidden bg-paper py-14 lg:py-24"
-    >
-      {/* Field: the azure lift the design puts in the top-right corner, plus the
+    <>
+      <section
+        ref={sectionRef}
+        id="work"
+        className="relative overflow-hidden bg-paper py-14 lg:py-24"
+      >
+        {/* Field: the azure lift the design puts in the top-right corner, plus the
           engineering grid every other section stands on. */}
-      <div
-        aria-hidden
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(70% 55% at 88% 0%, rgba(68,158,216,0.10), transparent 62%), radial-gradient(60% 50% at 8% 100%, rgba(245,159,19,0.05), transparent 65%)",
-        }}
-      />
-      <div aria-hidden className="absolute inset-0 grid-paper opacity-[0.5]" />
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(70% 55% at 88% 0%, rgba(68,158,216,0.10), transparent 62%), radial-gradient(60% 50% at 8% 100%, rgba(245,159,19,0.05), transparent 65%)",
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 grid-paper opacity-[0.5]"
+        />
 
-      <Container wide className="relative">
-        {/* Header — tag and heading left, intro right. */}
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-end lg:gap-20">
-          <div>
-            <div className="flex items-center gap-3">
-              <span aria-hidden className="h-px w-10 flex-none bg-azure" />
-              <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-ink-500">
-                Selected Work
-              </span>
+        <Container wide className="relative">
+          {/* Header — tag and heading left, intro right. */}
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-end lg:gap-20">
+            <div>
+              <div className="flex items-center gap-3">
+                <span aria-hidden className="h-px w-10 flex-none bg-azure" />
+                <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-ink-500">
+                  Selected Work
+                </span>
+              </div>
+              <h2 className="mt-6 text-h1 text-ink">
+                <KineticWords text="Systems we've" />
+                <br />
+                <KineticWords text="put into service." delay={0.12} />
+              </h2>
             </div>
-            <h2 className="mt-6 text-h1 text-ink">
-              <KineticWords text="Systems we've" />
-              <br />
-              <KineticWords text="put into service." delay={0.12} />
-            </h2>
+
+            <Wipe delay={0.2}>
+              <p className="text-base leading-[1.75] text-ink-500">
+                Web and enterprise platforms built end-to-end. Pick one below —
+                open it for the full case study.
+              </p>
+            </Wipe>
           </div>
 
-          <Wipe delay={0.2}>
-            <p className="text-base leading-[1.75] text-ink-500">
-              Web and enterprise platforms built end-to-end. Pick one below —
-              open it for the full case study.
-            </p>
-          </Wipe>
-        </div>
-
-        {/* Tabs. Plain buttons rather than an ARIA tablist: the stage below is a
+          {/* Tabs. Plain buttons rather than an ARIA tablist: the stage below is a
             single live region that swaps content, and `aria-pressed` describes
             that honestly without promising roving-focus tab semantics. */}
-        <div className="mt-10 flex flex-wrap gap-2 lg:mt-14">
-          {STUDIES.map((s, i) => {
-            const active = i === index;
-            return (
-              <button
-                key={s.slug}
-                type="button"
-                onClick={() => select(i)}
-                aria-pressed={active}
-                className={cn(
-                  "group inline-flex items-center gap-2.5 rounded-sm border px-4 py-2.5 text-left text-[13.5px] font-medium tracking-[-0.01em] transition-colors duration-300 ease-standard",
-                  active
-                    ? "border-azure bg-azure-50 text-ink"
-                    : "border-line-strong bg-transparent text-ink-500 hover:border-ink hover:bg-paper-white hover:text-ink",
-                )}
-              >
-                <span
+          <div className="mt-10 flex flex-wrap gap-2 lg:mt-14">
+            {STUDIES.map((s, i) => {
+              const active = i === index;
+              return (
+                <button
+                  key={s.slug}
+                  type="button"
+                  onClick={() => select(i)}
+                  aria-pressed={active}
                   className={cn(
-                    "font-mono text-[10px] tracking-[0.12em]",
-                    active ? "text-azure-ink" : "text-ink-400",
+                    "group inline-flex items-center gap-2.5 rounded-sm border px-4 py-2.5 text-left text-[13.5px] font-medium tracking-[-0.01em] transition-colors duration-300 ease-standard",
+                    active
+                      ? "border-azure bg-azure-50 text-ink"
+                      : "border-line-strong bg-transparent text-ink-500 hover:border-ink hover:bg-paper-white hover:text-ink",
                   )}
                 >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                {s.sector}
-              </button>
-            );
-          })}
-        </div>
+                  <span
+                    className={cn(
+                      "font-mono text-[10px] tracking-[0.12em]",
+                      active ? "text-azure-ink" : "text-ink-400",
+                    )}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  {s.sector}
+                </button>
+              );
+            })}
+          </div>
 
-        {/* Stage. The tilt lives on the inner shell so the field, the shadow and
+          {/* Stage. The tilt lives on the inner shell so the field, the shadow and
             the click target stay square to the page while the frames turn.
             Hover and touch hold the deck where it is — a study should never be
             pulled out from under someone who has just leaned into it. */}
-        <div
-          onMouseEnter={onEnter}
-          onMouseMove={onMove}
-          onMouseLeave={onLeave}
-          onTouchStart={pause}
-          onTouchEnd={resumeSoon}
-          /* Deliberately NOT `group/frame`. ProductWindow's hover state scales
+          <div
+            onMouseEnter={onEnter}
+            onMouseMove={onMove}
+            onMouseLeave={onLeave}
+            onTouchStart={pause}
+            onTouchEnd={resumeSoon}
+            /* Deliberately NOT `group/frame`. ProductWindow's hover state scales
              the window 1.02 and its capture a further 1.025, and a composited
              layer scaled by 4-odd percent is resampled — on a dashboard capture
              that lands squarely on the 10px table text the screenshot exists to
              show. The stage already signals it's interactive through the tilt
              and the pill; it does not need to do it by softening the thing
              being read. */
-          className="relative mt-8 overflow-hidden rounded-[8px] border border-line transition-shadow duration-500 ease-standard lg:mt-10"
-          style={{
-            perspective: "1400px",
-            boxShadow: hover
-              ? "0 40px 80px -30px rgba(46,52,54,0.35)"
-              : "0 20px 50px -30px rgba(46,52,54,0.28)",
-          }}
-        >
-          {/* Field, crossfaded on phase change so the wash follows the study. */}
-          <AnimatePresence>
-            <motion.div
-              key={study.phase}
-              aria-hidden
-              className="absolute inset-0"
-              style={{ background: stageField(phase.tint) }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.8, ease: "easeInOut" }}
-            />
-          </AnimatePresence>
+            className="relative mt-8 overflow-hidden rounded-[8px] border border-line transition-shadow duration-500 ease-standard lg:mt-10"
+            style={{
+              perspective: "1400px",
+              boxShadow: hover
+                ? "0 40px 80px -30px rgba(46,52,54,0.35)"
+                : "0 20px 50px -30px rgba(46,52,54,0.28)",
+            }}
+          >
+            {/* Field, crossfaded on phase change so the wash follows the study. */}
+            <AnimatePresence>
+              <motion.div
+                key={study.phase}
+                aria-hidden
+                className="absolute inset-0"
+                style={{ background: stageField(phase.tint) }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+              />
+            </AnimatePresence>
 
-          {/* Driven by `style` off the springs above, not by an `animate`
+            {/* Driven by `style` off the springs above, not by an `animate`
               target: an animate target is a render-time prop, so the tilt could
               only move when React re-rendered. On style, the value updates on
               the animation frame and never enters the render path at all. */}
-          <motion.div
-            className="relative"
-            style={{
-              rotateX,
-              rotateY,
-              transformStyle: "preserve-3d",
-            }}
-          >
-            {/* The slide. `mode="wait"` rather than two slides crossing: they
+            <motion.div
+              className="relative"
+              style={{
+                rotateX,
+                rotateY,
+                transformStyle: "preserve-3d",
+              }}
+            >
+              {/* The slide. `mode="wait"` rather than two slides crossing: they
                 would have to be taken out of flow to overlap, and an absolutely
                 positioned stage can't size itself to whichever study is longest.
                 `initial={false}` so the first study is simply there on load
@@ -585,27 +598,27 @@ export default function WorkInteractive() {
                 `preserve-3d` has to run every step from the rotating shell down
                 to the frames — one flat ancestor collapses the whole chain and
                 the phone loses its depth separation from the window. */}
-            <AnimatePresence mode="wait" custom={direction} initial={false}>
-              <motion.div
-                key={study.slug}
-                custom={direction}
-                variants={slide}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{ duration: reduce ? 0.25 : 0.45, ease: EXPO }}
-                /* 1.35/0.65 rather than the comp's near-even split. The capture
+              <AnimatePresence mode="wait" custom={direction} initial={false}>
+                <motion.div
+                  key={study.slug}
+                  custom={direction}
+                  variants={slide}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: reduce ? 0.25 : 0.45, ease: EXPO }}
+                  /* 1.35/0.65 rather than the comp's near-even split. The capture
                    is a whole dashboard shrunk into a thumbnail, so every pixel
                    of column width is legibility; the detail column beside it is
                    a heading, three lines, four chips and three figures, and it
                    reads fine narrow. */
-                className="grid gap-10 p-6 [transform-style:preserve-3d] sm:p-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.65fr)] lg:items-center lg:gap-12 lg:p-12"
-              >
-                {/* Frames. Where there's a phone it hangs off the capture's
+                  className="grid gap-10 p-6 [transform-style:preserve-3d] sm:p-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,0.65fr)] lg:items-center lg:gap-12 lg:p-12"
+                >
+                  {/* Frames. Where there's a phone it hangs off the capture's
                   lower-right corner and sits further forward, so the parallax
                   between them is what carries the depth; where there isn't, the
                   window takes back the width it was holding open for it. */}
-                {/* Both frames rest at transform NONE, and that is the whole fix
+                  {/* Both frames rest at transform NONE, and that is the whole fix
                   for the soft capture.
 
                   They used to sit at `rotate: -1.2deg, z: 20` permanently. Both
@@ -621,7 +634,7 @@ export default function WorkInteractive() {
                   frames only separate in z — and only pick up rotation — while
                   the pointer is actually tilting them. Resampling during a
                   motion nobody is reading through is free. */}
-                {/* Each capture now sets its own window height, and the six of
+                  {/* Each capture now sets its own window height, and the six of
                     them disagree — 16:10 through to CNBC's 2.02:1, a spread of
                     ~135px at this width. Left to itself the stage would resize
                     under every slide. So the column is pinned to the tallest and
@@ -632,142 +645,144 @@ export default function WorkInteractive() {
                     box, so the phone still hangs off the window's bottom edge
                     rather than off the fixed column, which would strand it in
                     open space under a short capture. */}
-                <div className="lg:flex lg:h-[560px] lg:items-center">
-                  <div className="relative w-full [transform-style:preserve-3d]">
-                    {/* `z` rather than an inline translateZ: Framer writes the
+                  <div className="lg:flex lg:h-[560px] lg:items-center">
+                    <div className="relative w-full [transform-style:preserve-3d]">
+                      {/* `z` rather than an inline translateZ: Framer writes the
                       whole transform itself, so a hand-written one is
                       overwritten on the first animated frame. */}
-                    <motion.div
-                      style={{ rotate: windowRotate }}
-                      animate={{ z: hover ? 20 : 0 }}
-                      transition={{ duration: 0.3, ease: EXPO }}
-                      className={study.mobileImage ? "w-[93%]" : "w-full"}
-                    >
-                      <ProductWindow
-                        study={study}
-                        fit="full"
-                        sizes="(max-width: 1024px) 88vw, 830px"
-                      />
-                    </motion.div>
-
-                    {study.mobileImage && (
                       <motion.div
-                        style={{ rotate: phoneRotate }}
-                        animate={{ z: hover ? 55 : 0 }}
+                        style={{ rotate: windowRotate }}
+                        animate={{ z: hover ? 20 : 0 }}
                         transition={{ duration: 0.3, ease: EXPO }}
-                        className="absolute -bottom-4 right-0 w-[26%] max-w-[152px] sm:-bottom-6 sm:right-2"
+                        className={study.mobileImage ? "w-[93%]" : "w-full"}
                       >
-                        <PhoneFrame
-                          image={study.mobileImage}
-                          title={study.title}
+                        <ProductWindow
+                          study={study}
+                          fit="full"
+                          sizes="(max-width: 1024px) 88vw, 830px"
                         />
                       </motion.div>
-                    )}
-                  </div>
-                </div>
 
-                {/* Detail column. */}
-                <div className="mt-8 lg:mt-0">
-                  <div className="flex items-center gap-2.5">
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "h-1.5 w-1.5 flex-none rounded-full",
-                        phase.dot,
+                      {study.mobileImage && (
+                        <motion.div
+                          style={{ rotate: phoneRotate }}
+                          animate={{ z: hover ? 55 : 0 }}
+                          transition={{ duration: 0.3, ease: EXPO }}
+                          className="absolute -bottom-4 right-0 w-[26%] max-w-[152px] sm:-bottom-6 sm:right-2"
+                        >
+                          <PhoneFrame
+                            image={study.mobileImage}
+                            title={study.title}
+                          />
+                        </motion.div>
                       )}
-                    />
-                    <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">
-                      {study.sector}
-                    </span>
-                    <span aria-hidden className="h-px w-3 bg-line-strong" />
-                    <span
-                      className={cn(
-                        "font-mono text-[10px] uppercase tracking-[0.18em]",
-                        phase.text,
-                      )}
-                    >
-                      {study.phase}
-                    </span>
+                    </div>
                   </div>
 
-                  <h3 className="mt-4 text-h3 text-ink">{study.title}</h3>
-                  <p className="mt-4 text-[15px] leading-[1.7] text-ink-500">
-                    {study.summary}
-                  </p>
-
-                  <div className="mt-7 flex flex-wrap gap-2">
-                    {study.capabilities.map((c) => (
+                  {/* Detail column. */}
+                  <div className="mt-8 lg:mt-0">
+                    <div className="flex items-center gap-2.5">
                       <span
-                        key={c}
-                        className="rounded-sm border border-line bg-paper-white/80 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-500 backdrop-blur-sm"
-                      >
-                        {c}
+                        aria-hidden
+                        className={cn(
+                          "h-1.5 w-1.5 flex-none rounded-full",
+                          phase.dot,
+                        )}
+                      />
+                      <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">
+                        {study.sector}
                       </span>
-                    ))}
-                  </div>
+                      <span aria-hidden className="h-px w-3 bg-line-strong" />
+                      <span
+                        className={cn(
+                          "font-mono text-[10px] uppercase tracking-[0.18em]",
+                          phase.text,
+                        )}
+                      >
+                        {study.phase}
+                      </span>
+                    </div>
 
-                  {/* Deck highlights, for the studies that carry them. Nothing
-                    stands in for the ones that don't. */}
-                  {study.highlights && (
-                    <div className="mt-8 flex flex-wrap gap-x-10 gap-y-5">
-                      {study.highlights.map((h) => (
-                        <Metric key={h.value} {...h} />
+                    <h3 className="mt-4 text-h3 text-ink">{study.title}</h3>
+                    <p className="mt-4 text-[15px] leading-[1.7] text-ink-500">
+                      {study.summary}
+                    </p>
+
+                    <div className="mt-7 flex flex-wrap gap-2">
+                      {study.capabilities.map((c) => (
+                        <span
+                          key={c}
+                          className="rounded-sm border border-line bg-paper-white/80 px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-500 backdrop-blur-sm"
+                        >
+                          {c}
+                        </span>
                       ))}
                     </div>
-                  )}
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </motion.div>
 
-          {/* The whole stage opens the study. A real button rather than a click
+                    {/* Deck highlights, for the studies that carry them. Nothing
+                    stands in for the ones that don't. */}
+                    {study.highlights && (
+                      <div className="mt-8 flex flex-wrap gap-x-10 gap-y-5">
+                        {study.highlights.map((h) => (
+                          <Metric key={h.value} {...h} />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </motion.div>
+
+            {/* The whole stage opens the study. A real button rather than a click
               handler on the shell: it lands in the tab order, announces itself,
               and its mousemove still bubbles to the tilt handler above. */}
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            className="absolute inset-0 z-10 flex items-end justify-end p-5 lg:p-7"
-          >
-            <span className="sr-only">Open the {study.title} case study</span>
-            <span
-              aria-hidden
-              className={cn(
-                "inline-flex items-center gap-2 rounded-sm bg-ink/85 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-paper backdrop-blur-sm transition-opacity duration-300 ease-standard",
-                hover ? "opacity-100" : "opacity-0",
-              )}
-            >
-              View case study
-              <ArrowRight size={13} />
-            </span>
-          </button>
-        </div>
-
-        {/* Pager. */}
-        <div className="mt-7 flex items-center justify-center gap-2">
-          {STUDIES.map((s, i) => (
             <button
-              key={s.slug}
               type="button"
-              onClick={() => select(i)}
-              aria-label={`Show case study ${i + 1}: ${s.title}`}
-              aria-current={i === index}
-              className={cn(
-                "h-1.5 rounded-full transition-all duration-300",
-                i === index ? "w-6 bg-ink" : "w-1.5 bg-ink/20 hover:bg-ink/40",
-              )}
-            />
-          ))}
-        </div>
+              onClick={() => setOpen(true)}
+              className="absolute inset-0 z-10 flex items-end justify-end p-5 lg:p-7"
+            >
+              <span className="sr-only">Open the {study.title} case study</span>
+              <span
+                aria-hidden
+                className={cn(
+                  "inline-flex items-center gap-2 rounded-sm bg-ink/85 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.16em] text-paper backdrop-blur-sm transition-opacity duration-300 ease-standard",
+                  hover ? "opacity-100" : "opacity-0",
+                )}
+              >
+                View case study
+                <ArrowRight size={13} />
+              </span>
+            </button>
+          </div>
 
-        <p aria-live="polite" className="sr-only">
-          Case study {index + 1} of {STUDIES.length}: {study.title}
-        </p>
-      </Container>
+          {/* Pager. */}
+          <div className="mt-7 flex items-center justify-center gap-2">
+            {STUDIES.map((s, i) => (
+              <button
+                key={s.slug}
+                type="button"
+                onClick={() => select(i)}
+                aria-label={`Show case study ${i + 1}: ${s.title}`}
+                aria-current={i === index}
+                className={cn(
+                  "h-1.5 rounded-full transition-all duration-300",
+                  i === index
+                    ? "w-6 bg-ink"
+                    : "w-1.5 bg-ink/20 hover:bg-ink/40",
+                )}
+              />
+            ))}
+          </div>
 
+          <p aria-live="polite" className="sr-only">
+            Case study {index + 1} of {STUDIES.length}: {study.title}
+          </p>
+        </Container>
+      </section>
       <AnimatePresence>
         {open && <StudyDialog study={study} onClose={close} />}
       </AnimatePresence>
-    </section>
+    </>
   );
 }
 

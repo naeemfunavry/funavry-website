@@ -70,13 +70,17 @@ function Tile({ industry, index }: { industry: Industry; index: number }) {
             covers the full tile — 700ms of full-bleed repaint per hover. Two
             static gradients rasterise once each and the compositor blends
             them for free. */}
+        {/* Mobile has no hover, so the card holds the hovered end-state
+            permanently there: the deep scrim is up and the description is
+            open (see the grid below). The `lg:` prefixes restore the
+            hover-driven cross-fade on pointer devices — desktop unchanged. */}
         <div
           aria-hidden
-          className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/45 to-ink-900/10 transition-opacity duration-700 ease-expo group-hover:opacity-0"
+          className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/45 to-ink-900/10 opacity-0 transition-opacity duration-700 ease-expo lg:opacity-100 lg:group-hover:opacity-0"
         />
         <div
           aria-hidden
-          className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/75 to-ink-900/35 opacity-0 transition-opacity duration-700 ease-expo group-hover:opacity-100"
+          className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/75 to-ink-900/35 opacity-100 transition-opacity duration-700 ease-expo lg:opacity-0 lg:group-hover:opacity-100"
         />
 
         <span
@@ -117,8 +121,14 @@ function Tile({ industry, index }: { industry: Industry; index: number }) {
           {/* 0fr → 1fr animates the height of content whose height nobody knows
               — a `max-h` guess either clips the long names or eases against
               dead space. `focus-within` opens it for the keyboard, since the
-              button inside is reachable by tab even while the row is closed. */}
-          <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-expo group-hover:grid-rows-[1fr] group-focus-within:grid-rows-[1fr]">
+              button inside is reachable by tab even while the row is closed.
+
+              Open by default so touch users — who never trigger `group-hover`
+              — always see the description, proof point, and Explore CTA.
+              Previously all three were hidden on mobile and the card was just a
+              photo with a title. The `lg:` prefixes collapse it back to the
+              hover-reveal on desktop, which is untouched. */}
+          <div className="grid grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-expo lg:grid-rows-[0fr] lg:group-hover:grid-rows-[1fr] lg:group-focus-within:grid-rows-[1fr]">
             <div className="overflow-hidden">
               <p className="mt-2.5 line-clamp-2 text-[13px] leading-[1.6] text-paper/70">
                 {industry.desc}

@@ -46,12 +46,22 @@ import { cn } from "@/lib/utils";
  */
 type Item = { name: string; mono?: string };
 type Group = { title: string; desc: string; icon: LucideIcon; items: Item[] };
-type Domain = { key: string; label: string; icon: LucideIcon; groups: Group[] };
+/* `short` is a tighter label used only on the mobile tab strip. The full
+   `label` (e.g. "Immersive (AR / VR / XR)") is what dominated the strip and
+   made it read as clipped; desktop still shows `label` verbatim. */
+type Domain = {
+  key: string;
+  label: string;
+  short?: string;
+  icon: LucideIcon;
+  groups: Group[];
+};
 
 const DOMAINS: Domain[] = [
   {
     key: "cloud",
     label: "Cloud & Infrastructure",
+    short: "Cloud",
     icon: Cloud,
     groups: [
       {
@@ -304,6 +314,7 @@ const DOMAINS: Domain[] = [
   {
     key: "immersive",
     label: "Immersive (AR / VR / XR)",
+    short: "Immersive",
     icon: Boxes,
     groups: [
       {
@@ -435,7 +446,12 @@ function GroupRow({ group, index }: { group: Group; index: number }) {
         </div>
       </div>
 
-      <ul className="grid grid-cols-2 gap-x-6 gap-y-4 border-l border-line pl-0 sm:grid-cols-3 lg:grid-cols-5 lg:pl-8">
+      {/* The left rail belongs to the desktop two-column layout, where it sits
+          between the label and the tools. On mobile the card stacks, so that
+          border became a stray vertical hairline down the left of the list and
+          threw the alignment off — scoped to `lg:` now, and the tools sit flush
+          under the heading. */}
+      <ul className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 lg:grid-cols-5 lg:border-l lg:border-line lg:pl-8">
         {group.items.map((item) => (
           <li
             key={item.name}
@@ -548,10 +564,14 @@ export default function TechStack() {
 
             {/* Right — tabs, then the active domain's groups. */}
             <div className="flex flex-col gap-3 lg:gap-4">
+              {/* One horizontal scroll strip on mobile — the five domain
+                  labels (one as long as "Immersive (AR / VR / XR)") wrapped to
+                  three ragged rows before. Bleeds to the screen edge so the
+                  strip reads as swipeable. Reverts to the wrapped row at `lg`. */}
               <div
                 role="tablist"
                 aria-label="Technology domains"
-                className="flex flex-wrap gap-2"
+                className="scrollbar-hide -mx-5 flex snap-x gap-2 overflow-x-auto px-5 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 flex-wrap lg:overflow-visible"
               >
                 {ORDERED.map((d, i) => {
                   const Icon = d.icon;
@@ -564,7 +584,7 @@ export default function TechStack() {
                       aria-selected={isActive}
                       onClick={() => setActive(i)}
                       className={cn(
-                        "flex items-center gap-2 px-4 py-2 text-[12.5px] font-medium transition-colors duration-300",
+                        "flex min-h-[44px] shrink-0 snap-start items-center gap-2 whitespace-nowrap px-4 py-2 text-[12.5px] font-medium transition-colors duration-300 lg:min-h-0 lg:shrink",
                         isActive
                           ? "bg-ink text-paper"
                           : "border border-line bg-paper-white text-ink-500 hover:border-line-strong hover:text-ink",
@@ -575,7 +595,14 @@ export default function TechStack() {
                         strokeWidth={1.7}
                         className={cn(isActive ? "text-amber" : "text-ink-400")}
                       />
-                      {d.label}
+                      {d.short ? (
+                        <>
+                          {/* <span className="lg:hidden">{d.short}</span> */}
+                          <span className="lg:inline">{d.label}</span>
+                        </>
+                      ) : (
+                        d.label
+                      )}
                     </button>
                   );
                 })}

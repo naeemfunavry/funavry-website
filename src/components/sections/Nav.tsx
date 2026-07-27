@@ -661,7 +661,7 @@ export default function Nav() {
                                     key={child.label}
                                     href={child.href}
                                     onClick={() => setOpen(false)}
-                                    className="py-2.5 text-[16px] font-medium leading-snug text-ink-500"
+                                    className="py-3 text-[16px] font-medium leading-snug text-ink-500"
                                   >
                                     {child.label}
                                   </a>
