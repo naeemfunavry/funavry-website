@@ -3,7 +3,10 @@ import Hero from "@/components/sections/Hero";
 // The previous grid-of-cards capabilities section. Kept for reference while the
 // OS view is being reviewed — swap the two lines in <main> to go back.
 // import Capabilities from "@/components/sections/Capabilities";
-import CapabilitiesOS from "@/components/sections/CapabilitiesOS";
+// The connection-fan OS view. Kept for reference while the index view is
+// reviewed — swap the two lines in <main> to go back.
+// import CapabilitiesOS from "@/components/sections/CapabilitiesOS";
+import CapabilitiesIndex from "@/components/sections/CapabilitiesIndex";
 // The previous framed-deck case studies section. Kept for reference while the
 // tablet showcase is reviewed — swap the two lines in <main> to go back.
 // import Work from "@/components/sections/Work";
@@ -24,6 +27,8 @@ import Testimonials from "@/components/sections/Testimonials";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/sections/Footer";
 import WorkInteractive from "@/components/sections/WorkInteractive";
+import CapabilitiesOS from "@/components/sections/CapabilitiesOS";
+import Capabilities from "@/components/sections/Capabilities";
 
 export default function Home() {
   return (
@@ -33,6 +38,7 @@ export default function Home() {
         <Hero />
         {/* <Capabilities /> */}
         <CapabilitiesOS />
+        {/* <CapabilitiesIndex /> */}
         {/* <Work /> */}
         {/* <WorkShowcase /> */}
         <WorkInteractive />

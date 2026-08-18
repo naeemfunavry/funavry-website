@@ -115,8 +115,8 @@ function ServicesMega({ onNavigate }: { onNavigate: () => void }) {
             Sixteen practices, one delivery model.
           </h3>
           <p className="mt-3 text-[13px] leading-relaxed text-ink-400">
-            Build → Automate → Operate, across technology engineering and global
-            business services.
+            Ten technology &amp; engineering practices and six global business
+            services, with AI running through both.
           </p>
           <a
             href="/services"

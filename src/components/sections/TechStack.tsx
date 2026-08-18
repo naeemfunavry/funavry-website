@@ -29,11 +29,14 @@ import {
   ShieldCheck,
   Code2,
   Lock,
+  Calculator,
+  Users,
   type LucideIcon,
 } from "lucide-react";
 import Container from "@/components/ui/Container";
 import TechIcon from "@/components/ui/TechIcon";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
+import { SERVICES, type Service } from "@/lib/services";
 import { cn } from "@/lib/utils";
 
 /**
@@ -46,13 +49,13 @@ import { cn } from "@/lib/utils";
  */
 type Item = { name: string; mono?: string };
 type Group = { title: string; desc: string; icon: LucideIcon; items: Item[] };
-/* `short` is a tighter label used only on the mobile tab strip. The full
-   `label` (e.g. "Immersive (AR / VR / XR)") is what dominated the strip and
-   made it read as clipped; desktop still shows `label` verbatim. */
+/* A `short` field lived here for a tighter mobile tab label, but its only use
+   site had already been commented out, and the strip now sits under a house
+   tablist that carries the mobile abbreviation instead. Removed rather than
+   left as data nothing reads. */
 type Domain = {
   key: string;
   label: string;
-  short?: string;
   icon: LucideIcon;
   groups: Group[];
 };
@@ -61,7 +64,6 @@ const DOMAINS: Domain[] = [
   {
     key: "cloud",
     label: "Cloud & Infrastructure",
-    short: "Cloud",
     icon: Cloud,
     groups: [
       {
@@ -314,7 +316,6 @@ const DOMAINS: Domain[] = [
   {
     key: "immersive",
     label: "Immersive (AR / VR / XR)",
-    short: "Immersive",
     icon: Boxes,
     groups: [
       {
@@ -390,6 +391,96 @@ const EXPO = [0.19, 1, 0.22, 1] as const;
    how they're defined above. */
 const ORDER = ["ai", "immersive", "blockchain", "fullstack", "cloud"] as const;
 const ORDERED: Domain[] = ORDER.map((k) => DOMAINS.find((d) => d.key === k)!);
+
+/* --------------------------------------------------------------------------
+   The two houses
+
+   The section used to be the engineering stack alone — five domains of vendor
+   marks — which left the six Global Business Services practices with nothing
+   behind them, on a page that now leads with both houses. So it splits the same
+   way the capabilities section above it does.
+
+   What each house is made of is necessarily different, and deliberately so. The
+   engineering side runs on named third-party tools, so it shows marks. The
+   business services side does not run on a vendor stack — it runs on operating
+   models, governance frameworks and process disciplines. Rather than invent a
+   logo wall for it, those rows are drawn straight from the sub-services already
+   recorded in @/lib/services, verbatim. Nothing here is a new claim: every line
+   on the GBS side is a line the capability statement already makes.
+   -------------------------------------------------------------------------- */
+
+type House = "tech" | "gbs";
+
+const HOUSES: { key: House; label: string; short: string }[] = [
+  { key: "tech", label: "Technology & Engineering", short: "Technology" },
+  { key: "gbs", label: "Global Business Services", short: "Business Services" },
+];
+
+/** `Service.icon` is a lucide name; only the GBS six are resolved here. */
+const GBS_ICONS: Record<string, LucideIcon> = {
+  Network,
+  Building2,
+  Calculator,
+  Bot,
+  GitBranch,
+  Users,
+};
+
+/** One GBS practice as a row — the same rail-and-contents geometry as a tool
+    group, but the contents are the practice's four sub-services rather than
+    vendor marks, so each carries a line of its own. */
+function PracticeRow({
+  practice,
+  index,
+}: {
+  practice: Service;
+  index: number;
+}) {
+  const Icon = GBS_ICONS[practice.icon] ?? Network;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.03 + index * 0.04, duration: 0.4, ease: EXPO }}
+      className="mt-3 grid gap-5 rounded-lg bg-white px-5 py-5 shadow-sm transition-colors duration-300 hover:bg-paper lg:grid-cols-[minmax(0,232px)_minmax(0,1fr)] lg:gap-8 lg:px-6"
+    >
+      <div className="flex items-start gap-3.5">
+        <span className="flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-steel/[0.08] text-steel-ink">
+          <Icon size={17} strokeWidth={1.7} />
+        </span>
+        <div className="min-w-0">
+          <span className="font-mono text-[9.5px] tabular-nums tracking-[0.16em] text-ink-400">
+            {practice.n}
+          </span>
+          <h3 className="mt-1 text-[14.5px] font-semibold leading-snug tracking-[-0.01em] text-ink">
+            {practice.title}
+          </h3>
+        </div>
+      </div>
+
+      {/* Two columns, not the five the tool grid uses: these entries carry a
+          descriptive line each, and five of those would set a two-word column. */}
+      <ul className="grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:border-l lg:border-line lg:pl-8">
+        {practice.subs.map((sub) => (
+          <li key={sub.title} className="flex min-w-0 gap-2.5">
+            <span
+              aria-hidden
+              className="mt-[6px] h-1 w-1 flex-none rounded-full bg-steel"
+            />
+            <div className="min-w-0">
+              <p className="text-[12.5px] font-medium leading-snug text-ink">
+                {sub.title}
+              </p>
+              <p className="mt-0.5 text-[12px] leading-snug text-ink-400">
+                {sub.desc}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </motion.div>
+  );
+}
 
 /** The sidebar's stacked-disks motif — a quiet nod to a layered core. */
 function CoreStack() {
@@ -476,8 +567,10 @@ function GroupRow({ group, index }: { group: Group; index: number }) {
 
 export default function TechStack() {
   const reduce = useReducedMotion();
+  const [house, setHouse] = useState<House>("tech");
   const [active, setActive] = useState(0);
   const domain = ORDERED[active];
+  const practices = SERVICES.filter((s) => s.group === "gbs");
 
   return (
     <section id="technology" className="relative overflow-hidden  bg-paper">
@@ -524,23 +617,22 @@ export default function TechStack() {
             <div className="flex items-center gap-3">
               <span aria-hidden className="h-px w-10 flex-none bg-azure" />
               <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-ink-500">
-                Technology
+                The Stack
               </span>
             </div>
             <h2 className="mt-6 text-h1 text-ink">
               <KineticWords text="The Architecture " />
               <br />
-              <KineticWords text="Behind Enterprise AI." delay={0.12} />
+              <KineticWords text="Behind The Work." delay={0.12} />
             </h2>
           </div>
 
           <Wipe delay={0.2}>
             <p className="text-[16px] leading-[1.75] text-ink-500">
-              We bring together world-class AI models, enterprise-grade
-              infrastructure, cloud platforms, data systems, automation
-              frameworks, and modern engineering practices to build intelligent
-              solutions that are secure, scalable, and ready for enterprise
-              transformation.
+              Two houses, two kinds of stack. Engineering runs on world-class AI
+              models, cloud platforms, data systems and modern frameworks.
+              Business services runs on operating models, governance and process
+              disciplines — the machinery that keeps a global operation moving.
             </p>
           </Wipe>
         </div>
@@ -562,64 +654,110 @@ export default function TechStack() {
               </div>
             </aside> */}
 
-            {/* Right — tabs, then the active domain's groups. */}
+            {/* House first, then — inside the engineering house only — the
+                domain it is broken into. Two levels, but the second one only
+                exists on one side, because only one side has vendor domains. */}
             <div className="flex flex-col gap-3 lg:gap-4">
-              {/* One horizontal scroll strip on mobile — the five domain
-                  labels (one as long as "Immersive (AR / VR / XR)") wrapped to
-                  three ragged rows before. Bleeds to the screen edge so the
-                  strip reads as swipeable. Reverts to the wrapped row at `lg`. */}
               <div
                 role="tablist"
-                aria-label="Technology domains"
-                className="scrollbar-hide -mx-5 flex snap-x gap-2 overflow-x-auto px-5 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 flex-wrap lg:overflow-visible"
+                aria-label="Stack"
+                className="flex flex-wrap gap-2"
               >
-                {ORDERED.map((d, i) => {
-                  const Icon = d.icon;
-                  const isActive = active === i;
+                {HOUSES.map((h) => {
+                  const isActive = house === h.key;
                   return (
                     <button
-                      key={d.key}
+                      key={h.key}
                       type="button"
                       role="tab"
                       aria-selected={isActive}
-                      onClick={() => setActive(i)}
+                      onClick={() => setHouse(h.key)}
                       className={cn(
-                        "flex min-h-[44px] shrink-0 snap-start items-center gap-2 whitespace-nowrap px-4 py-2 text-[12.5px] font-medium transition-colors duration-300 lg:min-h-0 lg:shrink",
+                        "flex min-h-[44px] items-center gap-2.5 border px-5 py-2 text-[13px] font-medium transition-colors duration-300 lg:min-h-0",
                         isActive
-                          ? "bg-ink text-paper"
-                          : "border border-line bg-paper-white text-ink-500 hover:border-line-strong hover:text-ink",
+                          ? "border-ink bg-ink text-paper"
+                          : "border-line bg-paper-white text-ink-500 hover:border-line-strong hover:text-ink",
                       )}
                     >
-                      <Icon
-                        size={14}
-                        strokeWidth={1.7}
-                        className={cn(isActive ? "text-amber" : "text-ink-400")}
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "h-1.5 w-1.5 rounded-full",
+                          h.key === "tech" ? "bg-azure" : "bg-steel",
+                        )}
                       />
-                      {d.short ? (
-                        <>
-                          {/* <span className="lg:hidden">{d.short}</span> */}
-                          <span className="lg:inline">{d.label}</span>
-                        </>
-                      ) : (
-                        d.label
-                      )}
+                      <span className="sm:hidden">{h.short}</span>
+                      <span className="hidden sm:inline">{h.label}</span>
                     </button>
                   );
                 })}
               </div>
 
+              {/* One horizontal scroll strip on mobile — the five domain labels
+                  (one as long as "Immersive (AR / VR / XR)") wrapped to three
+                  ragged rows before. Bleeds to the screen edge so the strip
+                  reads as swipeable. Reverts to the wrapped row at `lg`. Only
+                  the engineering house has domains to break into. */}
+              {house === "tech" && (
+                <div
+                  role="tablist"
+                  aria-label="Technology domains"
+                  className="scrollbar-hide -mx-5 flex snap-x flex-wrap gap-2 overflow-x-auto px-5 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 lg:overflow-visible"
+                >
+                  {ORDERED.map((d, i) => {
+                    const Icon = d.icon;
+                    const isActive = active === i;
+                    return (
+                      <button
+                        key={d.key}
+                        type="button"
+                        role="tab"
+                        aria-selected={isActive}
+                        onClick={() => setActive(i)}
+                        className={cn(
+                          "flex min-h-[44px] shrink-0 snap-start items-center gap-2 whitespace-nowrap px-4 py-2 text-[12.5px] font-medium transition-colors duration-300 lg:min-h-0 lg:shrink",
+                          isActive
+                            ? "bg-ink text-paper"
+                            : "border border-line bg-paper-white text-ink-500 hover:border-line-strong hover:text-ink",
+                        )}
+                      >
+                        <Icon
+                          size={14}
+                          strokeWidth={1.7}
+                          className={cn(isActive ? "text-amber" : "text-ink-400")}
+                        />
+                        {d.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* One AnimatePresence across both houses, keyed on whichever
+                  panel is showing — so switching house cross-fades the same way
+                  switching domain does. Two separate AnimatePresence trees, one
+                  per branch, would have had the outgoing one unmount before it
+                  could play its exit. */}
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={domain.key}
+                  key={house === "tech" ? domain.key : "gbs"}
                   initial={reduce ? { opacity: 0 } : { opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
                   transition={{ duration: 0.38, ease: EXPO }}
-                  className=" overflow-hidden"
+                  className="overflow-hidden"
                 >
-                  {domain.groups.map((group, gi) => (
-                    <GroupRow key={group.title} group={group} index={gi} />
-                  ))}
+                  {house === "tech"
+                    ? domain.groups.map((group, gi) => (
+                        <GroupRow key={group.title} group={group} index={gi} />
+                      ))
+                    : practices.map((practice, pi) => (
+                        <PracticeRow
+                          key={practice.n}
+                          practice={practice}
+                          index={pi}
+                        />
+                      ))}
                 </motion.div>
               </AnimatePresence>
             </div>
