@@ -123,14 +123,19 @@ function Row({ ariaHidden = false }: { ariaHidden?: boolean }) {
 /** The trusted-partner strip — a fixed plate and the marks looping past it in
     their own colours. Rendered at the foot of the About/Proof section rather
     than as a band of its own. */
-export function TrustedStrip() {
+export function TrustedStrip({ className }: { className?: string }) {
   return (
     /* Stacks below sm. As a row at every width, the plate is `flex-none` with
        no cap under `lg`, so it sizes to its own text — on a 375px phone that
        is most of the line, and the marquee it sits next to gets squeezed into
        a sliver too narrow to read a logo in. Above the marks instead, each
        gets the full width. */
-    <div className="flex flex-col items-stretch border-t border-line sm:flex-row">
+    <div
+      className={cn(
+        "flex flex-col items-stretch border-t border-line sm:flex-row",
+        className,
+      )}
+    >
       {/* The fixed plate. */}
       <div className="flex flex-none items-center border-b border-line pr-5 py-6 sm:border-b-0 sm:border-r sm:pr-10 sm:py-8 lg:max-w-[300px]">
         <p className="text-[14px] font-medium leading-[1.55] text-ink lg:text-[15px]">

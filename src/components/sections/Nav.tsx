@@ -29,19 +29,25 @@ type Link = {
 const LINKS: Link[] = [
   { label: "Services", href: "/services", mega: "services" },
   { label: "Industries", href: "/industries", mega: "industries" },
-  { label: "Our Work", href: "/case-studies", newTab: true },
+  { label: "Our Work", href: "/case-studies", newTab: false },
   // { label: "Case Studies", href: "/case-studies" },
   {
     label: "Company",
-    href: "/#insights",
+    href: "/about",
     children: [
+      {
+        label: "About Us",
+        href: "/about",
+        desc: "Who we are and how we deliver",
+      },
+      { label: "Contact Us", href: "/contact", desc: "Talk to our team" },
       {
         label: "Careers",
         href: "/#careers",
         desc: "Build with a team of 200+",
       },
-      { label: "Blog", href: "/#insights", desc: "Engineering & AI writing" },
-      { label: "News", href: "/#insights", desc: "Announcements and press" },
+      { label: "Blog", href: "/blog", desc: "Engineering & AI writing" },
+      { label: "News", href: "/blog", desc: "Announcements and press" },
     ],
   },
 ];

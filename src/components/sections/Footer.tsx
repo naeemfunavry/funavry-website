@@ -1,6 +1,6 @@
 import Container from "@/components/ui/Container";
 import Logo from "@/components/ui/Logo";
-import { OFFICES } from "@/lib/offices";
+import { OFFICES, DELIVERY_COUNTRIES } from "@/lib/offices";
 import { SOCIALS } from "@/lib/socials";
 
 /** The footer index mirrors the delivery model, not a generic sitemap. */
@@ -58,7 +58,7 @@ const COLUMNS: {
       { label: "Work", href: "#work" },
       { label: "Technology", href: "#technology" },
       { label: "Careers", href: "#careers" },
-      { label: "Blog & News", href: "#insights" },
+      { label: "Blog & News", href: "/blog" },
     ],
   },
 ];
@@ -150,11 +150,18 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Global delivery footprint — the offices, with addresses. */}
+        {/* Global delivery footprint — the offices, then the countries served. */}
         <div className="mt-16 border-t border-line pt-10">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
-            Global delivery
-          </p>
+          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
+              Global delivery
+            </p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
+              <span className="text-ink">{OFFICES.length} offices</span>
+              {" · "}
+              <span className="text-ink">{DELIVERY_COUNTRIES.length} countries served</span>
+            </p>
+          </div>
           <div className="mt-8 grid gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-16">
             {OFFICES.map((o) => (
               /* Headed by city, not country. There are two Pakistani offices
@@ -180,6 +187,21 @@ export default function Footer() {
                   ))}
                 </address>
               </div>
+            ))}
+          </div>
+
+          {/* Delivery reaches beyond the offices — the countries served. */}
+          <div className="mt-10 flex flex-wrap items-center gap-2">
+            <span className="mr-1 font-mono text-[9.5px] uppercase tracking-[0.16em] text-ink-400">
+              Delivery across
+            </span>
+            {DELIVERY_COUNTRIES.map((c) => (
+              <span
+                key={c}
+                className="border border-line px-2.5 py-1 text-[11.5px] leading-none text-ink-500"
+              >
+                {c}
+              </span>
             ))}
           </div>
         </div>

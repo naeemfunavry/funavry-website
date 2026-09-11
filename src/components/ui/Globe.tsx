@@ -26,12 +26,11 @@ import { cn } from "@/lib/utils";
 
    WHY THIS TURNS, rather than being a static picture with three pins on it.
 
-   The offices are Lahore, San Jose and Dubai. Lahore and San Jose are 109.5°
-   apart, and a globe only ever shows a 180° hemisphere — so from the resting
-   camera (14°E/16°N, which puts Africa dead centre) San Jose is at depth -0.38:
-   on the *far side of the planet*. There is no static camera that fixes this.
-   The only view that carries all three sits at 83°N, looking straight down at
-   the North Pole, which throws Africa onto the rim.
+   The offices are New York, Riyadh and Islamabad. New York and Islamabad are
+   ~147° apart, and a globe only ever shows a 180° hemisphere — so from the
+   resting camera (14°E/16°N, which puts Africa dead centre) New York sits far
+   round toward the limb. There is no static camera that carries all three dead
+   centre at once.
 
    So hovering an office turns the globe to face it and it settles back when you
    leave. Each office gets seen properly, dead centre, instead of squashed
@@ -73,7 +72,7 @@ function frameOf(cam: Cam) {
     paint is deterministic and hydration has nothing to disagree about. */
 const REST_FRAME = frameOf(REST);
 
-/** Shortest way round: from 14°E, San Jose is 135.9° WEST, not 224° east. Lerp
+/** Shortest way round: from 14°E, New York is ~88° WEST, not 272° east. Lerp
     the raw numbers and the globe spins the long way round the planet. */
 function shortLon(from: number, to: number) {
   let d = to - from;

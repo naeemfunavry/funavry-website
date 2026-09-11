@@ -2,6 +2,11 @@
  * The case studies, shared by the Work deck on the home page and the
  * /case-studies index. The deck runs FEATURED; the index runs all of them.
  *
+ * Copy — titles, summaries, capabilities, highlights — follows the portfolio
+ * content briefs (Funavry_Portfolio_Page_Content_MASTER_1.pdf), the same
+ * source of truth as the per-project detail pages in case-study-details.ts,
+ * so the deck, the index cards, and the detail pages tell one story.
+ *
  * Captures come from /public/case-studies/optimized — the delivered sources are
  * full-page PNGs and 4K photographs in six different shapes, cropped there to
  * one 16:10 frame so they read as one set. Replacing a screenshot means
@@ -32,6 +37,13 @@ import cnbcArabiaMobile from "../../public/case-studies/optimized/cnbc-arabia-mo
 export type CaseStudy = {
   slug: string;
   title: string;
+  /**
+   * The one-line "what it is", shown as the subheading under the title on the
+   * home deck and the index card — the same string the detail page's hero runs,
+   * so the three surfaces open with one identical heading → subheading →
+   * paragraph. Kept verbatim in sync with `tagline` in case-study-details.ts.
+   */
+  tagline: string;
   /** Stands in for the client name, which is not ours to publish. */
   sector: string;
   /** Which phase of Build → Automate → Operate the work mostly sat in. */
@@ -108,23 +120,25 @@ export type CaseStudy = {
 export const CASE_STUDIES: CaseStudy[] = [
   {
     slug: "qfs",
-    title: "QFS — Quality & Food Safety Inspections",
-    sector: "Food & Agriculture",
+    title: "QFS — Quality Inspection & Food Safety",
+    tagline: "A quality inspection & food safety application",
+    sector: "Manufacturing",
     phase: "Operate",
     surface: "app",
     frame: "window",
     summary:
-      "Paper inspection forms replaced by a live quality system: deviations raised on the plant floor, corrective actions tracked to closure, and the whole programme visible to QA management as it happens.",
+      "Paper-based quality checks replaced by a digital quality-inspection and food-safety platform: no-code check-sheets configured per facility, offline mobile capture on the production floor, and real-time deviation and corrective-action dashboards — live across 14 plants in the US and MENA.",
     capabilities: [
-      "Digital inspection forms",
+      "No-code inspection forms",
       "Deviation tracking",
       "Corrective actions",
+      "Offline mobile capture",
       "Live QA dashboards",
     ],
     callouts: [
       // The "Form History" rail item.
       {
-        label: "Digital inspection forms",
+        label: "No-code inspection forms",
         icon: "ClipboardList",
         at: { x: 0.07, y: 0.285 },
       },
@@ -155,21 +169,23 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     slug: "global-claims",
     title: "Global Claims Management System",
+    tagline: "An end-to-end, multi-region claims workflow platform",
     sector: "Supply Chain",
     phase: "Build",
     surface: "app",
     frame: "laptop",
     summary:
-      "One claim, one workflow, every market. Sales, port QA, procurement, surveyors, and finance each pick the claim up in their own queue and hand it on — submission through to settlement, with the trail intact.",
+      "Excel-based claim tracking replaced by a standardized, global workflow platform: claims move from creation through review, survey, approval, and settlement, routed across Sales, QA, Procurement, Regional Office, Surveyors, and Finance under a configurable, multi-level approval matrix.",
     capabilities: [
-      "Role-based queues",
       "Claim lifecycle",
+      "Role-based routing",
+      "Approval matrix",
       "Surveyor assignment",
-      "Reporting & export",
+      "Dashboards & reporting",
     ],
     callouts: [
       // The sidebar rail itself — Admin, DM Sales, Port QA, Procurement, Finance.
-      { label: "Role-based queues", icon: "Users", at: { x: 0.12, y: 0.35 } },
+      { label: "Role-based routing", icon: "Users", at: { x: 0.12, y: 0.35 } },
       // The counter row IS the lifecycle: Submitted, In Progress, Rejected,
       // Completed, Draft. The line lands on its first stage.
       { label: "Claim lifecycle", icon: "GitBranch", at: { x: 0.25, y: 0.16 } },
@@ -193,17 +209,18 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     slug: "contxtual",
     title: "Contxtual — Shoppable Video Commerce",
+    tagline: "A shoppable video commerce platform",
     sector: "Media",
     phase: "Automate",
     surface: "app",
     frame: "window",
     summary:
-      "Streaming content turned into a storefront. Scenes are indexed frame by frame, the apparel in them matched to buyable products through AI-assisted visual search, and the placements sold as ad inventory.",
+      "Streaming content transformed into a storefront: computer-vision scene analysis detects on-screen clothing and accessories frame by frame, AI visual-similarity matching connects them to purchasable retail products, and streamers gain a new revenue channel without added commercials.",
     capabilities: [
-      "Scene indexing",
+      "Scene analysis",
       "Visual product matching",
       "AI-assisted annotation",
-      "Ad inventory",
+      "In-video product discovery",
     ],
     callouts: [
       // The "Annotator" rail item — the one place this set's AI claim is real.
@@ -213,7 +230,7 @@ export const CASE_STUDIES: CaseStudy[] = [
         at: { x: 0.07, y: 0.415 },
       },
       // The indexed-episode card: season, episode, "91% Indexed".
-      { label: "Scene indexing", icon: "Film", at: { x: 0.28, y: 0.245 } },
+      { label: "Scene analysis", icon: "Film", at: { x: 0.28, y: 0.245 } },
       // The scene frame, with its product markers dotted onto the apparel.
       {
         label: "Visual product matching",
@@ -225,47 +242,54 @@ export const CASE_STUDIES: CaseStudy[] = [
   },
   {
     slug: "skillyah",
-    title: "SkillYah — Skills Marketplace & Live Classrooms",
+    title: "SkillYah — One-to-One Tutoring Marketplace",
+    tagline: "An online one-to-one tutoring marketplace",
     sector: "Education",
     phase: "Build",
     surface: "app",
     frame: "laptop",
     summary:
-      "A marketplace pairing people who have a skill with people who want it — live video classes and a shared whiteboard in the browser, and the admin, payments, and dispute tooling that keeps the market running.",
+      "An online marketplace connecting students with expert tutors for one-to-one live lessons — three role-based portals for students, tutors, and administrators, managing the full journey from discovery and booking through scheduling, payment, live video lessons, and post-lesson reviews.",
     capabilities: [
-      "Live classrooms",
-      "Collaborative whiteboard",
-      "Marketplace & bookings",
-      "Payments & disputes",
+      "Role-based portals",
+      "Tutor discovery & booking",
+      "Live video lessons",
+      "Payments & cancellations",
+      "Reviews & messaging",
     ],
     callouts: [
       // The "Skillers" rail item — the marketplace's own directory.
       {
-        label: "Marketplace & bookings",
+        label: "Tutor discovery & booking",
         icon: "Store",
         at: { x: 0.11, y: 0.4 },
       },
       // The "Lectures" rail item.
-      { label: "Live classrooms", icon: "Video", at: { x: 0.11, y: 0.645 } },
+      { label: "Live video lessons", icon: "Video", at: { x: 0.11, y: 0.645 } },
       // "Transactions" and "Disputes", which sit together at the rail's foot.
-      { label: "Payments & disputes", icon: "Scale", at: { x: 0.11, y: 0.89 } },
+      {
+        label: "Payments & cancellations",
+        icon: "Scale",
+        at: { x: 0.11, y: 0.89 },
+      },
     ],
     image: skillyah,
   },
   {
     slug: "cnbc-arabia",
     title: "CNBC Arabia News Portal",
+    tagline: "A high-traffic, bilingual business & financial news platform",
     sector: "Media",
     phase: "Build",
     surface: "site",
     frame: "window",
     summary:
-      "A right-to-left Arabic business news portal, where live market data — indices, movers, and tickers — is published alongside the newsroom's editorial feed.",
+      "A high-traffic, bilingual business and financial news platform — breaking news, live market data, and stock quotes across web and mobile, built on a custom CMS with Elasticsearch-powered search and engineered to scale to over a million hits per day.",
     capabilities: [
-      "Right-to-left Arabic",
+      "Custom editorial CMS",
+      "Elasticsearch search",
       "Live market data",
-      "Editorial publishing",
-      "High-traffic delivery",
+      "Bilingual Arabic & English",
     ],
     highlights: [
       { value: "1M+", detail: "Hits per Day" },
@@ -280,17 +304,19 @@ export const CASE_STUDIES: CaseStudy[] = [
   },
   {
     slug: "smart-municipality",
-    title: "Smart Municipality — Citizen Services Portal",
+    title: "Smart Municipality — Citizen Services & Municipal CRM",
+    tagline: "A citizen services & municipal CRM platform",
     sector: "Public Sector",
     phase: "Build",
     surface: "site",
     frame: "window",
     summary:
-      "Municipal services in one place: residents apply, file an instant report, and follow an application through to completion, while the municipality works the same cases from a single desk. Bilingual throughout.",
+      "Citizen services moved online through a bilingual app and web experience backed by a municipal CRM: residents request, pay for, and track services from a single app — with UAE Pass digital identity, Tahseel payments, and multi-level, role-based routing across departments.",
     capabilities: [
       "Citizen self-service",
-      "Application tracking",
-      "Case management",
+      "UAE Pass & Tahseel payments",
+      "Multi-level CRM routing",
+      "Instant issue reporting",
       "Arabic & English",
     ],
     highlights: [

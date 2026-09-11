@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Mail, Check, ArrowRight } from "lucide-react";
 import Container from "@/components/ui/Container";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
@@ -11,6 +11,20 @@ const INTERESTS = [
   "Operate — managed services & global teams",
   "Not sure yet",
 ];
+
+/** Which form option each phase of the delivery model pre-selects. */
+export const INTEREST_BY_PHASE = {
+  Build: INTERESTS[0],
+  Automate: INTERESTS[1],
+  Operate: INTERESTS[2],
+} as const;
+
+/**
+ * Anything on the page can pre-fill "What do you need?" by dispatching this on
+ * `window` with the option as `detail` — the contact page's practice cards do,
+ * so picking one carries the choice down into the form instead of asking twice.
+ */
+export const INTEREST_EVENT = "funavry:interest";
 
 /** Real certifications from the company profile — nothing invented. */
 const CREDENTIALS = [
@@ -36,6 +50,16 @@ const selectClass = `mt-2 w-full appearance-none border-0 border-b border-paper/
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [interest, setInterest] = useState("");
+
+  useEffect(() => {
+    const onInterest = (e: Event) => {
+      const detail = (e as CustomEvent<string>).detail;
+      if (INTERESTS.includes(detail)) setInterest(detail);
+    };
+    window.addEventListener(INTEREST_EVENT, onInterest);
+    return () => window.removeEventListener(INTEREST_EVENT, onInterest);
+  }, []);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -201,7 +225,8 @@ export default function Contact() {
                   <select
                     id="interest"
                     name="interest"
-                    defaultValue=""
+                    value={interest}
+                    onChange={(e) => setInterest(e.target.value)}
                     className={selectClass}
                   >
                     <option value="" disabled>

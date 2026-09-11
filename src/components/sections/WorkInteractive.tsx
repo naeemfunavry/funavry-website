@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image, { type StaticImageData } from "next/image";
+import Link from "next/link";
 import {
   AnimatePresence,
   motion,
@@ -10,13 +11,11 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { ArrowRight, X } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Container from "@/components/ui/Container";
-import Button from "@/components/ui/Button";
 import ProductWindow from "@/components/ui/ProductWindow";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
-import { CASE_PHASE, CASE_STUDIES, type CaseStudy } from "@/lib/case-studies";
-import { lockScroll, unlockScroll } from "@/lib/scroll-lock";
+import { CASE_PHASE, CASE_STUDIES } from "@/lib/case-studies";
 import { useInView } from "@/lib/use-in-view";
 import { cn } from "@/lib/utils";
 
@@ -26,7 +25,8 @@ import { cn } from "@/lib/utils";
  * pointer, with the capture window and a phone sitting at different depths so
  * the parallax between them reads as one object turning. The deck advances on
  * its own while it's on screen, sliding each study on from the side it's
- * travelling. Clicking the stage opens the full study.
+ * travelling. Clicking the stage goes straight to the study's own detail page
+ * at /case-studies/[slug] — no intermediate dialog.
  *
  * This is a third presentation of the same six studies, alongside `Work`
  * (framed deck) and `WorkShowcase` (Stripe-style reveal) — one of them goes in
@@ -113,229 +113,6 @@ function Metric({ value, detail }: { value: string; detail: string }) {
   );
 }
 
-/* The full study, over the page. Escape closes, the page behind is locked, and
-   the panel carries `data-lenis-prevent` so a stopped Lenis stops swallowing
-   its wheel events. */
-function StudyDialog({
-  study,
-  onClose,
-}: {
-  study: CaseStudy;
-  onClose: () => void;
-}) {
-  const phase = CASE_PHASE[study.phase];
-  const closeRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    lockScroll();
-    // Focus lands on the one control that gets you back out, so the dialog is
-    // dismissible from the keyboard the moment it opens.
-    closeRef.current?.focus();
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      unlockScroll();
-    };
-  }, [onClose]);
-
-  return (
-    <motion.div
-      className="fixed inset-0 z-[80] flex items-center justify-center p-4 sm:p-8"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.28 }}
-    >
-      <button
-        type="button"
-        aria-label="Close case study"
-        onClick={onClose}
-        className="absolute inset-0 bg-ink/30 backdrop-blur-[3px]"
-      />
-
-      <motion.div
-        role="dialog"
-        aria-modal="true"
-        aria-label={study.title}
-        data-lenis-prevent
-        initial={{ opacity: 0, scale: 0.97, y: 12 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.97, y: 12 }}
-        transition={{ duration: 0.42, ease: EXPO }}
-        /* Wider than the copy needs, because this is where the capture is meant
-           to actually be read — the stage can only ever be a thumbnail of a
-           dashboard, and this is the view that isn't.
-
-           No top margin: the wrapper already centres this with
-           `items-center`, and a `mt-28` on top of it pushed the panel below
-           centre and, on shorter screens, shoved its header off the top past
-           the reach of the internal scroll. The max-height is the viewport
-           minus the wrapper's own padding (1rem each side on mobile, 2rem at
-           sm+), in `svh` so the mobile browser's chrome is counted — so the
-           panel always fits and stays centred on every screen. Desktop keeps
-           its original `88vh` cap. */
-        className="relative max-h-[calc(100svh-2rem)] w-full max-w-[1140px] overflow-y-auto overscroll-contain rounded-[8px] bg-paper-white shadow-[0_50px_100px_-40px_rgba(46,52,54,0.55)] sm:max-h-[88vh]"
-      >
-        <span aria-hidden className={cn("block h-[3px] w-full", phase.dot)} />
-
-        <div className="p-6 sm:p-10 lg:p-12">
-          <header className="flex items-start justify-between gap-6">
-            <div className="min-w-0">
-              <div className="flex items-center gap-2.5">
-                <span
-                  aria-hidden
-                  className={cn(
-                    "h-1.5 w-1.5 flex-none rounded-full",
-                    phase.dot,
-                  )}
-                />
-                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">
-                  {study.sector}
-                </span>
-                <span aria-hidden className="h-px w-3 bg-line-strong" />
-                <span
-                  className={cn(
-                    "font-mono text-[10px] uppercase tracking-[0.18em]",
-                    phase.text,
-                  )}
-                >
-                  {study.phase}
-                </span>
-              </div>
-              <h3 className="mt-3 text-h3 text-ink">{study.title}</h3>
-            </div>
-
-            <button
-              ref={closeRef}
-              type="button"
-              onClick={onClose}
-              aria-label="Close"
-              className="flex h-9 w-9 flex-none items-center justify-center rounded-sm border border-line text-ink-500 transition-colors duration-300 hover:bg-ink hover:text-paper"
-            >
-              <X size={15} />
-            </button>
-          </header>
-
-          {/* Same pairing as the stage, and for the same reason: a study whose
-              mobile surface is on the deck should not lose it on the way into
-              the full write-up. */}
-          <div className="relative mt-8">
-            <div className={study.mobileImage ? "w-[93%]" : "w-full"}>
-              <ProductWindow
-                study={study}
-                fit="full"
-                sizes="(max-width: 1024px) 92vw, 1020px"
-              />
-            </div>
-            {study.mobileImage && (
-              <div className="absolute -bottom-3 right-0 w-[16%] max-w-[112px] rotate-[3deg] sm:-bottom-5">
-                <PhoneFrame image={study.mobileImage} title={study.title} />
-              </div>
-            )}
-          </div>
-
-          <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-14">
-            <div>
-              <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">
-                What we built
-              </div>
-              <p className="mt-4 text-[15px] leading-[1.75] text-ink-500">
-                {study.summary}
-              </p>
-
-              <div className="mt-8 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">
-                Capabilities
-              </div>
-              <ul className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2">
-                {study.capabilities.map((c) => (
-                  <li key={c} className="flex items-start gap-2.5">
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "mt-[7px] h-1 w-1 flex-none rounded-full",
-                        phase.dot,
-                      )}
-                    />
-                    <span className="text-[14px] leading-[1.6] text-ink">
-                      {c}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              {(study.client || study.team) && (
-                <>
-                  <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">
-                    Engagement
-                  </div>
-                  <dl className="mt-4 space-y-3">
-                    {study.team && (
-                      <div className="flex items-baseline justify-between gap-4 border-t border-line pt-3">
-                        <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-500">
-                          Team
-                        </dt>
-                        <dd className="text-[14px] font-medium text-ink">
-                          {study.team}
-                        </dd>
-                      </div>
-                    )}
-                    {study.client && (
-                      <div className="flex items-baseline justify-between gap-4 border-t border-line pt-3">
-                        <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-500">
-                          Delivered to
-                        </dt>
-                        <dd className="text-[14px] font-medium text-ink">
-                          {study.client}
-                        </dd>
-                      </div>
-                    )}
-                  </dl>
-                </>
-              )}
-
-              {study.highlights && (
-                <>
-                  <div className="mt-8 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">
-                    Highlights
-                  </div>
-                  <div className="mt-4 space-y-3">
-                    {study.highlights.map((h) => (
-                      <div
-                        key={h.value}
-                        className="flex items-baseline justify-between gap-4 border-t border-line pt-3"
-                      >
-                        <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-500">
-                          {h.detail}
-                        </span>
-                        <span className="text-[15px] font-medium tracking-[-0.02em] text-ink">
-                          {h.value}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )}
-
-              <Button
-                href="/case-studies"
-                variant="secondary"
-                size="md"
-                arrow
-                className="mt-8 w-full"
-              >
-                All Work
-              </Button>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
-
 export default function WorkInteractive() {
   const reduce = useReducedMotion();
   const [sectionRef, inView] = useInView<HTMLElement>();
@@ -346,7 +123,6 @@ export default function WorkInteractive() {
      comparison of the two indices reads it as five steps back. */
   const [direction, setDirection] = useState(1);
   const [hover, setHover] = useState(false);
-  const [open, setOpen] = useState(false);
 
   const study = STUDIES[index];
   const phase = CASE_PHASE[study.phase];
@@ -366,8 +142,7 @@ export default function WorkInteractive() {
   /* Autoplay, on screen only. `paused` is a ref so a hover doesn't restart the
      interval it's suspending; `index` in the deps does restart it, which is
      what gives a manually picked study a full turn on screen instead of the
-     remainder of someone else's. Off entirely under reduced motion, and while
-     the dialog is up — nothing should be moving behind a modal. */
+     remainder of someone else's. Off entirely under reduced motion. */
   const paused = useRef(false);
   const resumeTimer = useRef<ReturnType<typeof setTimeout>>();
   const pause = () => {
@@ -382,13 +157,13 @@ export default function WorkInteractive() {
   };
 
   useEffect(() => {
-    if (reduce || !inView || open) return;
+    if (reduce || !inView) return;
     const id = setInterval(() => {
       if (paused.current || document.hidden) return;
       go(1);
     }, 6200);
     return () => clearInterval(id);
-  }, [reduce, inView, open, index, go]);
+  }, [reduce, inView, index, go]);
 
   useEffect(() => () => clearTimeout(resumeTimer.current), []);
 
@@ -456,8 +231,6 @@ export default function WorkInteractive() {
     resume();
   };
 
-  const close = useCallback(() => setOpen(false), []);
-
   return (
     <>
       <section
@@ -524,14 +297,14 @@ export default function WorkInteractive() {
                       : "border-line-strong bg-transparent text-ink-500 hover:border-ink hover:bg-paper-white hover:text-ink",
                   )}
                 >
-                  <span
+                  {/* <span
                     className={cn(
                       "font-mono text-[10px] tracking-[0.12em]",
                       active ? "text-azure-ink" : "text-ink-400",
                     )}
                   >
                     {String(i + 1).padStart(2, "0")}
-                  </span>
+                  </span> */}
                   {s.sector}
                 </button>
               );
@@ -704,6 +477,9 @@ export default function WorkInteractive() {
                     </div>
 
                     <h3 className="mt-4 text-h3 text-ink">{study.title}</h3>
+                    <p className="mt-3 text-[14px] font-medium italic leading-snug text-azure-ink lg:text-[15px]">
+                      {study.tagline}
+                    </p>
                     <p className="mt-4 text-[15px] leading-[1.7] text-ink-500">
                       {study.summary}
                     </p>
@@ -733,12 +509,12 @@ export default function WorkInteractive() {
               </AnimatePresence>
             </motion.div>
 
-            {/* The whole stage opens the study. A real button rather than a click
-              handler on the shell: it lands in the tab order, announces itself,
-              and its mousemove still bubbles to the tilt handler above. */}
-            <button
-              type="button"
-              onClick={() => setOpen(true)}
+            {/* The whole stage is a link straight to the study's detail page.
+              A real <Link> rather than a click handler on the shell: it lands
+              in the tab order, announces itself, and its mousemove still
+              bubbles to the tilt handler above. */}
+            <Link
+              href={`/case-studies/${study.slug}`}
               className="absolute inset-0 z-10 flex items-end justify-end p-5 lg:p-7"
             >
               <span className="sr-only">Open the {study.title} case study</span>
@@ -752,7 +528,7 @@ export default function WorkInteractive() {
                 View case study
                 <ArrowRight size={13} />
               </span>
-            </button>
+            </Link>
           </div>
 
           {/* Pager. */}
@@ -779,18 +555,14 @@ export default function WorkInteractive() {
           </p>
         </Container>
       </section>
-      <AnimatePresence>
-        {open && <StudyDialog study={study} onClose={close} />}
-      </AnimatePresence>
     </>
   );
 }
 
 /* ── Notes ────────────────────────────────────────────────────────────────────
    Ported from an interactive-portfolio comp: project tabs, a pointer-tilted
-   stage with layered frames, a metrics row, a dot pager, and a case-study
-   modal. The interaction model is the comp's; the palette is this site's, and
-   so is the content.
+   stage with layered frames, a metrics row, and a dot pager. The interaction
+   model is the comp's; the palette is this site's, and so is the content.
 
    What changed on the way in, and why:
 
@@ -800,9 +572,10 @@ export default function WorkInteractive() {
      showcase, and the same reason: approved facts, not figures written for a
      layout.
 
-   - The comp's clickable <div> stage is a real <button>, the modal takes
-     Escape and locks Lenis through @/lib/scroll-lock, and the tilt, the
-     autoplay and the slide's travel are all off under prefers-reduced-motion.
+   - The comp opened a case-study modal over the page; the stage is now a real
+     <Link> straight to /case-studies/[slug], where the full write-up lives.
+     The tilt, the autoplay and the slide's travel are all off under
+     prefers-reduced-motion.
 
    The phone carries a real mobile capture, from `mobileImage` on the study, and
    appears only for the studies that have one — QFS and CNBC Arabia today. The

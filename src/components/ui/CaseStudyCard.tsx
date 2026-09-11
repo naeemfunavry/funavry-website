@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Frame from "@/components/ui/Frame";
 import ProductWindow from "@/components/ui/ProductWindow";
 import { CASE_PHASE, type CaseStudy } from "@/lib/case-studies";
@@ -63,10 +64,20 @@ export default function CaseStudyCard({ study }: { study: CaseStudy }) {
         </div>
 
         {/* h2, not h3: these cards sit directly under the page's single <h1>,
-            so an h3 would skip a level (axe: heading-order). */}
+            so an h3 would skip a level (axe: heading-order). The stretched
+            link makes the whole card open the study's detail page. */}
         <h2 className="mt-4 text-[19px] font-medium leading-snug tracking-[-0.02em] text-ink lg:text-[21px]">
-          {study.title}
+          <Link
+            href={`/case-studies/${study.slug}`}
+            className="after:absolute after:inset-0 after:z-10"
+          >
+            {study.title}
+          </Link>
         </h2>
+
+        <p className="mt-2.5 text-[13.5px] font-medium italic leading-snug text-azure-ink">
+          {study.tagline}
+        </p>
 
         <p className="mt-3.5 text-[14px] leading-[1.7] text-ink-500">
           {study.summary}

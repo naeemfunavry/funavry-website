@@ -95,7 +95,10 @@ export default function ServicesPage() {
         <section className="relative overflow-hidden border-b border-line bg-paper-deep pt-[130px]">
           <div aria-hidden className="absolute inset-0 grid-paper opacity-60" />
 
-          <Container wide className="relative z-10 pb-24 pt-16 lg:pb-28 lg:pt-20">
+          <Container
+            wide
+            className="relative z-10 pb-24 pt-16 lg:pb-28 lg:pt-20"
+          >
             <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] lg:items-end lg:gap-20">
               <div>
                 <div className="flex items-center gap-3">
@@ -104,7 +107,7 @@ export default function ServicesPage() {
                     Services
                   </span>
                 </div>
-                <h1 className="mt-6 text-h1 text-ink">
+                <h1 className="mt-6 text-h2 text-ink">
                   <KineticWords text="Sixteen practices," trigger="mount" />
                   <br />
                   <KineticWords
@@ -119,8 +122,7 @@ export default function ServicesPage() {
                 <p className="text-[16px] leading-[1.75] text-ink-500">
                   Technology engineering and global business services, mapped to
                   a single chain. Each practice sits where it creates value —
-                  across{" "}
-                  <span className="font-medium text-azure">build</span>,{" "}
+                  across <span className="font-medium text-azure">build</span>,{" "}
                   <span className="font-medium text-amber-ink">automate</span>,
                   and <span className="font-medium text-steel">operate</span> —
                   and can be engaged on its own or as one.

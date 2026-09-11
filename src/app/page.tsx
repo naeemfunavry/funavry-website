@@ -29,6 +29,7 @@ import Footer from "@/components/sections/Footer";
 import WorkInteractive from "@/components/sections/WorkInteractive";
 import CapabilitiesOS from "@/components/sections/CapabilitiesOS";
 import Capabilities from "@/components/sections/Capabilities";
+import Insights from "@/components/sections/Insights";
 
 export default function Home() {
   return (
@@ -46,7 +47,7 @@ export default function Home() {
         <Industries />
         <TechStack />
         <Testimonials />
-        {/* <Insights /> */}
+        <Insights />
         <Contact />
       </main>
       <Footer />
