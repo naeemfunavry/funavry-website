@@ -81,18 +81,67 @@ function alphaBounds(data, W, H, C) {
   return maxX < 0 ? null : { minX, minY, maxX, maxY };
 }
 
+/**
+ * Clears a white plate. High-resolution logos often arrive as JPEGs or PNGs on
+ * solid white, which shows as a white box on the strip's paper ground.
+ *
+ * Flood-fills from the border through light pixels only, so white that the
+ * mark encloses — Del Monte's lettering on its red shield — is never reached
+ * and stays opaque. Alpha ramps across the light band rather than cutting at
+ * one value, so anti-aliased edges fade instead of leaving a jagged fringe.
+ * Mutates `data` in place; a source whose border isn't light is left alone.
+ */
+const PLATE_MIN = 232;
+function clearWhitePlate(data, W, H, C) {
+  const light = (p) => {
+    const i = p * C;
+    return data[i + 3] > 24 && Math.min(data[i], data[i + 1], data[i + 2]) > PLATE_MIN;
+  };
+
+  let border = 0, lightBorder = 0;
+  for (let x = 0; x < W; x++) for (const y of [0, H - 1]) { border++; if (light(y * W + x)) lightBorder++; }
+  for (let y = 0; y < H; y++) for (const x of [0, W - 1]) { border++; if (light(y * W + x)) lightBorder++; }
+  if (lightBorder / border < 0.6) return false;
+
+  const seen = new Uint8Array(W * H);
+  const stack = new Int32Array(W * H);
+  let top = 0;
+  const push = (p) => { if (!seen[p] && light(p)) { seen[p] = 1; stack[top++] = p; } };
+  for (let x = 0; x < W; x++) { push(x); push((H - 1) * W + x); }
+  for (let y = 0; y < H; y++) { push(y * W); push(y * W + W - 1); }
+
+  while (top > 0) {
+    const p = stack[--top];
+    const i = p * C;
+    const lum = Math.min(data[i], data[i + 1], data[i + 2]);
+    data[i + 3] = Math.round(data[i + 3] * ((255 - lum) / (255 - PLATE_MIN)));
+    const x = p % W;
+    if (x > 0) push(p - 1);
+    if (x < W - 1) push(p + 1);
+    if (p >= W) push(p - W);
+    if (p < W * (H - 1)) push(p + W);
+  }
+  return true;
+}
+
 fs.mkdirSync(OUT, { recursive: true });
 
-const files = fs.readdirSync(SRC).filter((f) => f.endsWith(".webp"));
+// Sources may arrive as PNG or JPEG as well; every output is WebP, named after
+// its source.
+const files = fs
+  .readdirSync(SRC)
+  .filter((f) => /\.(webp|png|jpe?g)$/i.test(f));
 const report = [];
 
-for (const file of files) {
-  const src = path.join(SRC, file);
+for (const sourceFile of files) {
+  const src = path.join(SRC, sourceFile);
+  const file = sourceFile.replace(/\.(png|jpe?g)$/i, ".webp");
   const { data, info } = await sharp(src)
     .ensureAlpha()
     .raw()
     .toBuffer({ resolveWithObject: true });
   const { width: W, height: H, channels: C } = info;
+  const cleared = clearWhitePlate(data, W, H, C);
 
   const b = inkBounds(data, W, H, C) ?? alphaBounds(data, W, H, C);
   if (!b) {
@@ -121,10 +170,12 @@ for (const file of files) {
 
   const scale = outW / inkW;
 
-  const trimmed = await sharp(src)
-    .ensureAlpha()
+  // From the decoded (and possibly plate-cleared) pixels, not the file again.
+  const trimmed = await sharp(data, { raw: { width: W, height: H, channels: C } })
     .extract({ left: b.minX, top: b.minY, width: inkW, height: inkH })
     .resize(outW, outH, { fit: "fill", kernel: "lanczos3" })
+    // Raw in means raw out; the composite below needs an encoded image.
+    .png()
     .toBuffer();
 
   await sharp({
@@ -139,7 +190,7 @@ for (const file of files) {
     .webp({ quality: 92, alphaQuality: 100 })
     .toFile(path.join(OUT, file));
 
-  report.push({ file, ink: `${inkW}x${inkH}`, out: `${outW}x${outH}`, scale });
+  report.push({ file: cleared ? `${file} (plate)` : file, ink: `${inkW}x${inkH}`, out: `${outW}x${outH}`, scale });
 }
 
 report.sort((a, b) => b.scale - a.scale);

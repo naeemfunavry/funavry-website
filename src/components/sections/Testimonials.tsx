@@ -100,14 +100,18 @@ export default function Testimonials() {
             <h2 className="mt-6 text-h1 text-ink">
               <KineticWords text="What it's like" />
               <br />
-              <KineticWords text="to build with us." delay={0.12} />
+              <KineticWords
+                text="to build with us"
+                delay={0.12}
+                wordClassName={() => "text-sweep"}
+              />
             </h2>
           </div>
 
           <Wipe delay={0.2}>
-            <p className="text-[16px] leading-[1.75] text-ink-500">
-              Engagements that outlast the statement of work — across
-              healthcare, finance, government, and global operations.
+            <p className="text-lg leading-[1.75] text-ink-500">
+              Engagements that outlast the statement of work across healthcare,
+              finance, government, and global operations.
             </p>
           </Wipe>
         </div>

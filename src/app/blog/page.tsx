@@ -93,16 +93,20 @@ export default function BlogPage() {
         <section className="relative overflow-hidden border-b border-line bg-paper-deep pt-[130px]">
           <div aria-hidden className="absolute inset-0 grid-paper opacity-60" />
 
-          <Container wide className="relative z-10 pb-16 pt-14 lg:pb-20 lg:pt-20">
+          <Container
+            wide
+            className="relative z-10 pb-16 pt-14 lg:pb-20 lg:pt-20"
+          >
             <Eyebrow label="Blog & News" />
 
             <h1 className="mt-6 max-w-[16ch] text-h1 text-ink">
               <KineticWords text="What we're" trigger="mount" />
               <br />
               <KineticWords
-                text="thinking about."
+                text="thinking about"
                 delay={0.12}
                 trigger="mount"
+                wordClassName={() => "text-sweep"}
               />
             </h1>
 

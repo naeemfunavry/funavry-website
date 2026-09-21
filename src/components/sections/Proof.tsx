@@ -188,10 +188,11 @@ export default function Proof() {
               <h2 className="mt-6 text-h1 text-ink">
                 <KineticWords text="Building Intelligent" />
                 <br />
+
                 <KineticWords text="Enterprises with AI" delay={0.12} />
               </h2>
 
-              <p className="mt-6 text-[15px] leading-[1.75] text-ink-500">
+              <p className="mt-6 text-lg leading-[1.75] text-ink-500">
                 We help organizations modernize operations through AI,
                 enterprise engineering, cloud, and intelligent automation
                 delivering measurable business outcomes worldwide.

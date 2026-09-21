@@ -12,17 +12,28 @@ import { cn } from "@/lib/utils";
    names come from the filename because there is nothing in the artwork to
    check them against.
 
+   The high-resolution batch replaced DWTC, Jazz, VNClagoon, Al Jazeera Finance
+   and AMD Telecom, swapped solutions by stc for the stc mark, and added five.
+   Its source `GCPT.png` is ChainGPT. `estate-office` is Pakistan's state emblem
+   with no wordmark; it is named for the Estate Office, Government of Pakistan,
+   because that is the client (see the REstate case study), not the emblem.
+
    Strongest marks lead, so the first thing entering the frame is the most
    recognisable. Shown in their own colours — no plate, no filter. */
 const CLIENTS: { name: string; file: string }[] = [
   { name: "Amazon Web Services", file: "aws.webp" },
   { name: "EY", file: "ey.webp" },
+  { name: "Mayo Clinic", file: "mayo-clinic.webp" },
+  { name: "Del Monte", file: "delmonte.webp" },
+  { name: "stc", file: "stc.webp" },
   { name: "Dubai World Trade Centre", file: "dwtc.webp" },
-  { name: "solutions by stc", file: "solution.webp" },
   { name: "Manchester Metropolitan University", file: "manchester.webp" },
   { name: "Systems Limited", file: "system.webp" },
+  { name: "Estate Office, Government of Pakistan", file: "estate-office.webp" },
   { name: "Al Jazeera Finance", file: "aljazeera.webp" },
   { name: "Jazz", file: "jazz.webp" },
+  { name: "CitiMed", file: "citimed.webp" },
+  { name: "ChainGPT", file: "chaingpt.webp" },
   { name: "Wateen Telecom", file: "wateen.webp" },
   { name: "Pakistan Software Export Board", file: "pseb.webp" },
   { name: "P@SHA", file: "pasha.webp" },

@@ -30,6 +30,8 @@ export type Shot = {
   height: number;
   ratio: number;
   kind: ShotKind;
+  /** The brief chose this capture to lead the product visual. */
+  lead?: boolean;
 };
 
 /** A project's captures, arranged for a product visual. */

@@ -36,17 +36,17 @@ const CREDENTIALS = [
 
 /* Fields sit on the ink panel, so type is paper and the rule is a light hairline. */
 const fieldClass =
-  "peer w-full border-0 border-b border-paper/20 bg-transparent px-0 py-3.5 text-[16px] text-paper outline-none transition-colors duration-300 placeholder:text-transparent focus:border-azure focus-visible:shadow-none";
+  "peer w-full border-0 border-b border-paper/20 bg-paper/20 p-3 text-[16px] text-paper outline-none transition-colors duration-300 placeholder:text-transparent focus:border-azure focus-visible:shadow-none";
 
 const labelClass =
-  "pointer-events-none absolute left-0 top-3.5 font-mono text-[11px] uppercase tracking-[0.16em] text-paper/40 transition-all duration-300 ease-expo peer-focus:-top-3 peer-focus:text-[9.5px] peer-focus:text-azure peer-[:not(:placeholder-shown)]:-top-3 peer-[:not(:placeholder-shown)]:text-[9.5px]";
+  "pointer-events-none absolute left-3.5 top-3.5 font-mono text-[11px] uppercase tracking-[0.16em] text-paper/40 transition-all duration-300 ease-expo peer-focus:-top-4 peer-focus:left-0 peer-focus:text-[9.5px] peer-focus:text-azure peer-[:not(:placeholder-shown)]:-top-3 peer-[:not(:placeholder-shown)]:text-[9.5px]";
 
 /* Kept out of the JSX attribute: an escaped quote inside a JSX string literal
    is taken verbatim, which breaks the arbitrary-value url(). */
 const chevron =
   "bg-[url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23868C8E%22 stroke-width=%222%22%3E%3Cpath d=%22m6 9 6 6 6-6%22/%3E%3C/svg%3E')]";
 
-const selectClass = `mt-2 w-full appearance-none border-0 border-b border-paper/20 bg-transparent ${chevron} bg-right bg-no-repeat px-0 py-3.5 text-[16px] text-paper outline-none transition-colors focus:border-azure focus-visible:shadow-none [&>option]:bg-ink [&>option]:text-paper`;
+const selectClass = `mt-2 w-full appearance-none border-0 border-b border-paper/20  bg-paper/20 ${chevron} bg-right bg-no-repeat p-3 text-[16px] text-paper outline-none transition-colors focus:border-azure focus-visible:shadow-none [&>option]:bg-ink [&>option]:text-paper`;
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
@@ -92,7 +92,7 @@ export default function Contact() {
             <div className="flex items-center gap-3">
               <span aria-hidden className="h-px w-10 flex-none bg-azure" />
               <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-paper/50">
-                04 / Start
+                Start
               </span>
             </div>
 
@@ -100,7 +100,7 @@ export default function Contact() {
               <KineticWords text="Let's build what" />
               <br />
               <KineticWords
-                text="runs your future."
+                text="runs your future"
                 delay={0.12}
                 wordClassName={() => "text-azure"}
               />
@@ -108,9 +108,9 @@ export default function Contact() {
 
             <Wipe delay={0.2}>
               <p className="mt-8 max-w-[44ch] text-[17px] leading-[1.75] text-paper/60">
-                Tell us where you are — an idea, a platform under pressure, or
-                an operation ready to scale. We come back within one business
-                day with a point of view, not a sales script.
+                Tell us where you are an idea, a platform under pressure, or an
+                operation ready to scale. We come back within one business day
+                with a point of view, not a sales script.
               </p>
             </Wipe>
 
@@ -131,10 +131,8 @@ export default function Contact() {
             </Wipe>
 
             {/* Compliance, set as a drafted list rather than badges. */}
-            <Wipe delay={0.34}>
-              {/* A list of compliance items, not term/definition pairs — a
-                  <ul>, not a <dl>. The old <dl> held <dt>s with no <dd>, which
-                  is invalid definition-list markup (axe: definition-list). */}
+            {/* <Wipe delay={0.34}>
+             
               <ul className="mt-16 grid max-w-[480px] grid-cols-2 gap-px bg-paper/10">
                 {CREDENTIALS.map((cred) => (
                   <li
@@ -152,7 +150,7 @@ export default function Contact() {
                   </li>
                 ))}
               </ul>
-            </Wipe>
+            </Wipe> */}
           </div>
 
           {/* Right — the form, drawn as underlined fields. */}
@@ -170,7 +168,11 @@ export default function Contact() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-9" noValidate>
+              <form
+                onSubmit={handleSubmit}
+                className="space-y-9 mt-3"
+                noValidate
+              >
                 <div className="relative">
                   <input
                     id="name"
@@ -255,7 +257,7 @@ export default function Contact() {
 
                 <button
                   type="submit"
-                  className="group flex w-full items-center justify-between border border-paper/20 px-7 py-5 text-left transition-colors duration-400 hover:border-azure hover:bg-azure"
+                  className="group flex w-full items-center justify-between border bg-black border-paper/20 px-7 py-5 text-left transition-colors duration-400 hover:border-azure hover:bg-azure"
                 >
                   <span className="text-[15px] font-medium tracking-[-0.01em] text-paper">
                     Send message

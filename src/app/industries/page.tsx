@@ -21,9 +21,10 @@ const TINTS = ["68,158,216", "245,159,19", "55,96,121"] as const;
 function IndustryCard({ industry, i }: { industry: Industry; i: number }) {
   return (
     <Frame
-      as="article"
+      as="a"
+      href={`/industries/${industry.slug}`}
       tint={TINTS[i % TINTS.length]}
-      className="h-full"
+      className="block h-full"
       innerClassName="flex h-full flex-col"
     >
       <div className="relative aspect-[16/10] overflow-hidden border-b border-line">
@@ -55,6 +56,12 @@ function IndustryCard({ industry, i }: { industry: Industry; i: number }) {
           />
           <span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-ink-400">
             {industry.proof}
+          </span>
+          <span
+            aria-hidden
+            className="ml-auto text-ink-400 transition-transform duration-500 ease-expo group-hover/frame:translate-x-1 group-hover/frame:text-ink"
+          >
+            →
           </span>
         </div>
       </div>

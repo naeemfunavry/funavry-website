@@ -58,9 +58,15 @@ function subItemsFor(link: Link): { label: string; href: string }[] | null {
   if (link.children)
     return link.children.map((c) => ({ label: c.label, href: c.href }));
   if (link.mega === "services")
-    return SERVICES.map((s) => ({ label: s.title, href: "/services" }));
+    return SERVICES.map((s) => ({
+      label: s.title,
+      href: `/services/${s.slug}`,
+    }));
   if (link.mega === "industries")
-    return INDUSTRIES.map((i) => ({ label: i.name, href: "/industries" }));
+    return INDUSTRIES.map((i) => ({
+      label: i.name,
+      href: `/industries/${i.slug}`,
+    }));
   return null;
 }
 
@@ -88,7 +94,7 @@ function MegaGroup({
         {items.map((s) => (
           <li key={s.n}>
             <a
-              href="/services"
+              href={`/services/${s.slug}`}
               onClick={onNavigate}
               className="group flex items-start gap-2.5 py-1.5"
             >
@@ -183,7 +189,7 @@ function IndustriesMega({ onNavigate }: { onNavigate: () => void }) {
           {INDUSTRIES.map((ind) => (
             <li key={ind.name}>
               <a
-                href="/industries"
+                href={`/industries/${ind.slug}`}
                 onClick={onNavigate}
                 className="group block"
               >

@@ -292,7 +292,7 @@ export default function Insights() {
             <h2 className="mt-6 text-h1 text-ink">
               <KineticWords text="What we're" />
               <br />
-              <KineticWords text="thinking about." delay={0.12} />
+              <KineticWords text="thinking about" delay={0.12} />
             </h2>
           </div>
 

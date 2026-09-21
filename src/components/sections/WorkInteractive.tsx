@@ -266,13 +266,17 @@ export default function WorkInteractive() {
               <h2 className="mt-6 text-h1 text-ink">
                 <KineticWords text="Systems we've" />
                 <br />
-                <KineticWords text="put into service." delay={0.12} />
+                <KineticWords
+                  text="put into service"
+                  delay={0.12}
+                  wordClassName={() => "text-sweep"}
+                />
               </h2>
             </div>
 
             <Wipe delay={0.2}>
-              <p className="text-base leading-[1.75] text-ink-500">
-                Web and enterprise platforms built end-to-end. Pick one below —
+              <p className="text-lg leading-[1.75] text-ink-500">
+                Web and enterprise platforms built end-to-end. Pick one below
                 open it for the full case study.
               </p>
             </Wipe>
@@ -281,7 +285,7 @@ export default function WorkInteractive() {
           {/* Tabs. Plain buttons rather than an ARIA tablist: the stage below is a
             single live region that swaps content, and `aria-pressed` describes
             that honestly without promising roving-focus tab semantics. */}
-          <div className="mt-10 flex flex-wrap gap-2 lg:mt-14">
+          {/* <div className="mt-10 flex flex-wrap gap-2 lg:mt-14">
             {STUDIES.map((s, i) => {
               const active = i === index;
               return (
@@ -297,19 +301,12 @@ export default function WorkInteractive() {
                       : "border-line-strong bg-transparent text-ink-500 hover:border-ink hover:bg-paper-white hover:text-ink",
                   )}
                 >
-                  {/* <span
-                    className={cn(
-                      "font-mono text-[10px] tracking-[0.12em]",
-                      active ? "text-azure-ink" : "text-ink-400",
-                    )}
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span> */}
+                  
                   {s.sector}
                 </button>
               );
             })}
-          </div>
+          </div> */}
 
           {/* Stage. The tilt lives on the inner shell so the field, the shadow and
             the click target stay square to the page while the frames turn.

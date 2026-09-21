@@ -530,12 +530,16 @@ export default function TechStack() {
             <h2 className="mt-6 text-h1 text-ink">
               <KineticWords text="The Architecture " />
               <br />
-              <KineticWords text="Behind Enterprise AI." delay={0.12} />
+              <KineticWords
+                text="Behind Enterprise AI"
+                delay={0.12}
+                wordClassName={() => "text-sweep"}
+              />
             </h2>
           </div>
 
           <Wipe delay={0.2}>
-            <p className="text-[16px] leading-[1.75] text-ink-500">
+            <p className="text-lg leading-[1.75] text-ink-500">
               We bring together world-class AI models, enterprise-grade
               infrastructure, cloud platforms, data systems, automation
               frameworks, and modern engineering practices to build intelligent

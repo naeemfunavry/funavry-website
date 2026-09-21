@@ -2,30 +2,14 @@
 
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import {
-  BrainCircuit,
-  LayoutGrid,
-  Blocks,
-  Glasses,
-  Cpu,
-  Satellite,
-  BarChart3,
-  ShieldCheck,
-  BadgeCheck,
-  Server,
-  Network,
-  Building2,
-  Calculator,
-  Bot,
-  GitBranch,
-  Users,
-  X,
-  type LucideIcon,
-} from "lucide-react";
+import { X } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { lockScroll, unlockScroll } from "@/lib/scroll-lock";
 import { type Service } from "@/lib/services";
+import { HOUSE_LABEL, PHASE, SERVICE_ICONS } from "@/lib/service-style";
 import { cn } from "@/lib/utils";
+
+export { HOUSE_LABEL, PHASE, SERVICE_ICONS };
 
 /**
  * The sub-services drawer — a bottom sheet on phones, a centred dialog from
@@ -39,37 +23,6 @@ import { cn } from "@/lib/utils";
  * `data-lenis-prevent`, without which a stopped Lenis swallows the wheel events
  * inside the panel and the sheet's own overflow won't scroll.
  */
-
-export const SERVICE_ICONS: Record<string, LucideIcon> = {
-  BrainCircuit,
-  LayoutGrid,
-  Blocks,
-  Glasses,
-  Cpu,
-  Satellite,
-  BarChart3,
-  ShieldCheck,
-  BadgeCheck,
-  Server,
-  Network,
-  Building2,
-  Calculator,
-  Bot,
-  GitBranch,
-  Users,
-};
-
-/** Each phase keeps its logo hue, so a service says where in the chain it acts. */
-export const PHASE = {
-  Build: { text: "text-azure", dot: "bg-azure", tint: "68,158,216" },
-  Automate: { text: "text-amber-ink", dot: "bg-amber", tint: "245,159,19" },
-  Operate: { text: "text-steel", dot: "bg-steel", tint: "55,96,121" },
-} as const;
-
-export const HOUSE_LABEL: Record<Service["group"], string> = {
-  tech: "Technology & Engineering",
-  gbs: "Global Business Services",
-};
 
 const EXPO = [0.19, 1, 0.22, 1] as const;
 
@@ -208,6 +161,13 @@ export default function ServiceDrawer({
               onClick={onClose}
             >
               Discuss this service
+            </Button>
+            <Button
+              href={`/services/${service.slug}`}
+              variant="secondary"
+              size="md"
+            >
+              View practice
             </Button>
             <span className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-ink-400">
               {HOUSE_LABEL[service.group]}

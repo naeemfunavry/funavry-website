@@ -32,9 +32,10 @@ function ServiceCard({ service }: { service: Service }) {
   const phase = PHASE[service.phase];
   return (
     <Frame
-      as="article"
+      as="a"
+      href={`/services/${service.slug}`}
       tint={phase.tint}
-      className="h-full"
+      className="block h-full"
       innerClassName="flex h-full flex-col p-6 lg:p-7"
     >
       <div className="flex items-center gap-3">
@@ -83,6 +84,16 @@ function ServiceCard({ service }: { service: Service }) {
           </li>
         ))}
       </ul>
+
+      <span className="mt-auto inline-flex items-center gap-2 pt-6 text-[13px] font-medium text-ink">
+        View practice
+        <span
+          aria-hidden
+          className="transition-transform duration-500 ease-expo group-hover/frame:translate-x-1"
+        >
+          →
+        </span>
+      </span>
     </Frame>
   );
 }

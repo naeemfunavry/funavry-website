@@ -29,6 +29,10 @@ export type DetailScreenshot = {
       for phone screens and very tall page captures, which a 16:10 crop would
       reduce to a sliver. */
   fit?: "cover" | "contain";
+  /** Puts this capture on the laptop screen of the product visual, overriding
+      the widest-desktop rule — for a brief whose key screen isn't its widest
+      capture. */
+  lead?: boolean;
 };
 
 export type CaseStudyDetail = {
@@ -56,12 +60,18 @@ export type CaseStudyDetail = {
 
 const shots = (
   folder: string,
-  files: [file: string, alt: string, fit?: DetailScreenshot["fit"]][],
+  files: [
+    file: string,
+    alt: string,
+    fit?: DetailScreenshot["fit"],
+    lead?: boolean,
+  ][],
 ): DetailScreenshot[] =>
-  files.map(([file, alt, fit]) => ({
+  files.map(([file, alt, fit, lead]) => ({
     src: `/case-studies/optimized/${folder}/${file}`,
     alt,
     fit,
+    lead,
   }));
 
 export const CASE_STUDY_DETAILS: CaseStudyDetail[] = [
@@ -1758,7 +1768,28 @@ export const CASE_STUDY_DETAILS: CaseStudyDetail[] = [
       "Surfaced smart-money and whale-transaction signals not visible through standard retail trading tools.",
       "Converted complex technical analysis into a plain-language conversational interface, removing the expertise barrier to using it.",
     ],
-    screenshots: [],
+    screenshots: shots("ai trading assistant", [
+      [
+        "desktop.png",
+        "BTC/USD workspace with a detected Head and Shoulders pattern, signals summary, derivatives pulse, and smart money flow",
+        "cover",
+        true,
+      ],
+      [
+        "desktop-2.png",
+        "Candlestick view splitting actual price from predicted price, with detected and predicted pattern cards beneath",
+      ],
+      [
+        "ai trading assistant.png",
+        "Token picker listing blue chips, trending tokens, and top mindshare assets to scan",
+        "contain",
+      ],
+      [
+        "mobile.png",
+        "Mobile launch screen showing bullish, neutral, and bearish read-outs on a tracked asset",
+        "contain",
+      ],
+    ]),
   },
 
   /* ------------------------------------------------------------ 7.18 */
@@ -2036,7 +2067,22 @@ export const CASE_STUDY_DETAILS: CaseStudyDetail[] = [
       "Delivered AI-explained price moves with proprietary Bullishness Scores for real-time market awareness.",
       "Made all seven tools available through both a web app and API/SDK for external integration.",
     ],
-    screenshots: [],
+    screenshots: shots("Crypto ai hub", [
+      [
+        "desktop.png",
+        "Hub dashboard combining AI signals, Web3 news, market gauges, and the Web3 chatbot prompt bar",
+      ],
+      [
+        "mobile-1.png",
+        "Mobile hub with AI signals, fear and greed, stablecoin flows, and market dominance",
+        "contain",
+      ],
+      [
+        "mobile-2.png",
+        "AI chat mode picker listing the seven tools, from trading assistant to smart-contract auditor",
+        "contain",
+      ],
+    ]),
   },
 
   /* ------------------------------------------------------------ 7.25 */
@@ -2118,7 +2164,17 @@ export const CASE_STUDY_DETAILS: CaseStudyDetail[] = [
       "Delivered systematic risk-of-bias quality checks for every included study.",
       "Supported data synthesis and statistical meta-analysis across included studies.",
     ],
-    screenshots: [],
+    screenshots: shots("systematic review platform", [
+      [
+        "Dashboard_Projects 1.png",
+        "Project dashboard listing internal and external systematic reviews with their assigned roles and publication state",
+      ],
+      [
+        "Living Evidence.png",
+        "Living evidence synthesis site with searchable review projects, their systematic review questions, and the continuous-update method",
+        "contain",
+      ],
+    ]),
   },
 
   /* ------------------------------------------------------------ 7.26 */

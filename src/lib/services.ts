@@ -6,6 +6,8 @@
 
 export type Service = {
   n: string;
+  /** URL segment of the practice page, `/services/[slug]`. */
+  slug: string;
   title: string;
   /** Which side of the business this belongs to. */
   group: "tech" | "gbs";
@@ -21,6 +23,7 @@ export const SERVICES: Service[] = [
   /* ----------------------- Technology & Engineering ---------------------- */
   {
     n: "01",
+    slug: "ai-automation",
     title: "Artificial Intelligence & Automation",
     group: "tech",
     phase: "Automate",
@@ -36,6 +39,7 @@ export const SERVICES: Service[] = [
   },
   {
     n: "02",
+    slug: "digital-engineering",
     title: "Digital Engineering & Product Development",
     group: "tech",
     phase: "Build",
@@ -51,6 +55,7 @@ export const SERVICES: Service[] = [
   },
   {
     n: "03",
+    slug: "blockchain-fintech",
     title: "Blockchain & FinTech",
     group: "tech",
     phase: "Build",
@@ -66,6 +71,7 @@ export const SERVICES: Service[] = [
   },
   {
     n: "04",
+    slug: "immersive-technologies",
     title: "Immersive Technologies",
     group: "tech",
     phase: "Build",
@@ -81,6 +87,7 @@ export const SERVICES: Service[] = [
   },
   {
     n: "05",
+    slug: "robotics-iot-computer-vision",
     title: "Robotics, IoT & Computer Vision",
     group: "tech",
     phase: "Build",
@@ -96,6 +103,7 @@ export const SERVICES: Service[] = [
   },
   {
     n: "06",
+    slug: "geospatial-ai",
     title: "GIS, Geospatial AI & Satellite Analytics",
     group: "tech",
     phase: "Build",
@@ -111,6 +119,7 @@ export const SERVICES: Service[] = [
   },
   {
     n: "07",
+    slug: "data-business-intelligence",
     title: "Data & Business Intelligence",
     group: "tech",
     phase: "Build",
@@ -126,6 +135,7 @@ export const SERVICES: Service[] = [
   },
   {
     n: "08",
+    slug: "cloud-devops-cybersecurity",
     title: "Cloud, DevOps & Cybersecurity",
     group: "tech",
     phase: "Operate",
@@ -140,6 +150,7 @@ export const SERVICES: Service[] = [
   },
   {
     n: "09",
+    slug: "quality-engineering",
     title: "Quality Engineering & Audits",
     group: "tech",
     phase: "Build",
@@ -155,6 +166,7 @@ export const SERVICES: Service[] = [
   },
   {
     n: "10",
+    slug: "managed-services",
     title: "Managed Services",
     group: "tech",
     phase: "Operate",
@@ -172,6 +184,7 @@ export const SERVICES: Service[] = [
   /* -------------------- Global Business Services (GBS) ------------------- */
   {
     n: "11",
+    slug: "gbs-operating-model",
     title: "Global Business Services & Operating Model Transformation",
     group: "gbs",
     phase: "Operate",
@@ -187,6 +200,7 @@ export const SERVICES: Service[] = [
   },
   {
     n: "12",
+    slug: "gcc-advisory",
     title: "Global Capability Center (GCC) Advisory",
     group: "gbs",
     phase: "Operate",
@@ -202,6 +216,7 @@ export const SERVICES: Service[] = [
   },
   {
     n: "13",
+    slug: "finance-transformation",
     title: "Finance Transformation & Managed Services",
     group: "gbs",
     phase: "Operate",
@@ -217,6 +232,7 @@ export const SERVICES: Service[] = [
   },
   {
     n: "14",
+    slug: "ai-process-transformation",
     title: "AI-Powered Process Transformation",
     group: "gbs",
     phase: "Automate",
@@ -232,6 +248,7 @@ export const SERVICES: Service[] = [
   },
   {
     n: "15",
+    slug: "business-process-excellence",
     title: "Business Process Excellence",
     group: "gbs",
     phase: "Operate",
@@ -247,6 +264,7 @@ export const SERVICES: Service[] = [
   },
   {
     n: "16",
+    slug: "global-workforce",
     title: "Global Workforce & Capability Solutions",
     group: "gbs",
     phase: "Operate",

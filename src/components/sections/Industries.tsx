@@ -145,7 +145,7 @@ function Tile({ industry, index }: { industry: Industry; index: number }) {
               </div>
 
               <Button
-                href="#contact"
+                href={`/industries/${industry.slug}`}
                 variant="paper"
                 size="sm"
                 arrow
@@ -275,13 +275,17 @@ export default function Industries() {
             <h2 className="mt-6 text-h1 text-ink">
               <KineticWords text="Domain depth where" />
               <br />
-              <KineticWords text="it actually matters." delay={0.12} />
+              <KineticWords
+                text="it actually matters."
+                delay={0.12}
+                wordClassName={() => "text-sweep"}
+              />
             </h2>
           </div>
 
           <div className="flex flex-col gap-8">
             <Wipe delay={0.2}>
-              <p className="text-[16px] leading-[1.75] text-ink-500">
+              <p className="text-lg leading-[1.75] text-ink-500">
                 Ten industries, five hundred delivered projects. We speak the
                 regulatory language, the data models, and the operational
                 reality of each.

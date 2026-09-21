@@ -68,13 +68,16 @@ function resolveShot(shot: DetailScreenshot): Shot {
     height,
     ratio: width / height,
     kind: classify(width, height),
+    lead: shot.lead,
   };
 }
 
 function composeMedia(shots: Shot[]): ProjectMedia {
-  /* The widest desktop capture leads; within 10% of each other, the brief's
-     own order decides, since it lists the key screen first. */
+  /* A capture the brief marks `lead` goes first. Otherwise the widest desktop
+     capture leads; within 10% of each other, the brief's own order decides,
+     since it lists the key screen first. */
   const primary =
+    shots.find((s) => s.lead && s.kind !== "mobile") ??
     shots
       .filter((s) => s.kind === "desktop")
       .reduce<Shot | null>(

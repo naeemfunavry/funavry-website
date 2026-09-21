@@ -23,6 +23,7 @@ import {
   Building2,
   Calculator,
   ChevronRight,
+  Cog,
   Cpu,
   GitBranch,
   Glasses,
@@ -219,111 +220,256 @@ const GROUP_LABEL = {
 /* --------------------------------------------------------------------------
    The core's scene
 
-   Three stacked 3D pillars — glossy cylinders, one per delivery phase, seen
-   slightly from above: Operate the blue lid on top, Build the dark foundation
-   at the base. Everything lives in one 200×200 viewBox, which the connection
-   fan still measures against, so the sixteen lines land exactly as before.
+   Four stacked platforms, one per delivery phase — rounded square slabs seen
+   from above and in front, so each top face reads as a rounded rhombus with
+   two walls falling away beneath it: Operate the glass slab on top, Build the
+   dark foundation at the base.
+
+   The viewBox is 200 wide, as it always was, so `buildLinks`' 200-unit scale
+   still holds; it is taller than it is wide because four slabs with walls
+   thick enough to carry a label need the height.
    -------------------------------------------------------------------------- */
 
-type Pillar = {
-  phase: Service["phase"];
+/** The delivery model's phases. Orchestrate is a layer of the model but no
+    practice is filed under it, so it widens this type rather than
+    `Service["phase"]` — no lines fan into it. */
+type DeliveryPhase = Service["phase"] | "Orchestrate";
+
+const VB_H = 248;
+
+/** Shared slab geometry, in viewBox units: the top face's half-width `a` and
+    half-depth `b` (the perspective squash), the wall thickness `t`, and `k`,
+    how far along each edge a corner's rounding runs.
+
+    The pitch is tuned to the labels. Below the top slab, what shows of each
+    one is a chevron — the band between the slab above's base and its own —
+    and that chevron is exactly `pitch` tall everywhere, dipping at the centre.
+    A horizontal label only fits if `pitch` clears its height plus the slope
+    across half its width, which is what 52 buys at every breakpoint. */
+const SLAB = { a: 84, b: 26, t: 22, k: 0.24, pitch: 52 } as const;
+
+/** The rise of the face's edges, for the grid patterns that follow them. */
+const SLAB_SLOPE = SLAB.b / SLAB.a;
+
+/** How far out a slab's left and right corners reach. The rounding pulls them
+    in from the rhombus's true vertices to the midpoint of each corner curve —
+    this is where the connection fan lands. */
+const SLAB_EDGE = SLAB.a * (1 - SLAB.k / 2);
+
+/** The plinth under the stack. */
+const PLATE = { cy: 216, a: 96, b: 30 } as const;
+
+type Slab = {
+  phase: DeliveryPhase;
   icon: LucideIcon;
-  /** Cylinder geometry in the 200×200 viewBox: vertical centre, body height,
-      half-width, and the ellipse's vertical radius (the perspective squash). */
+  /** Vertical centre of the top face. */
   cy: number;
-  h: number;
-  rx: number;
-  ry: number;
-  /** Body gradient across the cylinder: dark edge, lit centre — the shading
-      that makes a flat rect read as round. */
-  edge: string;
-  mid: string;
-  /** The top lid — lighter, because it faces the light. There is no base
-      colour: the front lip keeps its curve but is painted in the body's own
-      gradient, so the bottom rounds off without a tonal step. */
-  lid: string;
-  /** The bright amber pillar takes dark labels; the blue and navy take white. */
-  darkLabel?: boolean;
-  caption: [string, string];
+  /** Top face, back to front. */
+  face: [string, string];
+  /** Walls across the front, left to right. The two faces meet at the front
+      corner, so the middle pair is where the tone steps. */
+  wall: [string, string, string, string];
+  /** Operate is glass: translucent, rimmed bright, glowing rather than cast. */
+  glass?: boolean;
+  /** Build carries a faint technical grid over its faces. */
+  grid?: boolean;
+  /** Only the top slab has the face depth to stack its icon above its name. */
+  iconAbove?: boolean;
+  /** Label and caption colours — glass and amber take dark type. */
+  tone: string;
+  capTone: string;
+  caption: string;
 };
 
-/** The three delivery pillars, top to base — Operate, Automate, Build. Colours
-    follow the stacked-pillars reference: a bright azure lid, an amber middle,
-    and a dark navy foundation, all within the brand palette. */
-const PILLARS: Pillar[] = [
+const LIGHT_TYPE = "[text-shadow:0_1px_3px_rgba(0,0,0,0.3)]";
+
+/** The four slabs, top to base — Operate, Orchestrate, Automate, Build. */
+const SLABS: Slab[] = [
   {
     phase: "Operate",
     icon: Users,
-    cy: 40,
-    h: 48,
-    rx: 80,
-    ry: 13,
-    edge: "#2A6BA3",
-    mid: "#4FA0D6",
-    lid: "#86C4EE",
-    caption: ["Managed services", "GCC · Excellence"],
+    cy: 34,
+    face: ["#F3F9FF", "#A6D3F6"],
+    wall: ["#A2CFF3", "#80B9EB", "#62A2E0", "#4B8BD2"],
+    glass: true,
+    iconAbove: true,
+    tone: "text-[#154A82] [text-shadow:0_1px_2px_rgba(255,255,255,0.7)]",
+    capTone: "text-[#1D5089] [text-shadow:0_1px_2px_rgba(255,255,255,0.7)]",
+    caption: "Managed services · GCC enablement",
+  },
+  {
+    phase: "Orchestrate",
+    icon: Network,
+    cy: 34 + SLAB.pitch,
+    face: ["#4F8DE2", "#2A66C6"],
+    wall: ["#2D68C2", "#1F54A9", "#17428C", "#10336F"],
+    tone: cn("text-white", LIGHT_TYPE),
+    capTone: cn("text-white/90", LIGHT_TYPE),
+    caption: "AI agents · APIs · Human oversight",
   },
   {
     phase: "Automate",
-    icon: BrainCircuit,
-    cy: 100,
-    h: 48,
-    rx: 80,
-    ry: 13,
-    edge: "#BC7207",
-    mid: "#F2A22C",
-    lid: "#FBC163",
-    darkLabel: true,
-    caption: ["AI agents · Automation", "Process optimization"],
+    icon: Cog,
+    cy: 34 + SLAB.pitch * 2,
+    face: ["#FFE08C", "#F9BC3E"],
+    wall: ["#F8B535", "#EFA123", "#DB8A12", "#C2760C"],
+    tone: "text-ink-900",
+    capTone: "text-ink-900/85",
+    caption: "Automation · Document intelligence",
   },
   {
     phase: "Build",
     icon: Boxes,
-    cy: 160,
-    h: 48,
-    rx: 80,
-    ry: 13,
-    edge: "#0F151D",
-    mid: "#2C3A48",
-    lid: "#3B4A58",
-    caption: ["AI · Engineering · Data", "Cloud · Security"],
+    cy: 34 + SLAB.pitch * 3,
+    face: ["#475566", "#2B3743"],
+    wall: ["#2C3743", "#222C37", "#19212A", "#11171E"],
+    grid: true,
+    tone: cn("text-white", LIGHT_TYPE),
+    capTone: cn("text-white/85", LIGHT_TYPE),
+    caption: "Platforms · AI · Data · Cloud",
   },
 ];
 
-/** The fuller copy a pillar reveals on hover — a one-line framing plus the
-    practices that sit in that phase, drawn from the deck's delivery model. */
-const PILLAR_DETAIL: Record<
-  Service["phase"],
-  { blurb: string; items: string[] }
-> = {
-  Build: {
-    blurb: "Engineer the platform.",
-    items: [
-      "AI Solutions",
-      "Digital Engineering",
-      "Data & Business Intelligence",
-      "Cloud & Cybersecurity",
-    ],
-  },
-  Automate: {
-    blurb: "Put AI to work.",
-    items: [
-      "AI Agents & Assistants",
-      "Intelligent Automation",
-      "Document Intelligence",
-      "Process Optimization",
-    ],
-  },
-  Operate: {
-    blurb: "Run it at scale.",
-    items: [
-      "Managed Services",
-      "GCC Enablement",
-      "Workforce Solutions",
-      "Operational Excellence",
-    ],
-  },
-};
+/** Where a slab's label row is centred. Lower slabs show only a chevron, so
+    their label sits just under the slab above; the top slab's sits a touch
+    lower on its face, so the icon hung above the name stays on the glass. */
+const labelY = (s: Slab) => s.cy + (s.iconAbove ? 7 : 5);
+
+type Pt = readonly [number, number];
+const lerp = (p: Pt, q: Pt, t: number): Pt => [
+  p[0] + (q[0] - p[0]) * t,
+  p[1] + (q[1] - p[1]) * t,
+];
+const mid = (p: Pt, q: Pt) => lerp(p, q, 0.5);
+const pt = (p: Pt) => `${p[0].toFixed(2)} ${p[1].toFixed(2)}`;
+
+/** A rhombus's vertices — left, back, right, front — centred on (100, cy). */
+const rhombus = (cy: number, a: number, b: number): [Pt, Pt, Pt, Pt] => [
+  [100 - a, cy],
+  [100, cy - b],
+  [100 + a, cy],
+  [100, cy + b],
+];
+
+/** A rounded rhombus: each corner cut `k` of the way along both edges and
+    bridged with a quadratic through the vertex. */
+function facePath(cy: number, a: number = SLAB.a, b: number = SLAB.b) {
+  const v = rhombus(cy, a, b);
+  return (
+    v
+      .map((V, i) => {
+        const cin = lerp(V, v[(i + 3) % 4], SLAB.k);
+        const cout = lerp(V, v[(i + 1) % 4], SLAB.k);
+        return `${i ? "L" : "M"}${pt(cin)} Q${pt(V)} ${pt(cout)}`;
+      })
+      .join(" ") + " Z"
+  );
+}
+
+/** A slab's whole outline — the face's back half, down the side corners, the
+    base's front half — as one path. The side corners are split at their
+    midpoints (de Casteljau at ½), so the outline leaves the face at its widest
+    point and picks the base up at the same x, which is what makes the extrusion
+    read as solid rather than as two shapes and a band. */
+function slabSegments(cy: number) {
+  const { a, b, t, k } = SLAB;
+  const [L, B, R, F] = rhombus(cy, a, b);
+  const [L2, , R2, F2] = rhombus(cy + t, a, b);
+
+  const lIn = lerp(L, F, k);
+  const lOut = lerp(L, B, k);
+  const lMid = mid(mid(lIn, L), mid(L, lOut));
+  const rIn = lerp(R, B, k);
+  const rOut = lerp(R, F, k);
+  const rMid = mid(mid(rIn, R), mid(R, rOut));
+
+  const r2Out = lerp(R2, F2, k);
+  const l2In = lerp(L2, F2, k);
+  const down = (p: Pt): Pt => [p[0], p[1] + t];
+
+  return [
+    `M${pt(lMid)}`,
+    `Q${pt(mid(L, lOut))} ${pt(lOut)}`,
+    `L${pt(lerp(B, L, k))}`,
+    `Q${pt(B)} ${pt(lerp(B, R, k))}`,
+    `L${pt(rIn)}`,
+    `Q${pt(mid(rIn, R))} ${pt(rMid)}`,
+    `L${pt(down(rMid))}`,
+    `Q${pt(mid(R2, r2Out))} ${pt(r2Out)}`,
+    `L${pt(lerp(F2, R2, k))}`,
+    `Q${pt(F2)} ${pt(lerp(F2, L2, k))}`,
+    `L${pt(l2In)}`,
+    `Q${pt(mid(l2In, L2))} ${pt(down(lMid))}`,
+    "Z",
+  ];
+}
+
+const slabPath = (cy: number) => slabSegments(cy).join(" ");
+
+/** Every path the scene draws, built once rather than on each hover. */
+const SLAB_SHAPES = Object.fromEntries(
+  SLABS.map((s) => [
+    s.phase,
+    {
+      outline: slabPath(s.cy),
+      face: facePath(s.cy),
+      shadow: slabPath(s.cy + 6),
+      sheen: facePath(s.cy - 2, SLAB.a - 12, SLAB.b - 5),
+      /* The face's back half alone: side corner, over the back, side corner. */
+      rim: slabSegments(s.cy).slice(0, 6).join(" "),
+    },
+  ]),
+) as Record<
+  DeliveryPhase,
+  { outline: string; face: string; shadow: string; sheen: string; rim: string }
+>;
+
+const PLATE_PATH = facePath(PLATE.cy, PLATE.a, PLATE.b);
+
+const GRID_PLANES = [
+  ["top", `matrix(1 ${SLAB_SLOPE} -1 ${SLAB_SLOPE} 0 0)`],
+  ["left", `matrix(1 ${SLAB_SLOPE} 0 1 0 0)`],
+  ["right", `matrix(1 ${-SLAB_SLOPE} 0 1 0 0)`],
+] as const;
+
+/** The fuller copy a pillar reveals on hover — a one-line framing plus what
+    sits in that phase, drawn from the deck's delivery model. */
+const PILLAR_DETAIL: Record<DeliveryPhase, { blurb: string; items: string[] }> =
+  {
+    Build: {
+      blurb: "Create the foundation.",
+      items: [
+        "Platforms",
+        "Enterprise Applications",
+        "AI Solutions",
+        "Data",
+        "Cloud",
+      ],
+    },
+    Automate: {
+      blurb: "Embed AI in process.",
+      items: ["Intelligent Automation", "Document Intelligence", "Analytics"],
+    },
+    Orchestrate: {
+      blurb: "Connect end to end.",
+      items: [
+        "AI Agents",
+        "Enterprise Knowledge",
+        "APIs",
+        "Business Rules",
+        "Human Oversight",
+      ],
+    },
+    Operate: {
+      blurb: "Run, govern, scale.",
+      items: [
+        "Managed Services",
+        "Dedicated Teams",
+        "GCC Enablement",
+        "Global Delivery",
+      ],
+    },
+  };
 
 /** What the delivery chain is for — the deck's four business outcomes (slide
     10), shown as the card beneath the shorter GBS column. */
@@ -334,10 +480,9 @@ const OUTCOMES = [
   { title: "Scale", desc: "Grows without friction" },
 ] as const;
 
-/** How far in from a pillar's top and bottom edges the fan may land, as a
-    fraction of the body height. Keeps the outermost lines clear of the lid and
-    base curves, where the silhouette is still turning — a line arriving level
-    with `topY` meets the lid ellipse at its widest and reads as touching air. */
+/** How far in from the top and bottom of a slab's side corner the fan may land,
+    as a fraction of the wall thickness. Keeps the outermost lines off the
+    face's rim and the base's edge, where the outline is still turning. */
 const PILLAR_INSET = 0.22;
 
 const SPRING = {
@@ -441,10 +586,9 @@ function buildLinks(
     }
 
     for (const [phaseName, bucket] of byPhase) {
-      const pillar = PILLARS.find((candidate) => candidate.phase === phaseName);
-      if (!pillar) continue;
+      const slab = SLABS.find((candidate) => candidate.phase === phaseName);
+      if (!slab) continue;
       const last = Math.max(bucket.length - 1, 1);
-      const top = pillar.cy - pillar.h / 2;
 
       bucket.forEach((service, i) => {
         const el = cards.get(service.n);
@@ -455,16 +599,16 @@ function buildLinks(
         const x0 = (side === -1 ? box.right : box.left) - wrap.left;
         const y0 = box.top + box.height / 2 - wrap.top;
 
-        // Land on the face of this phase's pillar, on the side the card lives
-        // on, spread down the body. A lone card takes the middle of the face
-        // rather than one end of it, so a group of one looks aimed rather than
-        // parked.
+        // Land on this phase's slab at the corner on the side the card lives
+        // on, spread down the wall there. A lone card takes the middle of the
+        // wall rather than one end of it, so a group of one looks aimed rather
+        // than parked.
         const t = bucket.length === 1 ? 0.5 : i / last;
 
-        const x1 = ox + (100 + side * pillar.rx) * k;
+        const x1 = ox + (100 + side * SLAB_EDGE) * k;
         const y1 =
           oy +
-          (top + pillar.h * (PILLAR_INSET + t * (1 - 2 * PILLAR_INSET))) * k;
+          (slab.cy + SLAB.t * (PILLAR_INSET + t * (1 - 2 * PILLAR_INSET))) * k;
 
         // Where the line makes its turn. Staggered per card so that sixteen
         // vertical runs don't pile onto the same few columns — with a fixed
@@ -482,10 +626,8 @@ function buildLinks(
     }
   }
 
-  // All three pillars present the same side face, so one x per side serves the
-  // whole fan. Taken as the widest rather than PILLARS[0].rx, so a future pillar
-  // with a different width can't quietly leave the gradients aiming short.
-  const faceRx = Math.max(...PILLARS.map((p) => p.rx));
+  // All four slabs share one footprint, so one x per side serves the whole fan.
+  const faceRx = SLAB_EDGE;
 
   return {
     w: wrap.width,
@@ -634,7 +776,7 @@ const AICore = ({
   const [hot, setHot] = useState(false);
   /** Which pillar the pointer is over — drives the fade-in details popup. Kept
       local so it never touches the card/fan logic the section owns. */
-  const [hovered, setHovered] = useState<Service["phase"] | null>(null);
+  const [hovered, setHovered] = useState<DeliveryPhase | null>(null);
   const accent = active ? HUE[active] : null;
 
   /** A pillar lights when the pointer is on it, or when a side card in its
@@ -652,7 +794,7 @@ const AICore = ({
         setHot(false);
         setHovered(null);
       }}
-      className="relative aspect-square w-[310px] shrink-0 sm:w-[400px] lg:w-[350px] xl:w-[480px]"
+      className="relative aspect-[200/248] w-[310px] shrink-0 sm:w-[400px] lg:w-[350px] xl:w-[480px]"
     >
       {/* Ambient halo — warms toward the hovered pillar's hue, or the hovered
           half of the network. Blurred past its own edge, so it reads as light
@@ -678,256 +820,278 @@ const AICore = ({
         transition={{ duration: 0.5, ease: EXPO }}
       >
         <div className="absolute inset-0">
-          {/* ---- The pillars. ----
-              Each is a glossy cylinder: a body rect shaded edge-dark to
-              centre-lit, capped by a lighter top-lid ellipse and a darker
-              rounded base. Painted bottom-up so every pillar and the soft
-              shadow it casts land on top of the one beneath it. */}
+          {/* ---- The slabs. ----
+              Each is an outline painted in its wall gradient with the top face
+              laid over it. Painted bottom-up, so every slab — and the soft
+              shadow it casts — lands on top of the one beneath it. */}
           <svg
             aria-hidden
-            viewBox="0 0 200 200"
+            viewBox={`0 0 200 ${VB_H}`}
             className="absolute inset-0 h-full w-full"
           >
             <defs>
-              {PILLARS.map((p) => (
-                <linearGradient
-                  key={p.phase}
-                  id={`pil-body-${p.phase}`}
-                  gradientUnits="userSpaceOnUse"
-                  x1={100 - p.rx}
-                  y1="0"
-                  x2={100 + p.rx}
-                  y2="0"
-                >
-                  <stop offset="0%" stopColor={p.edge} />
-                  <stop offset="18%" stopColor={p.mid} />
-                  <stop offset="42%" stopColor={p.lid} />
-                  <stop offset="64%" stopColor={p.mid} />
-                  <stop offset="100%" stopColor={p.edge} />
-                </linearGradient>
+              {SLABS.map((s) => (
+                <Fragment key={s.phase}>
+                  <linearGradient
+                    id={`slab-face-${s.phase}`}
+                    gradientUnits="userSpaceOnUse"
+                    x1="0"
+                    y1={s.cy - SLAB.b}
+                    x2="0"
+                    y2={s.cy + SLAB.b}
+                  >
+                    <stop offset="0%" stopColor={s.face[0]} />
+                    <stop offset="100%" stopColor={s.face[1]} />
+                  </linearGradient>
+                  <linearGradient
+                    id={`slab-wall-${s.phase}`}
+                    gradientUnits="userSpaceOnUse"
+                    x1={100 - SLAB.a}
+                    y1="0"
+                    x2={100 + SLAB.a}
+                    y2="0"
+                  >
+                    <stop offset="0%" stopColor={s.wall[0]} />
+                    <stop offset="47%" stopColor={s.wall[1]} />
+                    <stop offset="53%" stopColor={s.wall[2]} />
+                    <stop offset="100%" stopColor={s.wall[3]} />
+                  </linearGradient>
+                </Fragment>
               ))}
-              <radialGradient id="pil-shadow">
-                <stop offset="0%" stopColor="#0A1017" stopOpacity="0.45" />
-                <stop offset="70%" stopColor="#0A1017" stopOpacity="0.12" />
-                <stop offset="100%" stopColor="#0A1017" stopOpacity="0" />
-              </radialGradient>
-              <radialGradient id="pil-ground">
-                <stop offset="30%" stopColor="#0A1017" stopOpacity="0.22" />
-                <stop offset="100%" stopColor="#0A1017" stopOpacity="0" />
-              </radialGradient>
-              <linearGradient id="pil-sheen" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.5" />
+              {/* Walls darken toward their base. The face covers the top of
+                  the outline's box, so only the lower band ever shows this. */}
+              <linearGradient id="slab-wall-shade" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="55%" stopColor="#0A1017" stopOpacity="0" />
+                <stop offset="100%" stopColor="#0A1017" stopOpacity="0.22" />
+              </linearGradient>
+              <linearGradient id="slab-glass-sheen" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
                 <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
               </linearGradient>
+              <linearGradient id="slab-plate" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
+                <stop offset="100%" stopColor="#D9E4EE" stopOpacity="0.75" />
+              </linearGradient>
+              <radialGradient id="slab-ground">
+                <stop offset="30%" stopColor="#0A1017" stopOpacity="0.16" />
+                <stop offset="100%" stopColor="#0A1017" stopOpacity="0" />
+              </radialGradient>
+              <filter
+                id="slab-soft"
+                x="-20%"
+                y="-50%"
+                width="140%"
+                height="200%"
+              >
+                <feGaussianBlur stdDeviation="3" />
+              </filter>
+              <filter
+                id="slab-glow"
+                x="-25%"
+                y="-60%"
+                width="150%"
+                height="220%"
+              >
+                <feGaussianBlur stdDeviation="5" />
+              </filter>
+              {/* Build's technical grid, one pattern per plane, so the lines
+                  run with each face's edges instead of across them. */}
+              {GRID_PLANES.map(([plane, transform]) => (
+                <pattern
+                  key={plane}
+                  id={`slab-grid-${plane}`}
+                  width="8"
+                  height="8"
+                  patternUnits="userSpaceOnUse"
+                  patternTransform={transform}
+                >
+                  <path
+                    d="M8 0H0V8"
+                    fill="none"
+                    stroke="#FFFFFF"
+                    strokeOpacity="0.08"
+                    strokeWidth="0.5"
+                  />
+                </pattern>
+              ))}
+              <clipPath id="slab-half-left">
+                <rect x="0" y="0" width="100" height={VB_H} />
+              </clipPath>
+              <clipPath id="slab-half-right">
+                <rect x="100" y="0" width="100" height={VB_H} />
+              </clipPath>
             </defs>
 
-            {/* Ground shadow under the whole stack. */}
-            <ellipse cx="100" cy="194" rx="86" ry="9" fill="url(#pil-ground)" />
+            {/* The plinth the stack stands on, and its shadow on the page. */}
+            <ellipse
+              cx="100"
+              cy={PLATE.cy + 22}
+              rx="98"
+              ry="10"
+              fill="url(#slab-ground)"
+            />
+            <path
+              d={PLATE_PATH}
+              fill="url(#slab-plate)"
+              stroke="#FFFFFF"
+              strokeWidth="0.8"
+            />
 
-            {[...PILLARS].reverse().map((p) => {
-              const halfH = p.h / 2;
-              const topY = p.cy - halfH;
-              const botY = p.cy + halfH;
-              const lit = litPhase === p.phase;
+            {[...SLABS].reverse().map((s) => {
+              const shape = SLAB_SHAPES[s.phase];
+              const lit = litPhase === s.phase;
               const dim = litPhase !== null && !lit;
               return (
                 <motion.g
-                  key={p.phase}
+                  key={s.phase}
                   initial={false}
                   animate={{ opacity: dim ? 0.5 : 1 }}
                   transition={{ duration: 0.35, ease: EXPO }}
                 >
-                  {/* Cast shadow onto the pillar below. */}
-                  <ellipse
-                    cx="100"
-                    cy={botY + 5}
-                    rx={p.rx * 0.86}
-                    ry="7"
-                    fill="url(#pil-shadow)"
+                  {/* Cast shadow onto the slab below. */}
+                  <path
+                    d={shape.shadow}
+                    fill={s.glass ? "#2A6FB8" : "#0A1017"}
+                    opacity={s.glass ? 0.22 : 0.3}
+                    filter="url(#slab-soft)"
                   />
-                  {/* Body. */}
-                  <rect
-                    x={100 - p.rx}
-                    y={topY}
-                    width={p.rx * 2}
-                    height={p.h}
-                    fill={`url(#pil-body-${p.phase})`}
-                  />
-                  {/* Rounded base (front lip), in the body's OWN gradient
-                      rather than a darker tone of its own — the curve stays,
-                      the shading that made it read as a separate 3D lip goes.
-
-                      A flat fill can't do this job: the gradient runs bright at
-                      the cylinder's centre and dark at its edges, so any single
-                      colour is wrong somewhere along the lip. Filling with the
-                      same paint makes the join invisible at every x, because
-                      `pil-body-*` is `userSpaceOnUse` across exactly this
-                      ellipse's own span. */}
-                  <ellipse
-                    cx="100"
-                    cy={botY}
-                    rx={p.rx}
-                    ry={p.ry}
-                    fill={`url(#pil-body-${p.phase})`}
-                  />
-                  {/* Top sheen. */}
-                  <rect
-                    x={100 - p.rx}
-                    y={topY}
-                    width={p.rx * 2}
-                    height={p.h * 0.5}
-                    fill="url(#pil-sheen)"
-                    opacity="0.45"
-                  />
-                  {/* Top lid. */}
-                  <ellipse
-                    cx="100"
-                    cy={topY}
-                    rx={p.rx}
-                    ry={p.ry}
-                    fill={p.lid}
-                  />
-                  <ellipse
-                    cx="100"
-                    cy={topY}
-                    rx={p.rx}
-                    ry={p.ry}
-                    fill="none"
-                    stroke="#FFFFFF"
-                    strokeOpacity="0.3"
-                    strokeWidth="0.6"
-                  />
-                  {/* "This one's lit" wash — over the lip and the lid as well
-                      as the body, so the whole cylinder brightens as one
-                      object. It used to cover the body rect alone, which was
-                      invisible while the lip carried its own darker tone but
-                      shows plainly now the lip is painted in the body's
-                      gradient: on hover the body lifted 10% and the lip didn't,
-                      putting back the exact tonal step at the join that
-                      matching the fills removed.
-
-                      The opacity sits on the GROUP, not on each shape. These
-                      three overlap by `ry` at both joins, and per-shape alpha
-                      would compound there — two washes over one another read as
-                      20%, drawing a bright band around each join instead of
-                      lighting the cylinder evenly. A group is composited first
-                      and faded once. */}
-                  <motion.g
+                  {s.glass && (
+                    <path
+                      d={shape.outline}
+                      fill="#7CC0F5"
+                      opacity="0.5"
+                      filter="url(#slab-glow)"
+                    />
+                  )}
+                  {/* Opacity on the group, not on each shape: the outline and
+                      face overlap, and per-shape alpha would compound there. */}
+                  <g opacity={s.glass ? 0.9 : 1}>
+                    <path
+                      d={shape.outline}
+                      fill={`url(#slab-wall-${s.phase})`}
+                    />
+                    <path d={shape.outline} fill="url(#slab-wall-shade)" />
+                    {s.grid && (
+                      <>
+                        <path
+                          d={shape.outline}
+                          fill="url(#slab-grid-left)"
+                          clipPath="url(#slab-half-left)"
+                        />
+                        <path
+                          d={shape.outline}
+                          fill="url(#slab-grid-right)"
+                          clipPath="url(#slab-half-right)"
+                        />
+                      </>
+                    )}
+                    <path d={shape.face} fill={`url(#slab-face-${s.phase})`} />
+                    {s.grid && (
+                      <path d={shape.face} fill="url(#slab-grid-top)" />
+                    )}
+                    {s.glass && (
+                      <path d={shape.sheen} fill="url(#slab-glass-sheen)" />
+                    )}
+                    {/* Rim light where the face turns into the walls. Glass
+                        gets its bright rim along the back only: its caption
+                        runs across the front edge, and a white line through
+                        the type reads as a strike-through. */}
+                    <path
+                      d={s.glass ? shape.rim : shape.face}
+                      fill="none"
+                      stroke="#FFFFFF"
+                      strokeOpacity={s.glass ? 0.95 : 0.3}
+                      strokeWidth={s.glass ? 1 : 0.6}
+                    />
+                  </g>
+                  {/* "This one's lit" wash — one outline path, so the whole
+                      slab brightens evenly with no seam at the face. */}
+                  <motion.path
+                    d={shape.outline}
+                    fill="#FFFFFF"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: lit ? 0.1 : 0 }}
                     transition={{ duration: 0.35, ease: EXPO }}
-                  >
-                    <ellipse
-                      cx="100"
-                      cy={botY}
-                      rx={p.rx}
-                      ry={p.ry}
-                      fill="#FFFFFF"
-                    />
-                    <rect
-                      x={100 - p.rx}
-                      y={topY}
-                      width={p.rx * 2}
-                      height={p.h}
-                      fill="#FFFFFF"
-                    />
-                    <ellipse
-                      cx="100"
-                      cy={topY}
-                      rx={p.rx}
-                      ry={p.ry}
-                      fill="#FFFFFF"
-                    />
-                  </motion.g>
+                  />
                 </motion.g>
               );
             })}
           </svg>
 
-          {/* ---- Icon + label per pillar. ---- Icon left, phase and caption
-              to the right, centred on the pillar body — the layout the
-              reference uses. */}
-          {PILLARS.map((p) => {
-            const Icon = p.icon;
-            const lit = litPhase === p.phase;
-            const labelColor = p.darkLabel ? "text-ink-900" : "text-white";
-            const capColor = p.darkLabel ? "text-ink-900" : "text-white/95";
+          {/* ---- Icon + label per slab. ---- */}
+          {SLABS.map((s) => {
+            const Icon = s.icon;
+            const lit = litPhase === s.phase;
             return (
               <motion.div
-                key={p.phase}
+                key={s.phase}
                 aria-hidden
-                /* Two layouts, because the pillar is two very different heights.
+                /* Two layouts, as before.
 
                    sm and up (`block`): only the icon+name row is in flow, so
-                   `-translate-y-1/2` centres THAT on the pillar and the caption
-                   hangs out of flow beneath it. Centring the row and the caption
-                   as one block — what this used to do — let the caption's height
-                   lever the name up off the middle.
+                   `-translate-y-1/2` centres THAT at `labelY` and the caption
+                   hangs out of flow beneath it (and, on the top slab, the icon
+                   hangs above it).
 
-                   Below sm (`flex flex-col`): the caption comes back into flow
-                   and the whole group is centred again. It has to be: the core
-                   is 310px there, so the body is only ~74px tall and a caption
-                   hung beneath the row would hang off the bottom of the pillar
-                   and onto the section's white background — where white caption
-                   text is simply invisible. In flow, the group measures ~55px
-                   and sits inside the body with room to spare. */
-                className="pointer-events-none absolute left-1/2 flex w-[88%] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 text-center sm:block sm:gap-0 [text-shadow:0_1px_4px_rgba(0,0,0,0.35)]"
-                style={{ top: `${(p.cy / 200) * 100}%` }}
+                   Below sm (`flex flex-col`): everything comes back into flow
+                   and the whole group is centred, because the core is 310px
+                   there and a hung caption would drop off its slab. */
+                className="pointer-events-none absolute left-1/2 flex w-[88%] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1 text-center sm:block sm:gap-0"
+                style={{ top: `${(labelY(s) / VB_H) * 100}%` }}
                 initial={false}
                 animate={{ opacity: litPhase && !lit ? 0.7 : 1 }}
                 transition={{ duration: 0.35, ease: EXPO }}
               >
-                <div className="flex items-center justify-center gap-2">
+                <div
+                  className={cn(
+                    "relative flex items-center justify-center",
+                    s.iconAbove ? "flex-col gap-1 sm:block" : "gap-2",
+                  )}
+                >
                   <Icon
                     className={cn(
-                      "h-6 w-6 flex-none sm:h-7 sm:w-7 lg:h-8 lg:w-8 [filter:drop-shadow(0_1px_2px_rgba(0,0,0,0.35))]",
-                      labelColor,
+                      "h-5 w-5 flex-none sm:h-6 sm:w-6 lg:h-7 lg:w-7",
+                      s.iconAbove &&
+                        "sm:absolute sm:bottom-full sm:left-1/2 sm:mb-1 sm:-translate-x-1/2",
+                      s.tone,
                     )}
                     strokeWidth={1.8}
                   />
                   <p
                     className={cn(
-                      "text-[16px] font-extrabold uppercase tracking-[0.08em] sm:text-[19px] lg:text-[23px]",
-                      labelColor,
+                      "text-[15px] font-bold uppercase tracking-[0.08em] sm:text-[18px] lg:text-[20px] xl:text-[22px]",
+                      s.tone,
                     )}
                   >
-                    {p.phase}
+                    {s.phase}
                   </p>
                 </div>
-                {/* In flow on mobile (see above); out of flow from sm up, hung
-                    directly under the row so its height stops counting toward
-                    what `-translate-y-1/2` is centring. */}
                 <p
                   className={cn(
-                    "text-[9.5px] font-medium leading-[1.4] sm:absolute sm:inset-x-0 sm:top-full sm:mt-1 sm:text-[10.5px] lg:text-[12.5px]",
-                    capColor,
+                    "text-[9.5px] font-medium leading-[1.4] sm:absolute sm:inset-x-0 sm:top-full sm:mt-1 sm:text-[10.5px] lg:text-[11px] xl:text-[12px]",
+                    s.capTone,
                   )}
                 >
-                  {p.caption[0]}
-                  <br />
-                  {p.caption[1]}
+                  {s.caption}
                 </p>
               </motion.div>
             );
           })}
 
-          {/* ---- Hover targets. ---- Transparent copies of each body, above
-              everything, so hover lands on the true pillar and rides the same
-              float wrapper as the graphic. */}
+          {/* ---- Hover targets. ---- Transparent copies of each outline, above
+              everything, painted in the same order as the art so an overlap
+              goes to the slab that is visibly in front. */}
           <svg
-            viewBox="0 0 200 200"
+            viewBox={`0 0 200 ${VB_H}`}
             className="pointer-events-none absolute inset-0 h-full w-full"
           >
-            {PILLARS.map((p) => (
-              <rect
-                key={p.phase}
-                x={100 - p.rx}
-                y={p.cy - p.h / 2 - p.ry}
-                width={p.rx * 2}
-                height={p.h + p.ry * 2}
+            {[...SLABS].reverse().map((s) => (
+              <path
+                key={s.phase}
+                d={SLAB_SHAPES[s.phase].outline}
                 fill="transparent"
                 className="pointer-events-auto cursor-pointer"
-                onMouseEnter={() => setHovered(p.phase)}
+                onMouseEnter={() => setHovered(s.phase)}
               />
             ))}
           </svg>
@@ -965,7 +1129,7 @@ const AICore = ({
             )}
             style={
               {
-                "--pop-y": `${(PILLARS.find((p) => p.phase === hovered)!.cy / 200) * 100}%`,
+                "--pop-y": `${(labelY(SLABS.find((s) => s.phase === hovered)!) / VB_H) * 100}%`,
               } as React.CSSProperties
             }
           >
@@ -976,49 +1140,50 @@ const AICore = ({
               transition={{ duration: 0.3, ease: EXPO }}
               className="relative overflow-hidden rounded-2xl border border-line bg-white/95 p-4 shadow-[0_26px_60px_-28px_rgba(20,30,50,0.5)] backdrop-blur-xl"
             >
-            {(() => {
-              const pop = {
-                Build: "#2E3B4A",
-                Automate: "#B87407",
-                Operate: "#2C74AE",
-              }[hovered];
-              const detail = PILLAR_DETAIL[hovered];
-              return (
-                <>
-                  <span
-                    aria-hidden
-                    className="absolute inset-x-0 top-0 h-[3px] rounded-t-2xl"
-                    style={{ background: pop }}
-                  />
-                  <div className="flex items-baseline justify-between gap-2">
-                    <h4
-                      className="text-[15px] font-semibold tracking-[-0.02em]"
-                      style={{ color: pop }}
-                    >
-                      {hovered}
-                    </h4>
-                    <span className="font-mono text-[8.5px] uppercase tracking-[0.14em] text-ink-400">
-                      {detail.blurb}
-                    </span>
-                  </div>
-                  <ul className="mt-3 space-y-2">
-                    {detail.items.map((item) => (
-                      <li
-                        key={item}
-                        className="flex items-center gap-2.5 text-[12.5px] text-ink"
+              {(() => {
+                const pop = {
+                  Build: "#2E3B4A",
+                  Automate: "#B87407",
+                  Orchestrate: "#1F5F9E",
+                  Operate: "#2C74AE",
+                }[hovered];
+                const detail = PILLAR_DETAIL[hovered];
+                return (
+                  <>
+                    <span
+                      aria-hidden
+                      className="absolute inset-x-0 top-0 h-[3px] rounded-t-2xl"
+                      style={{ background: pop }}
+                    />
+                    <div className="flex items-baseline justify-between gap-2">
+                      <h4
+                        className="text-[15px] font-semibold tracking-[-0.02em]"
+                        style={{ color: pop }}
                       >
-                        <span
-                          aria-hidden
-                          className="h-1.5 w-1.5 flex-none rounded-full"
-                          style={{ background: pop }}
-                        />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              );
-            })()}
+                        {hovered}
+                      </h4>
+                      <span className="font-mono text-[8.5px] uppercase tracking-[0.14em] text-ink-400">
+                        {detail.blurb}
+                      </span>
+                    </div>
+                    <ul className="mt-3 space-y-2">
+                      {detail.items.map((item) => (
+                        <li
+                          key={item}
+                          className="flex items-center gap-2.5 text-[12.5px] text-ink"
+                        >
+                          <span
+                            aria-hidden
+                            className="h-1.5 w-1.5 flex-none rounded-full"
+                            style={{ background: pop }}
+                          />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                );
+              })()}
             </motion.div>
           </motion.div>
         )}
@@ -1708,14 +1873,14 @@ export default function CapabilitiesOS() {
             <div className="flex items-center gap-3">
               <span aria-hidden className="h-px w-10 flex-none bg-azure" />
               <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-ink-500">
-                Capabilities
+                Services
               </span>
             </div>
             <h2 className="mt-6 text-h1 text-ink">
               <KineticWords text="Every practice," />
               <br />
               <KineticWords
-                text="one delivery chain."
+                text="one delivery chain"
                 delay={0.12}
                 wordClassName={() => "text-sweep"}
               />
@@ -1727,13 +1892,14 @@ export default function CapabilitiesOS() {
                 phone this measure is ~40 characters, and justifying that
                 stretches word spacing into visible rivers — the one place
                 justified text reliably looks worse than ragged-right. */}
-            <p className="text-[16px] leading-[1.75] text-ink-500 lg:text-justify">
+            <p className="text-[18px] leading-[1.75] text-ink-500 lg:text-justify">
               Engineering and Global Business Services, mapped to a single
               delivery chain. Each practice sits where it creates value across{" "}
               <span className="font-medium text-azure">build</span>,{" "}
-              <span className="font-medium text-amber-ink">automate</span>, and{" "}
-              <span className="font-medium text-steel">operate</span>, not in a
-              separate silo. Open any one to explore what's inside.
+              <span className="font-medium text-amber-ink">automate</span>,{" "}
+              <span className="font-medium text-[#1F5F9E]">orchestrate</span>,
+              and <span className="font-medium text-steel">operate</span>, not
+              in a separate silo. Open any one to explore what's inside.
             </p>
           </Wipe>
         </div>
@@ -1759,14 +1925,14 @@ export default function CapabilitiesOS() {
             </div>
 
             <div className="lg:col-start-1 lg:row-start-1">
-              <p className="mb-4 border-b border-line pb-3 font-mono text-sm uppercase tracking-[0.2em] text-azure-ink lg:border-0 lg:pb-0">
+              <p className="mb-4 border-b border-line pb-3 font-mono text-lg font-bold uppercase tracking-[0.2em] text-azure-ink lg:border-0 lg:pb-0">
                 Technology &amp; Engineering
               </p>
               {column(TECH)}
             </div>
 
             <div className="lg:col-start-3 lg:row-start-1 mb-auto">
-              <p className="mb-4 border-b border-line pb-3 font-mono text-sm uppercase tracking-[0.2em] text-amber lg:border-0 lg:pb-0 lg:text-right">
+              <p className="mb-4 border-b border-line pb-3 font-mono text-lg font-bold uppercase tracking-[0.2em] text-amber lg:border-0 lg:pb-0 lg:text-right">
                 Global Business Services
               </p>
               {column(GBS)}
