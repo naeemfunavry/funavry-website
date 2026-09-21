@@ -247,7 +247,7 @@ function CategoriesTile({ className }: { className?: string }) {
       </div>
 
       <a
-        href="/blog"
+        href=""
         className="group/all mt-auto flex items-center justify-between gap-4 pt-8"
       >
         <span className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
@@ -297,7 +297,7 @@ export default function Insights() {
           </div>
 
           <Wipe delay={0.2} className="lg:pb-2">
-            <Button href="/blog" variant="secondary" size="md" arrow>
+            <Button href="" variant="secondary" size="md" arrow>
               All articles
             </Button>
           </Wipe>

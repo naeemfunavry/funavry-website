@@ -34,7 +34,7 @@ export const POSTS: Post[] = [
       "What it takes to move from an LLM demo to autonomous agents that regulators, auditors, and a board will sign off on.",
     date: "Coming soon",
     image: "/industries/enterprise.webp",
-    href: "/blog",
+    href: "",
     featured: true,
   },
   {
@@ -45,7 +45,7 @@ export const POSTS: Post[] = [
       "How confidence scoring and human-in-the-loop review turned a four-day manual finance process into a controlled pipeline.",
     date: "Coming soon",
     image: "/industries/financial.webp",
-    href: "/blog",
+    href: "",
   },
   {
     slug: "rag-tax-documents-source-grounding",
@@ -55,7 +55,7 @@ export const POSTS: Post[] = [
       "Semantic and vector search across authoritative material, and why source-grounding was the feature that passed compliance.",
     date: "Coming soon",
     image: "/industries/government.webp",
-    href: "/blog",
+    href: "",
   },
   {
     slug: "gcc-advisory-practice-expansion",
@@ -65,6 +65,6 @@ export const POSTS: Post[] = [
       "Strategy, location advisory, setup, and scale-up support for enterprises building owned capability centers.",
     date: "Coming soon",
     image: "/industries/media.webp",
-    href: "/blog",
+    href: "",
   },
 ];

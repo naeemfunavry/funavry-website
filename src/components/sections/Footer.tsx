@@ -16,10 +16,19 @@ const COLUMNS: {
     accent: "bg-azure",
     links: [
       { label: "Digital Engineering", href: "/services/digital-engineering" },
-      { label: "Data & Business Intelligence", href: "/services/data-business-intelligence" },
+      {
+        label: "Data & Business Intelligence",
+        href: "/services/data-business-intelligence",
+      },
       { label: "Blockchain & FinTech", href: "/services/blockchain-fintech" },
-      { label: "Immersive Technologies", href: "/services/immersive-technologies" },
-      { label: "Robotics, IoT & Vision", href: "/services/robotics-iot-computer-vision" },
+      {
+        label: "Immersive Technologies",
+        href: "/services/immersive-technologies",
+      },
+      {
+        label: "Robotics, IoT & Vision",
+        href: "/services/robotics-iot-computer-vision",
+      },
       { label: "Quality Engineering", href: "/services/quality-engineering" },
     ],
   },
@@ -31,7 +40,10 @@ const COLUMNS: {
       { label: "Artificial Intelligence", href: "/services/ai-automation" },
       { label: "Intelligent Automation", href: "/services/ai-automation" },
       { label: "Document Intelligence", href: "/services/ai-automation" },
-      { label: "AI Process Transformation", href: "/services/ai-process-transformation" },
+      {
+        label: "AI Process Transformation",
+        href: "/services/ai-process-transformation",
+      },
       { label: "Process Mining", href: "/services/ai-process-transformation" },
     ],
   },
@@ -41,10 +53,19 @@ const COLUMNS: {
     accent: "bg-steel",
     links: [
       { label: "Managed Services", href: "/services/managed-services" },
-      { label: "Cloud, DevOps & Security", href: "/services/cloud-devops-cybersecurity" },
-      { label: "GBS & Operating Models", href: "/services/gbs-operating-model" },
+      {
+        label: "Cloud, DevOps & Security",
+        href: "/services/cloud-devops-cybersecurity",
+      },
+      {
+        label: "GBS & Operating Models",
+        href: "/services/gbs-operating-model",
+      },
       { label: "GCC Advisory", href: "/services/gcc-advisory" },
-      { label: "Finance Transformation", href: "/services/finance-transformation" },
+      {
+        label: "Finance Transformation",
+        href: "/services/finance-transformation",
+      },
       { label: "EOR, BOT & Global Teams", href: "/services/global-workforce" },
     ],
   },
@@ -58,7 +79,7 @@ const COLUMNS: {
       { label: "Work", href: "#work" },
       { label: "Technology", href: "#technology" },
       { label: "Careers", href: "#careers" },
-      { label: "Blog & News", href: "/blog" },
+      { label: "Blog & News", href: "" },
     ],
   },
 ];
@@ -159,7 +180,9 @@ export default function Footer() {
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
               <span className="text-ink">{OFFICES.length} offices</span>
               {" · "}
-              <span className="text-ink">{DELIVERY_COUNTRIES.length} countries served</span>
+              <span className="text-ink">
+                {DELIVERY_COUNTRIES.length} countries served
+              </span>
             </p>
           </div>
           <div className="mt-8 grid gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-16">

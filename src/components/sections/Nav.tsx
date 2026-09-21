@@ -46,8 +46,8 @@ const LINKS: Link[] = [
         href: "/#careers",
         desc: "Build with a team of 200+",
       },
-      { label: "Blog", href: "/blog", desc: "Engineering & AI writing" },
-      { label: "News", href: "/blog", desc: "Announcements and press" },
+      { label: "Blog", href: "", desc: "Engineering & AI writing" },
+      { label: "News", href: "", desc: "Announcements and press" },
     ],
   },
 ];
