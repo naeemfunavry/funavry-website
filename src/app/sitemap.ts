@@ -44,12 +44,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.7,
     },
-    {
-      url: `${SITE_URL}/blog`,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 0.6,
-    },
+    // {
+    //   url: `${SITE_URL}/blog`,
+    //   lastModified,
+    //   changeFrequency: "weekly",
+    //   priority: 0.6,
+    // },
     ...SERVICES.map(({ slug }) => ({
       url: `${SITE_URL}/services/${slug}`,
       lastModified,
