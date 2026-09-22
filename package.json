@@ -1,32 +1,29 @@
 {
-  "name": "funavry-v2",
-  "version": "0.1.0",
+  "name": "funavry",
+  "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "media:case-studies": "node scripts/case-study-media.mjs"
+    "dev:web": "npm run dev --workspace @funavry/web",
+    "dev:admin": "npm run dev --workspace @funavry/admin",
+    "dev:api": "npm run start:dev --workspace @funavry/api",
+    "build": "npm run build --workspaces --if-present",
+    "build:types": "npm run build --workspace @funavry/types",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "migration:run": "npm run migration:run --workspace @funavry/api",
+    "migration:revert": "npm run migration:revert --workspace @funavry/api",
+    "seed": "npm run seed --workspace @funavry/api"
   },
-  "dependencies": {
-    "clsx": "^2.1.1",
-    "framer-motion": "^11.3.19",
-    "lenis": "^1.1.6",
-    "lucide-react": "^0.417.0",
-    "next": "^16.2.10",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "tailwind-merge": "^2.4.0"
+  "engines": {
+    "node": ">=20.11.0"
   },
-  "devDependencies": {
-    "@types/node": "^20.14.13",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "autoprefixer": "^10.4.19",
-    "postcss": "^8.4.40",
-    "simple-icons": "^16.25.0",
-    "tailwindcss": "^3.4.7",
-    "typescript": "^5.5.4"
+  "allowScripts": {
+    "argon2@0.41.1": true,
+    "sharp@0.35.4": true,
+    "sharp@0.34.5": true
   }
 }
