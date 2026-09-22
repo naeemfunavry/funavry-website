@@ -1,0 +1,190 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * The panel inherits the site's engineering-paper language: an off-white ground,
+ * charcoal ink, hairline rules rather than shadows, and square corners. What it
+ * adds is density — this is an interface for reading tables and filling forms,
+ * not a page to be scrolled.
+ */
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  * {
+    @apply border-line;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-paper text-ink antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* A visible, consistent focus ring. The default outline disappears against
+     the paper background on several controls, and an admin panel is exactly
+     the kind of form-dense interface people drive from the keyboard. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-azure ring-offset-2 ring-offset-paper;
+  }
+
+  /* Firefox renders a red glow on :invalid inputs before the field has been
+     touched, which flags every empty required field the moment a form opens. */
+  input:invalid,
+  textarea:invalid,
+  select:invalid {
+    box-shadow: none;
+  }
+
+  ::selection {
+    @apply bg-azure-100 text-ink-900;
+  }
+}
+
+@layer components {
+  /* ------------------------------------------------------------- surfaces */
+
+  .panel {
+    @apply border border-line bg-paper-white;
+  }
+
+  .panel-inset {
+    @apply border border-line bg-paper-deep/60;
+  }
+
+  /* ---------------------------------------------------------------- type */
+
+  .eyebrow {
+    @apply font-mono text-micro uppercase tracking-[0.14em] text-ink-400;
+  }
+
+  .field-label {
+    @apply mb-1.5 block font-mono text-label uppercase tracking-[0.08em] text-ink-500;
+  }
+
+  /* -------------------------------------------------------------- inputs */
+
+  .input {
+    @apply w-full border border-line bg-paper-white px-3 py-2 text-sm text-ink
+           placeholder:text-ink-400
+           focus:border-azure focus:outline-none focus:ring-1 focus:ring-azure
+           disabled:cursor-not-allowed disabled:bg-paper-deep disabled:text-ink-400;
+  }
+
+  .input-error {
+    @apply border-danger focus:border-danger focus:ring-danger;
+  }
+
+  .textarea {
+    @apply input resize-y leading-relaxed;
+    min-height: 6rem;
+  }
+
+  .select {
+    @apply input appearance-none bg-no-repeat pr-9;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2363696B' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-position: right 0.75rem center;
+  }
+
+  /* ------------------------------------------------------------- buttons */
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 border px-4 py-2
+           font-mono text-label uppercase tracking-[0.08em]
+           transition-colors duration-150
+           disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn border-ink bg-ink text-paper-white hover:bg-ink-900;
+  }
+
+  .btn-secondary {
+    @apply btn border-line bg-paper-white text-ink hover:border-ink-400 hover:bg-paper-deep;
+  }
+
+  .btn-danger {
+    @apply btn border-danger bg-danger text-paper-white hover:bg-danger-ink;
+  }
+
+  .btn-ghost {
+    @apply btn border-transparent bg-transparent text-ink-500 hover:bg-paper-deep hover:text-ink;
+  }
+
+  .btn-sm {
+    @apply px-2.5 py-1 text-micro;
+  }
+
+  /* -------------------------------------------------------------- tables */
+
+  .table-head {
+    @apply border-b border-line bg-paper-deep/50 px-4 py-2.5 text-left
+           font-mono text-micro uppercase tracking-[0.1em] text-ink-400;
+  }
+
+  .table-cell {
+    @apply border-b border-line-soft px-4 py-3 text-sm align-middle;
+  }
+
+  .table-row {
+    @apply transition-colors hover:bg-paper-deep/40;
+  }
+
+  /* ------------------------------------------------------------- badges */
+
+  .badge {
+    @apply inline-flex items-center gap-1.5 border px-2 py-0.5
+           font-mono text-micro uppercase tracking-[0.08em];
+  }
+
+  .badge-published {
+    @apply badge border-success/30 bg-success-100 text-success-ink;
+  }
+
+  .badge-draft {
+    @apply badge border-amber/40 bg-amber-50 text-amber-ink;
+  }
+
+  .badge-archived {
+    @apply badge border-line-strong bg-paper-deep text-ink-400;
+  }
+
+  .badge-neutral {
+    @apply badge border-line bg-paper-deep/60 text-ink-500;
+  }
+}
+
+@layer utilities {
+  /* The site's grid-paper texture, used behind the login screen and the
+     dashboard header so the panel reads as part of the same system. */
+  .grid-paper {
+    background-image:
+      linear-gradient(to right, rgba(205, 210, 201, 0.35) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(205, 210, 201, 0.35) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #cdd2c9 transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #cdd2c9;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
