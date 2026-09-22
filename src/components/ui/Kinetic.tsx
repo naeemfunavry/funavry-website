@@ -22,7 +22,8 @@ export function KineticWords({
 }: {
   text: string;
   className?: string;
-  wordClassName?: (word: string, i: number) => string | undefined;
+  /** String is serializable from Server Components; a function is only valid from Client Components. */
+  wordClassName?: string | ((word: string, i: number) => string | undefined);
   delay?: number;
   stagger?: number;
   once?: boolean;
@@ -76,7 +77,12 @@ export function KineticWords({
           className="-mb-[0.16em] inline-block overflow-hidden pb-[0.16em] align-bottom"
         >
           <motion.span
-            className={cn("inline-block", wordClassName?.(word, i))}
+            className={cn(
+              "inline-block",
+              typeof wordClassName === "function"
+                ? wordClassName(word, i)
+                : wordClassName,
+            )}
             custom={i}
             variants={variants}
           >

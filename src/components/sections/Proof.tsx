@@ -188,8 +188,11 @@ export default function Proof() {
               <h2 className="mt-6 text-h1 text-ink">
                 <KineticWords text="Building Intelligent" />
                 <br />
-
-                <KineticWords text="Enterprises with AI" delay={0.12} />
+                <KineticWords
+                  text="Enterprises with AI"
+                  delay={0.12}
+                  wordClassName="text-sweep"
+                />
               </h2>
 
               <p className="mt-6 text-lg leading-[1.75] text-ink-500">

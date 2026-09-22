@@ -106,7 +106,7 @@ export default function BlogPage() {
                 text="thinking about"
                 delay={0.12}
                 trigger="mount"
-                wordClassName={() => "text-sweep"}
+                wordClassName="text-sweep"
               />
             </h1>
 
