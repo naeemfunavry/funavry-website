@@ -74,7 +74,8 @@ const PHASE_OPTIONS = [
     label: "Managed Services & Teams",
     icon: Server,
     color: "steel",
-    activeClass: "border-steel-300 bg-steel/20 text-paper ring-1 ring-steel-300/40",
+    activeClass:
+      "border-steel-300 bg-steel/20 text-paper ring-1 ring-steel-300/40",
     dotClass: "bg-steel-300 shadow-[0_0_8px_rgba(143,202,235,0.8)]",
   },
   {
@@ -134,8 +135,7 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="relative overflow-hidden border-t border-paper/10 bg-ink-900 text-paper"
-    >
+      className="relative overflow-hidden border-t border-paper/10 bg-ink-900 text-paper">
       {/* Background Engineering Grids and Textures */}
       <div
         aria-hidden
@@ -163,14 +163,12 @@ export default function Contact() {
       {/* Decorative Technical Crosshairs */}
       <div
         aria-hidden
-        className="pointer-events-none absolute top-8 left-8 hidden font-mono text-[11px] text-paper/20 lg:block"
-      >
+        className="pointer-events-none absolute top-8 left-8 hidden font-mono text-[11px] text-paper/20 lg:block">
         + 00.1
       </div>
       <div
         aria-hidden
-        className="pointer-events-none absolute top-8 right-8 hidden font-mono text-[11px] text-paper/20 lg:block"
-      >
+        className="pointer-events-none absolute top-8 right-8 hidden font-mono text-[11px] text-paper/20 lg:block">
         + 00.2
       </div>
 
@@ -210,9 +208,9 @@ export default function Contact() {
             {/* Context Paragraph */}
             <Wipe delay={0.18}>
               <p className="mt-8 max-w-[48ch] text-[17px] leading-[1.75] text-paper/65 lg:text-[18px]">
-                Tell us where you are — an idea, a platform under pressure, or an
-                operation ready to scale. We come back within one business day
-                with an engineering point of view, not a sales script.
+                Tell us where you are — an idea, a platform under pressure, or
+                an operation ready to scale. We come back within one business
+                day with an engineering point of view, not a sales script.
               </p>
             </Wipe>
 
@@ -221,8 +219,7 @@ export default function Contact() {
               <div className="mt-9 flex flex-wrap items-center gap-3.5">
                 <a
                   href="mailto:hello@funavry.com"
-                  className="group inline-flex items-center gap-3.5 rounded-xl border border-paper/15 bg-paper/[0.04] px-5 py-3.5 backdrop-blur-md transition-all duration-300 hover:border-azure/50 hover:bg-paper/[0.08] hover:shadow-[0_0_20px_rgba(68,158,216,0.2)]"
-                >
+                  className="group inline-flex items-center gap-3.5 rounded-xl border border-paper/15 bg-paper/[0.04] px-5 py-3.5 backdrop-blur-md transition-all duration-300 hover:border-azure/50 hover:bg-paper/[0.08] hover:shadow-[0_0_20px_rgba(68,158,216,0.2)]">
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-azure/15 text-azure transition-colors group-hover:bg-azure group-hover:text-white">
                     <Mail size={16} />
                   </div>
@@ -244,8 +241,7 @@ export default function Contact() {
                   type="button"
                   onClick={copyEmail}
                   className="inline-flex h-[58px] items-center gap-2 rounded-xl border border-paper/15 bg-paper/[0.04] px-4 font-mono text-[11px] uppercase tracking-wider text-paper/70 backdrop-blur-md transition-all hover:border-azure/40 hover:bg-paper/[0.08] hover:text-paper active:scale-95"
-                  title="Copy email to clipboard"
-                >
+                  title="Copy email to clipboard">
                   {copied ? (
                     <>
                       <CheckCheck size={15} className="text-azure" />
@@ -261,7 +257,7 @@ export default function Contact() {
               </div>
 
               {/* Global Presence Footprint */}
-              <div className="mt-4 flex flex-wrap items-center gap-2 font-mono text-[10.5px] uppercase tracking-wider text-paper/40">
+              {/* <div className="mt-4 flex flex-wrap items-center gap-2 font-mono text-[10.5px] uppercase tracking-wider text-paper/40">
                 <span>Hubs:</span>
                 <span className="rounded border border-paper/10 bg-paper/[0.03] px-2 py-0.5 text-paper/70">
                   New York (US)
@@ -274,7 +270,7 @@ export default function Contact() {
                 <span className="rounded border border-paper/10 bg-paper/[0.03] px-2 py-0.5 text-paper/70">
                   Islamabad (PK)
                 </span>
-              </div>
+              </div> */}
             </Wipe>
 
             {/* Engagement Process Strip */}
@@ -287,8 +283,7 @@ export default function Contact() {
                   {PROCESS_STEPS.map((step) => (
                     <div
                       key={step.n}
-                      className="group relative rounded-lg border border-paper/10 bg-paper/[0.02] p-3.5 transition-colors hover:border-paper/20"
-                    >
+                      className="group relative rounded-lg border border-paper/10 bg-paper/[0.02] p-3.5 transition-colors hover:border-paper/20">
                       <div className="font-mono text-[11px] font-bold text-azure">
                         {step.n}
                       </div>
@@ -305,7 +300,7 @@ export default function Contact() {
             </Wipe>
 
             {/* Enterprise Security & Compliance Badges */}
-            <Wipe delay={0.36}>
+            {/* <Wipe delay={0.36}>
               <div className="mt-10">
                 <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-paper/40 mb-3">
                   <ShieldCheck size={13} className="text-azure" />
@@ -329,12 +324,12 @@ export default function Contact() {
                   ))}
                 </div>
               </div>
-            </Wipe>
+            </Wipe> */}
           </div>
 
           {/* Right Column — The Glassmorphic Engineering Console */}
           <Wipe delay={0.18}>
-            <div className="relative rounded-2xl border border-paper/15 bg-ink-900/85 p-6 sm:p-8 lg:p-9 shadow-2xl shadow-black/60 backdrop-blur-xl">
+            <div className="relative rounded-2xl border border-paper/15 bg-ink-900/85 p-6 sm:p-8 lg:p-9 shadow-2xl shadow-black/60 backdrop-blur-xl overflow-hidden">
               {/* Glowing Top Accent Rim */}
               <div
                 aria-hidden
@@ -370,8 +365,9 @@ export default function Contact() {
                     Inquiry Dispatched
                   </h3>
                   <p className="mt-3 max-w-[34ch] text-[15px] leading-relaxed text-paper/60">
-                    Your brief has been routed directly to our engineering leadership.
-                    We will review it and reply within one business day.
+                    Your brief has been routed directly to our engineering
+                    leadership. We will review it and reply within one business
+                    day.
                   </p>
 
                   <div className="mt-8 inline-flex items-center gap-2 rounded-lg border border-paper/10 bg-paper/[0.04] px-4 py-2 font-mono text-[11px] text-paper/50">
@@ -382,14 +378,16 @@ export default function Contact() {
                   <button
                     type="button"
                     onClick={() => setSubmitted(false)}
-                    className="mt-8 font-mono text-[11px] uppercase tracking-wider text-paper/40 underline hover:text-azure transition-colors"
-                  >
+                    className="mt-8 font-mono text-[11px] uppercase tracking-wider text-paper/40 underline hover:text-azure transition-colors">
                     Send another inquiry
                   </button>
                 </div>
               ) : (
                 /* The Engineering Form */
-                <form onSubmit={handleSubmit} className="mt-6 space-y-6" noValidate>
+                <form
+                  onSubmit={handleSubmit}
+                  className="mt-6 space-y-6"
+                  noValidate>
                   {/* Phase Selector Segment */}
                   <div>
                     <div className="flex items-center justify-between mb-2.5">
@@ -414,23 +412,21 @@ export default function Contact() {
                               "group relative flex flex-col items-start rounded-lg border p-3 text-left transition-all duration-200",
                               isSelected
                                 ? opt.activeClass
-                                : "border-paper/10 bg-paper/[0.02] text-paper/70 hover:border-paper/20 hover:bg-paper/[0.05]"
-                            )}
-                          >
+                                : "border-paper/10 bg-paper/[0.02] text-paper/70 hover:border-paper/20 hover:bg-paper/[0.05]",
+                            )}>
                             <div className="flex w-full items-center justify-between">
                               <div className="flex items-center gap-1.5">
                                 <span
                                   className={cn(
                                     "h-1.5 w-1.5 rounded-full transition-all",
-                                    isSelected ? opt.dotClass : "bg-paper/30"
+                                    isSelected ? opt.dotClass : "bg-paper/30",
                                   )}
                                 />
                                 <span
                                   className={cn(
                                     "font-mono text-[10px] uppercase font-semibold tracking-wider",
-                                    isSelected ? "text-paper" : "text-paper/70"
-                                  )}
-                                >
+                                    isSelected ? "text-paper" : "text-paper/70",
+                                  )}>
                                   {opt.phase}
                                 </span>
                               </div>
@@ -438,7 +434,7 @@ export default function Contact() {
                                 size={14}
                                 className={cn(
                                   "transition-colors",
-                                  isSelected ? "text-paper" : "text-paper/40"
+                                  isSelected ? "text-paper" : "text-paper/40",
                                 )}
                               />
                             </div>
@@ -456,8 +452,7 @@ export default function Contact() {
                     <div>
                       <label
                         htmlFor="name"
-                        className="block font-mono text-[10.5px] uppercase tracking-[0.16em] text-paper/60 mb-2"
-                      >
+                        className="block font-mono text-[10.5px] uppercase tracking-[0.16em] text-paper/60 mb-2">
                         Full Name <span className="text-azure">*</span>
                       </label>
                       <input
@@ -474,8 +469,7 @@ export default function Contact() {
                     <div>
                       <label
                         htmlFor="email"
-                        className="block font-mono text-[10.5px] uppercase tracking-[0.16em] text-paper/60 mb-2"
-                      >
+                        className="block font-mono text-[10.5px] uppercase tracking-[0.16em] text-paper/60 mb-2">
                         Work Email <span className="text-azure">*</span>
                       </label>
                       <input
@@ -494,8 +488,7 @@ export default function Contact() {
                   <div>
                     <label
                       htmlFor="company"
-                      className="block font-mono text-[10.5px] uppercase tracking-[0.16em] text-paper/60 mb-2"
-                    >
+                      className="block font-mono text-[10.5px] uppercase tracking-[0.16em] text-paper/60 mb-2">
                       Company / Organization
                     </label>
                     <input
@@ -513,8 +506,7 @@ export default function Contact() {
                     <div className="flex items-center justify-between mb-2">
                       <label
                         htmlFor="message"
-                        className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-paper/60"
-                      >
+                        className="font-mono text-[10.5px] uppercase tracking-[0.16em] text-paper/60">
                         Tell Us About The Project
                       </label>
                       <span className="font-mono text-[9.5px] uppercase tracking-wider text-paper/30">
@@ -533,8 +525,7 @@ export default function Contact() {
                   {/* High-Impact Submit Button */}
                   <button
                     type="submit"
-                    className="group relative flex w-full items-center justify-between overflow-hidden rounded-xl bg-azure px-6 py-4 text-left font-medium text-white shadow-[0_0_24px_rgba(68,158,216,0.35)] transition-all duration-300 hover:bg-azure-600 hover:shadow-[0_0_36px_rgba(68,158,216,0.55)] active:scale-[0.99]"
-                  >
+                    className="group relative flex w-full items-center justify-between overflow-hidden rounded-xl bg-azure px-6 py-4 text-left font-medium text-white shadow-[0_0_24px_rgba(68,158,216,0.35)] transition-all duration-300 hover:bg-azure-600 hover:shadow-[0_0_36px_rgba(68,158,216,0.55)] active:scale-[0.99]">
                     <span className="text-[15.5px] font-semibold tracking-[-0.01em]">
                       Send Inquiry
                     </span>

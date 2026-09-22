@@ -98,7 +98,11 @@ export interface FooterProps {
   socials: { label: string; href: string; icon: string }[];
 }
 
-export default function Footer({ offices, deliveryCountries, socials }: FooterProps) {
+export default function Footer({
+  offices,
+  deliveryCountries,
+  socials,
+}: FooterProps) {
   return (
     <footer className="relative overflow-hidden border-t border-line bg-paper">
       <Container wide className="relative z-10 pt-16 lg:pt-20">
@@ -108,8 +112,7 @@ export default function Footer({ offices, deliveryCountries, socials }: FooterPr
             <a
               href="/"
               aria-label="Funavry Technologies home"
-              className="text-ink"
-            >
+              className="text-ink">
               <Logo className="h-8" />
             </a>
             <p className="mt-7 max-w-[34ch] text-[14.5px] leading-[1.75] text-ink-400">
@@ -128,15 +131,14 @@ export default function Footer({ offices, deliveryCountries, socials }: FooterPr
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Funavry on ${s.label}`}
-                    className="-ml-px flex h-11 w-11 items-center justify-center border border-line text-ink-500 transition-colors duration-300 first:ml-0 hover:bg-ink hover:text-paper"
-                  >
+                    className="-ml-px flex h-11 w-11 items-center justify-center border border-line text-ink-500 transition-colors duration-300 first:ml-0 hover:bg-ink hover:text-paper">
                     <Icon size={16} />
                   </a>
                 );
               })}
             </div>
 
-            <dl className="mt-10 grid grid-cols-3 gap-px">
+            {/* <dl className="mt-10 grid grid-cols-3 gap-px">
               {[
                 ["2018", "Founded"],
                 ["500+", "Projects"],
@@ -151,7 +153,7 @@ export default function Footer({ offices, deliveryCountries, socials }: FooterPr
                   </dd>
                 </div>
               ))}
-            </dl>
+            </dl> */}
           </div>
 
           {/* Index, drafted by phase. */}
@@ -169,8 +171,7 @@ export default function Footer({ offices, deliveryCountries, socials }: FooterPr
                     <li key={link.label}>
                       <a
                         href={link.href}
-                        className="group inline-flex items-center gap-2 text-[13px] leading-snug text-ink-400 transition-colors duration-200 hover:text-ink"
-                      >
+                        className="group inline-flex items-center gap-2 text-[13px] leading-snug text-ink-400 transition-colors duration-200 hover:text-ink">
                         <span
                           aria-hidden
                           className="h-px w-0 flex-none bg-ink transition-all duration-400 ease-expo group-hover:w-3"
@@ -235,8 +236,7 @@ export default function Footer({ offices, deliveryCountries, socials }: FooterPr
             {deliveryCountries.map((c) => (
               <span
                 key={c}
-                className="border border-line px-2.5 py-1 text-[11.5px] leading-none text-ink-500"
-              >
+                className="border border-line px-2.5 py-1 text-[11.5px] leading-none text-ink-500">
                 {c}
               </span>
             ))}

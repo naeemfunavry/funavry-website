@@ -30,16 +30,23 @@ import {
  * they would serialise into six round trips before the first byte of HTML.
  */
 export default async function Home() {
-  const [services, caseStudies, industries, testimonials, offices, deliveryCountries, socials] =
-    await Promise.all([
-      getServices(),
-      getFeaturedOrAll(),
-      getIndustries(),
-      getTestimonials(),
-      getOffices(),
-      getDeliveryCountries(),
-      getSocials(),
-    ]);
+  const [
+    services,
+    caseStudies,
+    industries,
+    testimonials,
+    offices,
+    deliveryCountries,
+    socials,
+  ] = await Promise.all([
+    getServices(),
+    getFeaturedOrAll(),
+    getIndustries(),
+    getTestimonials(),
+    getOffices(),
+    getDeliveryCountries(),
+    getSocials(),
+  ]);
 
   return (
     <>
@@ -47,14 +54,19 @@ export default async function Home() {
       <main id="main">
         <Hero />
         <CapabilitiesOS services={services} />
-        <WorkInteractive caseStudies={caseStudies} />
         <Proof />
         <Industries industries={industries} />
+        <WorkInteractive caseStudies={caseStudies} />
+
         <TechStack />
         <Testimonials testimonials={testimonials} />
         <Contact />
       </main>
-      <Footer offices={offices} deliveryCountries={deliveryCountries} socials={socials} />
+      <Footer
+        offices={offices}
+        deliveryCountries={deliveryCountries}
+        socials={socials}
+      />
     </>
   );
 }
