@@ -272,7 +272,7 @@ export default function Industries() {
                 Industries
               </span>
             </div>
-            <h2 className="mt-6 text-h1 text-ink">
+            <h2 className="mt-6 text-h2 text-ink">
               <KineticWords text="Domain depth where" />
               <br />
               <KineticWords

@@ -435,41 +435,41 @@ const GRID_PLANES = [
 /** The fuller copy a pillar reveals on hover — a one-line framing plus what
     sits in that phase, drawn from the deck's delivery model. */
 const PILLAR_DETAIL: Record<DeliveryPhase, { blurb: string; items: string[] }> =
-  {
-    Build: {
-      blurb: "Create the foundation.",
-      items: [
-        "Platforms",
-        "Enterprise Applications",
-        "AI Solutions",
-        "Data",
-        "Cloud",
-      ],
-    },
-    Automate: {
-      blurb: "Embed AI in process.",
-      items: ["Intelligent Automation", "Document Intelligence", "Analytics"],
-    },
-    Orchestrate: {
-      blurb: "Connect end to end.",
-      items: [
-        "AI Agents",
-        "Enterprise Knowledge",
-        "APIs",
-        "Business Rules",
-        "Human Oversight",
-      ],
-    },
-    Operate: {
-      blurb: "Run, govern, scale.",
-      items: [
-        "Managed Services",
-        "Dedicated Teams",
-        "GCC Enablement",
-        "Global Delivery",
-      ],
-    },
-  };
+{
+  Build: {
+    blurb: "Create the foundation.",
+    items: [
+      "Platforms",
+      "Enterprise Applications",
+      "AI Solutions",
+      "Data",
+      "Cloud",
+    ],
+  },
+  Automate: {
+    blurb: "Embed AI in process.",
+    items: ["Intelligent Automation", "Document Intelligence", "Analytics"],
+  },
+  Orchestrate: {
+    blurb: "Connect end to end.",
+    items: [
+      "AI Agents",
+      "Enterprise Knowledge",
+      "APIs",
+      "Business Rules",
+      "Human Oversight",
+    ],
+  },
+  Operate: {
+    blurb: "Run, govern, scale.",
+    items: [
+      "Managed Services",
+      "Dedicated Teams",
+      "GCC Enablement",
+      "Global Delivery",
+    ],
+  },
+};
 
 /** What the delivery chain is for — the deck's four business outcomes (slide
     10), shown as the card beneath the shorter GBS column. */
@@ -1037,7 +1037,7 @@ const AICore = ({
                     className={cn(
                       "h-5 w-5 flex-none sm:h-6 sm:w-6 lg:h-7 lg:w-7",
                       s.iconAbove &&
-                        "sm:absolute sm:bottom-full sm:left-1/2 sm:mb-1 sm:-translate-x-1/2",
+                      "sm:absolute sm:bottom-full sm:left-1/2 sm:mb-1 sm:-translate-x-1/2",
                       s.tone,
                     )}
                     strokeWidth={1.8}
@@ -1114,7 +1114,7 @@ const AICore = ({
                 "--pop-y": `${(labelY(SLABS.find((s) => s.phase === hovered)!) / VB_H) * 100}%`,
               } as React.CSSProperties
             }>
-            <motion.div
+            {/* <motion.div
               initial={{ scale: 0.97 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.97 }}
@@ -1162,7 +1162,7 @@ const AICore = ({
                   </>
                 );
               })()}
-            </motion.div>
+            </motion.div> */}
           </motion.div>
         )}
       </AnimatePresence>
@@ -1220,21 +1220,17 @@ function CapabilityCard({
         className={cn(
           "relative flex w-full items-center gap-3.5 rounded-[14px] border px-4 py-3.5 text-left",
           "bg-white/70 backdrop-blur-md",
-          "transition-[transform,box-shadow,border-color,background-color] duration-400 ease-expo will-change-transform",
+          "transition-[transform,box-shadow,border-color,background-color] duration-[500ms] ease-expo will-change-transform",
           "shadow-[0_1px_2px_rgba(46,52,54,0.04)]",
           state === "active"
             ? "border-transparent bg-white shadow-[0_18px_40px_-18px_rgba(46,52,54,0.28)]"
-            : "border-line/70 group-hover:bg-white group-hover:shadow-[0_14px_34px_-16px_rgba(46,52,54,0.26)]",
-          // right
-          //   ? "group-hover:-translate-x-0.5"
-          //   : "group-hover:translate-x-0.5",
-          // "group-hover:-translate-y-0.5",
+            : "border-line/70 group-hover:bg-white group-hover:shadow-[0_20px_40px_-16px_rgba(46,52,54,0.22)]",
         )}
         style={
           state === "active"
             ? {
-                boxShadow: `0 0 0 1px rgba(${hue.rgb},0.55), 0 18px 40px -18px rgba(46,52,54,0.28)`,
-              }
+              boxShadow: `0 0 0 1px rgba(${hue.rgb},0.55), 0 18px 40px -18px rgba(46,52,54,0.28)`,
+            }
             : undefined
         }>
         {/* Number. */}
@@ -1250,28 +1246,23 @@ function CapabilityCard({
         {/* Icon well. */}
         <span
           className={cn(
-            "flex h-9 w-9 flex-none items-center justify-center rounded-[10px] border transition-all duration-400 ease-expo",
-            "group-hover:rotate-[-6deg] group-hover:scale-105",
+            "flex h-9 w-9 flex-none items-center justify-center rounded-[10px] border transition-all duration-[500ms] ease-expo",
+            "group-hover:rotate-[-6deg] group-hover:scale-110",
             state === "active"
               ? "border-transparent"
-              : "border-line/80 bg-paper",
+              : "border-transparent",
           )}
-          style={
-            state === "active"
-              ? {
-                  background: `rgba(${hue.rgb},0.12)`,
-                  boxShadow: `inset 0 0 0 1px rgba(${hue.rgb},0.28)`,
-                }
-              : undefined
-          }>
+          style={{
+            background: `rgba(${hue.rgb},${state === "active" ? 0.15 : 0.08})`,
+            boxShadow: `inset 0 0 0 1px rgba(${hue.rgb},${state === "active" ? 0.3 : 0.18})`,
+            transition: "transform 500ms cubic-bezier(0.19,1,0.22,1), background 500ms cubic-bezier(0.19,1,0.22,1), box-shadow 500ms cubic-bezier(0.19,1,0.22,1)",
+          }}>
           <Icon
             size={17}
             strokeWidth={1.6}
             className={cn(
-              "transition-colors duration-300",
-              state === "active"
-                ? hue.text
-                : "text-ink-500 group-hover:text-ink",
+              "transition-colors duration-[500ms] ease-expo",
+              hue.text,
             )}
           />
         </span>
@@ -1290,7 +1281,7 @@ function CapabilityCard({
         <ChevronRight
           size={15}
           className={cn(
-            "flex-none transition-all duration-400 ease-expo",
+            "flex-none transition-all duration-[500ms] ease-expo",
             state === "active" ? hue.text : "text-ink-400 group-hover:text-ink",
             "group-hover:translate-x-0.5",
           )}
@@ -1315,7 +1306,7 @@ function CapabilityCard({
           // that grew a floor rather than two stacked rectangles.
           "invisible absolute inset-x-0 -left-[1px] -right-[1px] top-[calc(100%-12px)] grid grid-rows-[0fr] overflow-hidden rounded-b-[14px] border border-t-0 bg-white opacity-0",
           "shadow-[0_18px_38px_-18px_rgba(46,52,54,0.3)]",
-          "transition-[grid-template-rows,opacity,visibility] duration-400 ease-expo",
+          "transition-[grid-template-rows,opacity,visibility] duration-[500ms] ease-expo",
           "group-hover:visible group-hover:grid-rows-[1fr] group-hover:opacity-100",
           "group-focus-within:visible group-focus-within:grid-rows-[1fr] group-focus-within:opacity-100",
         )}
@@ -1767,7 +1758,7 @@ export default function CapabilitiesOS() {
     if (wrapRef.current) ro.observe(wrapRef.current);
     window.addEventListener("resize", schedule, { passive: true });
     // Webfonts settle after paint and nudge every card's height.
-    document.fonts?.ready.then(schedule).catch(() => {});
+    document.fonts?.ready.then(schedule).catch(() => { });
     return () => {
       if (queued) cancelAnimationFrame(queued);
       ro.disconnect();
@@ -1831,7 +1822,7 @@ export default function CapabilitiesOS() {
                 Services
               </span>
             </div>
-            <h2 className="mt-6 text-h1 text-ink">
+            <h2 className="mt-6 text-h2 text-ink">
               <KineticWords text="Every practice," />
               <br />
               <KineticWords
@@ -1879,14 +1870,14 @@ export default function CapabilitiesOS() {
             </div>
 
             <div className="lg:col-start-1 lg:row-start-1">
-              <p className="mb-4 border-b border-line pb-3 font-mono text-lg font-bold uppercase tracking-[0.2em] text-azure-ink lg:border-0 lg:pb-0">
+              <p className="mb-4 border-b border-line pb-3 font-mono text-lg font-bold uppercase tracking-[0.2em] text-azure-ink lg:border-0 lg:pb-0 lg:text-center">
                 Technology &amp; Engineering
               </p>
               {column(TECH)}
             </div>
 
             <div className="lg:col-start-3 lg:row-start-1 mb-auto">
-              <p className="mb-4 border-b border-line pb-3 font-mono text-lg font-bold uppercase tracking-[0.2em] text-amber lg:border-0 lg:pb-0 lg:text-right">
+              <p className="mb-4 border-b border-line pb-3 font-mono text-lg font-bold uppercase tracking-[0.2em] text-amber lg:border-0 lg:pb-0 lg:text-center">
                 Global Business Services
               </p>
               {column(GBS)}

@@ -18,14 +18,14 @@ export const INDUSTRIES: Industry[] = [
     name: "Healthcare & Life Sciences",
     desc: "EHR, claims automation and telehealth — built inside HIPAA, HL7 and SureScripts.",
     proof: "Mayo Clinic · CitiMed",
-    image: "/industries/healthcare.webp",
+    image: "/industries/healthcare.png",
   },
   {
     slug: "financial-services",
     name: "Financial Services & FinTech",
     desc: "Digital banking, payments and blockchain rails bridging traditional finance and Web3.",
     proof: "Al Jazeera Finance · LodgeiT",
-    image: "/industries/financial.webp",
+    image: "/industries/financial.png",
   },
   {
     slug: "media",

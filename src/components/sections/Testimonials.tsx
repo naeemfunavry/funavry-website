@@ -97,7 +97,7 @@ export default function Testimonials() {
                 Testimonials
               </span>
             </div>
-            <h2 className="mt-6 text-h1 text-ink">
+            <h2 className="mt-6 text-h2 text-ink">
               <KineticWords text="What it's like" />
               <br />
               <KineticWords

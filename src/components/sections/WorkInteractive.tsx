@@ -263,7 +263,7 @@ export default function WorkInteractive() {
                   Selected Work
                 </span>
               </div>
-              <h2 className="mt-6 text-h1 text-ink">
+              <h2 className="mt-6 text-h2 text-ink">
                 <KineticWords text="Systems we've" />
                 <br />
                 <KineticWords

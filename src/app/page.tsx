@@ -42,9 +42,11 @@ export default function Home() {
         {/* <CapabilitiesIndex /> */}
         {/* <Work /> */}
         {/* <WorkShowcase /> */}
-        <WorkInteractive />
         <Proof />
         <Industries />
+        <WorkInteractive />
+
+
         <TechStack />
         <Testimonials />
         {/* <Insights /> */}

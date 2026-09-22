@@ -39,7 +39,7 @@ const CLIENTS: { name: string; file: string }[] = [
   { name: "P@SHA", file: "pasha.webp" },
   { name: "FAST", file: "fast.webp" },
   { name: "Ministry of Health & Wellness", file: "mohw-logo.webp" },
-  { name: "TechVista", file: "techvista.webp" },
+  { name: "TechVista", file: "techvista.png" },
   { name: "LodgeiT", file: "lodgeit.webp" },
   { name: "VNClagoon", file: "vnc.webp" },
   { name: "PiñaTech", file: "pinatech.webp" },

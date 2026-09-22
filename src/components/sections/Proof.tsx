@@ -185,7 +185,7 @@ export default function Proof() {
               {/* <h2 className="mt-5 text-[clamp(30px,4vw,44px)] font-semibold leading-[1.1] tracking-[-0.03em] text-ink">
                 Building Intelligent Enterprises with AI
               </h2> */}
-              <h2 className="mt-6 text-h1 text-ink">
+              <h2 className="mt-6 text-h2 text-ink">
                 <KineticWords text="Building Intelligent" />
                 <br />
                 <KineticWords
