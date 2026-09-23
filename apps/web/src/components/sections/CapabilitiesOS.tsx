@@ -643,10 +643,11 @@ function buildLinks(
 
 function ConnectionNetwork({
   geom,
-  activeId,
+  activeIds,
 }: {
   geom: Geometry;
-  activeId: string | null;
+  /** The lit services — one for a hovered card, a phase's worth for a pillar. */
+  activeIds: ReadonlySet<string> | null;
 }) {
   const reduce = useReducedMotion();
 
@@ -697,8 +698,8 @@ function ConnectionNetwork({
 
       {geom.links.map((link) => {
         const hue = HUE[link.group];
-        const active = activeId === link.n;
-        const dimmed = activeId !== null && !active;
+        const active = activeIds?.has(link.n) ?? false;
+        const dimmed = activeIds !== null && !active;
 
         return (
           <motion.g
@@ -763,17 +764,21 @@ const AICore = ({
   /** False while the section is off screen — the idle drift stops entirely
       rather than holding a composited layer alive down the whole page. */
   animate,
+  onPhaseHover,
 }: {
   innerRef: React.RefObject<HTMLDivElement>;
   active: "tech" | "gbs" | null;
   /** Which band the hovered or open service sits on. */
   phase: Service["phase"] | null;
   animate: boolean;
+  /** Reports the hovered pillar up, so the section can light its services. */
+  onPhaseHover: (phase: DeliveryPhase | null) => void;
 }) => {
   const [hot, setHot] = useState(false);
-  /** Which pillar the pointer is over — drives the fade-in details popup. Kept
-      local so it never touches the card/fan logic the section owns. */
+  /** Which pillar the pointer is over — drives the fade-in details popup. */
   const [hovered, setHovered] = useState<DeliveryPhase | null>(null);
+
+  useEffect(() => onPhaseHover(hovered), [hovered, onPhaseHover]);
   const accent = active ? HUE[active] : null;
 
   /** A pillar lights when the pointer is on it, or when a side card in its
@@ -1782,8 +1787,21 @@ export default function CapabilitiesOS({ services }: CapabilitiesOSProps) {
     };
   }, [measure]);
 
+  /* A hovered pillar lights every service in its phase. A card under the
+     pointer still wins; a pillar beats a card that's merely open. The
+     Orchestrate pillar has no services of its own, so it lights nothing. */
+  const [pillarPhase, setPillarPhase] = useState<DeliveryPhase | null>(null);
+  const activeIds = useMemo<ReadonlySet<string> | null>(() => {
+    if (hovered) return new Set([hovered]);
+    if (pillarPhase) {
+      const ids = SERVICES.filter((s) => s.phase === pillarPhase).map((s) => s.n);
+      if (ids.length) return new Set(ids);
+    }
+    return openId ? new Set([openId]) : null;
+  }, [hovered, pillarPhase, openId, SERVICES]);
+
   const cardState = (n: string): "idle" | "active" | "muted" =>
-    activeId === n ? "active" : activeId ? "muted" : "idle";
+    !activeIds ? "idle" : activeIds.has(n) ? "active" : "muted";
 
   /* Two-up on a phone and tablet, a single vertical rail from lg — which is
      also the only breakpoint where the connection fan exists to attach to.
@@ -1871,7 +1889,7 @@ export default function CapabilitiesOS({ services }: CapabilitiesOSProps) {
           ref={wrapRef}
           className="relative mt-14 lg:mt-20"
           onMouseLeave={() => setHovered(null)}>
-          {geom && <ConnectionNetwork geom={geom} activeId={activeId} />}
+          {geom && <ConnectionNetwork geom={geom} activeIds={activeIds} />}
 
           <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-8 xl:gap-14">
             {/* Core first on small screens — the visualisation is the point, so
@@ -1882,6 +1900,7 @@ export default function CapabilitiesOS({ services }: CapabilitiesOSProps) {
                 active={activeGroup}
                 phase={activePhase}
                 animate={inView}
+                onPhaseHover={setPillarPhase}
               />
             </div>
 

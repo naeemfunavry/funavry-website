@@ -4,6 +4,8 @@ import CapabilitiesOS from "@/components/sections/CapabilitiesOS";
 import WorkInteractive from "@/components/sections/WorkInteractive";
 import Proof from "@/components/sections/Proof";
 import Industries from "@/components/sections/Industries";
+import { TrustedStrip } from "@/components/sections/Clients";
+import Container from "@/components/ui/Container";
 import TechStack from "@/components/sections/TechStack";
 import Testimonials from "@/components/sections/Testimonials";
 import Contact from "@/components/sections/Contact";
@@ -54,12 +56,19 @@ export default async function Home() {
       <main id="main">
         <Hero />
         <CapabilitiesOS services={services} />
-        <Proof />
+
         <Industries industries={industries} />
+        {/* The trusted-partner strip, its own band under the industries. */}
+        <section aria-label="Trusted by" className="bg-paper">
+          <Container wide>
+            <TrustedStrip />
+          </Container>
+        </section>
         <WorkInteractive caseStudies={caseStudies} />
 
         <TechStack />
-        <Testimonials testimonials={testimonials} />
+        {/* <Testimonials testimonials={testimonials} /> */}
+        <Proof />
         <Contact />
       </main>
       <Footer

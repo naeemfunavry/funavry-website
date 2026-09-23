@@ -15,7 +15,6 @@ import { cn } from "@/lib/utils";
    the track loops without a seam: advancing past the last tile scrolls on into
    the copy, then resets to the matching real tile with no animation. */
 
-
 /** How long a tile holds before the deck advances itself. Quicker than the case
     study deck's 7s — these are glanceable tiles, not a page of prose. */
 const DWELL = 3800;
@@ -272,7 +271,7 @@ export default function Industries({ industries }: IndustriesProps) {
     >
       <div aria-hidden className="absolute inset-0 grid-paper opacity-70" />
 
-      <Container wide className="relative z-10 py-16 sm:py-24 lg:py-32">
+      <Container wide className="relative z-10 py-10 sm:py-16 lg:py-20">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] lg:items-end lg:gap-20">
           <div>
             <div className="flex items-center gap-3">

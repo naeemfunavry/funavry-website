@@ -1,88 +1,61 @@
+import { MapPin } from "lucide-react";
 import Container from "@/components/ui/Container";
 import Logo from "@/components/ui/Logo";
 import type { Office } from "@/lib/offices";
-import { socialIcon } from "@/lib/socials";
+import { socialColor, socialIcon } from "@/lib/socials";
 
-/** The footer index mirrors the delivery model, not a generic sitemap. */
-const COLUMNS: {
-  n: string;
-  title: string;
-  accent: string;
-  links: { label: string; href: string }[];
-}[] = [
-  {
-    n: "01",
-    title: "Build",
-    accent: "bg-azure",
-    links: [
-      { label: "Digital Engineering", href: "/services/digital-engineering" },
-      {
-        label: "Data & Business Intelligence",
-        href: "/services/data-business-intelligence",
-      },
-      { label: "Blockchain & FinTech", href: "/services/blockchain-fintech" },
-      {
-        label: "Immersive Technologies",
-        href: "/services/immersive-technologies",
-      },
-      {
-        label: "Robotics, IoT & Vision",
-        href: "/services/robotics-iot-computer-vision",
-      },
-      { label: "Quality Engineering", href: "/services/quality-engineering" },
-    ],
-  },
-  {
-    n: "02",
-    title: "Automate",
-    accent: "bg-amber",
-    links: [
-      { label: "Artificial Intelligence", href: "/services/ai-automation" },
-      { label: "Intelligent Automation", href: "/services/ai-automation" },
-      { label: "Document Intelligence", href: "/services/ai-automation" },
-      {
-        label: "AI Process Transformation",
-        href: "/services/ai-process-transformation",
-      },
-      { label: "Process Mining", href: "/services/ai-process-transformation" },
-    ],
-  },
-  {
-    n: "03",
-    title: "Operate",
-    accent: "bg-steel",
-    links: [
-      { label: "Managed Services", href: "/services/managed-services" },
-      {
-        label: "Cloud, DevOps & Security",
-        href: "/services/cloud-devops-cybersecurity",
-      },
-      {
-        label: "GBS & Operating Models",
-        href: "/services/gbs-operating-model",
-      },
-      { label: "GCC Advisory", href: "/services/gcc-advisory" },
-      {
-        label: "Finance Transformation",
-        href: "/services/finance-transformation",
-      },
-      { label: "EOR, BOT & Global Teams", href: "/services/global-workforce" },
-    ],
-  },
-  {
-    n: "04",
-    title: "Company",
-    accent: "bg-ink",
-    links: [
-      { label: "Services", href: "/services" },
-      { label: "Industries", href: "/industries" },
-      { label: "Work", href: "#work" },
-      { label: "Technology", href: "#technology" },
-      { label: "Careers", href: "#careers" },
-      { label: "Blog & News", href: "" },
-    ],
-  },
+/** The footer leads with the head office. Only the footer is reordered — the
+    About page and the globe keep the CMS order. A city not listed here keeps
+    its CMS position after these. */
+const OFFICE_ORDER = ["Islamabad", "Riyadh", "New York"];
+
+/** The flags ship with the site in /public/flags, so the footer takes them
+    from there by country rather than trusting the CMS media URL, which can be
+    empty or point at an API that isn't up. The CMS flag is only the fallback
+    for a country not listed here. */
+const LOCAL_FLAGS: Record<string, string> = {
+  Pakistan: "/flags/pk.svg",
+  "Saudi Arabia": "/flags/sa.svg",
+  "United States": "/flags/us.svg",
+};
+
+const flagFor = (o: Office) => LOCAL_FLAGS[o.country] ?? o.flag;
+
+function orderOffices(offices: Office[]): Office[] {
+  const rank = (o: Office) => {
+    const i = OFFICE_ORDER.indexOf(o.city);
+    return i === -1 ? OFFICE_ORDER.length : i;
+  };
+  return [...offices].sort((a, b) => rank(a) - rank(b));
+}
+
+// "Our Entities" has no page yet — it points at "#" until one exists.
+const COMPANY_LINKS = [
+  { label: "About Us", href: "/about" },
+  { label: "Our Entities", href: "#" },
+  { label: "Careers", href: "#careers" },
+  { label: "Blog & News", href: "/blog" },
 ];
+
+// The legal pages don't exist yet either; only the sitemap is real.
+const LEGAL_LINKS = [
+  { label: "Privacy Policy", href: "#" },
+  { label: "Terms & Conditions", href: "#" },
+  { label: "Sitemap", href: "/sitemap.xml" },
+  { label: "Cookie Policy", href: "#" },
+];
+
+/** A column heading — the site's mono label over a short amber rule. */
+function ColumnTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <div>
+      <h2 className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-500">
+        {children}
+      </h2>
+      <span aria-hidden className="mt-3 block h-px w-10 bg-amber" />
+    </div>
+  );
+}
 
 /**
  * Data arrives as props rather than being imported.
@@ -94,34 +67,33 @@ const COLUMNS: {
  */
 export interface FooterProps {
   offices: Office[];
+  /** Still passed by every page; the footer no longer lists them. */
   deliveryCountries: string[];
   socials: { label: string; href: string; icon: string }[];
 }
 
-export default function Footer({
-  offices,
-  deliveryCountries,
-  socials,
-}: FooterProps) {
+export default function Footer({ offices, socials }: FooterProps) {
   return (
     <footer className="relative overflow-hidden border-t border-line bg-paper">
       <Container wide className="relative z-10 pt-16 lg:pt-20">
-        <div className="grid gap-14 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)] lg:gap-20">
+        {/* Identity | Company | Offices, split by hairlines from lg. */}
+        <div className="grid gap-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:grid-cols-[minmax(0,340px)_minmax(0,200px)_minmax(0,1fr)] lg:gap-0">
           {/* Identity. */}
-          <div>
+          <div className="md:col-span-2 lg:col-span-1 lg:pr-12">
             <a
               href="/"
               aria-label="Funavry Technologies home"
-              className="text-ink">
+              className="text-ink"
+            >
               <Logo className="h-8" />
             </a>
-            <p className="mt-7 max-w-[34ch] text-[14.5px] leading-[1.75] text-ink-400">
+            <p className="mt-7 max-w-[36ch] text-[14.5px] leading-[1.75] text-ink-400">
               AI-first technology and Global Business Services. We build modern
               platforms, automate the work inside them, and operate them at
               global scale.
             </p>
 
-            <div className="mt-8 flex items-center">
+            <div className="mt-8 flex items-center gap-2.5">
               {socials.map((s) => {
                 const Icon = socialIcon(s.icon);
                 return (
@@ -131,122 +103,107 @@ export default function Footer({
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Funavry on ${s.label}`}
-                    className="-ml-px flex h-11 w-11 items-center justify-center border border-line text-ink-500 transition-colors duration-300 first:ml-0 hover:bg-ink hover:text-paper">
-                    <Icon size={16} />
+                    style={{ background: socialColor(s.icon) }}
+                    className="flex h-11 w-11 rounded-full items-center justify-center text-white transition-[transform,opacity] duration-300 ease-expo hover:-translate-y-0.5 hover:opacity-90"
+                  >
+                    <Icon size={17} />
                   </a>
                 );
               })}
             </div>
+          </div>
 
-            {/* <dl className="mt-10 grid grid-cols-3 gap-px">
-              {[
-                ["2018", "Founded"],
-                ["500+", "Projects"],
-                ["200+", "People"],
-              ].map(([v, l]) => (
-                <div key={l} className="bg-paper pr-4 pt-4 ">
-                  <dt className="text-[19px] font-medium leading-none tracking-[-0.02em] text-ink">
-                    {v}
-                  </dt>
-                  <dd className="mt-1.5 font-mono text-[9.5px] uppercase tracking-[0.16em] text-ink-400">
-                    {l}
-                  </dd>
+          {/* Company. */}
+          <nav
+            aria-label="Company"
+            className="lg:border-l lg:border-line lg:px-12"
+          >
+            <ColumnTitle>Company</ColumnTitle>
+            <ul className="mt-6 space-y-3.5">
+              {COMPANY_LINKS.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    className="group inline-flex items-center gap-2 text-[14px] leading-snug text-ink-400 transition-colors duration-200 hover:text-ink"
+                  >
+                    <span
+                      aria-hidden
+                      className="h-px w-0 flex-none bg-ink transition-all duration-400 ease-expo group-hover:w-3"
+                    />
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Offices. */}
+          <div className="lg:border-l lg:border-line lg:pl-12">
+            <ColumnTitle>Our Global Offices</ColumnTitle>
+            <div className="mt-6 grid gap-8 sm:grid-cols-3 sm:gap-6 xl:gap-10">
+              {orderOffices(offices).map((o) => (
+                /* Headed by city, which is unique; the flag carries the
+                   country. */
+                <div key={o.city}>
+                  <div className="flex items-start gap-2">
+                    <MapPin
+                      size={16}
+                      strokeWidth={1.8}
+                      className="mt-0.5 flex-none text-azure"
+                    />
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
+                          {o.city}
+                        </h3>
+                        {flagFor(o) && (
+                          /* eslint-disable-next-line @next/next/no-img-element */
+                          <img
+                            src={flagFor(o)}
+                            alt={`${o.country} flag`}
+                            width={24}
+                            height={16}
+                            loading="lazy"
+                            className="h-4 w-6 flex-none object-cover ring-1 ring-line-strong"
+                          />
+                        )}
+                      </div>
+                      <p className="mt-0.5 text-[12.5px] leading-snug text-ink-400">
+                        ({o.role})
+                      </p>
+                    </div>
+                  </div>
+                  <address className="mt-4 space-y-0.5 pl-6 text-[13.5px] not-italic leading-[1.65] text-ink-500">
+                    {o.address.map((line) => (
+                      <p key={line}>{line}</p>
+                    ))}
+                  </address>
                 </div>
               ))}
-            </dl> */}
-          </div>
-
-          {/* Index, drafted by phase. */}
-          <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-4">
-            {COLUMNS.map((col) => (
-              <nav key={col.title} aria-label={col.title}>
-                <div className="flex items-center gap-2.5 border-b border-line pb-3">
-                  <span aria-hidden className={`h-1.5 w-1.5 ${col.accent}`} />
-                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">
-                    {col.title}
-                  </span>
-                </div>
-                <ul className="mt-5 space-y-3">
-                  {col.links.map((link) => (
-                    <li key={link.label}>
-                      <a
-                        href={link.href}
-                        className="group inline-flex items-center gap-2 text-[13px] leading-snug text-ink-400 transition-colors duration-200 hover:text-ink">
-                        <span
-                          aria-hidden
-                          className="h-px w-0 flex-none bg-ink transition-all duration-400 ease-expo group-hover:w-3"
-                        />
-                        {link.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            ))}
+            </div>
           </div>
         </div>
 
-        {/* Global delivery footprint — the offices, then the countries served. */}
-        <div className="mt-16 border-t border-line pt-10">
-          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
-              Global delivery
-            </p>
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
-              <span className="text-ink">{offices.length} offices</span>
-              {" · "}
-              <span className="text-ink">
-                {deliveryCountries.length} countries served
-              </span>
-            </p>
-          </div>
-          <div className="mt-8 grid gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-16">
-            {offices.map((o) => (
-              /* Headed by city, not country. There are two Pakistani offices
-                 now, and country alone both repeated the heading and collided
-                 the keys — the flag and the address carry the country. */
-              <div key={o.city}>
-                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-                  <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
-                    {o.city}
-                  </h3>
-                  <span className="text-[13px] text-ink-400">({o.role})</span>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={o.flag}
-                    alt={`${o.country} flag`}
-                    loading="lazy"
-                    className="h-4 w-6 flex-none object-cover ring-1 ring-line-strong"
-                  />
-                </div>
-                <address className="mt-3 space-y-0.5 text-[14px] not-italic leading-[1.65] text-ink-500">
-                  {o.address.map((line) => (
-                    <p key={line}>{line}</p>
-                  ))}
-                </address>
-              </div>
-            ))}
-          </div>
-
-          {/* Delivery reaches beyond the offices — the countries served. */}
-          <div className="mt-10 flex flex-wrap items-center gap-2">
-            <span className="mr-1 font-mono text-[9.5px] uppercase tracking-[0.16em] text-ink-400">
-              Delivery across
-            </span>
-            {deliveryCountries.map((c) => (
-              <span
-                key={c}
-                className="border border-line px-2.5 py-1 text-[11.5px] leading-none text-ink-500">
-                {c}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-12 flex flex-col items-center justify-center gap-4 border-t border-line py-7 sm:flex-row">
+        {/* Copyright left, legal links right. */}
+        <div className="mt-14 flex flex-col gap-4 border-t border-line py-7 md:flex-row md:items-center md:justify-between">
           <p className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-400">
             © {new Date().getFullYear()} Funavry Technologies
           </p>
+          <ul className="flex flex-wrap items-center gap-y-2">
+            {LEGAL_LINKS.map((link, i) => (
+              <li key={link.label} className="flex items-center">
+                {i > 0 && (
+                  <span aria-hidden className="mx-4 h-3 w-px bg-line-strong" />
+                )}
+                <a
+                  href={link.href}
+                  className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-500 transition-colors duration-200 hover:text-ink"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </Container>
 

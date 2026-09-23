@@ -39,6 +39,26 @@ export function socialIcon(name: string): LucideIcon {
   return ICONS[name] ?? Link2;
 }
 
+/** Each channel's brand colour, keyed like `ICONS`. Instagram's is its
+    gradient. An unknown channel falls back to the site's ink. */
+const COLORS: Record<string, string> = {
+  Linkedin: "#0A66C2",
+  LinkedIn: "#0A66C2",
+  Facebook: "#1877F2",
+  Instagram:
+    "radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%)",
+  Twitter: "#000000",
+  X: "#000000",
+  Github: "#181717",
+  GitHub: "#181717",
+  Youtube: "#FF0000",
+  YouTube: "#FF0000",
+};
+
+export function socialColor(name: string): string {
+  return COLORS[name] ?? "#2E3436";
+}
+
 export interface SocialLink {
   label: string;
   href: string;

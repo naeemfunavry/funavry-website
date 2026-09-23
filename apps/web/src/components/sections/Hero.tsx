@@ -5,6 +5,7 @@ import Button from "@/components/ui/Button";
 import MagneticButton from "@/components/ui/MagneticButton";
 // import AIEcosystem from "@/components/ui/AIEcosystem";
 import ScrollCue from "@/components/ui/ScrollCue";
+import CountUp from "@/components/ui/CountUp";
 import { cn } from "@/lib/utils";
 
 /* Ambient 3D orbit that stands in for the ecosystem visual — concentric rings
@@ -41,6 +42,43 @@ const VERBS = [
   { text: "Build", className: "text-azure" },
   { text: "Automate", className: "text-amber" },
   { text: "Operate", className: "text-steel-300" },
+];
+
+const STATS: {
+  value: number;
+  suffix: string;
+  unit?: string;
+  label: string;
+  desc: string;
+  /** A year isn't a quantity — it's shown as-is rather than counted up. */
+  count?: boolean;
+}[] = [
+  {
+    value: 500,
+    suffix: "+",
+    label: "Projects Delivered",
+    desc: "Successful projects delivered across industries worldwide.",
+  },
+  {
+    value: 200,
+    suffix: "+",
+    label: "Engineers & Specialists",
+    desc: "Experienced engineers and AI specialists.",
+  },
+  {
+    value: 17,
+    suffix: "K",
+    unit: "sq ft",
+    label: "Engineering Facility",
+    desc: "State-of-the-art delivery & innovation center.",
+  },
+  {
+    value: 2018,
+    suffix: "",
+    count: false,
+    label: "Founded",
+    desc: "Building and running enterprise platforms since 2018.",
+  },
 ];
 
 export default function Hero() {
@@ -238,6 +276,38 @@ export default function Hero() {
                 Explore Our Case Studies
               </Button>
             </div>
+
+            {/* Proof points, on a hairline under the CTAs. Two-up on mobile,
+                one row of four from `lg`. */}
+            <dl
+              className="hero-fade mt-14 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-paper/15 pt-8 lg:mt-16 lg:grid-cols-4 lg:gap-x-8"
+              style={{ animationDelay: "0.44s" }}
+            >
+              {STATS.map((stat) => (
+                <div key={stat.label} className="flex flex-col">
+                  <dt className="order-2 mt-3 font-mono text-[10.5px] uppercase tracking-[0.16em] text-paper/60">
+                    {stat.label}
+                  </dt>
+                  <dd className="order-1 flex items-baseline gap-1.5">
+                    <span className="text-[clamp(28px,3vw,40px)] font-semibold leading-none tracking-[-0.03em] text-paper">
+                      {stat.count === false ? (
+                        `${stat.value}${stat.suffix}`
+                      ) : (
+                        <CountUp value={stat.value} suffix={stat.suffix} />
+                      )}
+                    </span>
+                    {stat.unit && (
+                      <span className="text-[14px] font-medium text-paper/50">
+                        {stat.unit}
+                      </span>
+                    )}
+                  </dd>
+                  <dd className="order-3 mt-2 text-[13px] leading-relaxed text-paper/45">
+                    {stat.desc}
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </div>
 
           {/* The ecosystem visual is commented out; the ambient 3D orbit in the
