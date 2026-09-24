@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "media:case-studies": "node scripts/case-study-media.mjs"
+    "media:case-studies": "node scripts/case-study-media.mjs",
+    "cms:snapshot": "node scripts/cms-snapshot.mjs"
   },
   "dependencies": {
     "@funavry/types": "*",

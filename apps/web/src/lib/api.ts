@@ -35,6 +35,8 @@ import type {
 } from "@funavry/types";
 import type { StaticImageData } from "next/image";
 
+import cmsSnapshot from "@/data/cms-snapshot.json";
+
 import type { CaseStudy } from "./case-studies";
 import type { CaseStudyDetail, DetailScreenshot } from "./case-study-details";
 import type { Industry } from "./industries";
@@ -46,6 +48,22 @@ const API_URL =
   process.env.API_URL?.replace(/\/$/, "") ??
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ??
   "http://localhost:4000/api/v1";
+
+/**
+ * The CMS content as of the last `npm run cms:snapshot`, keyed by request path,
+ * with its media served from the web app itself (see the script).
+ *
+ * A production build with no API configured reads it outright — that is how
+ * the site deploys before the API has a public home. Where an API is
+ * configured it is only the fallback for a call that failed: stale content
+ * is a better outcome than a failed build or a 500, and unlike an empty list
+ * it can't be mistaken for "this has no case studies".
+ */
+const SNAPSHOT = cmsSnapshot as Record<string, unknown>;
+const SNAPSHOT_ONLY =
+  process.env.NODE_ENV === "production" &&
+  !process.env.API_URL &&
+  !process.env.NEXT_PUBLIC_API_URL;
 
 /** Mirrors the API's tag names. */
 export const CacheTag = {
@@ -90,6 +108,21 @@ export class CmsUnavailableError extends Error {
  * reasonable degradation where a hard 500 on the whole page is not.
  */
 async function apiFetch<T>(
+  path: string,
+  tags: CacheTagValue[],
+): Promise<T | null> {
+  if (SNAPSHOT_ONLY) return (SNAPSHOT[path] as T | undefined) ?? null;
+
+  try {
+    return await fetchFromApi<T>(path, tags);
+  } catch (error) {
+    if (!(path in SNAPSHOT)) throw error;
+    console.warn(`${String(error)} — serving the snapshot`);
+    return SNAPSHOT[path] as T;
+  }
+}
+
+async function fetchFromApi<T>(
   path: string,
   tags: CacheTagValue[],
 ): Promise<T | null> {

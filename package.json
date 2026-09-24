@@ -16,7 +16,8 @@
     "test": "npm run test --workspaces --if-present",
     "migration:run": "npm run migration:run --workspace @funavry/api",
     "migration:revert": "npm run migration:revert --workspace @funavry/api",
-    "seed": "npm run seed --workspace @funavry/api"
+    "seed": "npm run seed --workspace @funavry/api",
+    "cms:snapshot": "npm run cms:snapshot --workspace @funavry/web"
   },
   "engines": {
     "node": ">=20.11.0"
