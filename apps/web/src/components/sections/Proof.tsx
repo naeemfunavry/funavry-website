@@ -11,6 +11,16 @@ const SLIDES: AboutSlide[] = [
     alt: "The Funavry team gathered outside the Islamabad engineering centre",
     caption: "The Funavry team · Islamabad engineering centre",
   },
+  {
+    src: "/about/team-2.webp",
+    alt: "The Funavry team gathered outside the Islamabad engineering centre",
+    caption: "The Funavry team · Islamabad engineering centre",
+  },
+  {
+    src: "/about/team-3.webp",
+    alt: "The Funavry team gathered outside the Islamabad engineering centre",
+    caption: "The Funavry team · Islamabad engineering centre",
+  },
 ];
 
 export default function Proof() {

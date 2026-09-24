@@ -104,7 +104,7 @@ export default function AboutSlider({ slides }: { slides: AboutSlide[] }) {
                 />
               ))}
             </div>
-            <div className="absolute bottom-3 right-3 flex items-center">
+            {/* <div className="absolute bottom-3 right-3 flex items-center">
               <button
                 type="button"
                 onClick={() => go(-1)}
@@ -121,7 +121,7 @@ export default function AboutSlider({ slides }: { slides: AboutSlide[] }) {
               >
                 <ArrowRight size={15} />
               </button>
-            </div>
+            </div> */}
           </>
         )}
       </div>
