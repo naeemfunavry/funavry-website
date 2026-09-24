@@ -8,7 +8,7 @@ placeholder at the same dimensions, so adding the file changes no layout.
 const ABOUT_IMAGE = {
   src: "/about/team.webp",
   alt: "The Funavry team outside the Islamabad engineering and delivery center",
-  caption: "Islamabad · 17,000 sq ft engineering & delivery center",
+  caption: "Islamabad · 25,000 sq ft engineering & delivery center",
 };
 ```
 

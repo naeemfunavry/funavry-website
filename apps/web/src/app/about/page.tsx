@@ -40,12 +40,11 @@ export const metadata: Metadata = {
 const ABOUT_IMAGE = {
   src: "", // e.g. "/about/team.webp"
   alt: "",
-  caption: "Islamabad · 17,000 sq ft engineering & delivery center",
+  caption: "Islamabad · 25,000 sq ft engineering & delivery center",
 };
 
 /* Every figure here is an approved company fact, the same ones the home page's
    Proof section and the footer carry. Nothing is invented for this page. */
-
 
 const MODEL = [
   {
@@ -73,7 +72,6 @@ const MODEL = [
    initials placeholder, so a real photo drops into the same slot with no
    layout change. Nothing here is invented — these are the profile's own bios. */
 
-
 export default async function AboutPage() {
   const [chrome, STATS, LEADERS, caseStudies] = await Promise.all([
     getChrome(),
@@ -86,13 +84,20 @@ export default async function AboutPage() {
 
   return (
     <>
-      <Nav services={chrome.services} industries={chrome.industries} socials={chrome.socials} />
+      <Nav
+        services={chrome.services}
+        industries={chrome.industries}
+        socials={chrome.socials}
+      />
       <main id="main">
         {/* ---------------------------------------------------- Hero ---- */}
         <section className="relative overflow-hidden border-b border-line bg-paper-deep pt-[130px]">
           <div aria-hidden className="absolute inset-0 grid-paper opacity-60" />
 
-          <Container wide className="relative z-10 pb-16 pt-12 lg:pb-24 lg:pt-16">
+          <Container
+            wide
+            className="relative z-10 pb-16 pt-12 lg:pb-24 lg:pt-16"
+          >
             <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,640px)] lg:items-center lg:gap-16">
               <div>
                 <Eyebrow label="About Funavry" />
@@ -207,7 +212,7 @@ export default async function AboutPage() {
                   Founded in 2018, Funavry has grown into a team of more than
                   200 engineers and specialists who have delivered over 500
                   projects across industries worldwide, from a
-                  17,000-square-foot engineering and delivery center and
+                  25,000-square-foot engineering and delivery center and
                   regional offices in the United States, Saudi Arabia and
                   Pakistan, delivering across nine countries.
                 </p>
@@ -240,8 +245,8 @@ export default async function AboutPage() {
                   Build. Automate. Operate.
                 </h2>
                 <p className="mt-5 max-w-[40ch] text-[15px] leading-[1.8] text-ink-500">
-                  Technology engineering and global business services, mapped
-                  to a single chain — engaged on its own or as one.
+                  Technology engineering and global business services, mapped to
+                  a single chain — engaged on its own or as one.
                 </p>
                 <div className="mt-8">
                   <TextLink href="/services">Explore all capabilities</TextLink>

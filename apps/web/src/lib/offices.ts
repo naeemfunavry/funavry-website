@@ -51,8 +51,12 @@ export const OFFICES: Office[] = [
     country: "Pakistan",
     city: "Islamabad",
     role: "Engineering & Delivery Center",
-    blurb: "17,000 sq ft engineering & delivery center.",
-    address: ["Street 12, G-8/1,", "Islamabad, Pakistan", "17,000 sq ft engineering center"],
+    blurb: "25,000 sq ft engineering & delivery center.",
+    address: [
+      "Street 12, G-8/1,",
+      "Islamabad, Pakistan",
+      "25,000 sq ft engineering center",
+    ],
     at: { lon: 73.04, lat: 33.69 }, // G-8, Islamabad
   },
 ];

@@ -36,7 +36,7 @@ export default function Footprint({
             <h2 className="mt-6 text-h3 text-ink">{title}</h2>
             <p className="mt-5 max-w-[40ch] text-[15px] leading-[1.8] text-ink-500">
               Regional offices in the United States, Saudi Arabia and Pakistan,
-              a 17,000 sq ft engineering and delivery center, and delivery
+              a 25,000 sq ft engineering and delivery center, and delivery
               across {deliveryCountries.length} countries.
             </p>
             <dl className="mt-8 flex gap-10">
@@ -47,7 +47,10 @@ export default function Footprint({
                   label: "Countries served",
                 },
               ].map((s) => (
-                <div key={s.label} className="flex flex-col-reverse justify-end">
+                <div
+                  key={s.label}
+                  className="flex flex-col-reverse justify-end"
+                >
                   <dt className="mt-2 font-mono text-[9.5px] uppercase tracking-[0.16em] text-ink-400">
                     {s.label}
                   </dt>

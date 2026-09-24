@@ -4,10 +4,10 @@ import Logo from "@/components/ui/Logo";
 import type { Office } from "@/lib/offices";
 import { socialColor, socialIcon } from "@/lib/socials";
 
-/** The footer leads with the head office. Only the footer is reordered — the
+/** The footer runs New York, Riyadh, Islamabad. Only the footer is reordered — the
     About page and the globe keep the CMS order. A city not listed here keeps
     its CMS position after these. */
-const OFFICE_ORDER = ["Islamabad", "Riyadh", "New York"];
+const OFFICE_ORDER = ["New York", "Riyadh", "Islamabad"];
 
 /** The flags ship with the site in /public/flags, so the footer takes them
     from there by country rather than trusting the CMS media URL, which can be
