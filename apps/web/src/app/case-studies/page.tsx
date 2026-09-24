@@ -3,17 +3,15 @@ import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
 import { getChrome } from "@/lib/chrome";
 import Contact from "@/components/sections/Contact";
-import Container from "@/components/ui/Container";
-import { KineticWords } from "@/components/ui/Kinetic";
-import FeaturedProject from "@/components/work/FeaturedProject";
-import MoreWork from "@/components/work/MoreWork";
+import WorkHero, { type WorkHeroStat } from "@/components/work/WorkHero";
+import WorkShowcase from "@/components/work/WorkShowcase";
 import { getIndustries, getWorkIndex } from "@/lib/api";
 import {
   buildFeaturedProjects,
-  FEATURED_SLUGS,
   byVisuals,
   buildWorkProjects,
 } from "@/lib/work";
+import type { Shot, WorkProject } from "@/lib/work-model";
 
 export const metadata: Metadata = {
   /* The root layout appends " — Funavry Technologies" via its title template. */
@@ -24,17 +22,29 @@ export const metadata: Metadata = {
 
 /* The company's published figures — the same ones the home page's Proof
    section and the About page carry — plus the industries the site lists. */
-const heroStats = (industryCount: number) => [
-  { value: "500+", label: "Projects Delivered" },
-  { value: String(industryCount), label: "Industries" },
-  { value: "2018", label: "Founded" },
+const heroStats = (industryCount: number): WorkHeroStat[] => [
+  { value: 500, suffix: "+", label: "Projects Delivered" },
+  { value: industryCount, label: "Industries" },
+  { value: 2018, label: "Founded", count: false },
 ];
 
+/** The hero's capture wall: each project's lead screen, where it is a
+    screen-shaped desktop capture — a full-page scroll or a phone would break
+    the wall's rhythm. */
+const wallShots = (projects: WorkProject[]): Shot[] =>
+  projects
+    .map((p) => p.media.primary)
+    .filter(
+      (s): s is Shot =>
+        s !== null && s.kind === "desktop" && s.ratio >= 1.2 && s.ratio <= 2.3,
+    )
+    .slice(0, 15);
+
 /**
- * The Work page, as a portfolio rather than a directory: a short editorial
- * hero, a curated set of flagship projects in alternating rows, then every
- * other project in a filterable two-column grid. All of it is generated from
- * the case-study briefs — see `@/lib/work`.
+ * The Work page, as a portfolio rather than a directory: a dark hero over a
+ * wall of the work itself, then every project as a filterable horizontal showcase — one row per
+ * project, the flagships first. All of it is generated from the case-study
+ * briefs — see `@/lib/work`.
  */
 export default async function CaseStudiesPage() {
   const [chrome, workIndex, industries] = await Promise.all([
@@ -44,97 +54,27 @@ export default async function CaseStudiesPage() {
   ]);
 
   const projects = buildWorkProjects(workIndex.details);
-  const WORK_PROJECTS_BY_VISUALS = byVisuals(projects);
-  const FEATURED_PROJECTS = buildFeaturedProjects(projects);
+  /* The flagships lead, then the rest with captures first. */
+  const featured = buildFeaturedProjects(projects);
+  const SHOWCASE = [
+    ...featured,
+    ...byVisuals(projects).filter((p) => !featured.includes(p)),
+  ];
   const HERO_STATS = heroStats(industries.length);
 
   return (
     <>
-      <Nav services={chrome.services} industries={chrome.industries} socials={chrome.socials} />
+      <Nav
+        services={chrome.services}
+        industries={chrome.industries}
+        socials={chrome.socials}
+      />
       <main id="main">
         {/* ------------------------------------------------------ Hero ---- */}
-        <section className="bg-paper pt-[130px]">
-          <Container wide className="pb-16 pt-12 lg:pb-24 lg:pt-16">
-            <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-20">
-              <div>
-                <div className="flex items-center gap-3">
-                  <span aria-hidden className="h-px w-8 flex-none bg-azure" />
-                  <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-ink-500">
-                    Our Work
-                  </span>
-                </div>
-                <h1 className="mt-6 text-h2 text-ink">
-                  <KineticWords
-                    text="Platforms in production,"
-                    trigger="mount"
-                  />
-                  <br />
-                  <KineticWords
-                    text="outcomes in the field."
-                    delay={0.12}
-                    trigger="mount"
-                  />
-                </h1>
-              </div>
-              <div>
-                <p className="max-w-[46ch] text-[16px] leading-[1.75] text-ink-500">
-                  We design, engineer and deploy digital products for
-                  organizations solving complex problems. From enterprise
-                  systems to AI-powered solutions, we turn ideas into reliable,
-                  scalable platforms.
-                </p>
-                <dl className="grid grid-cols-3 border-t border-line pt-6 lg:border-t-0 lg:pb-2">
-                  {HERO_STATS.map((stat, i) => (
-                    <div
-                      key={stat.label}
-                      className={
-                        i === 0
-                          ? "flex flex-col-reverse justify-end gap-2 pr-4 lg:pr-10"
-                          : "flex flex-col-reverse justify-end gap-2 border-l border-line px-4 lg:px-10"
-                      }
-                    >
-                      <dt className="font-mono text-[9.5px] uppercase leading-[1.5] tracking-[0.18em] text-ink-400">
-                        {stat.label}
-                      </dt>
-                      <dd className="text-[26px] font-medium leading-none tracking-[-0.03em] text-ink lg:text-[34px]">
-                        {stat.value}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
-            </div>
-          </Container>
-        </section>
+        <WorkHero shots={wallShots(SHOWCASE)} stats={HERO_STATS} />
 
-        {/* -------------------------------------------- Featured work ---- */}
-        <section aria-labelledby="featured-work-heading" className="bg-paper">
-          <Container wide className="pb-20 lg:pb-28">
-            <h2
-              id="featured-work-heading"
-              className="flex items-center gap-3 font-mono text-[10.5px] uppercase tracking-[0.24em] text-ink"
-            >
-              <span aria-hidden className="h-px w-8 flex-none bg-azure" />
-              Featured Work
-            </h2>
-
-            <div className="mt-8 space-y-16 lg:mt-12 lg:space-y-24">
-              {FEATURED_PROJECTS.map((project, i) => (
-                <FeaturedProject
-                  key={project.slug}
-                  project={project}
-                  index={i}
-                />
-              ))}
-            </div>
-          </Container>
-        </section>
-
-        {/* ------------------------------------------------ More work ---- */}
-        <MoreWork
-          projects={WORK_PROJECTS_BY_VISUALS}
-          featuredSlugs={FEATURED_SLUGS}
-        />
+        {/* ------------------------------------------------ Showcase ---- */}
+        <WorkShowcase projects={SHOWCASE} />
 
         <Contact />
       </main>

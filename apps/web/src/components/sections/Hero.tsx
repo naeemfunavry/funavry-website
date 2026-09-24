@@ -285,7 +285,7 @@ export default function Hero() {
             >
               {STATS.map((stat) => (
                 <div key={stat.label} className="flex flex-col">
-                  <dt className="order-2 mt-3 font-mono text-[10.5px] uppercase tracking-[0.16em] text-paper/60">
+                  <dt className="order-2 mt-3 font-mono text-sm uppercase tracking-[0.16em] text-paper/60">
                     {stat.label}
                   </dt>
                   <dd className="order-1 flex items-baseline gap-1.5">
@@ -297,12 +297,12 @@ export default function Hero() {
                       )}
                     </span>
                     {stat.unit && (
-                      <span className="text-[14px] font-medium text-paper/50">
+                      <span className="text-base font-medium text-paper/50">
                         {stat.unit}
                       </span>
                     )}
                   </dd>
-                  <dd className="order-3 mt-2 text-[13px] leading-relaxed text-paper/45">
+                  <dd className="order-3 mt-2 text-sm leading-relaxed text-paper/45">
                     {stat.desc}
                   </dd>
                 </div>

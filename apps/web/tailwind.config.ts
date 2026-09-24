@@ -105,6 +105,16 @@ const config: Config = {
           "0%": { transform: "translateX(-50%)" },
           "100%": { transform: "translateX(0)" },
         },
+        /* Vertical loops for the Work hero's capture wall: the column holds
+           its list twice, so -50% lands exactly where it started. */
+        "marquee-y": {
+          "0%": { transform: "translateY(0)" },
+          "100%": { transform: "translateY(-50%)" },
+        },
+        "marquee-y-reverse": {
+          "0%": { transform: "translateY(-50%)" },
+          "100%": { transform: "translateY(0)" },
+        },
         "ping-soft": {
           "0%": { transform: "scale(1)", opacity: "0.7" },
           "80%,100%": { transform: "scale(2.4)", opacity: "0" },
@@ -128,6 +138,8 @@ const config: Config = {
         marquee: "marquee 60s linear infinite",
         "marquee-slow": "marquee 90s linear infinite",
         "marquee-reverse": "marquee-reverse 90s linear infinite",
+        "marquee-y": "marquee-y 50s linear infinite",
+        "marquee-y-reverse": "marquee-y-reverse 50s linear infinite",
         "ping-soft": "ping-soft 2.4s cubic-bezier(0,0,0.2,1) infinite",
         "aurora-a": "aurora-a 26s cubic-bezier(0.4,0,0.2,1) infinite alternate",
         "aurora-b": "aurora-b 34s cubic-bezier(0.4,0,0.2,1) infinite alternate",
