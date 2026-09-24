@@ -64,7 +64,11 @@ export default async function Home() {
             <TrustedStrip />
           </Container>
         </section>
-        <WorkInteractive caseStudies={caseStudies} />
+        {/* The deck indexes into its studies from the first render, so it
+            only mounts with at least one — an unreachable CMS returns none. */}
+        {caseStudies.length > 0 && (
+          <WorkInteractive caseStudies={caseStudies} />
+        )}
 
         <TechStack />
         {/* <Testimonials testimonials={testimonials} /> */}
