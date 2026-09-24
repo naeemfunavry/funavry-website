@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
 import { getChrome } from "@/lib/chrome";
@@ -20,6 +21,23 @@ export const metadata: Metadata = {
 /* A little colour rhythm across the grid — the three logo hues, cycled — so ten
    photographic cards don't all wear the same tick colour. */
 const TINTS = ["68,158,216", "245,159,19", "55,96,121"] as const;
+
+/** The page leads with these four; the rest keep their CMS order after them.
+    Only this page is reordered — the nav and the home page keep the CMS's. */
+const LEAD_INDUSTRIES = [
+  "healthcare",
+  "financial-services",
+  "commerce",
+  "supply-chain",
+];
+
+function leadFirst(industries: Industry[]): Industry[] {
+  const rank = (industry: Industry) => {
+    const i = LEAD_INDUSTRIES.indexOf(industry.slug);
+    return i === -1 ? LEAD_INDUSTRIES.length : i;
+  };
+  return [...industries].sort((a, b) => rank(a) - rank(b));
+}
 
 function IndustryCard({ industry, i }: { industry: Industry; i: number }) {
   return (
@@ -60,13 +78,21 @@ function IndustryCard({ industry, i }: { industry: Industry; i: number }) {
           <span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-ink-400">
             {industry.proof}
           </span>
-          <span
-            aria-hidden
-            className="ml-auto text-ink-400 transition-transform duration-500 ease-expo group-hover/frame:translate-x-1 group-hover/frame:text-ink"
-          >
-            →
-          </span>
         </div>
+
+        {/* The landing page's "Explore" button, drawn rather than nested: the
+            whole card is already the link. Ink rather than paper, since this
+            card is light where the landing one sits on a dark photo. */}
+        <span
+          aria-hidden
+          className="mt-5 inline-flex min-h-[38px] items-center gap-2.5 self-start rounded-sm bg-ink px-4 py-2 text-[13px] font-medium tracking-[-0.01em] text-paper transition-colors duration-300 group-hover/frame:bg-ink-900"
+        >
+          Explore
+          <ArrowRight
+            size={15}
+            className="transition-transform duration-400 ease-expo group-hover/frame:translate-x-1"
+          />
+        </span>
       </div>
     </Frame>
   );
@@ -122,7 +148,7 @@ export default async function IndustriesPage() {
 
           <Container wide className="relative z-10 py-16 lg:py-24">
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {INDUSTRIES.map((industry, i) => (
+              {leadFirst(INDUSTRIES).map((industry, i) => (
                 <IndustryCard key={industry.name} industry={industry} i={i} />
               ))}
             </div>
