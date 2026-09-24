@@ -5,7 +5,6 @@ import {
   Mail,
   Check,
   ArrowRight,
-  Clock,
   CheckCheck,
   Copy,
   Sparkles,
@@ -60,7 +59,8 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="relative overflow-hidden border-t border-paper/10 bg-ink-900 text-paper">
+      className="relative overflow-hidden border-t border-paper/10 bg-ink-900 text-paper"
+    >
       {/* Background Engineering Grids and Textures */}
       <div
         aria-hidden
@@ -88,12 +88,14 @@ export default function Contact() {
       {/* Decorative Technical Crosshairs */}
       <div
         aria-hidden
-        className="pointer-events-none absolute top-8 left-8 hidden font-mono text-[11px] text-paper/20 lg:block">
+        className="pointer-events-none absolute top-8 left-8 hidden font-mono text-[11px] text-paper/20 lg:block"
+      >
         + 00.1
       </div>
       <div
         aria-hidden
-        className="pointer-events-none absolute top-8 right-8 hidden font-mono text-[11px] text-paper/20 lg:block">
+        className="pointer-events-none absolute top-8 right-8 hidden font-mono text-[11px] text-paper/20 lg:block"
+      >
         + 00.2
       </div>
 
@@ -109,11 +111,6 @@ export default function Contact() {
               </span>
               <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-paper/60">
                 START A CONVERSATION
-              </span>
-              <span aria-hidden className="h-3 w-px bg-paper/20" />
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-azure/30 bg-azure/10 px-2.5 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.14em] text-azure-300">
-                <Clock size={11} />
-                Reply in &lt; 24h
               </span>
             </div>
 
@@ -146,7 +143,8 @@ export default function Contact() {
               <div className="mt-9 flex flex-wrap items-center gap-3.5">
                 <a
                   href="mailto:hello@funavry.com"
-                  className="group inline-flex h-14 items-center gap-3.5 rounded-xl border border-paper/15 bg-paper/[0.04] px-5 backdrop-blur-md transition-all duration-300 hover:border-azure/50 hover:bg-paper/[0.08] hover:shadow-[0_0_20px_rgba(68,158,216,0.2)]">
+                  className="group inline-flex h-14 items-center gap-3.5 rounded-xl border border-paper/15 bg-paper/[0.04] px-5 backdrop-blur-md transition-all duration-300 hover:border-azure/50 hover:bg-paper/[0.08] hover:shadow-[0_0_20px_rgba(68,158,216,0.2)]"
+                >
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-azure/15 text-azure transition-colors group-hover:bg-azure group-hover:text-white">
                     <Mail size={16} />
                   </div>
@@ -163,7 +161,8 @@ export default function Contact() {
                   type="button"
                   onClick={copyEmail}
                   className="inline-flex h-14 items-center gap-2 rounded-xl border border-paper/15 bg-paper/[0.04] px-4 font-mono text-[11px] uppercase tracking-wider text-paper/70 backdrop-blur-md transition-all hover:border-azure/40 hover:bg-paper/[0.08] hover:text-paper active:scale-95"
-                  title="Copy email to clipboard">
+                  title="Copy email to clipboard"
+                >
                   {copied ? (
                     <>
                       <CheckCheck size={15} className="text-azure" />
@@ -260,22 +259,21 @@ export default function Contact() {
                   <button
                     type="button"
                     onClick={() => setSubmitted(false)}
-                    className="mt-8 font-mono text-[11px] uppercase tracking-wider text-paper/40 underline hover:text-azure transition-colors">
+                    className="mt-8 font-mono text-[11px] uppercase tracking-wider text-paper/40 underline hover:text-azure transition-colors"
+                  >
                     Send another inquiry
                   </button>
                 </div>
               ) : (
                 /* The Engineering Form */
-                <form
-                  onSubmit={handleSubmit}
-                  className="space-y-6"
-                  noValidate>
+                <form onSubmit={handleSubmit} className="space-y-6" noValidate>
                   {/* Name & Work Email in a 2-Column Grid */}
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div>
                       <label
                         htmlFor="name"
-                        className="block font-mono text-[10.5px] uppercase tracking-[0.16em] text-paper/60 mb-2">
+                        className="block font-mono text-[10.5px] uppercase tracking-[0.16em] text-paper/60 mb-2"
+                      >
                         Full Name <span className="text-azure">*</span>
                       </label>
                       <input
@@ -292,7 +290,8 @@ export default function Contact() {
                     <div>
                       <label
                         htmlFor="email"
-                        className="block font-mono text-[10.5px] uppercase tracking-[0.16em] text-paper/60 mb-2">
+                        className="block font-mono text-[10.5px] uppercase tracking-[0.16em] text-paper/60 mb-2"
+                      >
                         Work Email <span className="text-azure">*</span>
                       </label>
                       <input
@@ -311,7 +310,8 @@ export default function Contact() {
                   <div>
                     <label
                       htmlFor="message"
-                      className="block font-mono text-[10.5px] uppercase tracking-[0.16em] text-paper/60 mb-2">
+                      className="block font-mono text-[10.5px] uppercase tracking-[0.16em] text-paper/60 mb-2"
+                    >
                       Message
                     </label>
                     <textarea
@@ -326,12 +326,13 @@ export default function Contact() {
                   {/* High-Impact Submit Button */}
                   <button
                     type="submit"
-                    className="group relative flex w-full items-center justify-between overflow-hidden rounded-xl bg-azure px-6 py-4 text-left font-medium text-white shadow-[0_0_24px_rgba(68,158,216,0.35)] transition-all duration-300 hover:bg-azure-600 hover:shadow-[0_0_36px_rgba(68,158,216,0.55)] active:scale-[0.99]">
-                    <span className="text-[15.5px] font-semibold tracking-[-0.01em]">
+                    className="group relative flex ms-auto items-center gap-2.5 overflow-hidden rounded-lg bg-azure px-5 py-2.5 font-medium text-white shadow-[0_0_24px_rgba(68,158,216,0.35)] transition-all duration-300 hover:bg-azure-600 hover:shadow-[0_0_36px_rgba(68,158,216,0.55)] active:scale-[0.99]"
+                  >
+                    <span className="text-[14px] font-semibold tracking-[-0.01em]">
                       Send Query
                     </span>
                     <ArrowRight
-                      size={17}
+                      size={15}
                       className="transition-transform duration-300 ease-expo group-hover:translate-x-1.5"
                     />
                   </button>

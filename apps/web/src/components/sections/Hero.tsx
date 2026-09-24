@@ -66,7 +66,7 @@ const STATS: {
     desc: "Experienced engineers and AI specialists.",
   },
   {
-    value: 17,
+    value: 25,
     suffix: "K",
     unit: "sq ft",
     label: "Engineering Facility",
