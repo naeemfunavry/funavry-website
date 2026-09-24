@@ -144,7 +144,15 @@ async function fetchFromApi<T>(
     throw new CmsUnavailableError(path, `unreachable (${String(error)})`);
   }
 
-  if (response.status === 404) return null;
+  /* A 404 means "no such record" only when the API itself says so. Any other
+     404 — an HTML page from a host that isn't the API, say — is a
+     misconfigured API_URL, and reading it as absence would build a site with
+     every list empty and every detail page missing. */
+  if (response.status === 404) {
+    const body = (await response.json().catch(() => null)) as ApiResponse<T> | null;
+    if (body && body.success === false && body.error.code === "NOT_FOUND") return null;
+    throw new CmsUnavailableError(path, "responded 404 without an API body — is API_URL right?");
+  }
 
   if (!response.ok) {
     throw new CmsUnavailableError(path, `responded ${response.status}`);
