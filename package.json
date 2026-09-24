@@ -10,7 +10,7 @@
     "dev:web": "npm run dev --workspace @funavry/web",
     "dev:admin": "npm run dev --workspace @funavry/admin",
     "dev:api": "npm run start:dev --workspace @funavry/api",
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build:types && npm run build --workspaces --if-present",
     "build:types": "npm run build --workspace @funavry/types",
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
