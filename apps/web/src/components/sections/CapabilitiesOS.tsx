@@ -1056,10 +1056,13 @@ const AICore = ({
                     {s.phase}
                   </p>
                 </div>
+                {/* The caption only shows on its lit slab — hovered, or lit
+                    by a hovered service card in its phase. */}
                 <p
                   className={cn(
-                    "text-[9.5px] font-medium leading-[1.4] sm:absolute sm:inset-x-0 sm:top-full sm:mt-2.5 sm:text-[10.5px] lg:mt-8 lg:text-[11px] xl:text-[12px]",
+                    "text-[9.5px] font-medium leading-[1.4] transition-[opacity,transform,visibility] duration-500 ease-expo sm:absolute sm:inset-x-0 sm:top-full sm:mt-2.5 sm:text-[10.5px] lg:mt-8 lg:text-[11px] xl:text-[12px]",
                     s.capTone,
+                    lit ? "translate-y-0 opacity-100" : "invisible translate-y-1 opacity-0",
                   )}>
                   {s.caption}
                 </p>
