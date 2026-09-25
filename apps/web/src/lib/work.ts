@@ -53,10 +53,12 @@ function classify(width: number, height: number): ShotKind {
 }
 
 function resolveShot(shot: DetailScreenshot): Shot {
-  /* A capture missing from the manifest (added without re-running the script)
-     is treated as a 16:10 desktop screen — the commonest shape, and one that
-     composes safely. */
-  const [width, height] = MEDIA[shot.src] ?? [1600, 1000];
+  /* The manifest first, then the size the CMS recorded on upload. A capture
+     known to neither is treated as a 16:10 desktop screen — the commonest
+     shape, and one that composes safely. */
+  const [width, height] =
+    MEDIA[shot.src] ??
+    (shot.width && shot.height ? [shot.width, shot.height] : [1600, 1000]);
   return {
     src: shot.src,
     alt: shot.alt,

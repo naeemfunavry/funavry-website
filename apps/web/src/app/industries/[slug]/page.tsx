@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowRight } from "lucide-react";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
 import { getChrome } from "@/lib/chrome";
@@ -11,7 +10,7 @@ import Button from "@/components/ui/Button";
 import Frame from "@/components/ui/Frame";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
 import { PHASE, SERVICE_ICONS } from "@/lib/service-style";
-import type { WorkProject } from "@/lib/work-model";
+import { CardFoot, ProjectShot, SectionLabel } from "@/components/ui/DetailParts";
 import { projectsFor, servicesForIndustry } from "@/lib/relations";
 import { byVisuals, buildWorkProjects } from "@/lib/work";
 import {
@@ -308,62 +307,5 @@ export default async function IndustryDetailPage({
         socials={chrome.socials}
       />
     </>
-  );
-}
-
-/** A project's lead capture, plain — no device frame — and whole: fitted
-    inside a 16:10 area rather than cropped to it. A project with no capture
-    gets its sector as a quiet placeholder. */
-function ProjectShot({ project }: { project: WorkProject }) {
-  const shot = project.media.primary ?? project.media.phones[0] ?? null;
-
-  return (
-    <div className="relative aspect-[16/10] overflow-hidden border-b border-line bg-paper-deep">
-      {shot ? (
-        <Image
-          src={shot.src}
-          alt={shot.alt}
-          fill
-          sizes="(max-width: 768px) 92vw, (max-width: 1280px) 46vw, 30vw"
-          className="object-contain p-3 transition-transform duration-700 ease-expo group-hover/frame:scale-[1.03]"
-        />
-      ) : (
-        <span className="absolute inset-0 flex items-center justify-center px-6 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
-          {project.sector.split("·")[0].trim()}
-        </span>
-      )}
-    </div>
-  );
-}
-
-/** The site's section eyebrow — azure hairline beside a mono label. */
-function SectionLabel({ id, children }: { id: string; children: string }) {
-  return (
-    <h2
-      id={id}
-      className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.24em] text-ink"
-    >
-      <span aria-hidden className="h-px w-10 flex-none bg-azure" />
-      {children}
-    </h2>
-  );
-}
-
-/** A card's foot: a hairline, then the link label. The card itself is the
-    anchor, so this is only its label, moving with the card's hover. Pinned to
-    the bottom so a row of cards lines its feet up. */
-function CardFoot({ children }: { children: string }) {
-  return (
-    <div className="mt-auto pt-5">
-      <span aria-hidden className="block h-px bg-line" />
-      <span className="mt-4 inline-flex items-center gap-2 text-[13.5px] font-semibold text-azure-ink">
-        {children}
-        <ArrowRight
-          size={14}
-          aria-hidden
-          className="transition-transform duration-500 ease-smooth group-hover/frame:translate-x-1"
-        />
-      </span>
-    </div>
   );
 }

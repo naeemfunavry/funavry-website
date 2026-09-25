@@ -287,6 +287,8 @@ function toDetail(study: ApiCaseStudyDetail): CaseStudyDetail {
         alt: s.media.alt,
         fit: s.fit,
         lead: s.lead || undefined,
+        width: s.media.width ?? undefined,
+        height: s.media.height ?? undefined,
       }),
     ),
   };

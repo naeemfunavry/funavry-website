@@ -29,6 +29,9 @@ export type DetailScreenshot = {
       the widest-desktop rule — for a brief whose key screen isn't its widest
       capture. */
   lead?: boolean;
+  /** Pixel size as the CMS recorded it on upload, when it did. */
+  width?: number;
+  height?: number;
 };
 
 export type CaseStudyDetail = {
