@@ -53,10 +53,11 @@ export const PHASE = {
 } as const;
 
 /**
- * A photograph per engineering practice, keyed by slug, for the Services
- * page's carousel. 1920px wide WebP in /public/services, from Unsplash (free
- * for commercial use, no attribution required). A practice without one falls
- * back to its icon.
+ * A photograph per practice, keyed by slug: the Services page's carousel,
+ * the service detail hero and the nav's mega menu all draw from it. 1920px
+ * wide WebP in /public/services, from Unsplash (free for commercial use, no
+ * attribution required). A practice without one falls back to its icon (the
+ * carousel) or a shared photograph (the hero, the menu).
  */
 export const SERVICE_IMAGES: Record<string, string> = {
   "ai-automation": "/services/ai-automation.webp",
@@ -69,6 +70,12 @@ export const SERVICE_IMAGES: Record<string, string> = {
   "cloud-devops-cybersecurity": "/services/cloud-devops-cybersecurity.webp",
   "quality-engineering": "/services/quality-engineering.webp",
   "managed-services": "/services/managed-services.webp",
+  "gbs-operating-model": "/services/gbs-operating-model.webp",
+  "gcc-advisory": "/services/gcc-advisory.webp",
+  "finance-transformation": "/services/finance-transformation.webp",
+  "ai-process-transformation": "/services/ai-process-transformation.webp",
+  "business-process-excellence": "/services/business-process-excellence.webp",
+  "global-workforce": "/services/global-workforce.webp",
 };
 
 export const HOUSE_LABEL: Record<Service["group"], string> = {

@@ -8,14 +8,18 @@ import Contact from "@/components/sections/Contact";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import Frame from "@/components/ui/Frame";
-import { KineticWords, Wipe } from "@/components/ui/Kinetic";
+import { Wipe } from "@/components/ui/Kinetic";
 import { CardFoot, ProjectShot, SectionLabel } from "@/components/ui/DetailParts";
-import { HOUSE_LABEL, PHASE, SERVICE_ICONS } from "@/lib/service-style";
+import { HOUSE_LABEL, PHASE, SERVICE_IMAGES } from "@/lib/service-style";
+import PageHero from "@/components/ui/PageHero";
 import { industriesForService, projectsFor } from "@/lib/relations";
 import { byVisuals, buildWorkProjects } from "@/lib/work";
 import { getService, getServices, getWorkIndex, getIndustries } from "@/lib/api";
 
 type Params = { slug: string };
+
+/* For a practice added in the CMS before it has a photograph of its own. */
+const FALLBACK_PHOTO = "/services/digital-engineering.webp";
 
 /**
  * `true`, and it has to be.
@@ -81,7 +85,6 @@ export default async function ServiceDetailPage({
 
   const service = found.service;
 
-  const Icon = SERVICE_ICONS[service.icon];
   const phase = PHASE[service.phase];
 
   const projects = byVisuals(buildWorkProjects(workIndex.details));
@@ -106,62 +109,24 @@ export default async function ServiceDetailPage({
       />
       <main id="main">
         {/* ------------------------------------------------------ Hero ----
-            The industry page's dark stage. A practice has no photograph, so
-            its icon stands in on the right, lit in its phase's hue. `id="top"`
-            puts the nav in its on-dark style while it sits over this. */}
-        <section
-          id="top"
-          className="relative overflow-hidden bg-ink-900 pb-20 pt-[150px] lg:flex lg:min-h-[640px] lg:items-center lg:pb-24"
-        >
-          <div
-            aria-hidden
-            className="absolute inset-0 bg-[radial-gradient(60%_80%_at_12%_30%,rgba(68,158,216,0.22),transparent_70%)]"
-          />
-          <div
-            aria-hidden
-            className="absolute inset-0"
-            style={{
-              background: `radial-gradient(40% 60% at 78% 50%, rgba(${phase.tint},0.2), transparent 70%)`,
-            }}
-          />
-          <div aria-hidden className="absolute inset-0 grid-paper-dark" />
-          {Icon && (
-            <div
-              aria-hidden
-              className="pointer-events-none absolute right-[8%] top-1/2 hidden -translate-y-1/2 lg:block"
-            >
-              <Icon
-                size={340}
-                strokeWidth={0.6}
-                style={{ color: `rgba(${phase.tint},0.55)` }}
-              />
-            </div>
-          )}
-
-          <Container wide className="relative z-10 w-full">
-            <div className="max-w-[600px]">
-              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-amber">
-                Service {service.n}
-              </span>
-              <h1 className="mt-5 text-h1 text-paper">
-                <KineticWords text={service.title} trigger="mount" />
-              </h1>
-              <Wipe delay={0.2}>
-                <p className="mt-6 max-w-[46ch] text-[17px] leading-[1.7] text-paper/70">
-                  {service.summary}
-                </p>
-              </Wipe>
-              <div className="mt-9 flex flex-wrap items-center gap-3">
-                <Button href="/contact" variant="accent" size="md" arrow>
-                  Discuss your project
-                </Button>
-                <Button href="/services" variant="outline" size="md">
-                  All services
-                </Button>
-              </div>
-            </div>
-          </Container>
-        </section>
+            The industry page's dark stage, with the practice's photograph
+            filling the right and fading into the ink under the copy. */}
+        <PageHero
+          image={{ src: SERVICE_IMAGES[service.slug] ?? FALLBACK_PHOTO }}
+          eyebrow={`Service ${service.n}`}
+          title={[service.title]}
+          body={service.summary}
+          actions={
+            <>
+              <Button href="/contact" variant="accent" size="md" arrow>
+                Discuss your project
+              </Button>
+              <Button href="/services" variant="outline" size="md">
+                All services
+              </Button>
+            </>
+          }
+        />
 
         {/* ------------------------------------------------- Expertise ----
             One centred statement, built from what the CMS knows about the
