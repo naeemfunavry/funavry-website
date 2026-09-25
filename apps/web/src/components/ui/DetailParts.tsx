@@ -47,12 +47,22 @@ export function CardFoot({ children }: { children: string }) {
     these screens exist to show), and not scaled on hover, which resamples it
     soft. A phone capture is too tall to fill the area, so it sits whole; a
     project with no capture gets its sector as a quiet placeholder. */
-export function ProjectShot({ project }: { project: WorkProject }) {
+export function ProjectShot({
+  project,
+  className = "border-b",
+}: {
+  project: WorkProject;
+  /** Which edge carries the hairline: the foot under a card's copy by
+      default, or a side where the shot sits beside it. */
+  className?: string;
+}) {
   const wide = project.media.primary;
   const shot = wide ?? project.media.phones[0] ?? null;
 
   return (
-    <div className="relative aspect-[16/9] overflow-hidden border-b border-line bg-paper-deep">
+    <div
+      className={`relative aspect-[16/9] overflow-hidden border-line bg-paper-deep ${className}`}
+    >
       {shot ? (
         <Image
           src={shot.src}

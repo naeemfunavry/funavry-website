@@ -1,94 +1,85 @@
-import Link from "next/link";
+import Image from "next/image";
 import Container from "@/components/ui/Container";
-import { KineticWords } from "@/components/ui/Kinetic";
+import Button from "@/components/ui/Button";
+import { KineticWords, Wipe } from "@/components/ui/Kinetic";
+import type { DetailMeta, DetailStat } from "@/lib/case-study-details";
 import type { WorkProject } from "@/lib/work-model";
-import { cn } from "@/lib/utils";
-import FactLine from "./FactLine";
-import ProjectVisual from "./ProjectVisual";
-import { PHASE_STYLE } from "./phase";
+import { HeroSpecs } from "./ProjectSpecs";
 
 /**
- * The case study opener: category, name and positioning statement on the
- * left, the brief's summary on the right, and the project's product visual
- * across the full width beneath — the same composition as on the Work page,
- * at hero scale and held still.
+ * The case study opener, laid out as the industry page's hero: the project's
+ * lead screen fills the right and fades into the ink under the sector, name
+ * and positioning statement on the left. Under the buttons, the project's
+ * capabilities and technology: its figures, what it was delivered as, and
+ * what it was built with.
+ *
+ * `id="top"` puts the nav in its on-dark style while it sits over this.
  */
 export default function CaseStudyHero({
   project,
-  summary,
+  stats,
+  meta,
 }: {
   project: WorkProject;
-  summary: string;
+  stats: DetailStat[];
+  meta: DetailMeta[];
 }) {
-  const phase = PHASE_STYLE[project.phase];
+  const shot = project.media.primary;
 
   return (
-    <section className="relative overflow-hidden bg-paper pt-[120px]">
+    <section
+      id="top"
+      className="relative overflow-hidden bg-ink-900 pb-20 pt-[150px] lg:flex lg:min-h-[720px] lg:items-center lg:pb-24"
+    >
+      {/* The lead screen fills the right, as the industry page's photograph
+          does, anchored top-left so the product's header stays in view. */}
+      {shot && (
+        <div aria-hidden className="absolute inset-0 lg:left-[34%]">
+          <Image
+            src={shot.src}
+            alt=""
+            fill
+            priority
+            quality={90}
+            sizes="(max-width: 1024px) 100vw, 66vw"
+            className="object-cover object-left-top"
+          />
+        </div>
+      )}
+      {/* Ink over the screen: solid under the copy, clearing to the right. On
+          a phone the screen sits behind everything, so it is dimmed evenly. */}
       <div
         aria-hidden
-        className="absolute inset-x-0 top-0 h-[70%] grid-paper opacity-60 [mask-image:linear-gradient(to_bottom,black,transparent)]"
+        className="absolute inset-0 bg-ink-900/85 lg:bg-transparent lg:bg-[linear-gradient(90deg,#21262A_0%,#21262A_34%,rgba(33,38,42,0.82)_46%,rgba(33,38,42,0.25)_72%,rgba(33,38,42,0.05)_100%)]"
       />
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-[radial-gradient(60%_80%_at_12%_30%,rgba(68,158,216,0.22),transparent_70%)]"
+      />
+      <div aria-hidden className="absolute inset-0 grid-paper-dark" />
 
-      <Container wide className="relative z-10 pb-14 pt-10 lg:pb-20 lg:pt-12">
-        <nav
-          aria-label="Breadcrumb"
-          className="flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-400"
-        >
-          <Link href="/" className="transition-colors hover:text-ink">
-            Home
-          </Link>
-          <span aria-hidden>/</span>
-          <Link href="/case-studies" className="transition-colors hover:text-ink">
-            Our Work
-          </Link>
-          <span aria-hidden>/</span>
-          <span aria-current="page" className="max-w-[42ch] truncate text-ink-700">
-            {project.title}
+      <Container wide className="relative z-10 w-full">
+        <div className="max-w-[600px]">
+          <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-amber">
+            Case Study · {project.sector.split("·")[0].trim()}
           </span>
-        </nav>
-
-        <div className="mt-10 grid gap-8 lg:mt-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,440px)] lg:items-end lg:gap-20">
-          <div>
-            <div className="flex flex-wrap items-center gap-3">
-              <span aria-hidden className={cn("h-1.5 w-1.5 rounded-full", phase.dot)} />
-              <span
-                className={cn(
-                  "font-mono text-[10.5px] uppercase tracking-[0.2em]",
-                  phase.text,
-                )}
-              >
-                {project.sector}
-              </span>
-              <span aria-hidden className="h-px w-5 bg-line-strong" />
-              <span className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-400">
-                {project.phase}
-              </span>
-            </div>
-
-            <h1 className="mt-6 max-w-[22ch] text-h2 text-ink">
-              <KineticWords text={project.title} trigger="mount" />
-            </h1>
-
-            <p className="mt-6 max-w-[46ch] text-[18px] font-medium leading-[1.45] tracking-[-0.01em] text-azure-ink lg:text-[20px]">
+          <h1 className="mt-5 text-h2 text-paper">
+            <KineticWords text={project.title} trigger="mount" />
+          </h1>
+          <Wipe delay={0.2}>
+            <p className="mt-6 max-w-[46ch] text-[17px] leading-[1.7] text-paper/70">
               {project.tagline}
             </p>
+          </Wipe>
+          <div className="mt-9 flex flex-wrap items-center gap-3">
+            <Button href="/contact" variant="accent" size="md" arrow>
+              Discuss your project
+            </Button>
+            <Button href="/case-studies" variant="outline" size="md">
+              All work
+            </Button>
           </div>
-
-          {/* Plain, not wrapped in `Wipe`: this is above-the-fold body copy,
-              and it must not wait on an observer to become visible. */}
-          <p className="text-[15.5px] leading-[1.8] text-ink-500">{summary}</p>
-        </div>
-
-        <div className="mt-12 lg:mt-16">
-          <ProjectVisual
-            media={project.media}
-            title={project.title}
-            sector={project.sector}
-            phase={project.phase}
-            variant="hero"
-            priority
-          />
-          <FactLine facts={project.facts} className="mt-5" />
+          <HeroSpecs stats={stats} meta={meta} />
         </div>
       </Container>
     </section>
