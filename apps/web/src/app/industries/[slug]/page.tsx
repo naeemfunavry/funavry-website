@@ -7,10 +7,10 @@ import { getChrome } from "@/lib/chrome";
 import Contact from "@/components/sections/Contact";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
-import Frame from "@/components/ui/Frame";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
-import { PHASE, SERVICE_ICONS } from "@/lib/service-style";
-import { CardFoot, ProjectShot, SectionLabel } from "@/components/ui/DetailParts";
+import WorkTiles from "@/components/work/WorkTiles";
+import PracticesSplit from "@/components/sections/PracticesSplit";
+import { INDUSTRY_OVERVIEWS } from "@/lib/industry-overviews";
 import { projectsFor, servicesForIndustry } from "@/lib/relations";
 import { byVisuals, buildWorkProjects } from "@/lib/work";
 import {
@@ -21,6 +21,7 @@ import {
 } from "@/lib/api";
 
 type Params = { slug: string };
+
 
 /**
  * `true`, and it has to be.
@@ -84,6 +85,7 @@ export default async function IndustryDetailPage({
   if (!found) notFound();
 
   const industry = found.industry;
+  const overview = INDUSTRY_OVERVIEWS[industry.slug];
 
   const projects = byVisuals(buildWorkProjects(workIndex.details));
   const allWork = projectsFor(projects, found.caseStudySlugs);
@@ -103,6 +105,7 @@ export default async function IndustryDetailPage({
   const index = String(currentIndex + 1).padStart(2, "0");
 
   const workCount = allWork.length;
+
   const practiceCount = services.length;
 
   return (
@@ -136,7 +139,7 @@ export default async function IndustryDetailPage({
               evenly instead. */}
           <div
             aria-hidden
-            className="absolute inset-0 bg-ink-900/80 lg:bg-transparent lg:bg-[linear-gradient(90deg,#21262A_0%,#21262A_34%,rgba(33,38,42,0.82)_46%,rgba(33,38,42,0.25)_72%,rgba(33,38,42,0.05)_100%)]"
+            className="absolute inset-0 bg-ink-900/80 lg:bg-transparent lg:bg-[linear-gradient(90deg,#21262A_0%,#21262A_34%,rgba(33,38,42,0.82)_38%,rgba(33,38,42,0.25)_52%,rgba(33,38,42,0.05)_100%)]"
           />
           <div
             aria-hidden
@@ -170,134 +173,150 @@ export default async function IndustryDetailPage({
         </section>
 
         {/* ------------------------------------------------- Expertise ----
-            One centred statement, built from what the CMS knows about the
-            industry rather than written for it. */}
-        {(workCount > 0 || industry.proof) && (
+            The industry's own expertise statement where one is written
+            (`industry-overviews.ts`), laid out as its offerings and the
+            frameworks it names; otherwise one centred statement built from
+            what the CMS knows about the industry. */}
+        {overview ? (
           <section className="relative overflow-hidden border-b border-line bg-paper-deep">
             <div
               aria-hidden
               className="absolute inset-0 grid-paper opacity-60"
             />
-            <Container wide className="relative z-10 py-16 lg:py-20">
-              <div className="mx-auto max-w-[860px] text-center">
-                <h2 className="text-h3 text-ink">{industry.name} Expertise</h2>
-                <span
-                  aria-hidden
-                  className="mx-auto mt-6 block h-px w-full bg-line-strong"
-                />
-                <p className="mx-auto mt-6 max-w-[62ch] text-[17px] leading-[1.75] text-ink-500 lg:text-[18px]">
-                  {workCount > 0 ? (
-                    <>
-                      <strong className="font-semibold text-ink">
-                        {workCount} published{" "}
-                        {workCount === 1 ? "case study" : "case studies"}
-                      </strong>
-                      {practiceCount > 0 && (
-                        <>
-                          {" across "}
-                          <strong className="font-semibold text-ink">
-                            {practiceCount}{" "}
-                            {practiceCount === 1 ? "practice" : "practices"}
-                          </strong>
-                        </>
-                      )}
-                      {industry.proof ? ", trusted by " : "."}
-                    </>
-                  ) : (
-                    "Trusted by "
-                  )}
-                  {industry.proof && (
-                    <>
-                      <strong className="font-semibold text-ink">
-                        {industry.proof}
-                      </strong>
-                      .
-                    </>
-                  )}
-                </p>
+            <Container wide className="relative z-10 py-16 lg:py-24">
+              <div className="grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
+                {/* The statement: heading, then the closing sentence with
+                    the frameworks it names set as badges. */}
+                <div>
+                  <div className="flex items-center gap-3">
+                    <span
+                      aria-hidden
+                      className="h-px w-10 flex-none bg-azure"
+                    />
+                    <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-ink-500">
+                      Expertise
+                    </span>
+                  </div>
+                  <h2 className="mt-6 text-h3 text-ink">
+                    {industry.name} Expertise
+                  </h2>
+                  <p className="mt-6 text-[16px] leading-[1.9] text-ink-500 lg:text-[17px]">
+                    {overview.closing}{" "}
+                    {overview.frameworks.map((f, i) => (
+                      <span key={f}>
+                        <span className="mx-0.5 inline-flex items-center border border-azure/40 bg-azure-50 px-2 py-0.5 font-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-azure-ink">
+                          {f}
+                        </span>
+                        {i < overview.frameworks.length - 2
+                          ? ", "
+                          : i === overview.frameworks.length - 2
+                            ? ", and "
+                            : " "}
+                      </span>
+                    ))}
+                    {overview.tail}
+                  </p>
+                </div>
+
+                {/* The offerings, as an open list: a glyph and a line each,
+                    ruled off from the next — no boxes. */}
+                <div>
+                  <p className="border-b border-line-strong pb-4 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-500">
+                    {overview.lead}
+                  </p>
+                  <ul className="grid sm:grid-cols-2 sm:gap-x-10">
+                    {overview.offerings.map(({ text, icon: Icon }, i) => (
+                      <li key={text} className="border-b border-line">
+                        <Wipe delay={(i % 2) * 0.05}>
+                          <div className="group flex items-center gap-4 py-5">
+                            <Icon
+                              size={22}
+                              strokeWidth={1.5}
+                              aria-hidden
+                              className="flex-none text-azure transition-transform duration-500 ease-expo group-hover:scale-110"
+                            />
+                            <span className="text-[15.5px] font-medium leading-snug tracking-[-0.01em] text-ink first-letter:uppercase">
+                              {text}
+                            </span>
+                          </div>
+                        </Wipe>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </Container>
           </section>
-        )}
-
-        {/* ------------------------------------------- Selected work ---- */}
-        {work.length > 0 && (
-          <section
-            aria-labelledby="industry-work"
-            className="border-b border-line bg-paper"
-          >
-            <Container wide className="py-16 lg:py-24">
-              <SectionLabel id="industry-work">Selected Work</SectionLabel>
-              <ul className="mt-8 grid gap-6 md:grid-cols-2 lg:mt-10 xl:grid-cols-3">
-                {work.map((project, i) => (
-                  <li key={project.slug} className="h-full">
-                    <Wipe delay={(i % 3) * 0.06} className="h-full">
-                      <Frame
-                        as="a"
-                        href={`/case-studies/${project.slug}`}
-                        className="group block h-full"
-                        innerClassName="flex h-full flex-col"
-                      >
-                        <ProjectShot project={project} />
-                        <div className="flex flex-1 flex-col px-6 pb-6 pt-5">
-                          <h3 className="text-[18px] font-medium leading-snug tracking-[-0.02em] text-ink">
-                            {project.title}
-                          </h3>
-                          <CardFoot>View details</CardFoot>
-                        </div>
-                      </Frame>
-                    </Wipe>
-                  </li>
-                ))}
-              </ul>
-            </Container>
-          </section>
+        ) : (
+          (workCount > 0 || industry.proof) && (
+            <section className="relative overflow-hidden border-b border-line bg-paper-deep">
+              <div
+                aria-hidden
+                className="absolute inset-0 grid-paper opacity-60"
+              />
+              <Container wide className="relative z-10 py-16 lg:py-20">
+                <div className="mx-auto max-w-[860px] text-center">
+                  <h2 className="text-h3 text-ink">
+                    {industry.name} Expertise
+                  </h2>
+                  <span
+                    aria-hidden
+                    className="mx-auto mt-6 block h-px w-full bg-line-strong"
+                  />
+                  <p className="mx-auto mt-6 max-w-[62ch] text-[17px] leading-[1.75] text-ink-500 lg:text-[18px]">
+                    {workCount > 0 ? (
+                      <>
+                        <strong className="font-semibold text-ink">
+                          {workCount} published{" "}
+                          {workCount === 1 ? "case study" : "case studies"}
+                        </strong>
+                        {practiceCount > 0 && (
+                          <>
+                            {" across "}
+                            <strong className="font-semibold text-ink">
+                              {practiceCount}{" "}
+                              {practiceCount === 1 ? "practice" : "practices"}
+                            </strong>
+                          </>
+                        )}
+                        {industry.proof ? ", trusted by " : "."}
+                      </>
+                    ) : (
+                      "Trusted by "
+                    )}
+                    {industry.proof && (
+                      <>
+                        <strong className="font-semibold text-ink">
+                          {industry.proof}
+                        </strong>
+                        .
+                      </>
+                    )}
+                  </p>
+                </div>
+              </Container>
+            </section>
+          )
         )}
 
         {/* ---------------------------------------------- Practices ---- */}
-        {services.length > 0 && (
-          <section
-            aria-labelledby="industry-practices"
-            className="border-b border-line bg-paper-white"
-          >
-            <Container wide className="py-16 lg:py-24">
-              <SectionLabel id="industry-practices">
-                Key Practices We Bring
-              </SectionLabel>
-              <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:mt-10 lg:grid-cols-3">
-                {services.map((service) => {
-                  const Icon = SERVICE_ICONS[service.icon];
-                  return (
-                    <li key={service.slug} className="h-full">
-                      <Frame
-                        as="a"
-                        href={`/services/${service.slug}`}
-                        tint={PHASE[service.phase].tint}
-                        className="block h-full"
-                        innerClassName="flex h-full flex-col px-6 pb-6 pt-5"
-                      >
-                        <div className="flex items-center gap-3.5">
-                          {Icon && (
-                            <Icon
-                              size={26}
-                              strokeWidth={1.5}
-                              aria-hidden
-                              className="flex-none text-azure-ink"
-                            />
-                          )}
-                          <h3 className="text-[16px] font-medium leading-snug tracking-[-0.015em] text-ink">
-                            {service.title}
-                          </h3>
-                        </div>
-                        <CardFoot>View services</CardFoot>
-                      </Frame>
-                    </li>
-                  );
-                })}
-              </ul>
-            </Container>
-          </section>
-        )}
+        <PracticesSplit
+          id="industry-practices"
+          title="Key Practices We Bring"
+          services={services}
+        />
+
+        {/* ------------------------------------------- Selected work ---- */}
+        <WorkTiles
+          id="industry-work"
+          title="Selected Work"
+          body={
+            workCount > work.length
+              ? `Platforms we've designed, engineered and run for ${industry.name.toLowerCase()} clients — ${work.length} of the ${workCount} in our portfolio.`
+              : `Platforms we've designed, engineered and run for ${industry.name.toLowerCase()} clients.`
+          }
+          projects={work}
+        />
 
         <Contact />
       </main>
