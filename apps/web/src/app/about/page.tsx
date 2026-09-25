@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { BrainCircuit, LayoutGrid, Server } from "lucide-react";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
@@ -8,6 +7,7 @@ import { getLeaders, getStats } from "@/lib/api";
 import Contact from "@/components/sections/Contact";
 import Footprint from "@/components/sections/Footprint";
 import Gallery, { type GalleryPhoto } from "@/components/sections/Gallery";
+import Leadership from "@/components/sections/Leadership";
 import { TrustedStrip } from "@/components/sections/Clients";
 import Container from "@/components/ui/Container";
 import Frame from "@/components/ui/Frame";
@@ -103,7 +103,10 @@ export default async function AboutPage() {
         <PageHero
           image={{ src: "/about/team-2.webp", position: "center 40%" }}
           eyebrow="About Funavry"
-          title={["An AI-first partner that", "builds, automates and operates."]}
+          title={[
+            "An AI-first partner that",
+            "builds, automates and operates.",
+          ]}
           body="Funavry is an AI-first technology and Global Business Services company. We build modern platforms, automate the work inside them, and operate them at global scale — so our clients get outcomes, not just software."
           actions={
             <>
@@ -119,14 +122,6 @@ export default async function AboutPage() {
           <HeroStats stats={STATS} />
         </PageHero>
 
-        {/* ------------------------------------------------ Trusted ----
-            The home page's client strip, as its own band under the hero. */}
-        <section aria-label="Trusted by" className="border-b border-line bg-paper">
-          <Container wide>
-            <TrustedStrip className="border-t-0" />
-          </Container>
-        </section>
-
         {/* ------------------------------------------------ Who we are ----
             One centred statement, as the industry page opens with. */}
         <section className="relative overflow-hidden border-b border-line bg-paper-deep">
@@ -139,13 +134,16 @@ export default async function AboutPage() {
                 className="mx-auto mt-6 block h-px w-full bg-line-strong"
               />
               <p className="mx-auto mt-6 max-w-[62ch] text-[17px] leading-[1.75] text-ink-500 lg:text-[18px]">
-                Founded in <strong className="font-semibold text-ink">2018</strong>,
+                Founded in{" "}
+                <strong className="font-semibold text-ink">2018</strong>,
                 Funavry is a team of{" "}
                 <strong className="font-semibold text-ink">
                   200+ engineers and specialists
                 </strong>{" "}
                 who have delivered{" "}
-                <strong className="font-semibold text-ink">500+ projects</strong>{" "}
+                <strong className="font-semibold text-ink">
+                  500+ projects
+                </strong>{" "}
                 from a 25,000 sq ft engineering and delivery center and offices
                 in the United States, Saudi Arabia and Pakistan. AI runs through
                 everything we do — the build, the automation and the operation
@@ -183,7 +181,10 @@ export default async function AboutPage() {
                         <span className="mt-6 flex items-center gap-2">
                           <span
                             aria-hidden
-                            className={cn("h-1.5 w-1.5 rounded-full", phase.dot)}
+                            className={cn(
+                              "h-1.5 w-1.5 rounded-full",
+                              phase.dot,
+                            )}
                           />
                           <span
                             className={cn(
@@ -210,70 +211,7 @@ export default async function AboutPage() {
         </section>
 
         {/* --------------------------------------------- Leadership ---- */}
-        {LEADERS.length > 0 && (
-          <section
-            aria-labelledby="about-leadership"
-            className="bg-paper"
-          >
-            <Container wide className="py-16 lg:py-24">
-              <SectionLabel id="about-leadership">Leadership</SectionLabel>
-              <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:mt-10 lg:grid-cols-4">
-                {LEADERS.map((leader) => (
-                  <li key={leader.name}>
-                    <Frame
-                      as="article"
-                      tint="68,158,216"
-                      className="h-full"
-                      innerClassName="flex h-full flex-col"
-                    >
-                      {/* Portrait slot — always reserved, filled by an initials
-                          placeholder until a real photo is supplied. */}
-                      <div className="relative aspect-[4/3] overflow-hidden border-b border-line bg-paper-deep">
-                        {leader.photo ? (
-                          <Image
-                            src={leader.photo}
-                            alt={`${leader.name}, ${leader.role}`}
-                            fill
-                            sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 320px"
-                            className="object-cover object-top"
-                          />
-                        ) : (
-                          <div className="absolute inset-0 grid-paper">
-                            <div className="flex h-full items-center justify-center">
-                              <span className="flex h-16 w-16 items-center justify-center rounded-full border border-line-strong bg-paper-white font-mono text-[18px] tracking-[0.04em] text-ink-500">
-                                {leader.initials}
-                              </span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="flex flex-1 flex-col px-6 pb-6 pt-5">
-                        <h3 className="text-[17px] font-semibold tracking-[-0.01em] text-ink">
-                          {leader.name}
-                        </h3>
-                        <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-azure-ink">
-                          {leader.role}
-                        </p>
-                        <ul className="mt-4 space-y-2 border-t border-line pt-4 text-[13px] leading-[1.6] text-ink-500">
-                          {leader.points.map((point) => (
-                            <li key={point} className="flex gap-2.5">
-                              <span
-                                aria-hidden
-                                className="mt-[7px] h-1 w-1 flex-none rounded-full bg-azure"
-                              />
-                              <span>{point}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </Frame>
-                  </li>
-                ))}
-              </ul>
-            </Container>
-          </section>
-        )}
+        <Leadership leaders={LEADERS} />
 
         <Gallery title="Life at Funavry." photos={GALLERY} />
 
