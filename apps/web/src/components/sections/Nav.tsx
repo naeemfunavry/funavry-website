@@ -2,12 +2,30 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import Image from "next/image";
+import {
+  ArrowRight,
+  Building2,
+  ChevronDown,
+  Cpu,
+  Factory,
+  GraduationCap,
+  HeartPulse,
+  Landmark,
+  Layers,
+  LayoutGrid,
+  Network,
+  Radio,
+  ShoppingBag,
+  Truck,
+  type LucideIcon,
+} from "lucide-react";
 import Logo from "@/components/ui/Logo";
 import Button from "@/components/ui/Button";
 import type { Service } from "@/lib/services";
 import type { Industry } from "@/lib/industries";
 import { socialIcon, type SocialLink } from "@/lib/socials";
+import { PHASE, SERVICE_ICONS, SERVICE_IMAGES } from "@/lib/service-style";
 import { cn } from "@/lib/utils";
 
 const EXPO = [0.19, 1, 0.22, 1] as const;
@@ -80,40 +98,177 @@ function subItemsFor(
 
 const PAD = "px-5 sm:px-6 md:px-10 lg:px-14";
 
-function MegaGroup({
-  label,
-  items,
+/** A glyph per industry, keyed by slug; anything new falls back to Layers. */
+const INDUSTRY_ICONS: Record<string, LucideIcon> = {
+  healthcare: HeartPulse,
+  "financial-services": Landmark,
+  media: Radio,
+  government: Building2,
+  "supply-chain": Truck,
+  manufacturing: Factory,
+  "industrial-iot": Cpu,
+  education: GraduationCap,
+  commerce: ShoppingBag,
+  "enterprise-systems": Network,
+};
+
+/* The three logo hues, cycled down the industry list. */
+const TINTS = ["68,158,216", "245,159,19", "55,96,121"] as const;
+
+/* The Services card's photograph before anything is hovered, and for a
+   practice with none of its own (the business services). */
+const SERVICES_PHOTO = "/services/ai-automation.webp";
+const SERVICES_FALLBACK_PHOTO = "/services/digital-engineering.webp";
+
+/**
+ * The mega panel's feature card: a photograph fading into ink, and over it
+ * whatever the pointer is on — or the panel's own pitch until then. The
+ * photograph crossfades as the pointer moves down the list.
+ */
+function FeatureCard({
+  photo,
+  eyebrow,
+  title,
+  body,
+  meta,
+  cta,
   onNavigate,
 }: {
-  label: string;
-  items: Service[];
+  photo: string;
+  eyebrow: string;
+  title: string;
+  body: string;
+  meta?: string;
+  cta: { label: string; href: string };
   onNavigate: () => void;
 }) {
   return (
-    <div>
-      <p className="border-b border-line pb-2.5 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">
-        {label}
-      </p>
-      <ul className="mt-3 grid gap-x-6 gap-y-1 sm:grid-cols-2">
-        {items.map((s) => (
-          <li key={s.n}>
-            <a
-              href={`/services/${s.slug}`}
-              onClick={onNavigate}
-              className="group flex items-start gap-2.5 py-1.5"
-            >
-              <span
-                aria-hidden
-                className="mt-[7px] h-1 w-1 flex-none rounded-full bg-line-strong transition-colors group-hover:bg-azure"
-              />
-              <span className="text-[13px] leading-snug text-ink-500 transition-colors group-hover:text-ink">
-                {s.title}
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
+    <div className="relative flex min-h-[360px] flex-col justify-end overflow-hidden bg-ink-900 p-7">
+      <AnimatePresence initial={false}>
+        <motion.div
+          key={photo}
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.7, ease: EXPO }}
+          className="absolute inset-0"
+        >
+          <Image
+            src={photo}
+            alt=""
+            fill
+            sizes="340px"
+            quality={85}
+            className="object-cover"
+          />
+        </motion.div>
+      </AnimatePresence>
+      <span
+        aria-hidden
+        className="absolute inset-0 bg-[linear-gradient(0deg,#21262A_0%,rgba(33,38,42,0.82)_42%,rgba(33,38,42,0.25)_100%)]"
+      />
+      <span aria-hidden className="absolute inset-0 grid-paper-dark opacity-60" />
+      <span aria-hidden className="absolute left-0 top-0 h-[3px] w-20 bg-amber" />
+
+      <div className="relative">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={title}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.3, ease: EXPO }}
+          >
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-amber">
+              {eyebrow}
+            </p>
+            <p className="mt-3 text-[21px] font-medium leading-snug tracking-[-0.02em] text-paper">
+              {title}
+            </p>
+            <p className="mt-2.5 line-clamp-3 text-[13px] leading-relaxed text-paper/65">
+              {body}
+            </p>
+            {meta && (
+              <p className="mt-3 font-mono text-[9.5px] uppercase tracking-[0.16em] text-paper/45">
+                {meta}
+              </p>
+            )}
+          </motion.div>
+        </AnimatePresence>
+        <a
+          href={cta.href}
+          onClick={onNavigate}
+          className="group mt-6 inline-flex min-h-[40px] items-center gap-2 bg-amber px-4 text-[13px] font-semibold text-ink-900 transition-colors duration-300 hover:bg-amber-600"
+        >
+          {cta.label}
+          <ArrowRight
+            size={14}
+            aria-hidden
+            className="transition-transform duration-300 ease-expo group-hover:translate-x-1"
+          />
+        </a>
+      </div>
     </div>
+  );
+}
+
+/** One row in a mega list: an icon tile, the name, and a quiet second line.
+    The tile fills with the row's hue on hover. */
+function MegaItem({
+  href,
+  Icon,
+  tint,
+  title,
+  sub,
+  onNavigate,
+  onHover,
+}: {
+  href: string;
+  Icon: LucideIcon;
+  /** "r,g,b" the tile lights to on hover. */
+  tint: string;
+  title: string;
+  sub?: string;
+  onNavigate: () => void;
+  onHover: () => void;
+}) {
+  return (
+    <a
+      href={href}
+      onClick={onNavigate}
+      onMouseEnter={onHover}
+      onFocus={onHover}
+      style={{ "--tint": tint } as React.CSSProperties}
+      className="group flex items-center gap-3.5 border border-transparent p-2.5 transition-colors duration-300 hover:border-line hover:bg-paper"
+    >
+      <span className="flex h-10 w-10 flex-none items-center justify-center border border-line bg-paper-white text-ink-500 transition-colors duration-300 group-hover:border-[rgb(var(--tint))] group-hover:bg-[rgb(var(--tint))] group-hover:text-paper">
+        <Icon size={17} strokeWidth={1.6} aria-hidden />
+      </span>
+      <span className="min-w-0">
+        <span className="block text-[13.5px] font-medium leading-snug tracking-[-0.01em] text-ink">
+          {title}
+        </span>
+        {sub && (
+          <span className="mt-0.5 block truncate font-mono text-[9.5px] uppercase tracking-[0.14em] text-ink-400">
+            {sub}
+          </span>
+        )}
+      </span>
+      <ArrowRight
+        size={14}
+        aria-hidden
+        className="ml-auto flex-none -translate-x-1 text-ink-400 opacity-0 transition-all duration-300 ease-expo group-hover:translate-x-0 group-hover:opacity-100"
+      />
+    </a>
+  );
+}
+
+function GroupLabel({ children, hue }: { children: string; hue: string }) {
+  return (
+    <p className="flex items-center gap-3 border-b border-line pb-3 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">
+      <span aria-hidden className={cn("h-px w-6 flex-none", hue)} />
+      {children}
+    </p>
   );
 }
 
@@ -126,43 +281,66 @@ function ServicesMega({
 }) {
   const tech = services.filter((s) => s.group === "tech");
   const gbs = services.filter((s) => s.group === "gbs");
-  return (
-    <div className={cn("mx-auto w-full max-w-wide py-10", PAD)}>
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,230px)_minmax(0,1fr)] lg:gap-16">
-        <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
-            Services
-          </p>
-          <h3 className="mt-3 text-[21px] font-medium leading-snug tracking-[-0.02em] text-ink">
-            Sixteen practices, one delivery model.
-          </h3>
-          <p className="mt-3 text-[13px] leading-relaxed text-ink-400">
-            Ten technology &amp; engineering practices and six global business
-            services, with AI running through both.
-          </p>
-          <a
-            href="/services"
-            onClick={onNavigate}
-            className="group mt-6 inline-flex items-center gap-1.5 text-[13px] font-medium text-azure-ink"
-          >
-            Explore all capabilities
-            <span className="transition-transform duration-300 ease-expo group-hover:translate-x-1">
-              →
-            </span>
-          </a>
-        </div>
+  const [hovered, setHovered] = useState<Service | null>(null);
 
-        <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
-          <MegaGroup
-            label="Technology & Engineering"
-            items={tech}
-            onNavigate={onNavigate}
-          />
-          <MegaGroup
-            label="Global Business Services"
-            items={gbs}
-            onNavigate={onNavigate}
-          />
+  const item = (s: Service) => (
+    <li key={s.slug}>
+      <MegaItem
+        href={`/services/${s.slug}`}
+        Icon={SERVICE_ICONS[s.icon] ?? LayoutGrid}
+        tint={PHASE[s.phase].tint}
+        title={s.title}
+        sub={s.phase}
+        onNavigate={onNavigate}
+        onHover={() => setHovered(s)}
+      />
+    </li>
+  );
+
+  const photo = hovered
+    ? (SERVICE_IMAGES[hovered.slug] ?? SERVICES_FALLBACK_PHOTO)
+    : SERVICES_PHOTO;
+
+  return (
+    <div className={cn("mx-auto w-full max-w-wide py-8", PAD)}>
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)] lg:gap-10">
+        <FeatureCard
+          photo={photo}
+          eyebrow={
+            hovered
+              ? `${hovered.phase} · ${hovered.group === "tech" ? "Engineering" : "Business Services"}`
+              : "Services"
+          }
+          title={hovered ? hovered.title : "Sixteen practices, one delivery model."}
+          body={
+            hovered
+              ? hovered.summary
+              : "Ten technology & engineering practices and six global business services, with AI running through both."
+          }
+          cta={
+            hovered
+              ? { label: "View service", href: `/services/${hovered.slug}` }
+              : { label: "Explore all services", href: "/services" }
+          }
+          onNavigate={onNavigate}
+        />
+
+        <div
+          onMouseLeave={() => setHovered(null)}
+          className="grid gap-8 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"
+        >
+          <div>
+            <GroupLabel hue="bg-azure">Technology &amp; Engineering</GroupLabel>
+            <ul className="mt-3 grid gap-x-2 gap-y-0.5 sm:grid-cols-2">
+              {tech.map(item)}
+            </ul>
+          </div>
+          <div>
+            <GroupLabel hue="bg-amber">Global Business Services</GroupLabel>
+            <ul className="mt-3 grid gap-x-2 gap-y-0.5 sm:grid-cols-2 xl:grid-cols-1">
+              {gbs.map(item)}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -176,53 +354,50 @@ function IndustriesMega({
   industries: Industry[];
   onNavigate: () => void;
 }) {
-  return (
-    <div className={cn("mx-auto w-full max-w-wide py-10", PAD)}>
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,230px)_minmax(0,1fr)] lg:gap-16">
-        <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
-            Industries
-          </p>
-          <h3 className="mt-3 text-[21px] font-medium leading-snug tracking-[-0.02em] text-ink">
-            Ten industries, deep domain fluency.
-          </h3>
-          <p className="mt-3 text-[13px] leading-relaxed text-ink-400">
-            Five hundred delivered projects across the sectors we know cold.
-          </p>
-          <a
-            href="/industries"
-            onClick={onNavigate}
-            className="group mt-6 inline-flex items-center gap-1.5 text-[13px] font-medium text-azure-ink"
-          >
-            Explore all industries
-            <span className="transition-transform duration-300 ease-expo group-hover:translate-x-1">
-              →
-            </span>
-          </a>
-        </div>
+  const [hovered, setHovered] = useState<Industry | null>(null);
+  const photo = (hovered ?? industries[0])?.image;
 
-        <ul className="grid gap-x-8 gap-y-5 sm:grid-cols-2 xl:grid-cols-3">
-          {industries.map((ind) => (
-            <li key={ind.name}>
-              <a
-                href={`/industries/${ind.slug}`}
-                onClick={onNavigate}
-                className="group block"
-              >
-                <span className="flex items-center gap-2 text-[14px] font-medium tracking-[-0.01em] text-ink">
-                  <span
-                    aria-hidden
-                    className="h-px w-0 flex-none bg-azure transition-all duration-400 ease-expo group-hover:w-3"
-                  />
-                  {ind.name}
-                </span>
-                <span className="mt-1 block text-[12px] leading-snug text-ink-400">
-                  {ind.desc}
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
+  return (
+    <div className={cn("mx-auto w-full max-w-wide py-8", PAD)}>
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)] lg:gap-10">
+        {photo && (
+          <FeatureCard
+            photo={photo}
+            eyebrow={hovered ? "Industry" : "Industries"}
+            title={hovered ? hovered.name : "Ten industries, deep domain fluency."}
+            body={
+              hovered
+                ? hovered.desc
+                : "Five hundred delivered projects across the sectors we know cold."
+            }
+            meta={hovered?.proof}
+            cta={
+              hovered
+                ? { label: "View industry", href: `/industries/${hovered.slug}` }
+                : { label: "Explore all industries", href: "/industries" }
+            }
+            onNavigate={onNavigate}
+          />
+        )}
+
+        <div onMouseLeave={() => setHovered(null)}>
+          <GroupLabel hue="bg-azure">Industries we serve</GroupLabel>
+          <ul className="mt-3 grid gap-x-2 gap-y-0.5 sm:grid-cols-2 xl:grid-cols-3">
+            {industries.map((ind, i) => (
+              <li key={ind.slug}>
+                <MegaItem
+                  href={`/industries/${ind.slug}`}
+                  Icon={INDUSTRY_ICONS[ind.slug] ?? Layers}
+                  tint={TINTS[i % TINTS.length]}
+                  title={ind.name}
+                  sub={ind.proof}
+                  onNavigate={onNavigate}
+                  onHover={() => setHovered(ind)}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
@@ -626,7 +801,7 @@ export default function Nav({ services, industries, socials }: NavProps) {
             transition={{ duration: 0.3, ease: EXPO }}
             onMouseEnter={() => openMega(mega)}
             onMouseLeave={closeMega}
-            className="absolute inset-x-0 top-full hidden border-y border-line bg-paper-white/95 shadow-[0_30px_60px_-30px_rgba(46,52,54,0.3)] backdrop-blur-xl lg:block"
+            className="absolute inset-x-0 top-full hidden border-y border-line bg-paper-white/[0.97] shadow-[0_40px_80px_-30px_rgba(46,52,54,0.35)] backdrop-blur-xl lg:block"
           >
             {mega === "services" ? (
               <ServicesMega services={services} onNavigate={() => setMega(null)} />
