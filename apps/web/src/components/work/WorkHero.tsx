@@ -201,26 +201,6 @@ export default function WorkHero({
               Start a Project
             </Button>
           </div>
-
-          <dl
-            className="hero-fade mt-14 grid grid-cols-3 gap-x-6 border-t border-paper/15 pt-8"
-            style={{ animationDelay: "0.44s" }}
-          >
-            {stats.map((stat) => (
-              <div key={stat.label} className="flex flex-col">
-                <dt className="order-2 mt-3 font-mono text-[10.5px] uppercase tracking-[0.16em] text-paper/55 sm:text-xs">
-                  {stat.label}
-                </dt>
-                <dd className="order-1 text-[clamp(26px,3vw,40px)] font-semibold leading-none tracking-[-0.03em] text-paper">
-                  {stat.count === false ? (
-                    `${stat.value}${stat.suffix ?? ""}`
-                  ) : (
-                    <CountUp value={stat.value} suffix={stat.suffix} />
-                  )}
-                </dd>
-              </div>
-            ))}
-          </dl>
         </div>
       </Container>
 
