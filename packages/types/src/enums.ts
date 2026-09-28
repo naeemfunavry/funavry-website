@@ -40,10 +40,13 @@ export enum Permission {
   SETTINGS_MANAGE = "settings:manage",
 }
 
-/** Build → Automate → Operate, the spine the whole site is organised around. */
+/** Build → Automate → Orchestrate → Operate, the spine the whole site is
+    organised around. Only services use Orchestrate; case studies stay on the
+    other three. */
 export enum DeliveryPhase {
   BUILD = "Build",
   AUTOMATE = "Automate",
+  ORCHESTRATE = "Orchestrate",
   OPERATE = "Operate",
 }
 

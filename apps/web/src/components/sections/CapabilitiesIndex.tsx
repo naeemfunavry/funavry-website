@@ -67,6 +67,11 @@ const PHASE_TILE: Record<
     hover:
       "group-hover/row:bg-amber group-hover/row:text-ink-900 group-focus-within/row:bg-amber group-focus-within/row:text-ink-900",
   },
+  Orchestrate: {
+    idle: "bg-[#1F5F9E]/[0.10] text-[#1F5F9E]",
+    hover:
+      "group-hover/row:bg-[#1F5F9E] group-hover/row:text-white group-focus-within/row:bg-[#1F5F9E] group-focus-within/row:text-white",
+  },
   Operate: {
     idle: "bg-steel/[0.10] text-steel-ink",
     hover:
@@ -78,6 +83,7 @@ const PHASE_TILE: Record<
 const PHASES = [
   { key: "Build" as const, line: "Design and engineer the platform." },
   { key: "Automate" as const, line: "Put AI to work on top of it." },
+  { key: "Orchestrate" as const, line: "Connect it end to end." },
   { key: "Operate" as const, line: "Run it at scale." },
 ];
 
@@ -337,7 +343,7 @@ export default function CapabilitiesIndex({ services: SERVICES }: { services: Se
                 </p>
               </div>
 
-              <div className="grid gap-px bg-line sm:grid-cols-3">
+              <div className="grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-4">
                 {PHASES.map((p, i) => {
                   const phase = PHASE[p.key];
                   const count = SERVICES.filter(

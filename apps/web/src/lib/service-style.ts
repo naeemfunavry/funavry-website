@@ -49,6 +49,7 @@ export const SERVICE_ICONS: Record<string, LucideIcon> = {
 export const PHASE = {
   Build: { text: "text-azure", dot: "bg-azure", tint: "68,158,216" },
   Automate: { text: "text-amber-ink", dot: "bg-amber", tint: "245,159,19" },
+  Orchestrate: { text: "text-[#1F5F9E]", dot: "bg-[#1F5F9E]", tint: "31,95,158" },
   Operate: { text: "text-steel", dot: "bg-steel", tint: "55,96,121" },
 } as const;
 

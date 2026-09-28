@@ -11,8 +11,8 @@ export type Service = {
   title: string;
   /** Which side of the business this belongs to. */
   group: "tech" | "gbs";
-  /** Which phase of Build → Automate → Operate it mostly lives in. */
-  phase: "Build" | "Automate" | "Operate";
+  /** Which phase of Build → Automate → Orchestrate → Operate it mostly lives in. */
+  phase: "Build" | "Automate" | "Orchestrate" | "Operate";
   /** lucide-react icon name, resolved by the section. */
   icon: string;
   summary: string;
@@ -235,7 +235,7 @@ export const SERVICES: Service[] = [
     slug: "ai-process-transformation",
     title: "AI-Powered Process Transformation",
     group: "gbs",
-    phase: "Automate",
+    phase: "Orchestrate",
     icon: "Bot",
     summary:
       "Unlock productivity, intelligence, and automation through AI-driven process redesign across enterprise operations.",

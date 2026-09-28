@@ -229,10 +229,9 @@ const GROUP_LABEL = {
    thick enough to carry a label need the height.
    -------------------------------------------------------------------------- */
 
-/** The delivery model's phases. Orchestrate is a layer of the model but no
-    practice is filed under it, so it widens this type rather than
-    `Service["phase"]` — no lines fan into it. */
-type DeliveryPhase = Service["phase"] | "Orchestrate";
+/** The delivery model's phases, one per slab. Every one has practices filed
+    under it, so every slab takes lines from the fan. */
+type DeliveryPhase = Service["phase"];
 
 const VB_H = 248;
 
@@ -1791,8 +1790,8 @@ export default function CapabilitiesOS({ services }: CapabilitiesOSProps) {
   }, [measure]);
 
   /* A hovered pillar lights every service in its phase. A card under the
-     pointer still wins; a pillar beats a card that's merely open. The
-     Orchestrate pillar has no services of its own, so it lights nothing. */
+     pointer still wins; a pillar beats a card that's merely open. A pillar
+     with no services filed under it lights nothing. */
   const [pillarPhase, setPillarPhase] = useState<DeliveryPhase | null>(null);
   const activeIds = useMemo<ReadonlySet<string> | null>(() => {
     if (hovered) return new Set([hovered]);
@@ -1951,7 +1950,7 @@ export default function CapabilitiesOS({ services }: CapabilitiesOSProps) {
               the two ways people look at a diagram like this. */}
               <div className="mt-4 lg:mt-10">
                 {/* <p className="flex items-start justify-start gap-3 text-[15px] font-semibold tracking-[0.02em] text-ink lg:gap-4 lg:text-[19px]">
-                  {(["Build", "Automate", "Operate"] as const).map(
+                  {(["Build", "Automate", "Orchestrate", "Operate"] as const).map(
                     (name, i) => (
                       <Fragment key={name}>
                         {i > 0 && (

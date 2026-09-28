@@ -234,6 +234,7 @@ export function ServiceEditor({ id }: { id?: string }) {
               options={[
                 { value: DeliveryPhase.BUILD, label: "Build" },
                 { value: DeliveryPhase.AUTOMATE, label: "Automate" },
+                { value: DeliveryPhase.ORCHESTRATE, label: "Orchestrate" },
                 { value: DeliveryPhase.OPERATE, label: "Operate" },
               ]}
             />

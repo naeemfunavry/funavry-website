@@ -100,5 +100,6 @@ export type CaseStudy = {
 export const CASE_PHASE = {
   Build: { text: "text-azure-ink", dot: "bg-azure", tint: "68,158,216" },
   Automate: { text: "text-amber-ink", dot: "bg-amber", tint: "245,159,19" },
+  Orchestrate: { text: "text-[#1F5F9E]", dot: "bg-[#1F5F9E]", tint: "31,95,158" },
   Operate: { text: "text-steel-ink", dot: "bg-steel", tint: "55,96,121" },
 } as const;

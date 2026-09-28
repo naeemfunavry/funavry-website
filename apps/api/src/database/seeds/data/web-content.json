@@ -4037,7 +4037,7 @@
       "slug": "ai-process-transformation",
       "title": "AI-Powered Process Transformation",
       "group": "gbs",
-      "phase": "Automate",
+      "phase": "Orchestrate",
       "icon": "Bot",
       "summary": "Unlock productivity, intelligence, and automation through AI-driven process redesign across enterprise operations.",
       "subs": [

@@ -97,9 +97,11 @@ const slugify = (value: string): string =>
 const toPhase = (value: string): DeliveryPhase =>
   value === "Automate"
     ? DeliveryPhase.AUTOMATE
-    : value === "Operate"
-      ? DeliveryPhase.OPERATE
-      : DeliveryPhase.BUILD;
+    : value === "Orchestrate"
+      ? DeliveryPhase.ORCHESTRATE
+      : value === "Operate"
+        ? DeliveryPhase.OPERATE
+        : DeliveryPhase.BUILD;
 
 /**
  * Imports the website's hardcoded content into the database.

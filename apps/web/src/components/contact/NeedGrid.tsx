@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import { ArrowRight } from "lucide-react";
 import Frame from "@/components/ui/Frame";
 import { SERVICE_ICONS } from "@/components/ui/ServiceDrawer";
@@ -11,9 +12,15 @@ import { CASE_PHASE } from "@/lib/case-studies";
 import type { Service } from "@/lib/services";
 import { cn } from "@/lib/utils";
 
-/* Two practices from each phase, ordered so that on a three-column grid every
-   column is one phase: Build, then Automate, then Operate, left to right. */
+/* Two practices per column, ordered so that on a three-column grid the columns
+   run Build, then Automate and Orchestrate (01 and 14, the AI practices), then
+   Operate, left to right. */
 const PICKS = ["02", "01", "08", "07", "14", "16"];
+const COLUMNS = [
+  ["Build"],
+  ["Automate", "Orchestrate"],
+  ["Operate"],
+] as const satisfies readonly (readonly Service["phase"][])[];
 const buildNeeds = (SERVICES: Service[]) =>
   PICKS.map((n) => SERVICES.find((s) => s.n === n)).filter(
   (s): s is Service => Boolean(s),
@@ -90,20 +97,29 @@ export default function NeedGrid({ services }: NeedGridProps) {
     <div>
       {/* Column heads — only meaningful when the grid is three across. */}
       <div className="mb-4 hidden grid-cols-3 gap-5 lg:grid">
-        {(["Build", "Automate", "Operate"] as const).map((name) => (
-          <div key={name} className="flex items-center gap-2.5">
+        {COLUMNS.map((names) => (
+          <div key={names.join()} className="flex items-center gap-2.5">
             <span
               aria-hidden
-              className={cn("h-px w-6", CASE_PHASE[name].dot)}
+              className={cn("h-px w-6", CASE_PHASE[names[0]].dot)}
             />
-            <span
-              className={cn(
-                "font-mono text-[10px] uppercase tracking-[0.2em]",
-                CASE_PHASE[name].text,
-              )}
-            >
-              {name}
-            </span>
+            {names.map((name, i) => (
+              <Fragment key={name}>
+                {i > 0 && (
+                  <span aria-hidden className="text-[10px] text-ink-300">
+                    ·
+                  </span>
+                )}
+                <span
+                  className={cn(
+                    "font-mono text-[10px] uppercase tracking-[0.2em]",
+                    CASE_PHASE[name].text,
+                  )}
+                >
+                  {name}
+                </span>
+              </Fragment>
+            ))}
           </div>
         ))}
       </div>

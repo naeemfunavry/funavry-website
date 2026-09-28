@@ -23,6 +23,8 @@ export const INTERESTS = [
 export const INTEREST_BY_PHASE = {
   Build: INTERESTS[0],
   Automate: INTERESTS[1],
+  /* Orchestration is AI agents wired into process — the Automate option. */
+  Orchestrate: INTERESTS[1],
   Operate: INTERESTS[2],
 } as const;
 
