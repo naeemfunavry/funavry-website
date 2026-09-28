@@ -241,7 +241,7 @@ export default function WorkInteractive({ caseStudies }: WorkInteractiveProps) {
       <section
         ref={sectionRef}
         id="work"
-        className="relative overflow-hidden bg-paper py-14 lg:py-24"
+        className="relative overflow-hidden bg-paper py-10 lg:py-16"
       >
         {/* Field: the azure lift the design puts in the top-right corner, plus the
           engineering grid every other section stands on. */}

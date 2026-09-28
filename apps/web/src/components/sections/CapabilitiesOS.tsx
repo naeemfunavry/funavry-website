@@ -1848,7 +1848,7 @@ export default function CapabilitiesOS({ services }: CapabilitiesOSProps) {
         className="absolute inset-0 bg-[radial-gradient(75%_60%_at_50%_50%,transparent,white_95%)]"
       />
 
-      <Container wide className="relative z-10 py-16 sm:py-24 lg:py-32">
+      <Container wide className="relative z-10 py-12 sm:py-16 lg:py-20">
         {/* Header. */}
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)] lg:items-end lg:gap-20">
           <div>

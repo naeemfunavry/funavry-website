@@ -101,7 +101,7 @@ export default function Contact() {
         + 00.2
       </div>
 
-      <Container wide className="relative z-10 py-20 sm:py-24 lg:py-32">
+      <Container wide className="relative z-10 py-14 sm:py-16 lg:py-20">
         <div className="grid gap-14 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,540px)] lg:gap-20 xl:gap-24 items-start">
           {/* Left Column — The closing vision, trust matrix & direct lines */}
           <div>

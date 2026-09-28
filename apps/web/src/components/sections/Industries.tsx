@@ -271,7 +271,7 @@ export default function Industries({ industries }: IndustriesProps) {
     >
       <div aria-hidden className="absolute inset-0 grid-paper opacity-70" />
 
-      <Container wide className="relative z-10 py-10 sm:py-16 lg:py-20">
+      <Container wide className="relative z-10 py-8 sm:py-12 lg:py-14">
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] lg:items-end lg:gap-20">
           <div>
             <div className="flex items-center gap-3">
@@ -299,32 +299,30 @@ export default function Industries({ industries }: IndustriesProps) {
                 reality of each.
               </p>
             </Wipe>
-
-            {/* Deck controls, parked at the top right of the section. */}
-            <div className="flex flex-none items-center lg:justify-end">
-              <button
-                type="button"
-                onClick={() => go(-1)}
-                aria-label="Previous industry"
-                aria-controls="industries-track"
-                className="flex h-12 w-12 items-center justify-center border border-line-strong text-ink-500 transition-colors duration-300 hover:bg-ink hover:text-paper"
-              >
-                <ArrowLeft size={16} />
-              </button>
-              <button
-                type="button"
-                onClick={() => go(1)}
-                aria-label="Next industry"
-                aria-controls="industries-track"
-                className="-ml-px flex h-12 w-12 items-center justify-center border border-line-strong text-ink-500 transition-colors duration-300 hover:bg-ink hover:text-paper"
-              >
-                <ArrowRight size={16} />
-              </button>
-            </div>
           </div>
         </div>
-
-        <Rule className="mt-14 lg:mt-16" />
+        {/* <Rule className="mt-14 lg:mt-16" /> */}
+        {/* Deck controls, parked at the top right of the section. */}
+        <div className="flex flex-none items-center lg:justify-end">
+          <button
+            type="button"
+            onClick={() => go(-1)}
+            aria-label="Previous industry"
+            aria-controls="industries-track"
+            className="flex h-12 w-12 items-center justify-center border border-line-strong text-ink-500 transition-colors duration-300 hover:bg-ink hover:text-paper"
+          >
+            <ArrowLeft size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={() => go(1)}
+            aria-label="Next industry"
+            aria-controls="industries-track"
+            className="-ml-px flex h-12 w-12 items-center justify-center border border-line-strong text-ink-500 transition-colors duration-300 hover:bg-ink hover:text-paper"
+          >
+            <ArrowRight size={16} />
+          </button>
+        </div>
 
         {/* Hovering or touching the deck takes the wheel from the autoplay. */}
         <div
