@@ -154,8 +154,17 @@ export class MediaSeeder {
     await fs.mkdir(path.dirname(target), { recursive: true });
     await fs.writeFile(target, bytes, { mode: 0o640 });
 
+    /* A file already seeded under this key whose bytes have since changed:
+       update that row in place. Inserting would trip the unique storage key,
+       and the content that points at the old row should get the new image. */
+    const previous = await repo.findOne({
+      where: { storageKey: key },
+      withDeleted: true,
+    });
+
     const saved = await repo.save(
       repo.create({
+        ...(previous ? { id: previous.id, deletedAt: null } : {}),
         storageKey: key,
         originalName: path.basename(options.sourcePath),
         mimeType,
