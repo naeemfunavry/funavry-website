@@ -2,14 +2,12 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Container from "@/components/ui/Container";
 import type { Service } from "@/lib/services";
 import { PHASE, SERVICE_ICONS, SERVICE_IMAGES } from "@/lib/service-style";
 import { cn } from "@/lib/utils";
 
-const EXPO = [0.19, 1, 0.22, 1] as const;
 /* For a practice added in the CMS before it has a photograph of its own. */
 const FALLBACK_PHOTO = "/services/digital-engineering.webp";
 
@@ -33,7 +31,10 @@ export default function PracticesSplit({
   if (services.length === 0) return null;
 
   const current = services[active] ?? services[0];
-  const photo = SERVICE_IMAGES[current.slug] ?? FALLBACK_PHOTO;
+  const photoFor = (s: Service) => SERVICE_IMAGES[s.slug] ?? FALLBACK_PHOTO;
+  const photo = photoFor(current);
+  /* Several practices can share the fallback, so each file is stacked once. */
+  const photos = [...new Set(services.map(photoFor))];
 
   return (
     <section
@@ -43,7 +44,7 @@ export default function PracticesSplit({
       {/* The photograph — the right half of the band, bleeding off the page's
           edge, washed into the paper from its left. */}
       <div aria-hidden className="absolute inset-y-0 right-0 hidden w-[50%] lg:block">
-        <Photo src={photo} />
+        <Photos photos={photos} active={photo} />
         <span className="absolute inset-0 bg-[linear-gradient(90deg,#FFFFFF_0%,rgba(255,255,255,0.85)_18%,rgba(255,255,255,0.25)_48%,rgba(255,255,255,0)_75%)]" />
         <span className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-paper-white to-transparent" />
         <span className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-paper-white to-transparent" />
@@ -66,7 +67,7 @@ export default function PracticesSplit({
             aria-hidden
             className="relative mt-8 aspect-[16/9] overflow-hidden lg:hidden"
           >
-            <Photo src={photo} />
+            <Photos photos={photos} active={photo} />
             <span className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-paper-white to-transparent" />
           </div>
 
@@ -140,27 +141,42 @@ export default function PracticesSplit({
   );
 }
 
-/** The photograph, crossfading when it changes. */
-function Photo({ src }: { src: string }) {
+/**
+ * Every practice's photograph, stacked, with only the active one showing.
+ *
+ * Mounting a fresh image per hover made the change jerk: the file only
+ * started loading once hovered, so it popped in mid-fade, and the outgoing
+ * photo faded out while the incoming one faded in, so the paper showed
+ * through halfway. Here every photo is mounted, and so loaded, up front. The
+ * incoming one fades in on top, while the outgoing one drops beneath it and
+ * stays solid until the fade has finished, so there is never a gap to see.
+ */
+function Photos({ photos, active }: { photos: string[]; active: string }) {
   return (
-    <AnimatePresence initial={false}>
-      <motion.div
-        key={src}
-        initial={{ opacity: 0, scale: 1.03 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.8, ease: EXPO }}
-        className="absolute inset-0"
-      >
-        <Image
-          src={src}
-          alt=""
-          fill
-          quality={88}
-          sizes="(max-width: 1024px) 92vw, 50vw"
-          className="object-cover"
-        />
-      </motion.div>
-    </AnimatePresence>
+    <div className="absolute inset-0 isolate">
+      {photos.map((src) => {
+        const on = src === active;
+        return (
+          <div
+            key={src}
+            className={cn(
+              "absolute inset-0 transition-[opacity,transform] ease-expo motion-reduce:transition-none",
+              on
+                ? "z-10 scale-100 opacity-100 duration-700"
+                : "z-0 scale-[1.03] opacity-0 duration-0 delay-700",
+            )}
+          >
+            <Image
+              src={src}
+              alt=""
+              fill
+              quality={90}
+              sizes="(max-width: 1024px) 92vw, 50vw"
+              className="object-cover"
+            />
+          </div>
+        );
+      })}
+    </div>
   );
 }

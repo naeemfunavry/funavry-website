@@ -10,7 +10,9 @@ import Button from "@/components/ui/Button";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
 import WorkTiles from "@/components/work/WorkTiles";
 import PracticesSplit from "@/components/sections/PracticesSplit";
+import IndustryTech from "@/components/sections/IndustryTech";
 import { INDUSTRY_OVERVIEWS } from "@/lib/industry-overviews";
+import { INDUSTRY_TECHNOLOGIES } from "@/lib/industry-technologies";
 import { projectsFor, servicesForIndustry } from "@/lib/relations";
 import { byVisuals, buildWorkProjects } from "@/lib/work";
 import {
@@ -21,7 +23,6 @@ import {
 } from "@/lib/api";
 
 type Params = { slug: string };
-
 
 /**
  * `true`, and it has to be.
@@ -62,7 +63,8 @@ export async function generateMetadata({
 /**
  * An industry:
  *
- *   hero → expertise → selected work → practices we bring → contact
+ *   hero → expertise → practices we bring → technologies → selected work
+ *   → contact
  *
  * The copy is the industry's CMS entry; the work and practices come from
  * `relations.ts`, read off the case study briefs. Nothing on the page is
@@ -304,6 +306,12 @@ export default async function IndustryDetailPage({
           id="industry-practices"
           title="Key Practices We Bring"
           services={services}
+        />
+        {/* ------------------------------------------- Technologies ---- */}
+        <IndustryTech
+          id="industry-tech"
+          industry={industry.name}
+          technologies={INDUSTRY_TECHNOLOGIES[industry.slug] ?? []}
         />
 
         {/* ------------------------------------------- Selected work ---- */}

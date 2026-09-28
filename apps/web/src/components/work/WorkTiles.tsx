@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
 import { Wipe } from "@/components/ui/Kinetic";
 import type { WorkProject } from "@/lib/work-model";
@@ -14,8 +15,8 @@ const R = 20;
 const NOTCH = 68;
 
 /**
- * Selected Work as image tiles: a head with a pill label, title, a line and a
- * "See more" button, then square captures with rounded corners, each with a
+ * Selected Work as image tiles: a head in the page's eyebrow-and-title style
+ * with a "See more" button, then 16:9 captures with rounded corners, each with a
  * notch cut from its bottom-right corner holding a round arrow button. The
  * whole tile is the link; the project's name rises in over its foot on hover.
  */
@@ -41,27 +42,28 @@ export default function WorkTiles({
       <Container wide className="py-16 lg:py-24">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
           <div>
-            <span className="inline-flex items-center rounded-full border border-ink/25 px-3.5 py-1 text-[12.5px] font-medium text-ink">
-              {label}
-            </span>
-            <h2 id={id} className="mt-5 text-h3 text-ink">
+            <div className="flex items-center gap-3">
+              <span aria-hidden className="h-px w-10 flex-none bg-azure" />
+              <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-ink-500">
+                {label}
+              </span>
+            </div>
+            <h2 id={id} className="mt-6 text-h3 text-ink">
               {title}
             </h2>
             <p className="mt-4 max-w-[56ch] text-[15.5px] leading-[1.7] text-ink-500">
               {body}
             </p>
           </div>
-          <Link
+          <Button
             href={more.href}
-            className="group inline-flex min-h-[46px] flex-none items-center gap-3 self-start rounded-full bg-ink-900 pl-6 pr-5 text-[14px] font-semibold text-paper transition-colors duration-300 hover:bg-ink lg:self-auto"
+            variant="ink"
+            size="md"
+            arrow
+            className="flex-none self-start lg:self-auto"
           >
             {more.label}
-            <ArrowUpRight
-              size={17}
-              aria-hidden
-              className="transition-transform duration-300 ease-expo group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-            />
-          </Link>
+          </Button>
         </div>
 
         <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
@@ -85,7 +87,7 @@ function Tile({ project }: { project: WorkProject }) {
     <Link
       href={`/case-studies/${project.slug}`}
       aria-label={`${project.title} — view details`}
-      className="group relative block aspect-square overflow-hidden rounded-[28px] bg-ink-900 outline-none focus-visible:ring-2 focus-visible:ring-azure focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
+      className="group relative block aspect-[16/9] overflow-hidden rounded-md bg-white outline-none focus-visible:ring-0 focus-visible:ring-azure focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
     >
       {shot ? (
         <Image
