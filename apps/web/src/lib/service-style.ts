@@ -54,6 +54,24 @@ export const PHASE = {
 } as const;
 
 /**
+ * Practices that also belong to a second stage of the delivery chain, keyed by
+ * slug. A practice's own `phase` (from the CMS) is its home, the one its card
+ * and the admin panel show; these are the further stages the home page's
+ * service stack also draws it into.
+ */
+export const ALSO_PHASES: Record<string, Service["phase"][]> = {
+  "ai-automation": ["Automate"],
+  "robotics-iot-computer-vision": ["Automate"],
+  "ai-process-transformation": ["Automate"],
+};
+
+/** Every stage a practice belongs to: its home first, then any others. */
+export const phasesOf = (service: Service): Service["phase"][] => [
+  service.phase,
+  ...(ALSO_PHASES[service.slug] ?? []).filter((p) => p !== service.phase),
+];
+
+/**
  * A photograph per practice, keyed by slug: the Services page's carousel,
  * the service detail hero and the nav's mega menu all draw from it. 1920px
  * wide WebP in /public/services, from Unsplash (free for commercial use, no

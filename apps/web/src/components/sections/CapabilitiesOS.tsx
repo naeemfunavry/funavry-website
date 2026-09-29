@@ -44,6 +44,7 @@ import Container from "@/components/ui/Container";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
 import { lockScroll, unlockScroll } from "@/lib/scroll-lock";
 import type { Service } from "@/lib/services";
+import { phasesOf } from "@/lib/service-style";
 import { cn } from "@/lib/utils";
 
 const ICONS: Record<string, LucideIcon> = {
@@ -512,6 +513,8 @@ const EXPO = [0.19, 1, 0.22, 1] as const;
    -------------------------------------------------------------------------- */
 
 type Link = {
+  /** Unique per line: a practice in two stages draws one line to each. */
+  id: string;
   n: string;
   group: "tech" | "gbs";
   d: string;
@@ -572,12 +575,16 @@ function buildLinks(
   for (const column of [TECH, GBS]) {
     const side = column[0].group === "tech" ? -1 : 1; // which side of the core
 
-    // Bucket by phase, keeping reading order inside each bucket.
+    // Bucket by phase, keeping reading order inside each bucket. A practice
+    // that belongs to more than one stage goes into each of their buckets, so
+    // it draws a line to every slab it belongs to.
     const byPhase = new Map<Service["phase"], Service[]>();
     for (const service of column) {
-      const bucket = byPhase.get(service.phase);
-      if (bucket) bucket.push(service);
-      else byPhase.set(service.phase, [service]);
+      for (const phase of phasesOf(service)) {
+        const bucket = byPhase.get(phase);
+        if (bucket) bucket.push(service);
+        else byPhase.set(phase, [service]);
+      }
     }
 
     for (const [phaseName, bucket] of byPhase) {
@@ -611,6 +618,7 @@ function buildLinks(
         const mx = x0 - side * (26 + i * 15);
 
         links.push({
+          id: `${service.n}-${phaseName}`,
           n: service.n,
           group: service.group,
           x0,
@@ -697,7 +705,7 @@ function ConnectionNetwork({
 
         return (
           <motion.g
-            key={link.n}
+            key={link.id}
             initial={{ opacity: dimmed ? 0.25 : 1 }}
             animate={{ opacity: dimmed ? 0.25 : 1 }}
             transition={{ duration: 0.35, ease: EXPO }}>
@@ -1795,7 +1803,7 @@ export default function CapabilitiesOS({ services }: CapabilitiesOSProps) {
   const activeIds = useMemo<ReadonlySet<string> | null>(() => {
     if (hovered) return new Set([hovered]);
     if (pillarPhase) {
-      const ids = SERVICES.filter((s) => s.phase === pillarPhase).map((s) => s.n);
+      const ids = SERVICES.filter((s) => phasesOf(s).includes(pillarPhase)).map((s) => s.n);
       if (ids.length) return new Set(ids);
     }
     return openId ? new Set([openId]) : null;

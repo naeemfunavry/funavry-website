@@ -42,7 +42,7 @@ export const SERVICES: Service[] = [
     slug: "digital-engineering",
     title: "Digital Engineering & Product Development",
     group: "tech",
-    phase: "Build",
+    phase: "Automate",
     icon: "LayoutGrid",
     summary:
       "Build modern digital products, platforms, and business applications that drive growth and efficiency.",
@@ -58,7 +58,7 @@ export const SERVICES: Service[] = [
     slug: "blockchain-fintech",
     title: "Blockchain & FinTech",
     group: "tech",
-    phase: "Build",
+    phase: "Automate",
     icon: "Blocks",
     summary:
       "Build secure digital asset ecosystems, decentralized applications, and modern financial platforms.",
@@ -122,7 +122,7 @@ export const SERVICES: Service[] = [
     slug: "data-business-intelligence",
     title: "Data & Business Intelligence",
     group: "tech",
-    phase: "Build",
+    phase: "Automate",
     icon: "BarChart3",
     summary:
       "Transform raw data into trusted insights, operational intelligence, and strategic decision-making.",
