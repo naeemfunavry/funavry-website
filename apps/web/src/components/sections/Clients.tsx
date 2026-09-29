@@ -1,63 +1,51 @@
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-/* The trusted-partner marks, from /public/clients/webp. Names were read off the
-   artwork, not off the filenames — several of those lie: `mental.webp` is Metal
-   World, `solution.webp` is solutions by stc, `system.webp` is Systems Limited.
-   The later batch caught two more: `amd.webp` is AMD Telecom and not the chip
-   company, and `aljazeera.webp` is Al Jazeera Finance and not the broadcaster.
-   Naming either from its filename would have put a claim on the page that
-   isn't true, so every mark here was opened and read before it was listed.
-   `intensivate` and `skillyah` are the two with no wordmark at all — those
-   names come from the filename because there is nothing in the artwork to
-   check them against.
+/* The trusted-partner marks. Sources live in /public/clients/webp; the strip
+   draws the normalised copies `scripts/normalize-client-logos.mjs` writes to
+   /public/clients/optimized, named after each source in lower-case slug form.
 
-   The high-resolution batch replaced DWTC, Jazz, VNClagoon, Al Jazeera Finance
-   and AMD Telecom, swapped solutions by stc for the stc mark, and added five.
-   Its source `GCPT.png` is ChainGPT. `estate-office` is Pakistan's state emblem
-   with no wordmark; it is named for the Estate Office, Government of Pakistan,
-   because that is the client (see the REstate case study), not the emblem.
+   Names were read off the artwork, not the filenames, which mislead: `GCPT`
+   is ChainGPT, `systems` is Systems Limited, `Aljazeera` is Al Jazeera Finance
+   and not the broadcaster, and `dubai-world-trade1` is the Dubai World Trade
+   Centre mark. Six marks carry no legible name (Deline Media, Mammoth,
+   HTMLPro, Ovada, SkillYah, Intensivate) and are named from their files and
+   the earlier client list. `EstateOffice` is Pakistan's state emblem, named
+   for the Estate Office, Government of Pakistan, because that is the client
+   (see the REstate case study), not the emblem.
 
    Strongest marks lead, so the first thing entering the frame is the most
    recognisable. Shown in their own colours — no plate, no filter. */
 const CLIENTS: { name: string; file: string }[] = [
-  { name: "Amazon Web Services", file: "aws.webp" },
-  { name: "EY", file: "ey.webp" },
-  { name: "Mayo Clinic", file: "mayo-clinic.webp" },
-  { name: "Del Monte", file: "delmonte.webp" },
-  { name: "stc", file: "stc.webp" },
-  { name: "Dubai World Trade Centre", file: "dwtc.webp" },
+  { name: "Mayo Clinic", file: "mayo-clinic-logo.webp" },
+  { name: "Ernst & Young", file: "ey.webp" },
+  { name: "Saudi Telecom Company", file: "stc.webp" },
+  { name: "Del Monte", file: "del-monte-logo.webp" },
+  { name: "Dubai World Trade Centre", file: "dubai-world-trade1.webp" },
   { name: "Manchester Metropolitan University", file: "manchester.webp" },
-  { name: "Systems Limited", file: "system.webp" },
-  { name: "Estate Office, Government of Pakistan", file: "estate-office.webp" },
+  { name: "Systems Limited", file: "systems.webp" },
+  { name: "Jazz", file: "jazz-logo.webp" },
   { name: "Al Jazeera Finance", file: "aljazeera.webp" },
-  { name: "Jazz", file: "jazz.webp" },
-  { name: "CitiMed", file: "citimed.webp" },
-  { name: "ChainGPT", file: "chaingpt.webp" },
-  { name: "Wateen Telecom", file: "wateen.webp" },
-  { name: "Pakistan Software Export Board", file: "pseb.webp" },
-  { name: "P@SHA", file: "pasha.webp" },
-  { name: "FAST", file: "fast.webp" },
-  { name: "Ministry of Health & Wellness", file: "mohw-logo.webp" },
-  { name: "TechVista", file: "techvista.png" },
-  { name: "LodgeiT", file: "lodgeit.webp" },
+  { name: "Estate Office, Government of Pakistan", file: "estateoffice.webp" },
+  { name: "CitiMed", file: "citimed-logo.webp" },
+  { name: "ChainGPT", file: "gcpt.webp" },
+  { name: "Wateen", file: "wateen.webp" },
   { name: "VNClagoon", file: "vnc.webp" },
+  { name: "TechVista", file: "techvista.webp" },
+  { name: "LodgeiT", file: "lodgeit.webp" },
+  { name: "AIVM", file: "aivm.webp" },
+  { name: "Software Pro Group of Companies", file: "softwaepro.webp" },
   { name: "PiñaTech", file: "pinatech.webp" },
-  { name: "Intensivate", file: "intensivate.webp" },
-  { name: "AMD Telecom", file: "amd.webp" },
-  { name: "SkillYah", file: "skillyah.webp" },
-  { name: "GZ Tech", file: "gz.webp" },
-  { name: "Nexsys", file: "nexsys.webp" },
-  { name: "NxEnter", file: "nxenter.webp" },
-  { name: "Napollo", file: "napollo.webp" },
-  { name: "Mammoth", file: "mammoth-au.webp" },
+  { name: "Normies", file: "normies.webp" },
+  { name: "Mammoth", file: "mammoth-ai.webp" },
   { name: "XHumanity", file: "xhumanity.webp" },
-  { name: "Deline Media", file: "deline-media.webp" },
-  { name: "QuickBills", file: "quick-bills.webp" },
-  { name: "ShopifyPro", file: "shopifypro.webp" },
-  { name: "SoftwarePro", file: "software-pro.webp" },
+  { name: "Libbi", file: "libbi.webp" },
+  { name: "CattleKit", file: "cattlekit.webp" },
+  { name: "Ovada", file: "ovada.webp" },
+  { name: "Intensivate", file: "intensivate.webp" },
+  { name: "SkillYah", file: "skillyah.webp" },
+  { name: "Deline Media", file: "deline.webp" },
   { name: "HTMLPro", file: "htmlpro.webp" },
-  { name: "Berks Insulation", file: "berks-insulation.webp" },
 ];
 
 /** One pass of the marquee — a run of logo cells. Rendered twice so the strip
@@ -72,31 +60,38 @@ function Row({ ariaHidden = false }: { ariaHidden?: boolean }) {
         return (
           <span
             key={`${client.name}-${i}`}
-            className="group/cell relative flex h-[128px] w-[180px] flex-none items-center justify-center border-r border-line px-8 lg:w-[220px]"
+            className="group/cell relative flex h-[140px] w-[180px] flex-none flex-col items-center justify-center gap-0 border-r border-line px-4 lg:h-[164px] lg:w-[220px] lg:px-6"
           >
-            {/* From /clients/optimized, not /clients/webp. The delivered files
-                are all 120x120 and look uniform, but the ink inside them runs
-                from 21% of the canvas to 85% — so at identical CSS they rendered
-                4.1x apart. `scripts/normalize-client-logos.mjs` trims each one to
-                its own ink and rescales it to a constant ink AREA, which is what
-                the eye actually measures. That leaves nothing for this element to
-                decide: one fixed box, every mark already the same weight inside
-                it.
+            {/* From /clients/optimized, not /clients/webp. The sources arrive at
+                every size and with any amount of whitespace inside the file, so
+                `scripts/normalize-client-logos.mjs` trims each one to its own
+                ink and rescales it to a constant ink AREA, which is what the eye
+                measures, on one 480x270 canvas. That leaves nothing for this
+                element to decide: one fixed 16:9 box, the same for every mark,
+                each already the same weight inside it.
 
-                The box is deliberately half the canvas (100x56 of 200x112), so
-                the strip is drawing these at 2x on a retina screen. The old
-                `lg:max-h-[100px]` asked a 120px file for 200 device pixels and
-                got a 1.67x upscale — that was the blur. */}
+                The canvas is 3x the desktop box (160x90), so the marks are
+                drawn from real pixels on 2x and 3x screens rather than
+                upscaled. The client's name sits under its mark. */}
+            {/* The name below says who it is, so the mark itself is decorative. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={`/clients/optimized/${client.file}`}
-              alt={ariaHidden ? "" : client.name}
-              title={client.name}
+              alt=""
               loading="lazy"
-              width={200}
-              height={112}
-              className="h-[40px] w-[72px] object-contain lg:h-[112px] lg:w-[150px]"
+              decoding="async"
+              width={480}
+              height={270}
+              className="h-[63px] w-[112px] flex-none object-contain lg:h-[90px] lg:w-[160px]"
             />
+            {/* A fixed two-line slot, so a long name and a short one leave the
+                marks level across the strip. Narrower than the cell, to stay
+                clear of the corner arrow. */}
+            <span className="flex h-[30px] max-w-[124px] items-start justify-center lg:max-w-[160px]">
+              <span className="line-clamp-2 text-center text-[11.5px] font-medium leading-[1.3] tracking-[-0.005em] text-ink-500 transition-colors duration-300 group-hover/cell:text-ink">
+                {client.name}
+              </span>
+            </span>
 
             {/* Amber underline — static on the accented cells, drawn in on hover
                 for the rest. */}

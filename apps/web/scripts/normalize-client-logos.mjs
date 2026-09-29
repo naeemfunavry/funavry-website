@@ -19,12 +19,15 @@
  *
  * After that the strip's CSS is one fixed box and nothing else.
  *
- * On sharpness: these 120px sources are all that exist — no SVG, no larger
- * originals anywhere in the repo — so this cannot invent detail. It picks the
- * largest target that keeps the worst upscale mild (~1.5x on the three widest
- * wordmarks; most marks land at 1x or are downscaled) and prints the factor for
- * every file so a bad one is visible rather than discovered on a retina screen.
- * Real sharpness at a larger size needs real vector art.
+ * On sharpness: the canvas is 3x the box the strip draws (160x90 CSS px), so
+ * the marks stay crisp on 2x and 3x screens. Most sources are large enough to
+ * be downscaled into it; a small one has to be upscaled and cannot gain
+ * detail, so the scale factor is printed for every file and anything past
+ * 1.6x is flagged. The fix for a flagged mark is a larger original.
+ *
+ * Output names are slugged from the source ("del monte logo.webp" becomes
+ * "del-monte-logo.webp"), and the output folder is cleared first, so a
+ * removed source leaves no stale mark behind.
  *
  * Run after adding or replacing a client logo:
  *   node scripts/normalize-client-logos.mjs
@@ -36,17 +39,16 @@ import path from "node:path";
 const SRC = "public/clients/webp";
 const OUT = "public/clients/optimized";
 
-/** Output canvas, at 2x the CSS box the strip draws (100x56). */
-const CANVAS_W = 200;
-const CANVAS_H = 112;
+/** Output canvas, at 3x the CSS box the strip draws (160x90). */
+const CANVAS_W = 480;
+const CANVAS_H = 270;
 
 /**
- * Target ink area on that canvas, in px². 7056 = an 84x84 square, so ~42px of
- * optical size once halved for the 2x box. Chosen against the real measurements:
- * larger and the thin wordmarks upscale past ~1.5x and go visibly soft; smaller
- * and the set stops carrying the strip.
+ * Target ink area on that canvas, in px². 40000 = a 200x200 square, so ~67px
+ * of optical size in the 160x90 box: about the share of the box the marks have
+ * always had, at three times the pixels.
  */
-const TARGET_AREA = 7056;
+const TARGET_AREA = 40000;
 
 /** A pixel is ink if it's neither transparent nor effectively the page. */
 function inkBounds(data, W, H, C) {
@@ -124,7 +126,16 @@ function clearWhitePlate(data, W, H, C) {
   return true;
 }
 
+fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });
+
+/** "del monte logo.png" -> "del-monte-logo.webp". */
+const outName = (f) =>
+  f
+    .replace(/\.(webp|png|jpe?g)$/i, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "") + ".webp";
 
 // Sources may arrive as PNG or JPEG as well; every output is WebP, named after
 // its source.
@@ -135,7 +146,7 @@ const report = [];
 
 for (const sourceFile of files) {
   const src = path.join(SRC, sourceFile);
-  const file = sourceFile.replace(/\.(png|jpe?g)$/i, ".webp");
+  const file = outName(sourceFile);
   const { data, info } = await sharp(src)
     .ensureAlpha()
     .raw()
@@ -146,7 +157,7 @@ for (const sourceFile of files) {
   const b = inkBounds(data, W, H, C) ?? alphaBounds(data, W, H, C);
   if (!b) {
     console.warn(`  !! ${file}: no ink found, copied as-is`);
-    await sharp(src).resize(CANVAS_W, CANVAS_H, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } }).webp({ quality: 92 }).toFile(path.join(OUT, file));
+    await sharp(src).resize(CANVAS_W, CANVAS_H, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } }).webp({ quality: 95, alphaQuality: 100 }).toFile(path.join(OUT, file));
     continue;
   }
 
@@ -160,8 +171,8 @@ for (const sourceFile of files) {
 
   // Never let a mark touch the canvas edge — a hair of air on every side, so
   // nothing looks cropped when the strip scrolls past.
-  const maxW = CANVAS_W - 8;
-  const maxH = CANVAS_H - 8;
+  const maxW = CANVAS_W - 24;
+  const maxH = CANVAS_H - 24;
   if (outW > maxW) { outW = maxW; outH = outW / ratio; }
   if (outH > maxH) { outH = maxH; outW = outH * ratio; }
 
@@ -187,18 +198,18 @@ for (const sourceFile of files) {
     },
   })
     .composite([{ input: trimmed, gravity: "centre" }])
-    .webp({ quality: 92, alphaQuality: 100 })
+    .webp({ quality: 95, alphaQuality: 100, effort: 6, smartSubsample: true })
     .toFile(path.join(OUT, file));
 
   report.push({ file: cleared ? `${file} (plate)` : file, ink: `${inkW}x${inkH}`, out: `${outW}x${outH}`, scale });
 }
 
 report.sort((a, b) => b.scale - a.scale);
-console.log("\n  file                   ink       -> normalised   scale");
+console.log(`\n  ${"file".padEnd(28)} ${"ink".padEnd(9)} -> ${"normalised".padEnd(11)} scale`);
 for (const r of report) {
   const flag = r.scale > 1.6 ? "  <-- soft" : "";
   console.log(
-    `  ${r.file.padEnd(22)} ${r.ink.padEnd(9)} -> ${r.out.padEnd(11)} ${r.scale.toFixed(2)}x${flag}`,
+    `  ${r.file.padEnd(28)} ${r.ink.padEnd(9)} -> ${r.out.padEnd(11)} ${r.scale.toFixed(2)}x${flag}`,
   );
 }
 const scales = report.map((r) => r.scale);
