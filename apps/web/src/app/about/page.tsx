@@ -107,17 +107,10 @@ const GALLERY: GalleryPhoto[] = [
   },
   {
     src: "/about/4.webp",
-    alt: "A group of colleagues with a volleyball on a hillside above a lake",
-    caption: "Volleyball above the lake",
+    alt: "A volleyball match on a lakeside court, with colleagues watching from the side",
+    caption: "Volleyball by the lake",
     width: 4032,
     height: 3024,
-  },
-  {
-    src: "/about/9.webp",
-    alt: "Colleagues in a tug of war on the lawn under a blue shade",
-    caption: "Tug of war",
-    width: 958,
-    height: 1280,
   },
   {
     src: "/about/10.webp",

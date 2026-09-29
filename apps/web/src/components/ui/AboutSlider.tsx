@@ -12,6 +12,9 @@ export type AboutSlide = {
   alt: string;
   /** The mono line under the frame — who or where the photo is. */
   caption: string;
+  /** `contain` shows the whole photo on a dark ground instead of cropping it
+      to the 16:10 frame — for a portrait shot, which cropping would gut. */
+  fit?: "cover" | "contain";
 };
 
 /** How long a slide holds before the deck advances itself. */
@@ -67,6 +70,7 @@ export default function AboutSlider({ slides }: { slides: AboutSlide[] }) {
             className={cn(
               "absolute inset-0 transition-opacity duration-700 ease-expo",
               i === index ? "opacity-100" : "opacity-0",
+              slide.fit === "contain" && "bg-ink-900",
             )}
           >
             <Image
@@ -75,7 +79,7 @@ export default function AboutSlider({ slides }: { slides: AboutSlide[] }) {
               fill
               priority={i === 0}
               sizes="(max-width: 1024px) 100vw, 55vw"
-              className="object-cover"
+              className={slide.fit === "contain" ? "object-contain" : "object-cover"}
             />
           </div>
         ))}

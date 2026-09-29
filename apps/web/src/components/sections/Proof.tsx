@@ -3,10 +3,10 @@ import Button from "@/components/ui/Button";
 import AboutSlider, { type AboutSlide } from "@/components/ui/AboutSlider";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
 
-/** The photos the deck cycles through. Drop more into /public/about and list
-    them here — the arrows and dots appear as soon as there are two. The frame
-    crops to 16:10, so these are the landscape group shots; the About page's
-    gallery carries the full set, portraits included. */
+/** Every photo in /public/about, in the same order and words as the About
+    page's gallery. Drop more in and list them here — the dots grow with the
+    list. The frame crops to 16:10, so a portrait shot takes `fit: "contain"`
+    and shows whole instead. */
 const SLIDES: AboutSlide[] = [
   {
     src: "/about/1.webp",
@@ -24,9 +24,9 @@ const SLIDES: AboutSlide[] = [
     caption: "Celebrating at the office",
   },
   {
-    src: "/about/5.webp",
-    alt: "The whole team on a lawn below green hills on a company outing",
-    caption: "Company day out",
+    src: "/about/12.webp",
+    alt: "Colleagues in a meeting around the boardroom table",
+    caption: "In the boardroom",
   },
   {
     src: "/about/8.webp",
@@ -34,9 +34,25 @@ const SLIDES: AboutSlide[] = [
     caption: "Table tennis at the office",
   },
   {
+    src: "/about/5.webp",
+    alt: "The whole team on a lawn below green hills on a company outing",
+    caption: "Company day out",
+  },
+  {
     src: "/about/3.webp",
     alt: "The team gathered on a lakeside lawn with hills behind",
     caption: "By the lake",
+  },
+  {
+    src: "/about/4.webp",
+    alt: "A volleyball match on a lakeside court, with colleagues watching from the side",
+    caption: "Volleyball by the lake",
+  },
+
+  {
+    src: "/about/10.webp",
+    alt: "Colleagues on the lawn watching the games from their chairs",
+    caption: "Games on the lawn",
   },
 ];
 
