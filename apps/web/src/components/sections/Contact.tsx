@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Container from "@/components/ui/Container";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
+import { cn } from "@/lib/utils";
 
 export const INTERESTS = [
   "Build — engineering a platform",
@@ -43,7 +44,18 @@ const CREDENTIALS = [
   "DEA Certified",
 ];
 
-export default function Contact() {
+/**
+ * The closing section every page ends on — or, with `variant="page"`, the
+ * Contact page's opening: the heading becomes the page's h1, the eyebrow says
+ * where you are, and the top clears the fixed nav.
+ */
+export default function Contact({
+  variant = "closing",
+}: {
+  variant?: "closing" | "page";
+} = {}) {
+  const page = variant === "page";
+  const Heading = page ? "h1" : "h2";
   const [submitted, setSubmitted] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -88,20 +100,36 @@ export default function Contact() {
       />
 
       {/* Decorative Technical Crosshairs */}
+      {/* Opening the Contact page they drop below the fixed nav, which would
+          otherwise sit on top of them. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute top-8 left-8 hidden font-mono text-[11px] text-paper/20 lg:block"
+        className={cn(
+          "pointer-events-none absolute left-8 hidden font-mono text-[11px] text-paper/20 lg:block",
+          page ? "top-[100px]" : "top-8",
+        )}
       >
         + 00.1
       </div>
       <div
         aria-hidden
-        className="pointer-events-none absolute top-8 right-8 hidden font-mono text-[11px] text-paper/20 lg:block"
+        className={cn(
+          "pointer-events-none absolute right-8 hidden font-mono text-[11px] text-paper/20 lg:block",
+          page ? "top-[100px]" : "top-8",
+        )}
       >
         + 00.2
       </div>
 
-      <Container wide className="relative z-10 py-14 sm:py-16 lg:py-20">
+      <Container
+        wide
+        className={cn(
+          "relative z-10",
+          page
+            ? "pb-16 pt-[120px] sm:pb-20 lg:pb-24 lg:pt-[150px]"
+            : "py-14 sm:py-16 lg:py-20",
+        )}
+      >
         <div className="grid gap-14 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,540px)] lg:gap-20 xl:gap-24 items-start">
           {/* Left Column — The closing vision, trust matrix & direct lines */}
           <div>
@@ -112,12 +140,12 @@ export default function Contact() {
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-azure" />
               </span>
               <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-paper/60">
-                START A CONVERSATION
+                {page ? "CONTACT US" : "START A CONVERSATION"}
               </span>
             </div>
 
             {/* Display Headline */}
-            <h2 className="mt-7 text-h2 text-paper">
+            <Heading className="mt-7 text-h2 text-paper">
               <KineticWords text="Let's build what" />
               <br />
               <KineticWords
@@ -127,7 +155,7 @@ export default function Contact() {
                   "text-azure drop-shadow-[0_0_30px_rgba(68,158,216,0.35)]"
                 }
               />
-            </h2>
+            </Heading>
 
             {/* Context Paragraph */}
             <Wipe delay={0.18}>
