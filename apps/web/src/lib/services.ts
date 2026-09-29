@@ -26,7 +26,7 @@ export const SERVICES: Service[] = [
     slug: "ai-automation",
     title: "Artificial Intelligence & Automation",
     group: "tech",
-    phase: "Automate",
+    phase: "Orchestrate",
     icon: "BrainCircuit",
     summary:
       "Design, build, deploy, and manage AI systems that automate work, augment decision-making, and create new digital capabilities.",
@@ -90,7 +90,7 @@ export const SERVICES: Service[] = [
     slug: "robotics-iot-computer-vision",
     title: "Robotics, IoT & Computer Vision",
     group: "tech",
-    phase: "Build",
+    phase: "Orchestrate",
     icon: "Cpu",
     summary:
       "Connect physical assets with intelligent systems to automate operations and generate real-time insights.",
@@ -169,7 +169,7 @@ export const SERVICES: Service[] = [
     slug: "managed-services",
     title: "Managed Services",
     group: "tech",
-    phase: "Operate",
+    phase: "Orchestrate",
     icon: "Server",
     summary:
       "Ongoing operational support, monitoring, optimization, and management of business-critical technology systems.",
@@ -251,7 +251,7 @@ export const SERVICES: Service[] = [
     slug: "business-process-excellence",
     title: "Business Process Excellence",
     group: "gbs",
-    phase: "Operate",
+    phase: "Orchestrate",
     icon: "GitBranch",
     summary:
       "Build lean, standardized, continuously improving operations through harmonization, performance management, and governance.",
@@ -267,7 +267,7 @@ export const SERVICES: Service[] = [
     slug: "global-workforce",
     title: "Global Workforce & Capability Solutions",
     group: "gbs",
-    phase: "Operate",
+    phase: "Orchestrate",
     icon: "Users",
     summary:
       "Access and operate dedicated global teams through a fully managed workforce model — without a legal entity or captive setup.",

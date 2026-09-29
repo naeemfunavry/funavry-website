@@ -12,13 +12,13 @@ import { CASE_PHASE } from "@/lib/case-studies";
 import type { Service } from "@/lib/services";
 import { cn } from "@/lib/utils";
 
-/* Two practices per column, ordered so that on a three-column grid the columns
-   run Build, then Automate and Orchestrate (01 and 14, the AI practices), then
-   Operate, left to right. */
-const PICKS = ["02", "01", "08", "07", "14", "16"];
+/* Two practices per column, one from each house, ordered so that on a
+   three-column grid the columns run Build, Orchestrate and Operate, left to
+   right. No practice is filed under Automate at present. */
+const PICKS = ["02", "01", "08", "07", "14", "13"];
 const COLUMNS = [
   ["Build"],
-  ["Automate", "Orchestrate"],
+  ["Orchestrate"],
   ["Operate"],
 ] as const satisfies readonly (readonly Service["phase"][])[];
 const buildNeeds = (SERVICES: Service[]) =>
