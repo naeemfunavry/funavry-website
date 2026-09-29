@@ -226,7 +226,9 @@ export default function Contact() {
 
           {/* Right Column — The Glassmorphic Engineering Console */}
           <Wipe delay={0.18}>
-            <div className="relative rounded-2xl border border-paper/15 bg-ink-900/85 p-6 sm:p-8 lg:p-9 shadow-2xl shadow-black/60 backdrop-blur-xl overflow-hidden">
+            {/* No backdrop blur: at this opacity it was all but invisible, and
+                a panel this large re-blurred its backdrop on every scrolled frame. */}
+            <div className="relative rounded-2xl border border-paper/15 bg-ink-900/90 p-6 sm:p-8 lg:p-9 shadow-2xl shadow-black/60 overflow-hidden">
               {/* Glowing Top Accent Rim */}
               <div
                 aria-hidden

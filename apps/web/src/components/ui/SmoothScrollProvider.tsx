@@ -9,6 +9,48 @@ export default function SmoothScrollProvider({
 }: {
   children: React.ReactNode;
 }) {
+  /* No hover while the page is moving. Scrolling carries content under a
+     pointer that is standing still, so every card, slab and link it crosses
+     fires its hover: the service stack lifted and dropped, slabs lit and
+     dimmed, lines ran — a flicker that read as the scroll itself jerking, and
+     a repaint on every one.
+
+     While the page moves, an invisible full-screen shield takes the pointer,
+     so nothing under it is hovered; it goes 150ms after the page is still,
+     and hover resumes from wherever the pointer then rests. Wheel events on it
+     bubble to the window, so Lenis keeps scrolling.
+
+     A shield rather than `pointer-events: none` on the body: that is an
+     inherited property, so toggling it restyled all ~2,400 elements on the
+     page at every scroll start and stop, 20-60ms each — a jerk of its own.
+     Showing and hiding one fixed element restyles only that element.
+
+     Listens to native `scroll`, so it covers Lenis and the reduced-motion
+     case alike. */
+  useEffect(() => {
+    const shield = document.createElement("div");
+    shield.setAttribute("aria-hidden", "true");
+    shield.style.cssText =
+      "position:fixed;inset:0;z-index:2147483647;display:none;";
+    document.body.appendChild(shield);
+
+    let idle = 0;
+    const onScroll = () => {
+      if (!idle) shield.style.display = "block";
+      window.clearTimeout(idle);
+      idle = window.setTimeout(() => {
+        idle = 0;
+        shield.style.display = "none";
+      }, 150);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.clearTimeout(idle);
+      shield.remove();
+    };
+  }, []);
+
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;

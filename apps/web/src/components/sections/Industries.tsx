@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import { useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -31,7 +31,17 @@ const DWELL = 3800;
 const TICK =
   "pointer-events-none absolute h-3.5 w-3.5 scale-[0.571] border-azure/0 transition-[transform,border-color] duration-500 ease-expo group-hover:scale-100 group-hover:border-azure";
 
-function Tile({ industry, index }: { industry: Industry; index: number }) {
+/* Memoised: the deck re-renders when it scrolls into range (its `inView` flag
+   starts the autoplay), and nothing a tile draws depends on that. Without the
+   memo every scroll past the section re-rendered all twenty tiles, a frame
+   long enough to hitch the scroll just as the services section arrived. */
+const Tile = memo(function Tile({
+  industry,
+  index,
+}: {
+  industry: Industry;
+  index: number;
+}) {
   return (
     <Wipe delay={(index % 4) * 0.05} duration={0.9} className="h-full">
       {/* Not `Frame`: it renders content at z-10, which would bury its own
@@ -157,7 +167,7 @@ function Tile({ industry, index }: { industry: Industry; index: number }) {
       </article>
     </Wipe>
   );
-}
+});
 
 export interface IndustriesProps {
   industries: Industry[];

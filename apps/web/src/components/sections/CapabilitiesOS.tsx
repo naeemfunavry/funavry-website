@@ -44,7 +44,6 @@ import Container from "@/components/ui/Container";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
 import { lockScroll, unlockScroll } from "@/lib/scroll-lock";
 import type { Service } from "@/lib/services";
-import { useInView } from "@/lib/use-in-view";
 import { cn } from "@/lib/utils";
 
 const ICONS: Record<string, LucideIcon> = {
@@ -273,9 +272,9 @@ type Slab = {
   grid?: boolean;
   /** Only the top slab has the face depth to stack its icon above its name. */
   iconAbove?: boolean;
-  /** Label and caption colours — glass and amber take dark type. */
+  /** Label colour — glass and amber take dark type. The caption sits on its
+      own white pill, so it needs none. */
   tone: string;
-  capTone: string;
   caption: string;
 };
 
@@ -292,7 +291,6 @@ const SLABS: Slab[] = [
     glass: true,
     iconAbove: true,
     tone: "text-[#154A82] [text-shadow:0_1px_2px_rgba(255,255,255,0.7)]",
-    capTone: "text-[#1D5089] [text-shadow:0_1px_2px_rgba(255,255,255,0.7)]",
     caption: "Managed services · GCC enablement",
   },
   {
@@ -302,7 +300,6 @@ const SLABS: Slab[] = [
     face: ["#4F8DE2", "#2A66C6"],
     wall: ["#2D68C2", "#1F54A9", "#17428C", "#10336F"],
     tone: cn("text-white", LIGHT_TYPE),
-    capTone: cn("text-white/90", LIGHT_TYPE),
     caption: "AI agents · APIs · Human oversight",
   },
   {
@@ -312,7 +309,6 @@ const SLABS: Slab[] = [
     face: ["#FFE08C", "#F9BC3E"],
     wall: ["#F8B535", "#EFA123", "#DB8A12", "#C2760C"],
     tone: "text-ink-900",
-    capTone: "text-ink-900/85",
     caption: "Automation · Document intelligence",
   },
   {
@@ -323,7 +319,6 @@ const SLABS: Slab[] = [
     wall: ["#2C3743", "#222C37", "#19212A", "#11171E"],
     grid: true,
     tone: cn("text-white", LIGHT_TYPE),
-    capTone: cn("text-white/85", LIGHT_TYPE),
     caption: "Platforms · AI · Data · Cloud",
   },
 ];
@@ -760,16 +755,12 @@ const AICore = ({
   innerRef,
   active,
   phase,
-  /** False while the section is off screen — the idle drift stops entirely
-      rather than holding a composited layer alive down the whole page. */
-  animate,
   onPhaseHover,
 }: {
   innerRef: React.RefObject<HTMLDivElement>;
   active: "tech" | "gbs" | null;
   /** Which band the hovered or open service sits on. */
   phase: Service["phase"] | null;
-  animate: boolean;
   /** Reports the hovered pillar up, so the section can light its services. */
   onPhaseHover: (phase: DeliveryPhase | null) => void;
 }) => {
@@ -797,11 +788,13 @@ const AICore = ({
       }}
       className="relative aspect-[200/248] w-[310px] shrink-0 sm:w-[400px] lg:w-[350px] xl:w-[480px]">
       {/* Ambient halo — warms toward the hovered pillar's hue, or the hovered
-          half of the network. Blurred past its own edge, so it reads as light
-          in the air rather than as a disc. */}
+          half of the network. The radial gradient fades to nothing before its
+          edge, so it reads as light in the air rather than as a disc. It used
+          to carry `blur-3xl` too, which on a box this size was an expensive
+          filter re-rasterised while scrolling, for a gradient already soft. */}
       <motion.div
         aria-hidden
-        className="absolute -inset-[26%] rounded-full blur-3xl"
+        className="absolute -inset-[26%] rounded-full"
         initial={false}
         animate={{ opacity: hot || accent || hovered ? 0.85 : 0.55 }}
         transition={{ duration: 0.6, ease: EXPO }}
@@ -813,11 +806,10 @@ const AICore = ({
         }}
       />
 
-      {/* Hover-lift only — the idle bob is gone, so the pillars hold still. */}
-      <motion.div
-        className="absolute inset-0"
-        animate={{ y: hot ? -5 : 0 }}
-        transition={{ duration: 0.5, ease: EXPO }}>
+      {/* The stack holds still. It used to lift 5px under the pointer, and
+          since scrolling carries the stack under a resting pointer, it bobbed
+          up and down mid-scroll; the slabs' own highlight shows the hover. */}
+      <div className="absolute inset-0">
         <div className="absolute inset-0">
           {/* ---- The slabs. ----
               Each is an outline painted in its wall gradient with the top face
@@ -1056,14 +1048,18 @@ const AICore = ({
                   </p>
                 </div>
                 {/* The caption only shows on its lit slab — hovered, or lit
-                    by a hovered service card in its phase. */}
+                    by a hovered service card in its phase. It sits on its own
+                    white pill: printed straight onto the slab it crossed the
+                    wall's changing tone, and on the glass and amber slabs it
+                    all but disappeared. */}
                 <p
                   className={cn(
-                    "text-[9.5px] font-medium leading-[1.4] transition-[opacity,transform,visibility] duration-500 ease-expo sm:absolute sm:inset-x-0 sm:top-full sm:mt-2.5 sm:text-[10.5px] lg:mt-8 lg:text-[11px] xl:text-[12px]",
-                    s.capTone,
+                    "transition-[opacity,transform,visibility] duration-500 ease-expo sm:absolute sm:inset-x-0 sm:top-full sm:mt-2.5 lg:mt-7",
                     lit ? "translate-y-0 opacity-100" : "invisible translate-y-1 opacity-0",
                   )}>
-                  {s.caption}
+                  <span className="inline-block rounded-full bg-white/95 px-3 py-1 text-[11px] font-semibold leading-[1.35] tracking-[-0.005em] text-ink-900 shadow-[0_6px_18px_-6px_rgba(10,16,23,0.45)] ring-1 ring-black/5 sm:text-[12px] lg:px-3.5 lg:py-1.5 lg:text-[13px]">
+                    {s.caption}
+                  </span>
                 </p>
               </motion.div>
             );
@@ -1086,7 +1082,7 @@ const AICore = ({
             ))}
           </svg>
         </div>
-      </motion.div>
+      </div>
 
       {/* ---- Fade-in details popup. ---- A child of the measured box (not the
           float), so it holds still and the pointer can travel onto it. Sized
@@ -1227,8 +1223,12 @@ function CapabilityCard({
            label — a WCAG 2.5.3 name/label mismatch for voice-control users. */
         className={cn(
           "relative flex w-full items-center gap-3.5 rounded-[14px] border px-4 py-3.5 text-left",
-          "bg-white/70 backdrop-blur-md",
-          "transition-[transform,box-shadow,border-color,background-color] duration-[500ms] ease-expo will-change-transform",
+          /* Near-opaque instead of frosted: sixteen `backdrop-blur`s, each on
+             its own `will-change` layer, re-blurred what was behind them on
+             every scrolled frame, and over this pale grid the frost was all
+             but invisible anyway. */
+          "bg-white/90",
+          "transition-[transform,box-shadow,border-color,background-color] duration-[500ms] ease-expo",
           "shadow-[0_1px_2px_rgba(46,52,54,0.04)]",
           state === "active"
             ? "border-transparent bg-white shadow-[0_18px_40px_-18px_rgba(46,52,54,0.28)]"
@@ -1703,7 +1703,6 @@ export default function CapabilitiesOS({ services }: CapabilitiesOSProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const coreRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef(new Map<string, HTMLElement>());
-  const [sectionRef, inView] = useInView<HTMLElement>();
 
   const [geom, setGeom] = useState<Geometry | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
@@ -1828,7 +1827,6 @@ export default function CapabilitiesOS({ services }: CapabilitiesOSProps) {
 
   return (
     <section
-      ref={sectionRef}
       id="capabilities"
       className="relative overflow-hidden border-t border-line bg-white">
       {/* Blueprint paper. */}
@@ -1901,7 +1899,6 @@ export default function CapabilitiesOS({ services }: CapabilitiesOSProps) {
                 innerRef={coreRef}
                 active={activeGroup}
                 phase={activePhase}
-                animate={inView}
                 onPhaseHover={setPillarPhase}
               />
             </div>
