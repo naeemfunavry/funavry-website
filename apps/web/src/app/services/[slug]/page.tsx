@@ -9,9 +9,11 @@ import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import Frame from "@/components/ui/Frame";
 import { Wipe } from "@/components/ui/Kinetic";
-import { CardFoot, ProjectShot, SectionLabel } from "@/components/ui/DetailParts";
+import { CardFoot, SectionLabel } from "@/components/ui/DetailParts";
 import { HOUSE_LABEL, PHASE, SERVICE_IMAGES } from "@/lib/service-style";
 import PageHero from "@/components/ui/PageHero";
+import WorkTiles from "@/components/work/WorkTiles";
+import Governance from "@/components/sections/Governance";
 import { industriesForService, projectsFor } from "@/lib/relations";
 import { byVisuals, buildWorkProjects } from "@/lib/work";
 import { getService, getServices, getWorkIndex, getIndustries } from "@/lib/api";
@@ -215,39 +217,20 @@ export default async function ServiceDetailPage({
           </Container>
         </section>
 
+        {/* ------------------------------------- Compliance & governance ---- */}
+        <Governance />
+
         {/* ------------------------------------------- Selected work ---- */}
-        {work.length > 0 && (
-          <section
-            aria-labelledby="service-work"
-            className="border-b border-line bg-paper"
-          >
-            <Container wide className="py-16 lg:py-24">
-              <SectionLabel id="service-work">Selected Work</SectionLabel>
-              <ul className="mt-8 grid gap-6 md:grid-cols-2 lg:mt-10 xl:grid-cols-3">
-                {work.map((project, i) => (
-                  <li key={project.slug} className="h-full">
-                    <Wipe delay={(i % 3) * 0.06} className="h-full">
-                      <Frame
-                        as="a"
-                        href={`/case-studies/${project.slug}`}
-                        className="group block h-full"
-                        innerClassName="flex h-full flex-col"
-                      >
-                        <ProjectShot project={project} />
-                        <div className="flex flex-1 flex-col px-6 pb-6 pt-5">
-                          <h3 className="text-[18px] font-medium leading-snug tracking-[-0.02em] text-ink">
-                            {project.title}
-                          </h3>
-                          <CardFoot>View details</CardFoot>
-                        </div>
-                      </Frame>
-                    </Wipe>
-                  </li>
-                ))}
-              </ul>
-            </Container>
-          </section>
-        )}
+        <WorkTiles
+          id="service-work"
+          title="Selected Work"
+          body={
+            workCount > work.length
+              ? `Platforms we've designed, engineered and run through this practice — ${work.length} of the ${workCount} in our portfolio.`
+              : "Platforms we've designed, engineered and run through this practice."
+          }
+          projects={work}
+        />
 
         {/* --------------------------------------------- Industries ---- */}
         {industries.length > 0 && (

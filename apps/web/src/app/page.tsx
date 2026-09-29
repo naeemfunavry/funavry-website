@@ -7,6 +7,7 @@ import Industries from "@/components/sections/Industries";
 import { TrustedStrip } from "@/components/sections/Clients";
 import Container from "@/components/ui/Container";
 import TechStack from "@/components/sections/TechStack";
+import Governance from "@/components/sections/Governance";
 import Testimonials from "@/components/sections/Testimonials";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/sections/Footer";
@@ -64,6 +65,7 @@ export default async function Home() {
             <TrustedStrip />
           </Container>
         </section>
+        <Governance id="home-governance" variant="home" />
         {/* The deck indexes into its studies from the first render, so it
             only mounts with at least one — an unreachable CMS returns none. */}
         {caseStudies.length > 0 && (
