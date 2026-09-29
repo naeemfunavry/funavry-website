@@ -213,7 +213,8 @@ function FeatureCard({
 }
 
 /** One row in a mega list: an icon tile, the name, and a quiet second line.
-    The tile fills with the row's hue on hover. */
+    The icon wears the row's hue at rest, on a faint wash of it, and the tile
+    fills with the hue on hover. */
 function MegaItem({
   href,
   Icon,
@@ -241,7 +242,7 @@ function MegaItem({
       style={{ "--tint": tint } as React.CSSProperties}
       className="group flex items-center gap-3.5 border border-transparent p-2.5 transition-colors duration-300 hover:border-line hover:bg-paper"
     >
-      <span className="flex h-10 w-10 flex-none items-center justify-center border border-line bg-paper-white text-ink-500 transition-colors duration-300 group-hover:border-[rgb(var(--tint))] group-hover:bg-[rgb(var(--tint))] group-hover:text-paper">
+      <span className="flex h-10 w-10 flex-none items-center justify-center border border-[rgba(var(--tint),0.3)] bg-[rgba(var(--tint),0.1)] text-[rgb(var(--tint))] transition-colors duration-300 group-hover:border-[rgb(var(--tint))] group-hover:bg-[rgb(var(--tint))] group-hover:text-paper">
         <Icon size={17} strokeWidth={1.6} aria-hidden />
       </span>
       <span className="min-w-0">
