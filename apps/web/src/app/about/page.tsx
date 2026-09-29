@@ -51,26 +51,78 @@ const MODEL = [
 
 /* Life at Funavry — the company's own photographs, in /public/about. Add a
    photo by dropping it in that folder and listing it here with its pixel
-   size; the strip takes any number. */
+   size; the strip takes any number, portrait or landscape.
+
+   Captions say what the photo shows and no more: the outings are not named
+   by place, because nothing in the pictures says where they were. */
 const GALLERY: GalleryPhoto[] = [
   {
-    src: "/about/team-2.webp",
-    alt: "Engineers at work on the open-plan floor of the Funavry delivery center",
-    caption: "The engineering floor",
-    width: 5712,
-    height: 4284,
-  },
-  {
-    src: "/about/team.webp",
-    alt: "The Funavry team gathered outside the Islamabad engineering centre",
-    caption: "The Funavry team · Islamabad",
+    src: "/about/1.webp",
+    alt: "The Funavry team seated and standing in rows before a Funavry and P@SHA backdrop at an outdoor event",
+    caption: "The Funavry team",
     width: 680,
     height: 416,
   },
   {
-    src: "/about/team-3.webp",
-    alt: "The games room at the Funavry delivery center, with a table-tennis table and a graffiti wall",
-    caption: "Time out · the games room",
+    src: "/about/2.webp",
+    alt: "The team gathered on the stairs and marble floor of the office lobby",
+    caption: "The office lobby",
+    width: 4032,
+    height: 3024,
+  },
+  {
+    src: "/about/7.webp",
+    alt: "The team celebrating in the office under blue and white balloons",
+    caption: "Celebrating at the office",
+    width: 1280,
+    height: 960,
+  },
+  {
+    src: "/about/12.webp",
+    alt: "Colleagues in a meeting around the boardroom table",
+    caption: "In the boardroom",
+    width: 4032,
+    height: 3024,
+  },
+  {
+    src: "/about/8.webp",
+    alt: "A table-tennis match at the office, with colleagues crowded on the stairs to watch",
+    caption: "Table tennis at the office",
+    width: 4032,
+    height: 3024,
+  },
+  {
+    src: "/about/5.webp",
+    alt: "The whole team on a lawn below green hills on a company outing",
+    caption: "Company day out",
+    width: 4032,
+    height: 3024,
+  },
+  {
+    src: "/about/3.webp",
+    alt: "The team gathered on a lakeside lawn with hills behind",
+    caption: "By the lake",
+    width: 4032,
+    height: 3024,
+  },
+  {
+    src: "/about/4.webp",
+    alt: "A group of colleagues with a volleyball on a hillside above a lake",
+    caption: "Volleyball above the lake",
+    width: 4032,
+    height: 3024,
+  },
+  {
+    src: "/about/9.webp",
+    alt: "Colleagues in a tug of war on the lawn under a blue shade",
+    caption: "Tug of war",
+    width: 958,
+    height: 1280,
+  },
+  {
+    src: "/about/10.webp",
+    alt: "Colleagues on the lawn watching the games from their chairs",
+    caption: "Games on the lawn",
     width: 4032,
     height: 3024,
   },
@@ -101,7 +153,7 @@ export default async function AboutPage() {
       />
       <main id="main">
         <PageHero
-          image={{ src: "/about/team-2.webp", position: "center 40%" }}
+          image={{ src: "/about/2.webp", position: "center 40%" }}
           eyebrow="About Funavry"
           title={[
             "An AI-first partner that",

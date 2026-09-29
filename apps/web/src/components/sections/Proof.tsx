@@ -4,22 +4,39 @@ import AboutSlider, { type AboutSlide } from "@/components/ui/AboutSlider";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
 
 /** The photos the deck cycles through. Drop more into /public/about and list
-    them here — the arrows and dots appear as soon as there are two. */
+    them here — the arrows and dots appear as soon as there are two. The frame
+    crops to 16:10, so these are the landscape group shots; the About page's
+    gallery carries the full set, portraits included. */
 const SLIDES: AboutSlide[] = [
   {
-    src: "/about/team.webp",
-    alt: "The Funavry team gathered outside the Islamabad engineering centre",
-    caption: "The Funavry team · Islamabad engineering centre",
+    src: "/about/1.webp",
+    alt: "The Funavry team seated and standing in rows before a Funavry and P@SHA backdrop at an outdoor event",
+    caption: "The Funavry team",
   },
   {
-    src: "/about/team-2.webp",
-    alt: "The Funavry team gathered outside the Islamabad engineering centre",
-    caption: "The Funavry team · Islamabad engineering centre",
+    src: "/about/2.webp",
+    alt: "The team gathered on the stairs and marble floor of the office lobby",
+    caption: "The office lobby",
   },
   {
-    src: "/about/team-3.webp",
-    alt: "The Funavry team gathered outside the Islamabad engineering centre",
-    caption: "The Funavry team · Islamabad engineering centre",
+    src: "/about/7.webp",
+    alt: "The team celebrating in the office under blue and white balloons",
+    caption: "Celebrating at the office",
+  },
+  {
+    src: "/about/5.webp",
+    alt: "The whole team on a lawn below green hills on a company outing",
+    caption: "Company day out",
+  },
+  {
+    src: "/about/8.webp",
+    alt: "A table-tennis match at the office, with colleagues crowded on the stairs to watch",
+    caption: "Table tennis at the office",
+  },
+  {
+    src: "/about/3.webp",
+    alt: "The team gathered on a lakeside lawn with hills behind",
+    caption: "By the lake",
   },
 ];
 

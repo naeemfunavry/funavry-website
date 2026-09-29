@@ -1,29 +1,28 @@
-# About page — company image
+# Life at Funavry — company photographs
 
-Drop the hero photo here and point `ABOUT_IMAGE` in `src/app/about/page.tsx`
-at it. Until `ABOUT_IMAGE.src` is set, the frame renders a labelled
-placeholder at the same dimensions, so adding the file changes no layout.
+The company's own photographs. Three places draw from this folder:
 
-```ts
-const ABOUT_IMAGE = {
-  src: "/about/team.webp",
-  alt: "The Funavry team outside the Islamabad engineering and delivery center",
-  caption: "Islamabad · 25,000 sq ft engineering & delivery center",
-};
-```
+- **About page gallery** — `GALLERY` in `src/app/about/page.tsx`. Takes any
+  number of photos, portrait or landscape; each keeps its own shape, so list
+  every photo with its pixel `width` and `height`.
+- **Home page slider** — `SLIDES` in `src/components/sections/Proof.tsx`. The
+  frame crops to 16:10, so use landscape group shots here.
+- **About page hero** — the `image` passed to `PageHero` in
+  `src/app/about/page.tsx`. Needs a large landscape photo (2000 px wide or
+  more); it sits under a dark wash, so a darker photo holds up best.
 
-Set `alt` at the same time — it is empty on purpose while there is no image,
-and an image shipped without it is a real accessibility defect. Update
-`caption` too if the photo is not the Islamabad centre.
+## Adding a photo
+
+1. Drop it here with a plain file name — no spaces or brackets, since the name
+   becomes the URL (`14.webp`, not `IMG-2025 (2).webp`).
+2. List it where it should appear, with an `alt` that describes what the photo
+   shows and a short `caption`.
+3. Say only what the picture shows. Don't name a place or an event unless it
+   is certain.
 
 ## Asset spec
 
-- **Subject:** the company — the team, or the Islamabad engineering and
-  delivery centre. Both appear in the 2026 corporate profile (team group photo,
-  building and interior shots) and either suits the slot.
-- **Aspect:** **4:3 landscape.** The frame crops with `object-cover`, so keep
-  the subject clear of the outer ~8% on each edge.
-- **Size:** ~**1600 px wide** (renders at 520 px, 2× for retina).
-- **Format:** **WebP** preferred, JPEG acceptable. Aim under ~250 KB.
-- **Look:** natural light, neutral colour. It sits on `paper-deep` next to a
-  blueprint grid, so avoid heavy filters or a dark, high-contrast grade.
+- **Format:** WebP preferred, JPEG acceptable.
+- **Size:** 1600 px wide or more; `next/image` resizes for each screen, so a
+  large original costs nothing on the page.
+- **Look:** natural light, neutral colour, no heavy filters.

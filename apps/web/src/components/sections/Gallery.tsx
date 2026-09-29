@@ -130,7 +130,7 @@ export default function Gallery({
               fill
               draggable={false}
               priority={i === 0}
-              quality={88}
+              quality={90}
               sizes="(max-width: 640px) 90vw, (max-width: 1024px) 70vw, 900px"
               className="object-cover transition-transform duration-[1200ms] ease-expo group-hover:scale-[1.03]"
             />
