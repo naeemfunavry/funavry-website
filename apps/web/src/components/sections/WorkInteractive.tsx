@@ -36,7 +36,6 @@ import { cn } from "@/lib/utils";
  * studies that have them. It is not padded out for the two that don't: the
  * numbers on this page are approved facts or they are absent. */
 
-
 const EXPO = [0.19, 1, 0.22, 1] as const;
 
 /* The stage field, in the study's own phase hue: a diagonal wash lit from the
@@ -241,7 +240,7 @@ export default function WorkInteractive({ caseStudies }: WorkInteractiveProps) {
       <section
         ref={sectionRef}
         id="work"
-        className="relative overflow-hidden bg-paper py-10 lg:py-16"
+        className="relative overflow-hidden bg-paper py-8 sm:py-12 lg:py-14"
       >
         {/* Field: the azure lift the design puts in the top-right corner, plus the
           engineering grid every other section stands on. */}

@@ -64,7 +64,7 @@ export default function Proof() {
     >
       <div aria-hidden className="absolute inset-0 grid-paper opacity-70" />
 
-      <Container wide className="relative z-10 py-12 sm:py-16 lg:py-20">
+      <Container wide className="relative z-10 py-8 sm:py-12 lg:py-14">
         <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
           {/* Left — who we are. */}
           <div>

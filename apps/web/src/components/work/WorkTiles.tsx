@@ -39,7 +39,7 @@ export default function WorkTiles({
 
   return (
     <section aria-labelledby={id} className="border-b border-line bg-paper">
-      <Container wide className="py-16 lg:py-24">
+      <Container wide className="py-8 sm:py-12 lg:py-14">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
           <div>
             <div className="flex items-center gap-3">

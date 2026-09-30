@@ -193,8 +193,6 @@ const META: Record<string, Meta> = {
 
 const short = (s: Service) => META[s.n]?.short ?? s.title;
 
-
-
 /** Blue for technology, amber for business — the two halves of the network. */
 const HUE = {
   tech: {
@@ -429,41 +427,41 @@ const GRID_PLANES = [
 /** The fuller copy a pillar reveals on hover — a one-line framing plus what
     sits in that phase, drawn from the deck's delivery model. */
 const PILLAR_DETAIL: Record<DeliveryPhase, { blurb: string; items: string[] }> =
-{
-  Build: {
-    blurb: "Create the foundation.",
-    items: [
-      "Platforms",
-      "Enterprise Applications",
-      "AI Solutions",
-      "Data",
-      "Cloud",
-    ],
-  },
-  Automate: {
-    blurb: "Embed AI in process.",
-    items: ["Intelligent Automation", "Document Intelligence", "Analytics"],
-  },
-  Orchestrate: {
-    blurb: "Connect end to end.",
-    items: [
-      "AI Agents",
-      "Enterprise Knowledge",
-      "APIs",
-      "Business Rules",
-      "Human Oversight",
-    ],
-  },
-  Operate: {
-    blurb: "Run, govern, scale.",
-    items: [
-      "Managed Services",
-      "Dedicated Teams",
-      "GCC Enablement",
-      "Global Delivery",
-    ],
-  },
-};
+  {
+    Build: {
+      blurb: "Create the foundation.",
+      items: [
+        "Platforms",
+        "Enterprise Applications",
+        "AI Solutions",
+        "Data",
+        "Cloud",
+      ],
+    },
+    Automate: {
+      blurb: "Embed AI in process.",
+      items: ["Intelligent Automation", "Document Intelligence", "Analytics"],
+    },
+    Orchestrate: {
+      blurb: "Connect end to end.",
+      items: [
+        "AI Agents",
+        "Enterprise Knowledge",
+        "APIs",
+        "Business Rules",
+        "Human Oversight",
+      ],
+    },
+    Operate: {
+      blurb: "Run, govern, scale.",
+      items: [
+        "Managed Services",
+        "Dedicated Teams",
+        "GCC Enablement",
+        "Global Delivery",
+      ],
+    },
+  };
 
 /** What the delivery chain is for — the deck's four business outcomes (slide
     10), shown as the card beneath the shorter GBS column. */
@@ -658,7 +656,8 @@ function ConnectionNetwork({
       aria-hidden
       className="pointer-events-none absolute inset-0 h-full w-full"
       viewBox={`0 0 ${geom.w} ${geom.h}`}
-      fill="none">
+      fill="none"
+    >
       <defs>
         {/* The fade. Each side runs from its own card column to the pillar face
             its lines terminate on — the gradient's end and the stroke's end are
@@ -680,7 +679,8 @@ function ConnectionNetwork({
           x1="0"
           y1="0"
           x2={geom.edge.tech}
-          y2="0">
+          y2="0"
+        >
           <stop offset="0%" stopColor={HUE.tech.hex} stopOpacity="0.9" />
           <stop offset="55%" stopColor={HUE.tech.hex} stopOpacity="0.78" />
           <stop offset="100%" stopColor={HUE.tech.hex} stopOpacity="0.5" />
@@ -691,7 +691,8 @@ function ConnectionNetwork({
           x1={geom.w}
           y1="0"
           x2={geom.edge.gbs}
-          y2="0">
+          y2="0"
+        >
           <stop offset="0%" stopColor={HUE.gbs.hex} stopOpacity="0.9" />
           <stop offset="55%" stopColor={HUE.gbs.hex} stopOpacity="0.78" />
           <stop offset="100%" stopColor={HUE.gbs.hex} stopOpacity="0.5" />
@@ -708,7 +709,8 @@ function ConnectionNetwork({
             key={link.id}
             initial={{ opacity: dimmed ? 0.25 : 1 }}
             animate={{ opacity: dimmed ? 0.25 : 1 }}
-            transition={{ duration: 0.35, ease: EXPO }}>
+            transition={{ duration: 0.35, ease: EXPO }}
+          >
             <path
               d={link.d}
               stroke={`url(#os-fade-${link.group})`}
@@ -794,7 +796,8 @@ const AICore = ({
         setHot(false);
         setHovered(null);
       }}
-      className="relative aspect-[200/248] w-[310px] shrink-0 sm:w-[400px] lg:w-[350px] xl:w-[480px]">
+      className="relative aspect-[200/248] w-[310px] shrink-0 sm:w-[400px] lg:w-[350px] xl:w-[480px]"
+    >
       {/* Ambient halo — warms toward the hovered pillar's hue, or the hovered
           half of the network. The radial gradient fades to nothing before its
           edge, so it reads as light in the air rather than as a disc. It used
@@ -826,7 +829,8 @@ const AICore = ({
           <svg
             aria-hidden
             viewBox={`0 0 200 ${VB_H}`}
-            className="absolute inset-0 h-full w-full">
+            className="absolute inset-0 h-full w-full"
+          >
             <defs>
               {SLABS.map((s) => (
                 <Fragment key={s.phase}>
@@ -836,7 +840,8 @@ const AICore = ({
                     x1="0"
                     y1={s.cy - SLAB.b}
                     x2="0"
-                    y2={s.cy + SLAB.b}>
+                    y2={s.cy + SLAB.b}
+                  >
                     <stop offset="0%" stopColor={s.face[0]} />
                     <stop offset="100%" stopColor={s.face[1]} />
                   </linearGradient>
@@ -846,7 +851,8 @@ const AICore = ({
                     x1={100 - SLAB.a}
                     y1="0"
                     x2={100 + SLAB.a}
-                    y2="0">
+                    y2="0"
+                  >
                     <stop offset="0%" stopColor={s.wall[0]} />
                     <stop offset="47%" stopColor={s.wall[1]} />
                     <stop offset="53%" stopColor={s.wall[2]} />
@@ -877,7 +883,8 @@ const AICore = ({
                 x="-20%"
                 y="-50%"
                 width="140%"
-                height="200%">
+                height="200%"
+              >
                 <feGaussianBlur stdDeviation="3" />
               </filter>
               <filter
@@ -885,7 +892,8 @@ const AICore = ({
                 x="-25%"
                 y="-60%"
                 width="150%"
-                height="220%">
+                height="220%"
+              >
                 <feGaussianBlur stdDeviation="5" />
               </filter>
               {/* Build's technical grid, one pattern per plane, so the lines
@@ -897,7 +905,8 @@ const AICore = ({
                   width="8"
                   height="8"
                   patternUnits="userSpaceOnUse"
-                  patternTransform={transform}>
+                  patternTransform={transform}
+                >
                   <path
                     d="M8 0H0V8"
                     fill="none"
@@ -939,7 +948,8 @@ const AICore = ({
                   key={s.phase}
                   initial={false}
                   animate={{ opacity: dim ? 0.5 : 1 }}
-                  transition={{ duration: 0.35, ease: EXPO }}>
+                  transition={{ duration: 0.35, ease: EXPO }}
+                >
                   {/* Cast shadow onto the slab below. */}
                   <path
                     d={shape.shadow}
@@ -1032,17 +1042,19 @@ const AICore = ({
                 style={{ top: `${(labelY(s) / VB_H) * 100}%` }}
                 initial={false}
                 animate={{ opacity: litPhase && !lit ? 0.7 : 1 }}
-                transition={{ duration: 0.35, ease: EXPO }}>
+                transition={{ duration: 0.35, ease: EXPO }}
+              >
                 <div
                   className={cn(
                     "relative flex items-center justify-center",
                     s.iconAbove ? "flex-col gap-1 sm:block" : "gap-2",
-                  )}>
+                  )}
+                >
                   <Icon
                     className={cn(
                       "h-5 w-5 flex-none sm:h-6 sm:w-6 lg:h-7 lg:w-7",
                       s.iconAbove &&
-                      "sm:absolute sm:bottom-full sm:left-1/2 sm:mb-1 sm:-translate-x-1/2",
+                        "sm:absolute sm:bottom-full sm:left-1/2 sm:mb-1 sm:-translate-x-1/2",
                       s.tone,
                     )}
                     strokeWidth={1.8}
@@ -1051,7 +1063,8 @@ const AICore = ({
                     className={cn(
                       "text-[15px] font-bold uppercase tracking-[0.08em] sm:text-[18px] lg:text-[20px] xl:text-[22px]",
                       s.tone,
-                    )}>
+                    )}
+                  >
                     {s.phase}
                   </p>
                 </div>
@@ -1063,8 +1076,11 @@ const AICore = ({
                 <p
                   className={cn(
                     "transition-[opacity,transform,visibility] duration-500 ease-expo sm:absolute sm:inset-x-0 sm:top-full sm:mt-2.5 lg:mt-7",
-                    lit ? "translate-y-0 opacity-100" : "invisible translate-y-1 opacity-0",
-                  )}>
+                    lit
+                      ? "translate-y-0 opacity-100"
+                      : "invisible translate-y-1 opacity-0",
+                  )}
+                >
                   <span className="inline-block rounded-full bg-white/95 px-3 py-1 text-[11px] font-semibold leading-[1.35] tracking-[-0.005em] text-ink-900 shadow-[0_6px_18px_-6px_rgba(10,16,23,0.45)] ring-1 ring-black/5 sm:text-[12px] lg:px-3.5 lg:py-1.5 lg:text-[13px]">
                     {s.caption}
                   </span>
@@ -1078,7 +1094,8 @@ const AICore = ({
               goes to the slab that is visibly in front. */}
           <svg
             viewBox={`0 0 200 ${VB_H}`}
-            className="pointer-events-none absolute inset-0 h-full w-full">
+            className="pointer-events-none absolute inset-0 h-full w-full"
+          >
             {[...SLABS].reverse().map((s) => (
               <path
                 key={s.phase}
@@ -1125,7 +1142,8 @@ const AICore = ({
               {
                 "--pop-y": `${(labelY(SLABS.find((s) => s.phase === hovered)!) / VB_H) * 100}%`,
               } as React.CSSProperties
-            }>
+            }
+          >
             {/* <motion.div
               initial={{ scale: 0.97 }}
               animate={{ scale: 1 }}
@@ -1218,7 +1236,8 @@ function CapabilityCard({
       animate={{ opacity: state === "muted" ? 0.42 : 1 }}
       transition={{ duration: 0.3, ease: EXPO }}
       // A hovered card's drawer hangs over its neighbour, so it has to out-rank one.
-      className="group relative hover:z-30 focus-within:z-30">
+      className="group relative hover:z-30 focus-within:z-30"
+    >
       <button
         ref={(el) => register(service.n, el)}
         type="button"
@@ -1245,10 +1264,11 @@ function CapabilityCard({
         style={
           state === "active"
             ? {
-              boxShadow: `0 0 0 1px rgba(${hue.rgb},0.55), 0 18px 40px -18px rgba(46,52,54,0.28)`,
-            }
+                boxShadow: `0 0 0 1px rgba(${hue.rgb},0.55), 0 18px 40px -18px rgba(46,52,54,0.28)`,
+              }
             : undefined
-        }>
+        }
+      >
         {/* Number. */}
         {/* <span
         className={cn(
@@ -1264,15 +1284,15 @@ function CapabilityCard({
           className={cn(
             "flex h-9 w-9 flex-none items-center justify-center rounded-[10px] border transition-all duration-[500ms] ease-expo",
             "group-hover:rotate-[-6deg] group-hover:scale-110",
-            state === "active"
-              ? "border-transparent"
-              : "border-transparent",
+            state === "active" ? "border-transparent" : "border-transparent",
           )}
           style={{
             background: `rgba(${hue.rgb},${state === "active" ? 0.15 : 0.08})`,
             boxShadow: `inset 0 0 0 1px rgba(${hue.rgb},${state === "active" ? 0.3 : 0.18})`,
-            transition: "transform 500ms cubic-bezier(0.19,1,0.22,1), background 500ms cubic-bezier(0.19,1,0.22,1), box-shadow 500ms cubic-bezier(0.19,1,0.22,1)",
-          }}>
+            transition:
+              "transform 500ms cubic-bezier(0.19,1,0.22,1), background 500ms cubic-bezier(0.19,1,0.22,1), box-shadow 500ms cubic-bezier(0.19,1,0.22,1)",
+          }}
+        >
           <Icon
             size={17}
             strokeWidth={1.6}
@@ -1328,7 +1348,8 @@ function CapabilityCard({
         )}
         // The panel carries the practice's own colour, as the card does when it
         // is active — azure for engineering, amber for GBS.
-        style={{ borderColor: `rgba(${hue.rgb},0.45)` }}>
+        style={{ borderColor: `rgba(${hue.rgb},0.45)` }}
+      >
         <div className="min-h-0 overflow-hidden">
           <div className="px-4 pb-3.5 pt-3">
             <p className="text-[12px] leading-snug text-ink-500 line-clamp-1">
@@ -1342,7 +1363,8 @@ function CapabilityCard({
               style={{
                 background: `rgba(${hue.rgb},0.1)`,
                 boxShadow: `inset 0 0 0 1px rgba(${hue.rgb},0.3)`,
-              }}>
+              }}
+            >
               <span className={hue.text}>Explore practice</span>
               <ArrowRight size={11} className={hue.text} />
             </button>
@@ -1435,7 +1457,8 @@ function Drawer({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}>
+      transition={{ duration: 0.3 }}
+    >
       {/* Kept light: the core stays readable behind it. */}
       <button
         type="button"
@@ -1460,7 +1483,8 @@ function Drawer({
           // Tablet and up: right-edge panel.
           "sm:inset-y-0 sm:left-auto sm:top-0 sm:w-[420px] sm:rounded-l-[24px] sm:rounded-tr-none",
           "lg:w-[520px] xl:w-[560px]",
-        )}>
+        )}
+      >
         {/* Phase seam. */}
         <span
           aria-hidden
@@ -1475,7 +1499,8 @@ function Drawer({
               style={{
                 background: `rgba(${hue.rgb},0.12)`,
                 boxShadow: `inset 0 0 0 1px rgba(${hue.rgb},0.25)`,
-              }}>
+              }}
+            >
               <Icon size={22} strokeWidth={1.6} className={hue.text} />
             </span>
             <div className="min-w-0">
@@ -1488,7 +1513,8 @@ function Drawer({
                   className={cn(
                     "font-mono text-[9.5px] uppercase tracking-[0.16em]",
                     hue.text,
-                  )}>
+                  )}
+                >
                   {GROUP_LABEL[service.group]}
                 </span>
               </div>
@@ -1502,7 +1528,8 @@ function Drawer({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="flex h-9 w-9 flex-none items-center justify-center rounded-[10px] border border-line text-ink-500 transition-colors duration-300 hover:bg-ink hover:text-paper">
+            className="flex h-9 w-9 flex-none items-center justify-center rounded-[10px] border border-line text-ink-500 transition-colors duration-300 hover:bg-ink hover:text-paper"
+          >
             <X size={15} />
           </button>
         </header>
@@ -1512,7 +1539,8 @@ function Drawer({
             itself still scrolls. */}
         <div
           data-lenis-prevent
-          className="flex-1 overflow-y-auto overscroll-contain px-6 py-7 lg:px-8">
+          className="flex-1 overflow-y-auto overscroll-contain px-6 py-7 lg:px-8"
+        >
           <motion.div {...stagger(0)} className="space-y-3.5">
             <p className="text-[14.5px] leading-[1.75] text-ink-500">
               {service.summary}
@@ -1537,15 +1565,16 @@ function Drawer({
                 {service.phase.toLowerCase()}
               </span>{" "}
               phase of delivery, wired into the same core as the other{" "}
-              {practiceCount - 1} practices — so a build hands off to
-              automation and operations without a seam.
+              {practiceCount - 1} practices — so a build hands off to automation
+              and operations without a seam.
             </p>
           </motion.div>
 
           {/* Sub-capabilities. */}
           <motion.h4
             {...stagger(1)}
-            className="mt-9 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
+            className="mt-9 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400"
+          >
             Key sub-capabilities
           </motion.h4>
           <div className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2 ">
@@ -1559,13 +1588,15 @@ function Drawer({
                   "group flex items-start gap-3.5 rounded-[14px] border border-line/70 bg-white/70 p-4",
                   "transition-[transform,box-shadow,border-color] duration-400 ease-expo",
                   "hover:-translate-y-0.5 hover:border-transparent hover:shadow-[0_16px_36px_-18px_rgba(46,52,54,0.3)]",
-                )}>
+                )}
+              >
                 <span
                   className="mt-0.5 flex h-7 w-7 flex-none items-center justify-center rounded-[9px] font-mono text-[9.5px]"
                   style={{
                     background: `rgba(${hue.rgb},0.1)`,
                     color: hue.hex,
-                  }}>
+                  }}
+                >
                   {service.n}.{i + 1}
                 </span>
                 <span className="min-w-0 flex-1">
@@ -1587,7 +1618,8 @@ function Drawer({
           {/* Industries. */}
           <motion.h4
             {...stagger(6)}
-            className="mt-9 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
+            className="mt-9 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400"
+          >
             Industries
           </motion.h4>
           <motion.div {...stagger(7)} className="mt-3.5 flex flex-wrap gap-2">
@@ -1597,7 +1629,8 @@ function Drawer({
                 className={cn(
                   "rounded-full border border-line/70 px-3 py-1.5 text-[12px] text-ink-500",
                   hue.chip,
-                )}>
+                )}
+              >
                 {industry}
               </span>
             ))}
@@ -1606,14 +1639,16 @@ function Drawer({
           {/* Stack. */}
           <motion.h4
             {...stagger(8)}
-            className="mt-8 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
+            className="mt-8 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400"
+          >
             Technology stack
           </motion.h4>
           <motion.div {...stagger(9)} className="mt-3.5 flex flex-wrap gap-1.5">
             {meta?.stack.map((tech) => (
               <span
                 key={tech}
-                className="rounded-md border border-line/70 bg-paper px-2.5 py-1 font-mono text-[10.5px] tracking-[0.04em] text-ink-500">
+                className="rounded-md border border-line/70 bg-paper px-2.5 py-1 font-mono text-[10.5px] tracking-[0.04em] text-ink-500"
+              >
                 {tech}
               </span>
             ))}
@@ -1622,19 +1657,22 @@ function Drawer({
           {/* Case study preview. */}
           <motion.h4
             {...stagger(10)}
-            className="mt-9 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
+            className="mt-9 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400"
+          >
             Case studies
           </motion.h4>
           <motion.a
             {...stagger(11)}
             href="#work"
             onClick={onClose}
-            className="group mt-3.5 flex items-center gap-4 overflow-hidden rounded-[14px] border border-line/70 bg-white/70 p-4 transition-[transform,box-shadow] duration-400 ease-expo hover:-translate-y-0.5 hover:shadow-[0_16px_36px_-18px_rgba(46,52,54,0.3)]">
+            className="group mt-3.5 flex items-center gap-4 overflow-hidden rounded-[14px] border border-line/70 bg-white/70 p-4 transition-[transform,box-shadow] duration-400 ease-expo hover:-translate-y-0.5 hover:shadow-[0_16px_36px_-18px_rgba(46,52,54,0.3)]"
+          >
             <span
               className="flex h-12 w-12 flex-none items-center justify-center rounded-[10px]"
               style={{
                 background: `linear-gradient(135deg, rgba(${hue.rgb},0.18), rgba(${hue.rgb},0.04))`,
-              }}>
+              }}
+            >
               <Icon size={18} strokeWidth={1.6} className={hue.text} />
             </span>
             <span className="min-w-0 flex-1">
@@ -1655,11 +1693,13 @@ function Drawer({
           {/* CTAs. */}
           <motion.div
             {...stagger(12)}
-            className="mt-9 space-y-2.5 border-t border-line/70 pt-7">
+            className="mt-9 space-y-2.5 border-t border-line/70 pt-7"
+          >
             <a
               href="#contact"
               onClick={onClose}
-              className="group relative flex items-center justify-between overflow-hidden rounded-[12px] bg-ink px-5 py-3.5 text-[14px] font-medium text-paper">
+              className="group relative flex items-center justify-between overflow-hidden rounded-[12px] bg-ink px-5 py-3.5 text-[14px] font-medium text-paper"
+            >
               <span
                 aria-hidden
                 className="absolute inset-0 translate-x-[-101%] transition-transform duration-600 ease-expo group-hover:translate-x-0"
@@ -1678,13 +1718,15 @@ function Drawer({
               <a
                 href="#work"
                 onClick={onClose}
-                className="flex items-center justify-center gap-2 rounded-[12px] border border-line-strong px-4 py-3 text-[13px] font-medium text-ink transition-colors duration-300 hover:border-ink hover:bg-paper">
+                className="flex items-center justify-center gap-2 rounded-[12px] border border-line-strong px-4 py-3 text-[13px] font-medium text-ink transition-colors duration-300 hover:border-ink hover:bg-paper"
+              >
                 View case studies
               </a>
               <a
                 href="#contact"
                 onClick={onClose}
-                className="flex items-center justify-center gap-2 rounded-[12px] border border-line-strong px-4 py-3 text-[13px] font-medium text-ink transition-colors duration-300 hover:border-ink hover:bg-paper">
+                className="flex items-center justify-center gap-2 rounded-[12px] border border-line-strong px-4 py-3 text-[13px] font-medium text-ink transition-colors duration-300 hover:border-ink hover:bg-paper"
+              >
                 Schedule a call
               </a>
             </div>
@@ -1704,8 +1746,14 @@ export interface CapabilitiesOSProps {
 }
 
 export default function CapabilitiesOS({ services }: CapabilitiesOSProps) {
-  const TECH = useMemo(() => services.filter((s) => s.group === "tech"), [services]);
-  const GBS = useMemo(() => services.filter((s) => s.group === "gbs"), [services]);
+  const TECH = useMemo(
+    () => services.filter((s) => s.group === "tech"),
+    [services],
+  );
+  const GBS = useMemo(
+    () => services.filter((s) => s.group === "gbs"),
+    [services],
+  );
   const SERVICES = services;
 
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -1788,7 +1836,7 @@ export default function CapabilitiesOS({ services }: CapabilitiesOSProps) {
     if (wrapRef.current) ro.observe(wrapRef.current);
     window.addEventListener("resize", schedule, { passive: true });
     // Webfonts settle after paint and nudge every card's height.
-    document.fonts?.ready.then(schedule).catch(() => { });
+    document.fonts?.ready.then(schedule).catch(() => {});
     return () => {
       if (queued) cancelAnimationFrame(queued);
       ro.disconnect();
@@ -1803,7 +1851,9 @@ export default function CapabilitiesOS({ services }: CapabilitiesOSProps) {
   const activeIds = useMemo<ReadonlySet<string> | null>(() => {
     if (hovered) return new Set([hovered]);
     if (pillarPhase) {
-      const ids = SERVICES.filter((s) => phasesOf(s).includes(pillarPhase)).map((s) => s.n);
+      const ids = SERVICES.filter((s) => phasesOf(s).includes(pillarPhase)).map(
+        (s) => s.n,
+      );
       if (ids.length) return new Set(ids);
     }
     return openId ? new Set([openId]) : null;
@@ -1836,7 +1886,8 @@ export default function CapabilitiesOS({ services }: CapabilitiesOSProps) {
   return (
     <section
       id="capabilities"
-      className="relative overflow-hidden border-t border-line bg-white">
+      className="relative overflow-hidden border-t border-line bg-white"
+    >
       {/* Blueprint paper. */}
       <div aria-hidden className="absolute inset-0 grid-paper opacity-40" />
       {/* Very light washes, one per half of the network. */}
@@ -1854,7 +1905,7 @@ export default function CapabilitiesOS({ services }: CapabilitiesOSProps) {
         className="absolute inset-0 bg-[radial-gradient(75%_60%_at_50%_50%,transparent,white_95%)]"
       />
 
-      <Container wide className="relative z-10 py-12 sm:py-16 lg:py-20">
+      <Container wide className="relative z-10 py-8 sm:py-12 lg:py-14">
         {/* Header. */}
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)] lg:items-end lg:gap-20">
           <div>
@@ -1896,7 +1947,8 @@ export default function CapabilitiesOS({ services }: CapabilitiesOSProps) {
         <div
           ref={wrapRef}
           className="relative mt-14 lg:mt-20"
-          onMouseLeave={() => setHovered(null)}>
+          onMouseLeave={() => setHovered(null)}
+        >
           {geom && <ConnectionNetwork geom={geom} activeIds={activeIds} />}
 
           <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-8 xl:gap-14">
@@ -1986,7 +2038,8 @@ export default function CapabilitiesOS({ services }: CapabilitiesOSProps) {
                     {OUTCOMES.map((o) => (
                       <li
                         key={o.title}
-                        className="flex items-baseline gap-3 py-3">
+                        className="flex items-baseline gap-3 py-3"
+                      >
                         <span
                           aria-hidden
                           className="h-1.5 w-1.5 flex-none translate-y-[-1px] rounded-full bg-amber"

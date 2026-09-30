@@ -99,11 +99,18 @@ function IndustryCard({ industry, i }: { industry: Industry; i: number }) {
 }
 
 export default async function IndustriesPage() {
-  const [chrome, INDUSTRIES] = await Promise.all([getChrome(), getIndustries()]);
+  const [chrome, INDUSTRIES] = await Promise.all([
+    getChrome(),
+    getIndustries(),
+  ]);
 
   return (
     <>
-      <Nav services={chrome.services} industries={chrome.industries} socials={chrome.socials} />
+      <Nav
+        services={chrome.services}
+        industries={chrome.industries}
+        socials={chrome.socials}
+      />
       <main id="main">
         <section className="relative overflow-hidden border-b border-line bg-paper-deep pt-[130px]">
           <div aria-hidden className="absolute inset-0 grid-paper opacity-60" />
@@ -146,7 +153,7 @@ export default async function IndustriesPage() {
         <section className="relative overflow-hidden bg-paper">
           <div aria-hidden className="absolute inset-0 grid-paper opacity-40" />
 
-          <Container wide className="relative z-10 py-16 lg:py-24">
+          <Container wide className="relative z-10 py-8 sm:py-12 lg:py-14">
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {leadFirst(INDUSTRIES).map((industry, i) => (
                 <IndustryCard key={industry.name} industry={industry} i={i} />

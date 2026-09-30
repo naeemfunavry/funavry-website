@@ -517,7 +517,7 @@ export default function TechStack() {
         </div>
       )}
 
-      <Container wide className="relative z-10 py-12 sm:py-16 lg:py-20">
+      <Container wide className="relative z-10 py-8 sm:py-12 lg:py-14">
         {/* Heading — the section's own, kept as it was. */}
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] lg:items-end lg:gap-20">
           <div>

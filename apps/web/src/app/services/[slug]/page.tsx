@@ -16,7 +16,12 @@ import WorkTiles from "@/components/work/WorkTiles";
 import Governance from "@/components/sections/Governance";
 import { industriesForService, projectsFor } from "@/lib/relations";
 import { byVisuals, buildWorkProjects } from "@/lib/work";
-import { getService, getServices, getWorkIndex, getIndustries } from "@/lib/api";
+import {
+  getService,
+  getServices,
+  getWorkIndex,
+  getIndustries,
+} from "@/lib/api";
 
 type Params = { slug: string };
 
@@ -181,7 +186,9 @@ export default async function ServiceDetailPage({
           className="border-b border-line bg-paper-white"
         >
           <Container wide className="py-16 lg:py-24">
-            <SectionLabel id="service-included">What&apos;s Included</SectionLabel>
+            <SectionLabel id="service-included">
+              What&apos;s Included
+            </SectionLabel>
             <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:mt-10 xl:grid-cols-4">
               {service.subs.map((sub, i) => (
                 <li key={sub.title} className="h-full">
@@ -238,7 +245,7 @@ export default async function ServiceDetailPage({
             aria-labelledby="service-industries"
             className="border-b border-line bg-paper-white"
           >
-            <Container wide className="py-16 lg:py-24">
+            <Container wide className="py-8 sm:py-12 lg:py-14">
               <SectionLabel id="service-industries">
                 Industries We Serve
               </SectionLabel>

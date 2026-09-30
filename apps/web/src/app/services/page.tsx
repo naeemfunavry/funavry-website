@@ -60,7 +60,11 @@ export default async function ServicesPage() {
 
   return (
     <>
-      <Nav services={chrome.services} industries={chrome.industries} socials={chrome.socials} />
+      <Nav
+        services={chrome.services}
+        industries={chrome.industries}
+        socials={chrome.socials}
+      />
       <main id="main">
         <section className="relative overflow-hidden border-b border-line bg-paper-deep pt-[130px]">
           <div aria-hidden className="absolute inset-0 grid-paper opacity-60" />
@@ -117,8 +121,8 @@ export default async function ServicesPage() {
               hue="bg-azure"
             >
               {tech.length} engineering practices — from AI and product
-              engineering to cloud, security and data. Pick one to see
-              what it covers.
+              engineering to cloud, security and data. Pick one to see what it
+              covers.
             </GroupHead>
             <div className="mt-10 lg:mt-14">
               <TechCarousel services={tech} />
@@ -133,15 +137,15 @@ export default async function ServicesPage() {
           className="relative overflow-hidden bg-paper-deep"
         >
           <div aria-hidden className="absolute inset-0 grid-paper opacity-60" />
-          <Container wide className="relative z-10 py-16 lg:py-24">
+          <Container wide className="relative z-10 py-8 sm:py-12 lg:py-14">
             <GroupHead
               id="services-gbs"
               label="Global Business Services"
               title="The operations we run."
               hue="bg-amber"
             >
-              {gbs.length} business services that keep the organisation
-              running — delivered from our centres, measured on outcomes.
+              {gbs.length} business services that keep the organisation running
+              — delivered from our centres, measured on outcomes.
             </GroupHead>
             <div className="mt-12 lg:mt-16">
               <GbsTimeline services={gbs} />

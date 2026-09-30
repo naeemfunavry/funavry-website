@@ -43,14 +43,17 @@ export default function PracticesSplit({
     >
       {/* The photograph — the right half of the band, bleeding off the page's
           edge, washed into the paper from its left. */}
-      <div aria-hidden className="absolute inset-y-0 right-0 hidden w-[50%] lg:block">
+      <div
+        aria-hidden
+        className="absolute inset-y-0 right-0 hidden w-[50%] lg:block"
+      >
         <Photos photos={photos} active={photo} />
         <span className="absolute inset-0 bg-[linear-gradient(90deg,#FFFFFF_0%,rgba(255,255,255,0.85)_18%,rgba(255,255,255,0.25)_48%,rgba(255,255,255,0)_75%)]" />
         <span className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-paper-white to-transparent" />
         <span className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-paper-white to-transparent" />
       </div>
 
-      <Container wide className="relative py-16 lg:py-24">
+      <Container wide className="relative py-8 sm:py-12 lg:py-14">
         <div className="lg:w-[48%]">
           <div className="flex items-center gap-3">
             <span aria-hidden className="h-px w-10 flex-none bg-azure" />

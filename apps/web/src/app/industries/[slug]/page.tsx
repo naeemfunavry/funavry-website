@@ -185,7 +185,7 @@ export default async function IndustryDetailPage({
               aria-hidden
               className="absolute inset-0 grid-paper opacity-60"
             />
-            <Container wide className="relative z-10 py-16 lg:py-24">
+            <Container wide className="relative z-10 py-8 sm:py-12 lg:py-14">
               <div className="grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
                 {/* The statement: heading, then the closing sentence with
                     the frameworks it names set as badges. */}
