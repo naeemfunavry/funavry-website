@@ -58,6 +58,10 @@ const MAP = {
   TensorFlow: 'TensorFlow',
   Keras: 'Keras',
   'Hugging Face': 'Hugging Face',
+  // PEFT is Hugging Face's library and LangSmith is LangChain's platform;
+  // neither has a mark of its own, so each takes its maker's.
+  PEFT: 'Hugging Face',
+  LangSmith: 'LangChain',
   'Vertex AI': 'Google Cloud',
   MLflow: 'MLflow',
 

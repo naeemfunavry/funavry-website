@@ -2,6 +2,7 @@ import Image from "next/image";
 import { TECH_ICONS } from "@/lib/tech-icons";
 import { TECH_LOGOS } from "@/lib/tech-logos";
 import { TECH_MARKS } from "@/lib/tech-marks";
+import { TECH_MARKS_EXTRA } from "@/lib/tech-marks-extra";
 import { cn } from "@/lib/utils";
 
 /** Relative luminance of a brand hex, 0..1. */
@@ -59,7 +60,8 @@ function optical(w: number, h: number, size: number) {
 }
 
 type TechIconProps = {
-  /** Resolved against TECH_MARKS, then TECH_LOGOS, then TECH_ICONS, then a monogram. */
+  /** Resolved against TECH_MARKS (and TECH_MARKS_EXTRA), then TECH_LOGOS,
+      then TECH_ICONS, then a monogram. */
   name: string;
   /** Shown when the vendor has no artwork anywhere. */
   mono?: string;
@@ -90,7 +92,7 @@ export default function TechIcon({
   onDark = false,
   size = 30,
 }: TechIconProps) {
-  const mark = TECH_MARKS[name];
+  const mark = TECH_MARKS[name] ?? TECH_MARKS_EXTRA[name];
 
   if (mark) {
     /* Artwork painted in currentColor takes the vendor's hex when we have one —
@@ -138,7 +140,13 @@ export default function TechIcon({
         width={logo.width}
         height={logo.height}
         className={className}
-        style={{ width: size, height: size, objectFit: "contain" }}
+        style={{
+          width: size,
+          height: size,
+          objectFit: "contain",
+          // A tile carries its own background, so round it like an app icon.
+          ...(logo.tile ? { borderRadius: Math.round(size * 0.22) } : undefined),
+        }}
       />
     );
   }
