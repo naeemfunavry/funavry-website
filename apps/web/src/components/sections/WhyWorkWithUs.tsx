@@ -51,7 +51,7 @@ const REASONS: { title: string; body: string; icon: LucideIcon; tint: string }[]
   },
   {
     title: "Industry-Specific Depth",
-    body: "Proven across ten industries, from healthcare to government.",
+    body: "Proven across eleven industries, from healthcare to agriculture.",
     icon: Building2,
     tint: STEEL,
   },
@@ -60,7 +60,7 @@ const REASONS: { title: string; body: string; icon: LucideIcon; tint: string }[]
 /** The figures the photo carries, taken from the reasons themselves. */
 const FIGURES = [
   { value: "500+", label: "Projects delivered" },
-  { value: "10", label: "Industries" },
+  { value: "11", label: "Industries" },
   { value: "4", label: "Regions" },
 ];
 

@@ -17,6 +17,7 @@ import {
   Network,
   Radio,
   ShoppingBag,
+  Sprout,
   Truck,
   type LucideIcon,
 } from "lucide-react";
@@ -110,6 +111,7 @@ const INDUSTRY_ICONS: Record<string, LucideIcon> = {
   education: GraduationCap,
   commerce: ShoppingBag,
   "enterprise-systems": Network,
+  agriculture: Sprout,
 };
 
 /* The three logo hues, cycled down the industry list. */
@@ -365,7 +367,7 @@ function IndustriesMega({
           <FeatureCard
             photo={photo}
             eyebrow={hovered ? "Industry" : "Industries"}
-            title={hovered ? hovered.name : "Ten industries, deep domain fluency."}
+            title={hovered ? hovered.name : "Eleven industries, deep domain fluency."}
             body={
               hovered
                 ? hovered.desc

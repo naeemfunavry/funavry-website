@@ -1,6 +1,7 @@
 /**
- * The ten industries Funavry delivers into, shared by the Industries section
+ * The eleven industries Funavry delivers into, shared by the Industries section
  * and the nav mega-menu. Verbatim from the section — do not invent entries.
+ * Ordered as the site lists them; the CMS carries the same order.
  */
 export type Industry = {
   /** URL segment of the industry page, `/industries/[slug]`. */
@@ -28,32 +29,11 @@ export const INDUSTRIES: Industry[] = [
     image: "/industries/financial.webp",
   },
   {
-    slug: "media",
-    name: "Media, Broadcasting & Infotainment",
-    desc: "News, streaming and audience platforms engineered for a million hits a day.",
-    proof: "CNBC Arabia",
-    image: "/industries/media.webp",
-  },
-  {
     slug: "government",
     name: "Government & Public Sector",
     desc: "Citizen service platforms, e-government CRM and smart municipality programmes.",
     proof: "Ministry of Housing · DWTC",
     image: "/industries/government.webp",
-  },
-  {
-    slug: "supply-chain",
-    name: "Supply Chain, Logistics & Operations",
-    desc: "Transport, warehousing and distribution platforms with predictive analytics.",
-    proof: "Del Monte",
-    image: "/industries/supply-chain.webp",
-  },
-  {
-    slug: "manufacturing",
-    name: "Consumer Products & Manufacturing",
-    desc: "Quality management, traceability and vision-based inspection across production plants.",
-    proof: "14 plants, US + MENA",
-    image: "/industries/manufacturing.webp",
   },
   {
     slug: "industrial-iot",
@@ -63,11 +43,11 @@ export const INDUSTRIES: Industry[] = [
     image: "/industries/industrial-iot.webp",
   },
   {
-    slug: "education",
-    name: "Education & Workforce Development",
-    desc: "Learning platforms, tutoring marketplaces and simulation-based training.",
-    proof: "Manchester Met · SkillYah",
-    image: "/industries/education.webp",
+    slug: "supply-chain",
+    name: "Supply Chain, Logistics & Operations",
+    desc: "Transport, warehousing and distribution platforms with predictive analytics.",
+    proof: "Del Monte",
+    image: "/industries/supply-chain.webp",
   },
   {
     slug: "commerce",
@@ -82,5 +62,33 @@ export const INDUSTRIES: Industry[] = [
     desc: "ERP, CRM, HRMS and workflow automation running entire organisations.",
     proof: "EY · Systems Limited",
     image: "/industries/enterprise.webp",
+  },
+  {
+    slug: "media",
+    name: "Media, Broadcasting & Infotainment",
+    desc: "News, streaming and audience platforms engineered for a million hits a day.",
+    proof: "CNBC Arabia",
+    image: "/industries/media.webp",
+  },
+  {
+    slug: "education",
+    name: "Education & Workforce Development",
+    desc: "Learning platforms, tutoring marketplaces and simulation-based training.",
+    proof: "Manchester Met · SkillYah",
+    image: "/industries/education.webp",
+  },
+  {
+    slug: "manufacturing",
+    name: "Consumer Products & Manufacturing",
+    desc: "Quality management, traceability and vision-based inspection across production plants.",
+    proof: "14 plants, US + MENA",
+    image: "/industries/manufacturing.webp",
+  },
+  {
+    slug: "agriculture",
+    name: "Agriculture & AgriTech",
+    desc: "Digital agriculture: crop diagnostics, satellite and geospatial analytics, and AI advisory that reaches farmers in the field.",
+    proof: "Crop diagnostics · Satellite analytics",
+    image: "/industries/agriculture.webp",
   },
 ];

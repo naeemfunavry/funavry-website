@@ -15,10 +15,10 @@ export const metadata: Metadata = {
   /* The root layout appends " — Funavry Technologies" via its title template. */
   title: "Industries",
   description:
-    "Ten industries with deep domain fluency: healthcare, financial services, media, government, supply chain, manufacturing, industrial IoT, education, commerce, and enterprise systems.",
+    "Eleven industries with deep domain fluency: healthcare, financial services, government, industrial IoT, supply chain, commerce, enterprise systems, media, education, manufacturing, and agriculture.",
 };
 
-/* A little colour rhythm across the grid — the three logo hues, cycled — so ten
+/* A little colour rhythm across the grid — the three logo hues, cycled — so the
    photographic cards don't all wear the same tick colour. */
 const TINTS = ["68,158,216", "245,159,19", "55,96,121"] as const;
 
@@ -128,7 +128,7 @@ export default async function IndustriesPage() {
                   </span>
                 </div>
                 <h1 className="mt-6 text-h2 text-ink">
-                  <KineticWords text="Ten industries," trigger="mount" />
+                  <KineticWords text="Eleven industries," trigger="mount" />
                   <br />
                   <KineticWords
                     text="deep domain fluency."

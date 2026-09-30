@@ -180,4 +180,24 @@ export const INDUSTRY_TECHNOLOGIES: Record<string, string[]> = {
     "Kubernetes",
     "Terraform",
   ],
+  // The digital agriculture platform's stack: vision models for crop
+  // diagnostics, an AI advisory engine, geospatial and satellite analytics,
+  // and mobile apps that reach farmers in the field.
+  agriculture: [
+    "Python",
+    "PyTorch",
+    "TensorFlow",
+    "Hugging Face",
+    "OpenAI",
+    "LangChain",
+    "GCP",
+    "AWS",
+    "FastAPI",
+    "React Native",
+    "Flutter",
+    "PostgreSQL",
+    "MongoDB",
+    "Grafana",
+    "Docker",
+  ],
 };
