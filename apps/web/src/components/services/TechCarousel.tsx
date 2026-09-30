@@ -80,9 +80,15 @@ export default function TechCarousel({ services }: { services: Service[] }) {
           if (Math.abs(dx) > 50) go(active + (dx < 0 ? 1 : -1));
         }}
       >
+        {/* Until the viewport is measured the cards size themselves from CSS,
+            so the server's HTML and the first paint aren't a row of zero-width
+            cards that jump open once the script runs. */}
         <ul
-          className="flex py-4 transition-transform duration-700 ease-expo"
-          style={{ gap, transform: `translate3d(${offset}px,0,0)` }}
+          className={cn(
+            "flex py-4 transition-transform duration-700 ease-expo motion-reduce:transition-none",
+            !width && "gap-[14px] lg:gap-5",
+          )}
+          style={width ? { gap, transform: `translate3d(${offset}px,0,0)` } : undefined}
         >
           {services.map((service, i) => (
             <Panel
@@ -90,7 +96,7 @@ export default function TechCarousel({ services }: { services: Service[] }) {
               service={service}
               open={i === active}
               desktop={desktop}
-              width={i === active ? openW : closedW}
+              width={width ? (i === active ? openW : closedW) : undefined}
               priority={i < 4}
               onPick={() => go(i)}
             />
@@ -158,7 +164,8 @@ function Panel({
   service: Service;
   open: boolean;
   desktop: boolean;
-  width: number;
+  /** Exact width once measured; before that the classes below size it. */
+  width: number | undefined;
   priority: boolean;
   onPick: () => void;
 }) {
@@ -171,10 +178,14 @@ function Panel({
       aria-roledescription="slide"
       aria-label={service.title}
       className={cn(
-        "group relative h-[520px] flex-none overflow-hidden bg-ink-900 transition-[width,box-shadow] duration-700 ease-expo sm:h-[480px] lg:h-[460px]",
+        "group relative h-[520px] flex-none overflow-hidden bg-ink-900 transition-[width,box-shadow] duration-700 ease-expo motion-reduce:transition-none sm:h-[480px] lg:h-[460px]",
         open && "shadow-[0_40px_80px_-40px_rgba(33,38,42,0.55)]",
+        width === undefined &&
+          (open
+            ? "w-[88%] sm:w-[78%] lg:w-[66%] lg:max-w-[900px]"
+            : "w-[88%] sm:w-[190px] lg:w-[230px]"),
       )}
-      style={{ width }}
+      style={width === undefined ? undefined : { width }}
     >
       {/* The photograph, or — with none — the icon lit on dark paper. */}
       {photo ? (
