@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import MagneticButton from "@/components/ui/MagneticButton";
@@ -81,6 +82,13 @@ const STATS: {
   },
 ];
 
+/**
+ * The hero's photograph. While set, it is the background: the drawn one (the
+ * aurora washes, the grid and the 3D orbit, which would compete with the
+ * picture's own globe) stands down. Set to null to bring the drawn one back.
+ */
+const HERO_BG: string | null = "/hero-bg.webp";
+
 export default function Hero() {
   const HEADLINE = ["Building the", "Intelligent Enterprise"];
 
@@ -89,6 +97,34 @@ export default function Hero() {
       id="top"
       className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden bg-ink-900 pb-20 pt-[130px]"
     >
+      {HERO_BG && (
+        <>
+          {/* The photograph. Its artwork sits right and its left is dark, which
+              is where the copy goes. Priority: it is the first thing on the page. */}
+          <Image
+            src={HERO_BG}
+            alt=""
+            fill
+            priority
+            quality={90}
+            sizes="100vw"
+            className="object-cover object-[72%_center]"
+          />
+          {/* Keeps the headline crisp: from lg a wash from the left, clearing
+              over the globe; below lg, where the copy sits over the picture,
+              a steadier darkening. */}
+          <div
+            aria-hidden
+            className="absolute inset-0 hidden lg:block"
+            style={{
+              background:
+                "linear-gradient(90deg, rgba(20,24,26,0.9) 0%, rgba(20,24,26,0.72) 38%, rgba(20,24,26,0.28) 58%, rgba(20,24,26,0) 76%)",
+            }}
+          />
+          <div aria-hidden className="absolute inset-0 bg-ink-900/70 lg:hidden" />
+        </>
+      )}
+
       {/* Aurora: three washes in the phase colours, drifting on different
           periods. Blurred far past their own edges, so what reads is the
           light, not the shape.
@@ -106,30 +142,35 @@ export default function Hero() {
           approximation for its own sake — a circle blurred by 130px IS a radial
           gradient, so the result reads the same while costing one gradient fill
           and no blur, no animation, and no extra layers. */}
-      <div
-        aria-hidden
-        className="absolute inset-0 hidden overflow-hidden lg:block"
-      >
-        <div className="absolute -left-[15%] -top-[20%] h-[75vh] w-[75vw] animate-aurora-a rounded-full bg-azure/25 blur-[130px]" />
-        <div className="absolute -right-[12%] top-[4%] h-[58vh] w-[58vw] animate-aurora-b rounded-full bg-amber/[0.13] blur-[140px]" />
-        <div className="absolute -bottom-[25%] left-[22%] h-[65vh] w-[65vw] animate-aurora-c rounded-full bg-steel/35 blur-[130px]" />
-      </div>
+      {!HERO_BG && (
+        <div
+          aria-hidden
+          className="absolute inset-0 hidden overflow-hidden lg:block"
+        >
+          <div className="absolute -left-[15%] -top-[20%] h-[75vh] w-[75vw] animate-aurora-a rounded-full bg-azure/25 blur-[130px]" />
+          <div className="absolute -right-[12%] top-[4%] h-[58vh] w-[58vw] animate-aurora-b rounded-full bg-amber/[0.13] blur-[140px]" />
+          <div className="absolute -bottom-[25%] left-[22%] h-[65vh] w-[65vw] animate-aurora-c rounded-full bg-steel/35 blur-[130px]" />
+        </div>
+      )}
 
       {/* The phone's aurora: same light, no blur and no animation. */}
-      <div
-        aria-hidden
-        className="absolute inset-0 lg:hidden"
-        style={{
-          background: [
-            "radial-gradient(78% 58% at 10% 6%, rgba(68,158,216,0.28), transparent 62%)",
-            "radial-gradient(62% 46% at 94% 14%, rgba(245,159,19,0.14), transparent 60%)",
-            "radial-gradient(72% 58% at 46% 104%, rgba(55,96,121,0.38), transparent 66%)",
-          ].join(","),
-        }}
-      />
+      {!HERO_BG && (
+        <div
+          aria-hidden
+          className="absolute inset-0 lg:hidden"
+          style={{
+            background: [
+              "radial-gradient(78% 58% at 10% 6%, rgba(68,158,216,0.28), transparent 62%)",
+              "radial-gradient(62% 46% at 94% 14%, rgba(245,159,19,0.14), transparent 60%)",
+              "radial-gradient(72% 58% at 46% 104%, rgba(55,96,121,0.38), transparent 66%)",
+            ].join(","),
+          }}
+        />
+      )}
 
-      {/* Grid over the wash, grain over both. */}
-      <div aria-hidden className="absolute inset-0 grid-paper-dark" />
+      {/* Grid over the wash, grain over both. The photograph carries its own
+          grid, so the drawn one stands down with the washes. */}
+      {!HERO_BG && <div aria-hidden className="absolute inset-0 grid-paper-dark" />}
       <div
         aria-hidden
         className="absolute inset-0 grain opacity-[0.16] mix-blend-overlay"
@@ -142,7 +183,9 @@ export default function Hero() {
         className="absolute inset-0 bg-[radial-gradient(125%_105%_at_50%_38%,transparent_30%,rgba(20,24,26,0.72)_100%)]"
       />
 
-      {/* Ambient 3D orbit — fills the right space the copy leaves open. */}
+      {/* Ambient 3D orbit — fills the right space the copy leaves open. The
+          photograph's globe fills it instead while HERO_BG is set. */}
+      {!HERO_BG && (
       <div
         aria-hidden
         className="pointer-events-none absolute inset-y-0 right-[-10%] hidden w-[64%] items-center justify-center [perspective:1600px] lg:flex"
@@ -182,6 +225,7 @@ export default function Hero() {
           <span className="absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-azure shadow-[0_0_32px_10px_rgba(68,158,216,0.6)]" />
         </div>
       </div>
+      )}
 
       <Container wide className="relative z-10">
         {/* Copy, left-aligned. The ecosystem visual is retired in favour of the

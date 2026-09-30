@@ -84,7 +84,7 @@ const Tile = memo(function Tile({
             hover-driven cross-fade on pointer devices — desktop unchanged. */}
         <div
           aria-hidden
-          className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/45 to-ink-900/10 opacity-0 transition-opacity duration-700 ease-expo lg:opacity-100 lg:group-hover:opacity-0"
+          className="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/25 to-ink-900/5 opacity-0 transition-opacity duration-700 ease-expo lg:opacity-100 lg:group-hover:opacity-0"
         />
         <div
           aria-hidden
