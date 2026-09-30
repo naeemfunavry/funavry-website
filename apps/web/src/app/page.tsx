@@ -1,7 +1,9 @@
 import Nav from "@/components/sections/Nav";
 import Hero from "@/components/sections/Hero";
 import CapabilitiesOS from "@/components/sections/CapabilitiesOS";
-import WorkInteractive from "@/components/sections/WorkInteractive";
+// The previous Selected Work deck, commented out below; kept to restore.
+// import WorkInteractive from "@/components/sections/WorkInteractive";
+import HomeWork from "@/components/sections/HomeWork";
 import Proof from "@/components/sections/Proof";
 import Industries from "@/components/sections/Industries";
 import { TrustedStrip } from "@/components/sections/Clients";
@@ -66,11 +68,15 @@ export default async function Home() {
           </Container>
         </section>
         <Governance id="home-governance" variant="home" />
-        {/* The deck indexes into its studies from the first render, so it
-            only mounts with at least one — an unreachable CMS returns none. */}
+        {/* Selected Work, in the Services page's carousel form. It renders
+            nothing without studies, so an unreachable CMS leaves no gap. */}
+        <HomeWork caseStudies={caseStudies} />
+
+        {/* The previous Selected Work deck, kept for now in favour of the
+            carousel above.
         {caseStudies.length > 0 && (
           <WorkInteractive caseStudies={caseStudies} />
-        )}
+        )} */}
 
         <TechStack />
         {/* <Testimonials testimonials={testimonials} /> */}
