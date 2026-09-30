@@ -24,9 +24,24 @@ const EXPO = [0.19, 1, 0.22, 1] as const;
  */
 function place(d: number, wide: boolean) {
   if (d === 0) return { x: 0, scale: 1, opacity: 1, blur: 0, z: 30 };
-  if (d === 1) return { x: wide ? 58 : 16, scale: 0.84, opacity: wide ? 0.8 : 0.6, blur: 2, z: 20 };
-  if (d === 2) return { x: wide ? 102 : 26, scale: 0.7, opacity: wide ? 0.55 : 0, blur: 4, z: 10 };
-  if (d > 2) return { x: wide ? 130 : 30, scale: 0.6, opacity: 0, blur: 4, z: 0 };
+  if (d === 1)
+    return {
+      x: wide ? 58 : 16,
+      scale: 0.84,
+      opacity: wide ? 0.8 : 0.6,
+      blur: 2,
+      z: 20,
+    };
+  if (d === 2)
+    return {
+      x: wide ? 102 : 26,
+      scale: 0.7,
+      opacity: wide ? 0.55 : 0,
+      blur: 4,
+      z: 10,
+    };
+  if (d > 2)
+    return { x: wide ? 130 : 30, scale: 0.6, opacity: 0, blur: 4, z: 0 };
   return { x: -30, scale: 0.9, opacity: 0, blur: 0, z: 0 };
 }
 
@@ -44,7 +59,11 @@ const DWELL = 5000;
  * over it or focus is inside it. A pause button stops it outright — moving
  * content that runs on needs one (WCAG 2.2.2).
  */
-export default function HomeWork({ caseStudies }: { caseStudies: CaseStudy[] }) {
+export default function HomeWork({
+  caseStudies,
+}: {
+  caseStudies: CaseStudy[];
+}) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [hold, setHold] = useState(false);
@@ -70,7 +89,11 @@ export default function HomeWork({ caseStudies }: { caseStudies: CaseStudy[] }) 
   const phase = CASE_PHASE[study.phase];
 
   return (
-    <section ref={sectionRef} id="work" className="relative overflow-hidden bg-paper py-12 sm:py-16 lg:py-20">
+    <section
+      ref={sectionRef}
+      id="work"
+      className="relative overflow-hidden bg-paper py-12 sm:py-16 lg:py-20"
+    >
       <div
         aria-hidden
         className="absolute inset-0"
@@ -95,7 +118,11 @@ export default function HomeWork({ caseStudies }: { caseStudies: CaseStudy[] }) 
             <h2 className="mt-6 text-h2 text-ink">
               <KineticWords text="Systems we've" />
               <br />
-              <KineticWords text="put into service" delay={0.12} wordClassName="text-sweep" />
+              <KineticWords
+                text="put into service"
+                delay={0.12}
+                wordClassName="text-sweep"
+              />
             </h2>
           </div>
           <Wipe delay={0.2}>
@@ -103,7 +130,13 @@ export default function HomeWork({ caseStudies }: { caseStudies: CaseStudy[] }) 
               Web and enterprise platforms built end-to-end. Browse the deck, or
               open one for the full case study.
             </p>
-            <Button href="/case-studies" variant="secondary" size="md" arrow className="mt-6">
+            <Button
+              href="/case-studies"
+              variant="secondary"
+              size="md"
+              arrow
+              className="mt-6"
+            >
               View all case studies
             </Button>
           </Wipe>
@@ -124,7 +157,8 @@ export default function HomeWork({ caseStudies }: { caseStudies: CaseStudy[] }) 
           onMouseLeave={() => setHold(false)}
           onFocus={() => setHold(true)}
           onBlur={(e) => {
-            if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setHold(false);
+            if (!e.currentTarget.contains(e.relatedTarget as Node | null))
+              setHold(false);
           }}
           onPointerDown={(e) => (swipeFrom.current = e.clientX)}
           onPointerUp={(e) => {
@@ -139,7 +173,10 @@ export default function HomeWork({ caseStudies }: { caseStudies: CaseStudy[] }) 
             Use the left and right arrow keys, or the arrow buttons, to move
             between case studies.
           </p>
-          <div aria-hidden className="pointer-events-none absolute inset-0 grid-paper-dark opacity-60" />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 grid-paper-dark opacity-60"
+          />
           <span
             aria-hidden
             className="pointer-events-none absolute inset-0 transition-[background] duration-700"
@@ -207,7 +244,13 @@ export default function HomeWork({ caseStudies }: { caseStudies: CaseStudy[] }) 
                 transition={{ duration: 0.4, ease: EXPO }}
               >
                 <span className="flex items-center gap-2">
-                  <span aria-hidden className={cn("h-1.5 w-1.5 flex-none rounded-full", phase.dot)} />
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "h-1.5 w-1.5 flex-none rounded-full",
+                      phase.dot,
+                    )}
+                  />
                   <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper/65">
                     {study.phase} · {study.sector}
                   </span>
@@ -250,22 +293,37 @@ export default function HomeWork({ caseStudies }: { caseStudies: CaseStudy[] }) 
                   aria-live={playing && !hold ? "off" : "polite"}
                   className="font-mono text-[11px] tabular-nums tracking-[0.12em] text-paper/55"
                 >
-                  {String(active + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
+                  {String(active + 1).padStart(2, "0")} /{" "}
+                  {String(count).padStart(2, "0")}
                 </span>
                 {!reduce && count > 1 && (
                   <button
                     type="button"
                     onClick={() => setPaused((p) => !p)}
-                    aria-label={paused ? "Play the case studies" : "Pause the case studies"}
+                    aria-label={
+                      paused
+                        ? "Play the case studies"
+                        : "Pause the case studies"
+                    }
                     className="flex h-[52px] w-[52px] items-center justify-center rounded-sm border border-paper/20 text-paper/80 transition-colors duration-300 hover:border-paper/50 hover:text-paper"
                   >
-                    {paused ? <Play size={18} aria-hidden /> : <Pause size={18} aria-hidden />}
+                    {paused ? (
+                      <Play size={18} aria-hidden />
+                    ) : (
+                      <Pause size={18} aria-hidden />
+                    )}
                   </button>
                 )}
-                <DeckArrow label="Previous case study" onClick={() => go(active - 1)}>
+                <DeckArrow
+                  label="Previous case study"
+                  onClick={() => go(active - 1)}
+                >
                   <ArrowLeft size={20} aria-hidden />
                 </DeckArrow>
-                <DeckArrow label="Next case study" onClick={() => go(active + 1)}>
+                <DeckArrow
+                  label="Next case study"
+                  onClick={() => go(active + 1)}
+                >
                   <ArrowRight size={20} aria-hidden />
                 </DeckArrow>
               </div>
@@ -295,18 +353,24 @@ function DeckCard({
      banded top and bottom, rather than losing its right-hand side; one no
      wider fills the screen and can only lose a little of its foot. */
   const { width, height } = study.image;
-  const wide = width && height ? width / height > 16 / 10 : false;
+  const wide = width && height ? width / height > 16 / 9 : false;
 
   const screen = (
-    <span className="relative block aspect-[16/10] overflow-hidden rounded-xl border border-paper/10 bg-paper-white shadow-[0_30px_60px_-24px_rgba(0,0,0,0.7)]">
+    <span className="relative block aspect-[16/9] overflow-hidden rounded-xl border border-paper/10 bg-paper-white shadow-[0_30px_60px_-24px_rgba(0,0,0,0.7)]">
       <Image
         src={study.image}
         alt={front ? `${study.title} — interface` : ""}
         fill
         quality={90}
         priority={priority}
-        sizes={front ? "(max-width: 1024px) 88vw, 760px" : "(max-width: 1024px) 60vw, 560px"}
-        className={wide ? "object-contain object-center" : "object-cover object-top"}
+        sizes={
+          front
+            ? "(max-width: 1024px) 88vw, 760px"
+            : "(max-width: 1024px) 60vw, 560px"
+        }
+        className={
+          wide ? "object-contain object-center" : "object-cover object-top"
+        }
       />
     </span>
   );
