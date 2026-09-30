@@ -60,6 +60,15 @@ const nextConfig = {
      * 75 stays for everything that hasn't asked for better.
      */
     qualities: [75, 90],
+
+    /**
+     * Development only: don't keep optimised images. Images here are replaced
+     * under the same file name, and with the default cache (hours, on disk
+     * and in memory) localhost kept serving the old picture until the dev
+     * server was stopped and its cache deleted. At 0 a normal refresh shows
+     * the new file. Production keeps Next's default caching.
+     */
+    ...(isDev ? { minimumCacheTTL: 0 } : {}),
   },
 };
 
