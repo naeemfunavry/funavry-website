@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
 } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   ArrowRight,
@@ -1695,8 +1696,10 @@ function Drawer({
             {...stagger(12)}
             className="mt-9 space-y-2.5 border-t border-line/70 pt-7"
           >
-            <a
-              href="#contact"
+            {/* To the practice's own page. Closing first releases the scroll
+                lock, so the page it lands on scrolls. */}
+            <Link
+              href={`/services/${service.slug}`}
               onClick={onClose}
               className="group relative flex items-center justify-between overflow-hidden rounded-[12px] bg-ink px-5 py-3.5 text-[14px] font-medium text-paper"
             >
@@ -1712,23 +1715,23 @@ function Drawer({
                 size={15}
                 className="relative transition-transform duration-400 ease-expo group-hover:translate-x-1"
               />
-            </a>
+            </Link>
 
             <div className="grid grid-cols-2 gap-2.5">
-              <a
-                href="#work"
+              <Link
+                href="/case-studies"
                 onClick={onClose}
                 className="flex items-center justify-center gap-2 rounded-[12px] border border-line-strong px-4 py-3 text-[13px] font-medium text-ink transition-colors duration-300 hover:border-ink hover:bg-paper"
               >
-                View case studies
-              </a>
-              <a
-                href="#contact"
+                View all work
+              </Link>
+              <Link
+                href="/contact"
                 onClick={onClose}
                 className="flex items-center justify-center gap-2 rounded-[12px] border border-line-strong px-4 py-3 text-[13px] font-medium text-ink transition-colors duration-300 hover:border-ink hover:bg-paper"
               >
                 Schedule a call
-              </a>
+              </Link>
             </div>
           </motion.div>
         </div>

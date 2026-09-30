@@ -227,7 +227,7 @@ export default function Hero() {
       </div>
       )}
 
-      <Container wide className="relative z-10">
+      <Container full className="relative z-10">
         {/* Copy, left-aligned. The ecosystem visual is retired in favour of the
             ambient 3D orbit in the background above. */}
         <div className="max-w-[860px]">

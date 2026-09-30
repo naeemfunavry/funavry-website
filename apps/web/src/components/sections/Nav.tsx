@@ -169,8 +169,14 @@ function FeatureCard({
         aria-hidden
         className="absolute inset-0 bg-[linear-gradient(0deg,#21262A_0%,rgba(33,38,42,0.82)_42%,rgba(33,38,42,0.25)_100%)]"
       />
-      <span aria-hidden className="absolute inset-0 grid-paper-dark opacity-60" />
-      <span aria-hidden className="absolute left-0 top-0 h-[3px] w-20 bg-amber" />
+      <span
+        aria-hidden
+        className="absolute inset-0 grid-paper-dark opacity-60"
+      />
+      <span
+        aria-hidden
+        className="absolute left-0 top-0 h-[3px] w-20 bg-amber"
+      />
 
       <div className="relative">
         <AnimatePresence mode="wait" initial={false}>
@@ -314,7 +320,9 @@ function ServicesMega({
               ? `${hovered.phase} · ${hovered.group === "tech" ? "Engineering" : "Business Services"}`
               : "Services"
           }
-          title={hovered ? hovered.title : "Sixteen practices, one delivery model."}
+          title={
+            hovered ? hovered.title : "Sixteen practices, one delivery model."
+          }
           body={
             hovered
               ? hovered.summary
@@ -367,7 +375,9 @@ function IndustriesMega({
           <FeatureCard
             photo={photo}
             eyebrow={hovered ? "Industry" : "Industries"}
-            title={hovered ? hovered.name : "Eleven industries, deep domain fluency."}
+            title={
+              hovered ? hovered.name : "Eleven industries, deep domain fluency."
+            }
             body={
               hovered
                 ? hovered.desc
@@ -376,7 +386,10 @@ function IndustriesMega({
             meta={hovered?.proof}
             cta={
               hovered
-                ? { label: "View industry", href: `/industries/${hovered.slug}` }
+                ? {
+                    label: "View industry",
+                    href: `/industries/${hovered.slug}`,
+                  }
                 : { label: "Explore all industries", href: "/industries" }
             }
             onNavigate={onNavigate}
@@ -642,7 +655,7 @@ export default function Nav({ services, industries, socials }: NavProps) {
         )}
       />
 
-      <div className="relative mx-auto flex h-[76px] w-full max-w-wide items-center justify-between px-5 sm:px-6 md:px-10 lg:px-14">
+      <div className="relative mx-auto flex h-[76px] w-full items-center justify-between px-5 sm:px-6 md:px-10 lg:px-14">
         <a
           href="/"
           aria-label="Funavry Technologies home"
@@ -807,9 +820,15 @@ export default function Nav({ services, industries, socials }: NavProps) {
             className="absolute inset-x-0 top-full hidden border-y border-line bg-paper-white/[0.97] shadow-[0_40px_80px_-30px_rgba(46,52,54,0.35)] backdrop-blur-xl lg:block"
           >
             {mega === "services" ? (
-              <ServicesMega services={services} onNavigate={() => setMega(null)} />
+              <ServicesMega
+                services={services}
+                onNavigate={() => setMega(null)}
+              />
             ) : (
-              <IndustriesMega industries={industries} onNavigate={() => setMega(null)} />
+              <IndustriesMega
+                industries={industries}
+                onNavigate={() => setMega(null)}
+              />
             )}
           </motion.div>
         )}
