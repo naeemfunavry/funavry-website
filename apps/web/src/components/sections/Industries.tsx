@@ -69,11 +69,17 @@ const Tile = memo(function Tile({
             The photos come in every shape — square, 3:2, 2:1, portrait — and
             are shared with the industry, service and blog pages, so they are
             not cropped on disk. The tile is a fixed 4:5 instead (see below)
-            and every photo is centre-cropped to that one shape. */}
+            and every photo is centre-cropped to that one shape.
+
+            The CMS's 16px blur shows the instant the tile does, so a photo
+            still on its way reads as the picture coming into focus rather
+            than an empty dark card. */}
         <Image
           src={industry.image}
           alt=""
           fill
+          placeholder={industry.blur ? "blur" : "empty"}
+          blurDataURL={industry.blur}
           sizes="(max-width: 640px) 78vw, (max-width: 1024px) 50vw, 25vw"
           className="object-cover transition-transform duration-700 ease-expo group-hover:scale-[1.06]"
         />

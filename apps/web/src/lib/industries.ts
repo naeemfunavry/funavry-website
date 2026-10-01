@@ -11,6 +11,8 @@ export type Industry = {
   desc: string;
   proof: string;
   image: string;
+  /** A 16px blurred copy of `image` as a data URL, shown while it loads. */
+  blur?: string;
 };
 
 export const INDUSTRIES: Industry[] = [

@@ -366,6 +366,7 @@ function toIndustry(industry: ApiIndustry): Industry {
     desc: industry.description,
     proof: industry.proof,
     image: imageUrl(industry.image),
+    blur: industry.image?.blurDataUrl ?? undefined,
   };
 }
 
