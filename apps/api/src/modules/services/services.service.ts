@@ -298,6 +298,6 @@ export class ServicesService extends SimpleContentService<ServiceEntity, Service
   }
 
   protected override pathsFor(entity: ServiceEntity): string[] {
-    return ["/services", `/services/${entity.slug}`];
+    return [`/services/${entity.slug}`];
   }
 }

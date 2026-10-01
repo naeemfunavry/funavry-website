@@ -121,7 +121,10 @@ export default function Hero() {
                 "linear-gradient(90deg, rgba(20,24,26,0.9) 0%, rgba(20,24,26,0.72) 38%, rgba(20,24,26,0.28) 58%, rgba(20,24,26,0) 76%)",
             }}
           />
-          <div aria-hidden className="absolute inset-0 bg-ink-900/70 lg:hidden" />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-ink-900/70 lg:hidden"
+          />
         </>
       )}
 
@@ -170,7 +173,9 @@ export default function Hero() {
 
       {/* Grid over the wash, grain over both. The photograph carries its own
           grid, so the drawn one stands down with the washes. */}
-      {!HERO_BG && <div aria-hidden className="absolute inset-0 grid-paper-dark" />}
+      {!HERO_BG && (
+        <div aria-hidden className="absolute inset-0 grid-paper-dark" />
+      )}
       <div
         aria-hidden
         className="absolute inset-0 grain opacity-[0.16] mix-blend-overlay"
@@ -186,45 +191,45 @@ export default function Hero() {
       {/* Ambient 3D orbit — fills the right space the copy leaves open. The
           photograph's globe fills it instead while HERO_BG is set. */}
       {!HERO_BG && (
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-y-0 right-[-10%] hidden w-[64%] items-center justify-center [perspective:1600px] lg:flex"
-      >
-        {/* A luminous focal glow so the right side reads as full, not empty. */}
-        <div className="absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-azure/[0.14] blur-[120px]" />
         <div
-          className="relative [transform-style:preserve-3d]"
-          style={{ transform: "rotateX(64deg)" }}
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 right-[-10%] hidden w-[64%] items-center justify-center [perspective:1600px] lg:flex"
         >
-          {RINGS.map((r) => (
-            <div
-              key={r.size}
-              className={cn(
-                "hero-spin absolute left-1/2 top-1/2 rounded-full border",
-                r.ring,
-              )}
-              style={{
-                width: r.size,
-                height: r.size,
-                marginLeft: -r.size / 2,
-                marginTop: -r.size / 2,
-                animationDuration: `${r.dur}s`,
-              }}
-            >
-              {r.dot && (
-                <span
-                  className={cn(
-                    "absolute left-1/2 top-0 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full",
-                    r.dot,
-                  )}
-                />
-              )}
-            </div>
-          ))}
-          {/* The core. */}
-          <span className="absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-azure shadow-[0_0_32px_10px_rgba(68,158,216,0.6)]" />
+          {/* A luminous focal glow so the right side reads as full, not empty. */}
+          <div className="absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-azure/[0.14] blur-[120px]" />
+          <div
+            className="relative [transform-style:preserve-3d]"
+            style={{ transform: "rotateX(64deg)" }}
+          >
+            {RINGS.map((r) => (
+              <div
+                key={r.size}
+                className={cn(
+                  "hero-spin absolute left-1/2 top-1/2 rounded-full border",
+                  r.ring,
+                )}
+                style={{
+                  width: r.size,
+                  height: r.size,
+                  marginLeft: -r.size / 2,
+                  marginTop: -r.size / 2,
+                  animationDuration: `${r.dur}s`,
+                }}
+              >
+                {r.dot && (
+                  <span
+                    className={cn(
+                      "absolute left-1/2 top-0 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full",
+                      r.dot,
+                    )}
+                  />
+                )}
+              </div>
+            ))}
+            {/* The core. */}
+            <span className="absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-azure shadow-[0_0_32px_10px_rgba(68,158,216,0.6)]" />
+          </div>
         </div>
-      </div>
       )}
 
       <Container full className="relative z-10">
@@ -329,7 +334,7 @@ export default function Hero() {
             >
               {STATS.map((stat) => (
                 <div key={stat.label} className="flex flex-col">
-                  <dt className="order-2 mt-3 font-mono text-sm uppercase tracking-[0.16em] text-paper/60">
+                  <dt className="order-2 mt-3 font-mono text-sm uppercase tracking-[0.16em] text-paper/60 min-h-10">
                     {stat.label}
                   </dt>
                   <dd className="order-1 flex items-baseline gap-1.5">

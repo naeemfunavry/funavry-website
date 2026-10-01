@@ -94,14 +94,14 @@ export default function HomeWork({
       id="work"
       className="relative overflow-hidden bg-paper py-12 sm:py-16 lg:py-20"
     >
-      <div
+      {/* <div
         aria-hidden
         className="absolute inset-0"
         style={{
           background:
             "radial-gradient(70% 55% at 88% 0%, rgba(68,158,216,0.10), transparent 62%), radial-gradient(60% 50% at 8% 100%, rgba(245,159,19,0.05), transparent 65%)",
         }}
-      />
+      /> */}
       <div aria-hidden className="absolute inset-0 grid-paper opacity-[0.5]" />
 
       <Container wide className="relative">

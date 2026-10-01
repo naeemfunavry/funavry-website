@@ -128,7 +128,7 @@ export default async function ServiceDetailPage({
               <Button href="/contact" variant="accent" size="md" arrow>
                 Discuss your project
               </Button>
-              <Button href="/services" variant="outline" size="md">
+              <Button href="/#capabilities" variant="outline" size="md">
                 All services
               </Button>
             </>

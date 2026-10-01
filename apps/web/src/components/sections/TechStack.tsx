@@ -480,15 +480,28 @@ export default function TechStack() {
   const domain = ORDERED[active];
 
   return (
-    <section id="technology" className="relative overflow-hidden  bg-paper">
+    <section
+      id="technology"
+      className="relative overflow-hidden  bg-[linear-gradient(180deg,#F8FBFE_0%,#EEF5FC_100%)]"
+    >
       {/* Minimal field: soft radial lift behind the device, a whisper of the
           engineering grid, and a few drifting motes. */}
-      <div
+      {/* <div
         aria-hidden
         className="absolute inset-0"
         style={{
           background:
             "radial-gradient(120% 80% at 50% 8%, rgba(68,158,216,0.06), transparent 60%), radial-gradient(90% 70% at 80% 100%, rgba(245,159,19,0.05), transparent 65%)",
+        }}
+      /> */}
+
+      <div aria-hidden className="absolute inset-0 grid-paper opacity-40" />
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(45% 55% at 90% 8%, rgba(68,158,216,0.14), transparent 70%), radial-gradient(35% 50% at 86% 78%, rgba(68,158,216,0.16), transparent 70%)",
         }}
       />
       <div aria-hidden className="absolute inset-0 grid-paper opacity-[0.5]" />

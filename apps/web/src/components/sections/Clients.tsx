@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
    Names were read off the artwork, not the filenames, which mislead: `GCPT`
    is ChainGPT, `systems` is Systems Limited, `Aljazeera` is Al Jazeera Finance
    and not the broadcaster, and `dubai-world-trade1` is the Dubai World Trade
-   Centre mark. Six marks carry no legible name (Deline Media, Mammoth,
-   HTMLPro, Ovada, SkillYah, Intensivate) and are named from their files and
+   Centre mark. Five marks carry no legible name (Deline Media, Mammoth,
+   HTMLPro, SkillYah, Intensivate) and are named from their files and
    the earlier client list. `EstateOffice` is Pakistan's state emblem, named
    for the Estate Office, Government of Pakistan, because that is the client
    (see the REstate case study), not the emblem.
@@ -27,7 +27,6 @@ const CLIENTS: { name: string; file: string }[] = [
   { name: "Jazz", file: "jazz-logo.webp" },
   { name: "Al Jazeera Finance", file: "aljazeera.webp" },
   { name: "Estate Office, Government of Pakistan", file: "estateoffice.webp" },
-  { name: "CitiMed", file: "citimed-logo.webp" },
   { name: "ChainGPT", file: "gcpt.webp" },
   { name: "Wateen", file: "wateen.webp" },
   { name: "VNClagoon", file: "vnc.webp" },
@@ -41,7 +40,6 @@ const CLIENTS: { name: string; file: string }[] = [
   { name: "XHumanity", file: "xhumanity.webp" },
   { name: "Libbi", file: "libbi.webp" },
   { name: "CattleKit", file: "cattlekit.webp" },
-  { name: "Ovada", file: "ovada.webp" },
   { name: "Intensivate", file: "intensivate.webp" },
   { name: "SkillYah", file: "skillyah.webp" },
   { name: "Deline Media", file: "deline.webp" },

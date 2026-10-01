@@ -46,8 +46,8 @@ type Link = {
    "#work" from there scrolls to nothing. On the home page a same-document
    fragment still resolves as a jump, so nothing changes there. */
 const LINKS: Link[] = [
-  { label: "Services", href: "/services", mega: "services" },
-  { label: "Industries", href: "/industries", mega: "industries" },
+  { label: "Services", href: "/#capabilities", mega: "services" },
+  { label: "Industries", href: "/#industries", mega: "industries" },
   { label: "Our Work", href: "/case-studies", newTab: false },
   // { label: "Case Studies", href: "/case-studies" },
   {
@@ -257,11 +257,11 @@ function MegaItem({
         <span className="block text-[13.5px] font-medium leading-snug tracking-[-0.01em] text-ink">
           {title}
         </span>
-        {sub && (
+        {/* {sub && (
           <span className="mt-0.5 block truncate font-mono text-[9.5px] uppercase tracking-[0.14em] text-ink-400">
             {sub}
           </span>
-        )}
+        )} */}
       </span>
       <ArrowRight
         size={14}
@@ -331,7 +331,7 @@ function ServicesMega({
           cta={
             hovered
               ? { label: "View service", href: `/services/${hovered.slug}` }
-              : { label: "Explore all services", href: "/services" }
+              : { label: "Explore all services", href: "/#capabilities" }
           }
           onNavigate={onNavigate}
         />
@@ -390,7 +390,7 @@ function IndustriesMega({
                     label: "View industry",
                     href: `/industries/${hovered.slug}`,
                   }
-                : { label: "Explore all industries", href: "/industries" }
+                : { label: "Explore all industries", href: "/#industries" }
             }
             onNavigate={onNavigate}
           />

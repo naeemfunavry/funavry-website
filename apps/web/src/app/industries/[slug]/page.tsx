@@ -166,7 +166,7 @@ export default async function IndustryDetailPage({
                 <Button href="/contact" variant="accent" size="md" arrow>
                   Discuss your project
                 </Button>
-                <Button href="/industries" variant="outline" size="md">
+                <Button href="/#industries" variant="outline" size="md">
                   All industries
                 </Button>
               </div>

@@ -48,9 +48,7 @@ const ALLOWED_PATH_PATTERNS: RegExp[] = [
   /^\/blog\/[a-z0-9-]{1,160}$/,
   /^\/case-studies$/,
   /^\/case-studies\/[a-z0-9-]{1,140}$/,
-  /^\/services$/,
   /^\/services\/[a-z0-9-]{1,140}$/,
-  /^\/industries$/,
   /^\/industries\/[a-z0-9-]{1,140}$/,
 ];
 

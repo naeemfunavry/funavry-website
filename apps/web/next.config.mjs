@@ -6,6 +6,18 @@ const isDev = process.env.NODE_ENV !== "production";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  /**
+   * There are no services or industries index pages: each service and
+   * industry has its own page, and the full lists live in the home page's
+   * capabilities and industries sections.
+   */
+  redirects() {
+    return [
+      { source: "/services", destination: "/#capabilities", permanent: true },
+      { source: "/industries", destination: "/#industries", permanent: true },
+    ];
+  },
+
   images: {
     /**
      * Development only, and the name is not hyperbole.

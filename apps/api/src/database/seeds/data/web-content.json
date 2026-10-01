@@ -3375,7 +3375,7 @@
       "meta": [
         {
           "label": "Industry",
-          "value": "Agriculture & AgriTech · Industrial IoT & Automation · Supply Chain, Logistics & Operations"
+          "value": "AgriTech · Industrial IoT & Automation · Supply Chain, Logistics & Operations"
         },
         {
           "label": "Service",
@@ -4187,7 +4187,7 @@
     },
     {
       "slug": "agriculture",
-      "name": "Agriculture & AgriTech",
+      "name": "AgriTech",
       "desc": "Digital agriculture: crop diagnostics, satellite and geospatial analytics, and AI advisory that reaches farmers in the field.",
       "proof": "Crop diagnostics · Satellite analytics",
       "image": "/industries/agriculture.webp"

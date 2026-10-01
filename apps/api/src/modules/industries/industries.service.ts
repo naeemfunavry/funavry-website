@@ -110,6 +110,6 @@ export class IndustriesService extends SimpleContentService<IndustryEntity, Indu
   }
 
   protected override pathsFor(entity: IndustryEntity): string[] {
-    return ["/industries", `/industries/${entity.slug}`];
+    return [`/industries/${entity.slug}`];
   }
 }

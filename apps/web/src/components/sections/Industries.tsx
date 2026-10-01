@@ -46,8 +46,13 @@ const Tile = memo(function Tile({
     <Wipe delay={(index % 4) * 0.05} duration={0.9} className="h-full">
       {/* Not `Frame`: it renders content at z-10, which would bury its own
           corner ticks under a full-bleed photo. Same drafting language, drawn
-          over the image in paper so it reads against the picture. */}
-      <article className="group relative h-[300px] overflow-hidden border border-line bg-ink-900 lg:h-[340px]">
+          over the image in paper so it reads against the picture.
+
+          A fixed 4:5 rather than a fixed height: with the width a share of
+          the row, a fixed height made the tile's shape drift with the screen
+          (near-square on desktop, wide at tablet), and the photo's crop
+          drifted with it. */}
+      <article className="group relative aspect-[4/5] overflow-hidden border border-line bg-ink-900">
         {/* `next/image`, not a bare `<img>`. These are ~110KB JPEGs apiece and
             the deck renders every one of them twice for the loop, so the raw
             tag was shipping the full-resolution original — twenty times over,
@@ -59,7 +64,12 @@ const Tile = memo(function Tile({
             `grayscale` filter, which re-filters the whole photo every frame
             of a 700ms transition on every hover — expensive, and on a
             full-bleed image it is the most expensive kind of repaint there
-            is. The zoom carries the interaction on its own. */}
+            is. The zoom carries the interaction on its own.
+
+            The photos come in every shape — square, 3:2, 2:1, portrait — and
+            are shared with the industry, service and blog pages, so they are
+            not cropped on disk. The tile is a fixed 4:5 instead (see below)
+            and every photo is centre-cropped to that one shape. */}
         <Image
           src={industry.image}
           alt=""

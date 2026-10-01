@@ -86,7 +86,7 @@ export const INDUSTRIES: Industry[] = [
   },
   {
     slug: "agriculture",
-    name: "Agriculture & AgriTech",
+    name: "AgriTech",
     desc: "Digital agriculture: crop diagnostics, satellite and geospatial analytics, and AI advisory that reaches farmers in the field.",
     proof: "Crop diagnostics · Satellite analytics",
     image: "/industries/agriculture.webp",
