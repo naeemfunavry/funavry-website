@@ -29,26 +29,14 @@ const coverOf = (p: WorkProject): Shot | null =>
 const FIRST_PAGE = 12;
 const PAGE_STEP = 6;
 
-/* The floating preview never crops: its frame takes the capture's own shape,
-   fitted inside this box. A very tall full-page capture would fit as a
-   sliver, so the frame keeps a minimum width and the capture sits contained
-   in it. `OFFSET` keeps the frame off the pointer so it never covers the
-   text being read. */
-const PREVIEW_MAX_W = 440;
-const PREVIEW_MAX_H = 340;
-const PREVIEW_MIN_W = 200;
+/* The floating preview is one fixed 16:9 card for every project — the shape
+   most lead captures already have — so moving down the list never resizes
+   it. It used to take each capture's own shape, which made a wide strip of
+   one project and a tall block of the next. A capture of another shape sits
+   contained in the card rather than cropped. `OFFSET` keeps the card off the
+   pointer so it never covers the text being read. */
+const FRAME = { w: 440, h: 248 };
 const OFFSET = 28;
-
-function frameFor(shot: Shot | null) {
-  if (!shot) return { w: PREVIEW_MAX_W, h: PREVIEW_MAX_W / 1.6 };
-  let w = PREVIEW_MAX_W;
-  let h = w / shot.ratio;
-  if (h > PREVIEW_MAX_H) {
-    h = PREVIEW_MAX_H;
-    w = Math.max(h * shot.ratio, PREVIEW_MIN_W);
-  }
-  return { w: Math.round(w), h: Math.round(h) };
-}
 
 const EASE = [0.19, 1, 0.22, 1] as const;
 
@@ -107,18 +95,13 @@ export default function WorkShowcase({
   const label = options.find((o) => o.id === active)?.label;
   const hoveredProject = visible.find((p) => p.slug === hovered);
   const hoveredCover = hoveredProject ? coverOf(hoveredProject) : null;
-  const frame = frameFor(hoveredCover);
-  /* The pointer handler reads the frame from here, so it places the box
-     for the capture on show rather than the one it was created with. */
-  const frameRef = useRef(frame);
-  frameRef.current = frame;
 
   function track(e: PointerEvent<HTMLDivElement>) {
     if (e.pointerType !== "mouse" || !listRef.current) return;
     const box = listRef.current.getBoundingClientRect();
     /* Right of the pointer, vertically centred on it — flipped to the left
        when the frame would run off the list's right edge. */
-    const { w, h } = frameRef.current;
+    const { w, h } = FRAME;
     const px = e.clientX - box.left;
     const left = px + OFFSET + w > box.width ? px - OFFSET - w : px + OFFSET;
     const top = e.clientY - box.top - h / 2;
@@ -242,10 +225,12 @@ export default function WorkShowcase({
 
           <motion.div
             aria-hidden
-            style={{ x: reduce ? x : sx, y: reduce ? y : sy }}
-            initial={false}
-            animate={{ width: frame.w, height: frame.h }}
-            transition={{ duration: reduce ? 0 : 0.45, ease: EASE }}
+            style={{
+              x: reduce ? x : sx,
+              y: reduce ? y : sy,
+              width: FRAME.w,
+              height: FRAME.h,
+            }}
             className="pointer-events-none absolute left-0 top-0 z-20 hidden lg:block"
           >
             <AnimatePresence>
@@ -266,7 +251,7 @@ export default function WorkShowcase({
                     src={hoveredCover.src}
                     alt=""
                     fill
-                    sizes={`${PREVIEW_MAX_W}px`}
+                    sizes={`${FRAME.w}px`}
                     className="object-contain"
                   />
                 </motion.div>

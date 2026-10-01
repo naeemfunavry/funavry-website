@@ -11,7 +11,7 @@ import Frame from "@/components/ui/Frame";
 import { Wipe } from "@/components/ui/Kinetic";
 import { CardFoot, SectionLabel } from "@/components/ui/DetailParts";
 import { HOUSE_LABEL, PHASE, SERVICE_IMAGES } from "@/lib/service-style";
-import PageHero from "@/components/ui/PageHero";
+import DetailHero from "@/components/ui/DetailHero";
 import WorkTiles from "@/components/work/WorkTiles";
 import Governance from "@/components/sections/Governance";
 import { industriesForService, projectsFor } from "@/lib/relations";
@@ -67,8 +67,8 @@ export async function generateMetadata({
 /**
  * A practice, drawn like an industry page:
  *
- *   hero → expertise → what's included → selected work → industries served →
- *   contact
+ *   hero → expertise (with what's included) → governance → selected work →
+ *   industries served → contact
  *
  * The copy is the practice's CMS entry; the work and industry links come from
  * `relations.ts`, read off the case study briefs. Sections with nothing to
@@ -116,12 +116,11 @@ export default async function ServiceDetailPage({
       />
       <main id="main">
         {/* ------------------------------------------------------ Hero ----
-            The industry page's dark stage, with the practice's photograph
-            filling the right and fading into the ink under the copy. */}
-        <PageHero
-          image={{ src: SERVICE_IMAGES[service.slug] ?? FALLBACK_PHOTO }}
+            The same hero as the industry pages. */}
+        <DetailHero
+          image={SERVICE_IMAGES[service.slug] ?? FALLBACK_PHOTO}
           eyebrow={`Service ${service.n}`}
-          title={[service.title]}
+          title={service.title}
           body={service.summary}
           actions={
             <>
@@ -136,18 +135,25 @@ export default async function ServiceDetailPage({
         />
 
         {/* ------------------------------------------------- Expertise ----
-            One centred statement, built from what the CMS knows about the
-            practice rather than written for it. */}
+            Laid out like the industry page's: the statement on the left,
+            built from what the CMS knows about the practice, and the services
+            it covers as an open list on the right — a line each, ruled off
+            from the next, no boxes. */}
         <section className="relative overflow-hidden border-b border-line bg-paper-deep">
           <div aria-hidden className="absolute inset-0 grid-paper opacity-60" />
-          <Container wide className="relative z-10 py-16 lg:py-20">
-            <div className="mx-auto max-w-[860px] text-center">
-              <h2 className="text-h3 text-ink">{service.title} Expertise</h2>
-              <span
-                aria-hidden
-                className="mx-auto mt-6 block h-px w-full bg-line-strong"
-              />
-              <p className="mx-auto mt-6 max-w-[62ch] text-[17px] leading-[1.75] text-ink-500 lg:text-[18px]">
+          <Container wide className="relative z-10 py-8 sm:py-12 lg:py-14">
+            <div className="grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
+              <div>
+                <div className="flex items-center gap-3">
+                  <span aria-hidden className="h-px w-10 flex-none bg-azure" />
+                  <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-ink-500">
+                    Expertise
+                  </span>
+                </div>
+                <h2 className="mt-6 text-h3 text-ink">
+                  {service.title} Expertise
+                </h2>
+                <p className="mt-6 text-[16px] leading-[1.9] text-ink-500 lg:text-[17px]">
                 {workCount > 0 && (
                   <>
                     <strong className="font-semibold text-ink">
@@ -175,52 +181,44 @@ export default async function ServiceDetailPage({
                   {HOUSE_LABEL[service.group]}
                 </strong>
                 .
-              </p>
-            </div>
-          </Container>
-        </section>
+                </p>
+              </div>
 
-        {/* ------------------------------------------- What's included ---- */}
-        <section
-          aria-labelledby="service-included"
-          className="border-b border-line bg-paper-white"
-        >
-          <Container wide className="py-16 lg:py-24">
-            <SectionLabel id="service-included">
-              What&apos;s Included
-            </SectionLabel>
-            <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:mt-10 xl:grid-cols-4">
-              {service.subs.map((sub, i) => (
-                <li key={sub.title} className="h-full">
-                  <Wipe delay={(i % 4) * 0.06} className="h-full">
-                    <Frame
-                      tint={phase.tint}
-                      className="h-full"
-                      innerClassName="flex h-full flex-col px-6 pb-6 pt-5"
-                    >
-                      <h3 className="text-[18px] font-medium leading-snug tracking-[-0.02em] text-ink">
-                        {sub.title}
-                      </h3>
-                      <span aria-hidden className="mt-5 block h-px bg-line" />
-                      <ul className="mt-5 grid gap-2.5">
-                        {sub.desc.split(/,\s*/).map((item) => (
-                          <li key={item} className="flex gap-3">
+              {/* The services, where the industry page lists its offerings.
+                  A practice's services carry no icons of their own, so each
+                  row leads with its number in the azure the glyphs use. */}
+              {service.subs.length > 0 && (
+                <div>
+                  <p className="border-b border-line-strong pb-4 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-500">
+                    What&apos;s included
+                  </p>
+                  <ul className="grid sm:grid-cols-2 sm:gap-x-10">
+                    {service.subs.map((sub, i) => (
+                      <li key={sub.title} className="border-b border-line">
+                        <Wipe delay={(i % 2) * 0.05}>
+                          <div className="flex gap-4 py-5">
                             <span
                               aria-hidden
-                              className="mt-[8px] h-1 w-1 flex-none rounded-full"
-                              style={{ background: `rgb(${phase.tint})` }}
-                            />
-                            <span className="block text-[14px] leading-snug text-ink-500 first-letter:uppercase">
-                              {item}
+                              className="mt-[3px] w-[22px] flex-none font-mono text-[12px] font-semibold tracking-[0.04em] text-azure"
+                            >
+                              {String(i + 1).padStart(2, "0")}
                             </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </Frame>
-                  </Wipe>
-                </li>
-              ))}
-            </ul>
+                            <div>
+                              <h3 className="text-[15.5px] font-medium leading-snug tracking-[-0.01em] text-ink">
+                                {sub.title}
+                              </h3>
+                              <p className="mt-1.5 text-[13.5px] leading-[1.6] text-ink-500 first-letter:uppercase">
+                                {sub.desc}
+                              </p>
+                            </div>
+                          </div>
+                        </Wipe>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </Container>
         </section>
 

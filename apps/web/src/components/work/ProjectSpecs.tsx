@@ -119,22 +119,14 @@ export function HeroSpecs({
   );
 }
 
-/* Written out whole so Tailwind sees each class. */
-const LG_COLS: Record<number, string> = {
-  1: "lg:grid-cols-1",
-  2: "lg:grid-cols-2",
-  3: "lg:grid-cols-3",
-  4: "lg:grid-cols-4",
-};
-
-/** The overview band's facts: one column per remaining brief row. */
-export function FactGrid({ rows }: { rows: DetailMeta[] }) {
+/** The overview band's facts, drawn like the industry page's offerings: an
+    open list, a glyph and the row's label over its values, each ruled off
+    from the next — no boxes. */
+export function FactList({ rows }: { rows: DetailMeta[] }) {
   if (rows.length === 0) return null;
 
   return (
-    <dl
-      className={`mt-10 grid border-l border-t border-line bg-paper-white text-left sm:grid-cols-2 lg:mt-12 ${LG_COLS[Math.min(rows.length, 4)]}`}
-    >
+    <dl className="grid sm:grid-cols-2 sm:gap-x-10">
       {rows.map((row) => {
         const Icon = rowIcon(row.label);
         const parts = row.value
@@ -142,30 +134,30 @@ export function FactGrid({ rows }: { rows: DetailMeta[] }) {
           .map((p) => p.trim())
           .filter(Boolean);
         return (
-          <div
-            key={row.label}
-            className="flex flex-col gap-4 border-b border-r border-line p-6 lg:p-7"
-          >
-            <dt className="flex items-center gap-3">
-              <span className="flex h-9 w-9 flex-none items-center justify-center border border-line bg-paper text-azure-ink">
-                <Icon size={16} strokeWidth={1.6} aria-hidden />
-              </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">
+          <div key={row.label} className="flex gap-4 border-b border-line py-5">
+            <Icon
+              size={22}
+              strokeWidth={1.5}
+              aria-hidden
+              className="mt-0.5 flex-none text-azure"
+            />
+            <div className="min-w-0">
+              <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">
                 {row.label}
-              </span>
-            </dt>
-            <dd>
-              <ul className="grid gap-1.5">
-                {parts.map((part) => (
-                  <li
-                    key={part}
-                    className="text-[14.5px] leading-[1.5] text-ink first-letter:uppercase"
-                  >
-                    {part}
-                  </li>
-                ))}
-              </ul>
-            </dd>
+              </dt>
+              <dd className="mt-2">
+                <ul className="grid gap-1">
+                  {parts.map((part) => (
+                    <li
+                      key={part}
+                      className="text-[15.5px] font-medium leading-snug tracking-[-0.01em] text-ink first-letter:uppercase"
+                    >
+                      {part}
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
           </div>
         );
       })}

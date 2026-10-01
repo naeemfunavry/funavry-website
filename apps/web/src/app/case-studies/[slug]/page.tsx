@@ -14,7 +14,7 @@ import CaseStudyHero from "@/components/work/CaseStudyHero";
 import CaseStudySection from "@/components/work/CaseStudySection";
 import Frame from "@/components/ui/Frame";
 import { CardFoot, ProjectShot } from "@/components/ui/DetailParts";
-import { FactGrid, factRows } from "@/components/work/ProjectSpecs";
+import { FactList, factRows } from "@/components/work/ProjectSpecs";
 import ChallengeShowcase from "@/components/work/ChallengeShowcase";
 import { PHASE_STYLE } from "@/components/work/phase";
 import {
@@ -187,27 +187,40 @@ export default async function CaseStudyDetailPage({
         />
 
         {/* -------------------------------------------------- Overview ----
-            One centred statement, as the industry page opens with: the
-            brief's summary and the project's facts, then the brief's own
-            rows — industry, scale, client — as a grid. */}
+            Laid out like the industry and service pages' expertise band: the
+            brief's summary and the project's facts on the left, the brief's
+            own rows — industry, scale, client — as an open list on the
+            right. */}
         <section className="relative overflow-hidden border-b border-line bg-paper-deep">
           <div aria-hidden className="absolute inset-0 grid-paper opacity-60" />
-          <Container wide className="relative z-10 py-16 lg:py-20">
-            <div className="mx-auto max-w-[860px] text-center">
-              <h2 className="text-h3 text-ink">Project Overview</h2>
-              <span
-                aria-hidden
-                className="mx-auto mt-6 block h-px w-full bg-line-strong"
-              />
-              <p className="mx-auto mt-6 max-w-[62ch] text-[17px] leading-[1.75] text-ink-500 lg:text-[18px]">
-                {detail.summary}
-              </p>
-              <FactLine
-                facts={project.facts}
-                className="mt-6 font-mono text-[10.5px] uppercase tracking-[0.16em] text-ink-400"
-              />
+          <Container wide className="relative z-10 py-8 sm:py-12 lg:py-14">
+            <div className="grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
+              <div>
+                <div className="flex items-center gap-3">
+                  <span aria-hidden className="h-px w-10 flex-none bg-azure" />
+                  <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-ink-500">
+                    Overview
+                  </span>
+                </div>
+                <h2 className="mt-6 text-h3 text-ink">Project Overview</h2>
+                <p className="mt-6 text-[16px] leading-[1.9] text-ink-500 lg:text-[17px]">
+                  {detail.summary}
+                </p>
+                <FactLine
+                  facts={project.facts}
+                  className="mt-6 font-mono text-[10.5px] uppercase tracking-[0.16em] text-ink-400"
+                />
+              </div>
+
+              {factRows(detail.meta).length > 0 && (
+                <div>
+                  <p className="border-b border-line-strong pb-4 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-500">
+                    Project facts
+                  </p>
+                  <FactList rows={factRows(detail.meta)} />
+                </div>
+              )}
             </div>
-            <FactGrid rows={factRows(detail.meta)} />
           </Container>
         </section>
 

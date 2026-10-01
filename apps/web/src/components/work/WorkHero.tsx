@@ -155,7 +155,7 @@ export default function WorkHero({
                   className="-mb-[0.3em] block overflow-hidden pb-[0.3em]"
                 >
                   <span
-                    className="hero-rise block text-h1 text-paper"
+                    className="hero-rise block text-h2 text-paper"
                     style={{ animationDelay: `${0.1 + i * 0.09}s` }}
                   >
                     {i === 1 ? (

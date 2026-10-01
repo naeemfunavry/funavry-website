@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
@@ -7,7 +6,8 @@ import { getChrome } from "@/lib/chrome";
 import Contact from "@/components/sections/Contact";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
-import { KineticWords, Wipe } from "@/components/ui/Kinetic";
+import { Wipe } from "@/components/ui/Kinetic";
+import DetailHero from "@/components/ui/DetailHero";
 import WorkTiles from "@/components/work/WorkTiles";
 import PracticesSplit from "@/components/sections/PracticesSplit";
 import IndustryTech from "@/components/sections/IndustryTech";
@@ -88,6 +88,7 @@ export default async function IndustryDetailPage({
 
   const industry = found.industry;
   const overview = INDUSTRY_OVERVIEWS[industry.slug];
+  const frameworks = overview?.frameworks ?? [];
 
   const projects = byVisuals(buildWorkProjects(workIndex.details));
   const allWork = projectsFor(projects, found.caseStudySlugs);
@@ -118,61 +119,23 @@ export default async function IndustryDetailPage({
         socials={chrome.socials}
       />
       <main id="main">
-        {/* ------------------------------------------------------ Hero ----
-            The dark stage, with the industry's photograph filling the right
-            and fading into the ink under the copy. `id="top"` puts the nav in
-            its on-dark style while it sits over this. */}
-        <section
-          id="top"
-          className="relative overflow-hidden bg-ink-900 pb-20 pt-[150px] lg:flex lg:min-h-[640px] lg:items-center lg:pb-24"
-        >
-          <div aria-hidden className="absolute inset-0 lg:left-[34%]">
-            <Image
-              src={industry.image}
-              alt=""
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 66vw"
-              className="object-cover"
-            />
-          </div>
-          {/* Ink over the photo: solid under the copy, clearing to the right.
-              On a phone the photo sits behind everything, so it is dimmed
-              evenly instead. */}
-          <div
-            aria-hidden
-            className="absolute inset-0 bg-ink-900/80 lg:bg-transparent lg:bg-[linear-gradient(90deg,#21262A_0%,#21262A_34%,rgba(33,38,42,0.82)_38%,rgba(33,38,42,0.25)_52%,rgba(33,38,42,0.05)_100%)]"
-          />
-          <div
-            aria-hidden
-            className="absolute inset-0 bg-[radial-gradient(60%_80%_at_12%_30%,rgba(68,158,216,0.22),transparent_70%)]"
-          />
-          <div aria-hidden className="absolute inset-0 grid-paper-dark" />
-
-          <Container wide className="relative z-10 w-full">
-            <div className="max-w-[560px]">
-              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-amber">
-                Industry {index}
-              </span>
-              <h1 className="mt-5 text-h1 text-paper">
-                <KineticWords text={industry.name} trigger="mount" />
-              </h1>
-              <Wipe delay={0.2}>
-                <p className="mt-6 max-w-[46ch] text-[17px] leading-[1.7] text-paper/70">
-                  {industry.desc}
-                </p>
-              </Wipe>
-              <div className="mt-9 flex flex-wrap items-center gap-3">
-                <Button href="/contact" variant="accent" size="md" arrow>
-                  Discuss your project
-                </Button>
-                <Button href="/#industries" variant="outline" size="md">
-                  All industries
-                </Button>
-              </div>
-            </div>
-          </Container>
-        </section>
+        {/* ------------------------------------------------------ Hero ---- */}
+        <DetailHero
+          image={industry.image}
+          eyebrow={`Industry ${index}`}
+          title={industry.name}
+          body={industry.desc}
+          actions={
+            <>
+              <Button href="/contact" variant="accent" size="md" arrow>
+                Discuss your project
+              </Button>
+              <Button href="/#industries" variant="outline" size="md">
+                All industries
+              </Button>
+            </>
+          }
+        />
 
         {/* ------------------------------------------------- Expertise ----
             The industry's own expertise statement where one is written
@@ -187,8 +150,9 @@ export default async function IndustryDetailPage({
             />
             <Container wide className="relative z-10 py-8 sm:py-12 lg:py-14">
               <div className="grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
-                {/* The statement: heading, then the closing sentence with
-                    the frameworks it names set as badges. */}
+                {/* The statement: heading, the opening sentence where the
+                    paragraph has one, then the closing sentence with any
+                    frameworks it names set as badges. */}
                 <div>
                   <div className="flex items-center gap-3">
                     <span
@@ -202,22 +166,30 @@ export default async function IndustryDetailPage({
                   <h2 className="mt-6 text-h3 text-ink">
                     {industry.name} Expertise
                   </h2>
-                  <p className="mt-6 text-[16px] leading-[1.9] text-ink-500 lg:text-[17px]">
-                    {overview.closing}{" "}
-                    {overview.frameworks.map((f, i) => (
-                      <span key={f}>
-                        <span className="mx-0.5 inline-flex items-center border border-azure/40 bg-azure-50 px-2 py-0.5 font-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-azure-ink">
-                          {f}
+                  {overview.intro && (
+                    <p className="mt-6 text-[16px] leading-[1.9] text-ink-500 lg:text-[17px]">
+                      {overview.intro}
+                    </p>
+                  )}
+                  {overview.closing && (
+                    <p className="mt-6 text-[16px] leading-[1.9] text-ink-500 lg:text-[17px]">
+                      {overview.closing}
+                      {frameworks.length > 0 && " "}
+                      {frameworks.map((f, i) => (
+                        <span key={f}>
+                          <span className="mx-0.5 inline-flex items-center border border-azure/40 bg-azure-50 px-2 py-0.5 font-mono text-[12px] font-semibold uppercase tracking-[0.08em] text-azure-ink">
+                            {f}
+                          </span>
+                          {i < frameworks.length - 2
+                            ? ", "
+                            : i === frameworks.length - 2
+                              ? ", and "
+                              : " "}
                         </span>
-                        {i < overview.frameworks.length - 2
-                          ? ", "
-                          : i === overview.frameworks.length - 2
-                            ? ", and "
-                            : " "}
-                      </span>
-                    ))}
-                    {overview.tail}
-                  </p>
+                      ))}
+                      {overview.tail}
+                    </p>
+                  )}
                 </div>
 
                 {/* The offerings, as an open list: a glyph and a line each,
