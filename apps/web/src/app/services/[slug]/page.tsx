@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
@@ -7,13 +6,12 @@ import { getChrome } from "@/lib/chrome";
 import Contact from "@/components/sections/Contact";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
-import Frame from "@/components/ui/Frame";
 import { Wipe } from "@/components/ui/Kinetic";
-import { CardFoot, SectionLabel } from "@/components/ui/DetailParts";
-import { HOUSE_LABEL, PHASE, SERVICE_IMAGES } from "@/lib/service-style";
+import { HOUSE_LABEL, SERVICE_IMAGES } from "@/lib/service-style";
 import DetailHero from "@/components/ui/DetailHero";
 import WorkTiles from "@/components/work/WorkTiles";
 import Governance from "@/components/sections/Governance";
+import ServiceIndustries from "@/components/sections/ServiceIndustries";
 import { industriesForService, projectsFor } from "@/lib/relations";
 import { byVisuals, buildWorkProjects } from "@/lib/work";
 import {
@@ -92,11 +90,10 @@ export default async function ServiceDetailPage({
 
   const service = found.service;
 
-  const phase = PHASE[service.phase];
 
   const projects = byVisuals(buildWorkProjects(workIndex.details));
   const allWork = projectsFor(projects, found.caseStudySlugs);
-  const work = allWork.slice(0, 3);
+  const work = allWork.slice(0, 4);
 
   const industries = industriesForService(
     allIndustries,
@@ -238,49 +235,7 @@ export default async function ServiceDetailPage({
         />
 
         {/* --------------------------------------------- Industries ---- */}
-        {industries.length > 0 && (
-          <section
-            aria-labelledby="service-industries"
-            className="border-b border-line bg-paper-white"
-          >
-            <Container wide className="py-8 sm:py-12 lg:py-14">
-              <SectionLabel id="service-industries">
-                Industries We Serve
-              </SectionLabel>
-              <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:mt-10 lg:grid-cols-3">
-                {industries.map((industry) => (
-                  <li key={industry.slug} className="h-full">
-                    <Frame
-                      as="a"
-                      href={`/industries/${industry.slug}`}
-                      tint={phase.tint}
-                      className="block h-full"
-                      innerClassName="flex h-full flex-col px-6 pb-6 pt-5"
-                    >
-                      <div className="flex items-center gap-3.5">
-                        {industry.image && (
-                          <span className="relative h-10 w-10 flex-none overflow-hidden border border-line">
-                            <Image
-                              src={industry.image}
-                              alt=""
-                              fill
-                              sizes="40px"
-                              className="object-cover"
-                            />
-                          </span>
-                        )}
-                        <h3 className="text-[16px] font-medium leading-snug tracking-[-0.015em] text-ink">
-                          {industry.name}
-                        </h3>
-                      </div>
-                      <CardFoot>View industry</CardFoot>
-                    </Frame>
-                  </li>
-                ))}
-              </ul>
-            </Container>
-          </section>
-        )}
+        <ServiceIndustries id="service-industries" industries={industries} />
 
         <Contact />
       </main>

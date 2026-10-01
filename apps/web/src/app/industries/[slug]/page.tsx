@@ -92,7 +92,7 @@ export default async function IndustryDetailPage({
 
   const projects = byVisuals(buildWorkProjects(workIndex.details));
   const allWork = projectsFor(projects, found.caseStudySlugs);
-  const work = allWork.slice(0, 3);
+  const work = allWork.slice(0, 4);
 
   const services = servicesForIndustry(
     allServices,

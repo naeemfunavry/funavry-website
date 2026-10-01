@@ -2,27 +2,23 @@ import Image from "next/image";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
-import type { DetailMeta, DetailStat } from "@/lib/case-study-details";
 import type { WorkProject } from "@/lib/work-model";
-import { HeroSpecs } from "./ProjectSpecs";
 
 /**
  * The case study opener, laid out as the industry page's hero: the project's
  * lead screen fills the right and fades into the ink under the sector, name
- * and positioning statement on the left. Under the buttons, the project's
- * capabilities and technology: its figures, what it was delivered as, and
- * what it was built with.
+ * and positioning statement on the left, then the project's tags and the way
+ * into its Product Showcase.
  *
  * `id="top"` puts the nav in its on-dark style while it sits over this.
  */
 export default function CaseStudyHero({
   project,
-  stats,
-  meta,
+  hasShowcase,
 }: {
   project: WorkProject;
-  stats: DetailStat[];
-  meta: DetailMeta[];
+  /** The page has a Product Showcase for the button to scroll to. */
+  hasShowcase: boolean;
 }) {
   const shot = project.media.primary;
 
@@ -59,9 +55,9 @@ export default function CaseStudyHero({
       <div aria-hidden className="absolute inset-0 grid-paper-dark" />
 
       <Container wide className="relative z-10 w-full">
-        <div className="max-w-[600px]">
+        <div className="max-w-[640px]">
           <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-amber">
-            Case Study · {project.sector.split("·")[0].trim()}
+            Our Work · {project.sector.split("·")[0].trim()}
           </span>
           <h1 className="mt-5 text-h2 text-paper">
             <KineticWords text={project.title} trigger="mount" />
@@ -71,15 +67,28 @@ export default function CaseStudyHero({
               {project.tagline}
             </p>
           </Wipe>
+          {project.tags.length > 0 && (
+            <ul className="mt-7 flex flex-wrap gap-2">
+              {project.tags.map((tag) => (
+                <li
+                  key={tag}
+                  className="rounded-md border border-paper/20 bg-paper/[0.06] px-3.5 py-1.5 text-[12.5px] leading-none text-paper/85 backdrop-blur-sm"
+                >
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          )}
           <div className="mt-9 flex flex-wrap items-center gap-3">
-            <Button href="/contact" variant="accent" size="md" arrow>
-              Discuss your project
-            </Button>
-            <Button href="/case-studies" variant="outline" size="md">
-              All work
+            <Button
+              href={hasShowcase ? "#showcase" : "/contact"}
+              variant="accent"
+              size="md"
+              arrow
+            >
+              {hasShowcase ? "View Live Demo" : "Discuss your project"}
             </Button>
           </div>
-          <HeroSpecs stats={stats} meta={meta} />
         </div>
       </Container>
     </section>

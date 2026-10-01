@@ -121,10 +121,10 @@ export default function WorkHero({
 
       {/* A wash off the copy's side, so the headline keeps its contrast over
           whatever capture drifts behind it. */}
-      <div
+      {/* <div
         aria-hidden
         className="absolute inset-0 hidden bg-[linear-gradient(90deg,rgba(33,38,42,0.92)_0%,rgba(33,38,42,0.7)_38%,transparent_62%)] lg:block"
-      />
+      /> */}
 
       <Container wide className="relative z-10">
         <div className="max-w-[640px]">

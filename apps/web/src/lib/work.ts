@@ -254,3 +254,26 @@ export function getNextProject(projects: WorkProject[], slug: string): WorkProje
   }
   return projects[(i + 1) % count] ?? null;
 }
+
+/** Up to `count` other projects most like this one — shared categories first,
+    then the same sector — with captures preferred, the brief order breaking
+    ties. */
+export function getRelatedProjects(
+  projects: WorkProject[],
+  slug: string,
+  count = 3,
+): WorkProject[] {
+  const self = projects.find((p) => p.slug === slug);
+  if (!self) return [];
+  const sector = self.sector.split("·")[0].trim();
+  const score = (p: WorkProject) =>
+    p.categories.filter((c) => self.categories.includes(c)).length * 2 +
+    (p.sector.split("·")[0].trim() === sector ? 3 : 0) +
+    (p.hasVisuals ? 1 : 0);
+  return projects
+    .filter((p) => p.slug !== slug)
+    .map((p, i) => ({ p, i, s: score(p) }))
+    .sort((a, b) => b.s - a.s || a.i - b.i)
+    .slice(0, count)
+    .map(({ p }) => p);
+}

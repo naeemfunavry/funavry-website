@@ -130,15 +130,12 @@ export default function HomeWork({
               Web and enterprise platforms built end-to-end. Browse the deck, or
               open one for the full case study.
             </p>
-            <Button
-              href="/case-studies"
-              variant="secondary"
-              size="md"
-              arrow
-              className="mt-6"
-            >
-              View all case studies
-            </Button>
+            {/* Right-aligned from lg, under the intro's right edge. */}
+            <div className="mt-6 flex lg:justify-end">
+              <Button href="/case-studies" variant="primary" size="md" arrow>
+                View All Projects
+              </Button>
+            </div>
           </Wipe>
         </div>
 
@@ -167,7 +164,7 @@ export default function HomeWork({
             swipeFrom.current = null;
             if (Math.abs(dx) > 50) go(active + (dx < 0 ? 1 : -1));
           }}
-          className="relative mt-10 touch-pan-y overflow-hidden rounded-2xl bg-ink-900 p-5 outline-none focus-visible:ring-2 focus-visible:ring-azure focus-visible:ring-offset-4 focus-visible:ring-offset-paper sm:p-7 lg:mt-14 lg:p-10"
+          className="relative mt-6 touch-pan-y overflow-hidden rounded-2xl bg-ink-900 p-5 outline-none focus-visible:ring-2 focus-visible:ring-azure focus-visible:ring-offset-4 focus-visible:ring-offset-paper sm:p-7 lg:mt-8 lg:p-10"
         >
           <p id="home-work-hint" className="sr-only">
             Use the left and right arrow keys, or the arrow buttons, to move
@@ -277,7 +274,7 @@ export default function HomeWork({
                 href={`/case-studies/${study.slug}`}
                 className="group/link inline-flex min-h-[52px] items-center gap-2.5 rounded-sm bg-amber px-7 text-[15px] font-semibold text-ink-900 transition-colors duration-300 hover:bg-amber-600"
               >
-                View case study
+                View project
                 <ArrowRight
                   size={16}
                   aria-hidden
