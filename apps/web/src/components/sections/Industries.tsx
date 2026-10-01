@@ -73,14 +73,20 @@ const Tile = memo(function Tile({
 
             The CMS's 16px blur shows the instant the tile does, so a photo
             still on its way reads as the picture coming into focus rather
-            than an empty dark card. */}
+            than an empty dark card.
+
+            `sizes` is the tile's real width, not a vw guess: the row stops
+            growing at the 1480px container, so "25vw" overstated the tile on
+            any wider screen and the browser fetched a variant a size too big.
+            Four tiles share the row less its 3.5rem gutters and 3rem of gaps;
+            two tiles share it at sm–lg less the gutters and one 1rem gap. */}
         <Image
           src={industry.image}
           alt=""
           fill
           placeholder={industry.blur ? "blur" : "empty"}
           blurDataURL={industry.blur}
-          sizes="(max-width: 640px) 78vw, (max-width: 1024px) 50vw, 25vw"
+          sizes="(min-width: 1480px) 330px, (min-width: 1024px) calc((100vw - 160px) / 4), (min-width: 640px) calc((100vw - 64px) / 2), 75vw"
           className="object-cover transition-transform duration-700 ease-expo group-hover:scale-[1.06]"
         />
 
