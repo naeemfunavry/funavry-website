@@ -66,7 +66,11 @@ const LINKS: Link[] = [
         desc: "Build with a team of 200+",
       },
       { label: "Blog", href: "", desc: "Engineering & AI writing" },
-      { label: "News", href: "", desc: "Announcements and press" },
+      {
+        label: "Life @ Funavry",
+        href: "/life-at-funavry",
+        desc: "Our people, values and culture",
+      },
     ],
   },
 ];
