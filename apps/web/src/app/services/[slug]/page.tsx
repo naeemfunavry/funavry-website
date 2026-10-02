@@ -90,7 +90,6 @@ export default async function ServiceDetailPage({
 
   const service = found.service;
 
-
   const projects = byVisuals(buildWorkProjects(workIndex.details));
   const allWork = projectsFor(projects, found.caseStudySlugs);
   const work = allWork.slice(0, 4);
@@ -151,33 +150,33 @@ export default async function ServiceDetailPage({
                   {service.title} Expertise
                 </h2>
                 <p className="mt-6 text-[16px] leading-[1.9] text-ink-500 lg:text-[17px]">
-                {workCount > 0 && (
-                  <>
-                    <strong className="font-semibold text-ink">
-                      {workCount} published{" "}
-                      {workCount === 1 ? "case study" : "case studies"}
-                    </strong>
-                    {industryCount > 0 && (
-                      <>
-                        {" across "}
-                        <strong className="font-semibold text-ink">
-                          {industryCount}{" "}
-                          {industryCount === 1 ? "industry" : "industries"}
-                        </strong>
-                      </>
-                    )}
-                    {" — "}
-                  </>
-                )}
-                {workCount > 0 ? "a " : "A "}
-                <strong className="font-semibold text-ink">
-                  {service.phase}
-                </strong>{" "}
-                practice within{" "}
-                <strong className="font-semibold text-ink">
-                  {HOUSE_LABEL[service.group]}
-                </strong>
-                .
+                  {workCount > 0 && (
+                    <>
+                      <strong className="font-semibold text-ink">
+                        {workCount} published{" "}
+                        {workCount === 1 ? "case study" : "case studies"}
+                      </strong>
+                      {industryCount > 0 && (
+                        <>
+                          {" across "}
+                          <strong className="font-semibold text-ink">
+                            {industryCount}{" "}
+                            {industryCount === 1 ? "industry" : "industries"}
+                          </strong>
+                        </>
+                      )}
+                      {" — "}
+                    </>
+                  )}
+                  {workCount > 0 ? "a " : "A "}
+                  <strong className="font-semibold text-ink">
+                    {service.phase}
+                  </strong>{" "}
+                  practice within{" "}
+                  <strong className="font-semibold text-ink">
+                    {HOUSE_LABEL[service.group]}
+                  </strong>
+                  .
                 </p>
               </div>
 
@@ -220,7 +219,7 @@ export default async function ServiceDetailPage({
         </section>
 
         {/* ------------------------------------- Compliance & governance ---- */}
-        <Governance />
+        {/* <Governance /> */}
 
         {/* ------------------------------------------- Selected work ---- */}
         <WorkTiles

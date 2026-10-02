@@ -18,6 +18,9 @@ export interface FootprintProps {
   eyebrow?: string;
   title?: string;
   action?: { label: string; href: string };
+  /** The office list beside the map; the map's labels carry the countries
+      when it's hidden. */
+  showOffices?: boolean;
 }
 
 export default function Footprint({
@@ -26,11 +29,18 @@ export default function Footprint({
   eyebrow = "Our locations",
   title = "Where we work.",
   action,
+  showOffices = true,
 }: FootprintProps) {
   return (
     <section className="border-y border-line bg-paper-deep">
       <Container wide className="py-16 lg:py-24">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,300px)_minmax(0,1fr)_minmax(0,280px)] lg:items-center lg:gap-12">
+        <div
+          className={`grid gap-12 lg:items-center lg:gap-12 ${
+            showOffices
+              ? "lg:grid-cols-[minmax(0,300px)_minmax(0,1fr)_minmax(0,280px)]"
+              : "lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)] lg:gap-16"
+          }`}
+        >
           <div>
             <Eyebrow label={eyebrow} />
             <h2 className="mt-6 text-h3 text-ink">{title}</h2>
@@ -71,40 +81,42 @@ export default function Footprint({
             <WorldMap offices={offices} />
           </Wipe>
 
-          <ul className="divide-y divide-line border-y border-line lg:border-y-0 lg:border-l lg:pl-10">
-            {offices.map((o) => (
-              <li key={o.city} className="flex gap-4 py-5">
-                <MapPin
-                  size={18}
-                  strokeWidth={2}
-                  className="mt-0.5 flex-none text-azure"
-                />
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">
-                    {o.country}
-                  </p>
-                  <div className="mt-1 flex items-center gap-2.5">
-                    <h3 className="text-[16px] font-semibold tracking-[-0.01em] text-ink">
-                      {o.city}
-                    </h3>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={o.flag}
-                      alt={`${o.country} flag`}
-                      loading="lazy"
-                      className="h-3.5 w-5 flex-none object-cover ring-1 ring-line-strong"
-                    />
+          {showOffices && (
+            <ul className="divide-y divide-line border-y border-line lg:border-y-0 lg:border-l lg:pl-10">
+              {offices.map((o) => (
+                <li key={o.city} className="flex gap-4 py-5">
+                  <MapPin
+                    size={18}
+                    strokeWidth={2}
+                    className="mt-0.5 flex-none text-azure"
+                  />
+                  <div>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-500">
+                      {o.country}
+                    </p>
+                    <div className="mt-1 flex items-center gap-2.5">
+                      <h3 className="text-[16px] font-semibold tracking-[-0.01em] text-ink">
+                        {o.city}
+                      </h3>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={o.flag}
+                        alt={`${o.country} flag`}
+                        loading="lazy"
+                        className="h-3.5 w-5 flex-none object-cover ring-1 ring-line-strong"
+                      />
+                    </div>
+                    <p className="mt-1 text-[13.5px] leading-[1.6] text-ink-500">
+                      {o.blurb}
+                    </p>
                   </div>
-                  <p className="mt-1 text-[13.5px] leading-[1.6] text-ink-500">
-                    {o.blurb}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
-        <div className="mt-12 flex flex-wrap items-center gap-2 border-t border-line pt-8">
+        {/* <div className="mt-12 flex flex-wrap items-center gap-2 border-t border-line pt-8">
           <span className="mr-2 font-mono text-[10px] uppercase tracking-[0.18em] text-azure-ink">
             Delivery across
           </span>
@@ -116,7 +128,7 @@ export default function Footprint({
               {c}
             </span>
           ))}
-        </div>
+        </div> */}
       </Container>
     </section>
   );

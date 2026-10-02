@@ -11,8 +11,8 @@ import { cn } from "@/lib/utils";
    Centre mark. Five marks carry no legible name (Deline Media, Mammoth,
    HTMLPro, SkillYah, Intensivate) and are named from their files and
    the earlier client list. `EstateOffice` is Pakistan's state emblem, named
-   for the Estate Office, Government of Pakistan, because that is the client
-   (see the REstate case study), not the emblem.
+   for the Ministry of Housing & Works, because that is the client (see the
+   REstate case study), not the emblem.
 
    Strongest marks lead, so the first thing entering the frame is the most
    recognisable. Shown in their own colours — no plate, no filter. */
@@ -26,7 +26,7 @@ const CLIENTS: { name: string; file: string }[] = [
   { name: "Systems Limited", file: "systems.webp" },
   { name: "Jazz", file: "jazz-logo.webp" },
   { name: "Al Jazeera Finance", file: "aljazeera.webp" },
-  { name: "Estate Office, Government of Pakistan", file: "estateoffice.webp" },
+  { name: "Ministry of Housing & Works", file: "estateoffice.webp" },
   { name: "ChainGPT", file: "gcpt.webp" },
   { name: "Wateen", file: "wateen.webp" },
   { name: "VNClagoon", file: "vnc.webp" },
@@ -38,7 +38,7 @@ const CLIENTS: { name: string; file: string }[] = [
   { name: "Normies", file: "normies.webp" },
   { name: "Mammoth", file: "mammoth-ai.webp" },
   { name: "XHumanity", file: "xhumanity.webp" },
-  { name: "Libbi", file: "libbi.webp" },
+  { name: "InChannelAI", file: "libbi.webp" },
   { name: "CattleKit", file: "cattlekit.webp" },
   { name: "Intensivate", file: "intensivate.webp" },
   { name: "SkillYah", file: "skillyah.webp" },

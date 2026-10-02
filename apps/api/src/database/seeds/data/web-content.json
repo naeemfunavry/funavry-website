@@ -35,7 +35,7 @@
       "file": "system.webp"
     },
     {
-      "name": "Estate Office, Government of Pakistan",
+      "name": "Ministry of Housing & Works",
       "file": "estate-office.webp"
     },
     {
@@ -232,6 +232,18 @@
         "GBS, SSC & GCC strategy & operating-model design",
         "Service delivery excellence & transformation",
         "Governance, organization & change management"
+      ]
+    },
+    {
+      "name": "Irfan Ayub",
+      "role": "Managing Director",
+      "initials": "IA",
+      "photo": "/team/irfan-ayub.webp",
+      "points": [
+        "15+ years in business & operations leadership",
+        "Leads delivery, operations & day-to-day execution",
+        "Client partnerships across the US, GCC & Asia",
+        "Drives operational excellence & sustainable growth"
       ]
     }
   ],

@@ -11,13 +11,14 @@ import type { LeaderCard } from "@/lib/api";
  * neither gets their initials.
  */
 const PORTRAITS: Record<string, string> = {
-  "Dr. Adnan Tariq": "/team/adnan-tariq.webp",
   "Salman Tariq": "/team/salman-tariq.webp",
   "Imran Khawar": "/team/imran-khawar.webp",
   "Imran Ashraf": "/team/imran-ashraf.webp",
+  "Irfan Ayub": "/team/irfan-ayub.webp",
 };
 
-const portraitFor = (leader: LeaderCard) => PORTRAITS[leader.name] || leader.photo;
+const portraitFor = (leader: LeaderCard) =>
+  PORTRAITS[leader.name] || leader.photo;
 
 /**
  * The leadership team on the dark stage: a full portrait per leader with the
@@ -52,7 +53,7 @@ export default function Leadership({ leaders }: { leaders: LeaderCard[] }) {
             <div className="flex items-center gap-3">
               <span aria-hidden className="h-px w-10 flex-none bg-amber" />
               <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-paper/70">
-                Leadership
+                Leadership Team
               </span>
             </div>
             <h2 id="about-leadership" className="mt-6 text-h3 text-paper">
@@ -66,7 +67,12 @@ export default function Leadership({ leaders }: { leaders: LeaderCard[] }) {
           </p>
         </div>
 
-        <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:mt-12 lg:grid-cols-4">
+        {/* One row on a wide screen, however many leaders there are. */}
+        <ul
+          className={`mt-10 grid gap-5 sm:grid-cols-2 lg:mt-12 ${
+            leaders.length >= 5 ? "sm:grid-cols-3 lg:grid-cols-5" : "lg:grid-cols-4"
+          }`}
+        >
           {leaders.map((leader, i) => {
             const photo = portraitFor(leader);
             return (
@@ -74,7 +80,7 @@ export default function Leadership({ leaders }: { leaders: LeaderCard[] }) {
                 <Wipe delay={i * 0.06}>
                   <article
                     tabIndex={0}
-                    className="group relative aspect-[4/5] overflow-hidden bg-ink-700 outline-none ring-amber focus-visible:ring-2"
+                    className="group relative aspect-square overflow-hidden bg-ink-700 outline-none ring-amber focus-visible:ring-2"
                   >
                     {photo ? (
                       <Image
@@ -108,16 +114,19 @@ export default function Leadership({ leaders }: { leaders: LeaderCard[] }) {
                       className="absolute left-0 top-0 h-[3px] w-10 bg-amber transition-all duration-500 ease-expo group-hover:w-full group-focus:w-full"
                     />
 
-                    <div className="absolute inset-x-0 bottom-0 p-6">
+                    {/* The whole card is the stage, so the record can never
+                        grow past its top: it takes what room is left above
+                        the name, and scrolls in the rare case it needs more. */}
+                    <div className="absolute inset-0 flex flex-col justify-end p-5 lg:p-6">
                       {/* The record — collapsed to nothing at rest. */}
-                      <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-expo group-hover:grid-rows-[1fr] group-focus:grid-rows-[1fr]">
-                        <div className="overflow-hidden">
-                          <ul className="space-y-2.5 pb-5 text-[13px] leading-[1.6] text-paper/80 opacity-0 transition-opacity delay-100 duration-500 group-hover:opacity-100 group-focus:opacity-100">
+                      <div className="grid min-h-0 grid-rows-[minmax(0,0fr)] transition-[grid-template-rows] duration-500 ease-expo group-hover:grid-rows-[minmax(0,1fr)] group-focus:grid-rows-[minmax(0,1fr)]">
+                        <div className="min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                          <ul className="space-y-2 pb-4 pt-2 text-[12.5px] leading-[1.5] text-paper/85 opacity-0 transition-opacity delay-100 duration-500 group-hover:opacity-100 group-focus:opacity-100">
                             {leader.points.map((point) => (
                               <li key={point} className="flex gap-2.5">
                                 <span
                                   aria-hidden
-                                  className="mt-[7px] h-1 w-1 flex-none rounded-full bg-amber"
+                                  className="mt-[6px] h-1 w-1 flex-none rounded-full bg-amber"
                                 />
                                 <span>{point}</span>
                               </li>
@@ -126,9 +135,9 @@ export default function Leadership({ leaders }: { leaders: LeaderCard[] }) {
                         </div>
                       </div>
 
-                      <div className="flex items-end justify-between gap-4 border-t border-paper/15 pt-4">
+                      <div className="flex flex-none items-end justify-between gap-4 border-t border-paper/15 pt-4">
                         <div>
-                          <h3 className="text-[18px] font-semibold leading-snug tracking-[-0.015em] text-paper">
+                          <h3 className="text-[17px] font-semibold leading-snug tracking-[-0.015em] text-paper lg:text-[18px]">
                             {leader.name}
                           </h3>
                           <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-amber">

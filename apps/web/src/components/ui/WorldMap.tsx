@@ -44,6 +44,15 @@ const LAND_PATHS = LAND_RINGS.map((ring) => {
    markers don't collide. */
 const LABEL_BELOW = new Set(["Riyadh"]);
 
+/* Each country's label in its own flag's colour; any other country falls back
+   to the brand ink. */
+const COUNTRY_COLOR: Record<string, string> = {
+  "United States": "#3C3B6E",
+  "Saudi Arabia": "#006C35",
+  Pakistan: "#01411C",
+};
+const colorOf = (country: string) => COUNTRY_COLOR[country] ?? "#21262A";
+
 export default function WorldMap({
   offices,
   className,
@@ -70,12 +79,13 @@ export default function WorldMap({
           const y = py(o.at.lat);
           return (
             <g key={o.city}>
-              <circle cx={x} cy={y} r={11} className="fill-amber/20" />
+              <circle cx={x} cy={y} r={12} fill={colorOf(o.country)} opacity={0.2} />
               <circle
                 cx={x}
                 cy={y}
-                r={5}
-                className="fill-amber stroke-paper-white"
+                r={5.5}
+                fill={colorOf(o.country)}
+                className="stroke-paper-white"
                 strokeWidth={2}
               />
             </g>
@@ -101,8 +111,17 @@ export default function WorldMap({
               })`,
             }}
           >
-            <span className="block whitespace-nowrap rounded-md border border-line bg-paper-white px-2.5 py-1 text-[11px] font-semibold tracking-[-0.01em] text-ink shadow-[0_8px_18px_-10px_rgba(46,52,54,0.6)]">
-              {o.city}
+            <span
+              className="flex items-center gap-2 whitespace-nowrap rounded-full py-1 pl-1 pr-3 text-[11.5px] font-semibold tracking-[-0.01em] text-paper shadow-[0_10px_22px_-10px_rgba(15,23,42,0.7)] ring-1 ring-white/20"
+              style={{ background: colorOf(o.country) }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={o.flag}
+                alt=""
+                className="h-[18px] w-[18px] flex-none rounded-full object-cover ring-2 ring-white/80"
+              />
+              {o.country}
             </span>
           </div>
         );

@@ -94,23 +94,39 @@ export default function WorkTiles({
   );
 }
 
-/** The site's round arrow: solid ink, turning a quarter into amber on the
-    card's hover. */
-function CardArrow({ large = false }: { large?: boolean }) {
+/** The site's round arrow, turning a quarter into amber on the card's hover:
+    paper on the dark featured card, ink on the light rows. */
+function CardArrow({ onDark = false, large = false }: { onDark?: boolean; large?: boolean }) {
   return (
     <span
       aria-hidden
-      className={`flex flex-none items-center justify-center rounded-full bg-ink-900 text-paper transition-all duration-500 ease-expo group-hover:rotate-45 group-hover:bg-amber group-hover:text-ink-900 ${
-        large ? "h-11 w-11" : "h-9 w-9"
-      }`}
+      className={`relative flex flex-none items-center justify-center rounded-full transition-all duration-500 ease-expo group-hover:rotate-45 group-hover:bg-amber group-hover:text-ink-900 ${
+        onDark ? "bg-paper text-ink-900" : "bg-ink-900 text-paper"
+      } ${large ? "h-11 w-11" : "h-9 w-9"}`}
     >
       <ArrowUpRight size={large ? 18 : 16} />
     </span>
   );
 }
 
+/** The featured card's deep azure; its capture fades into it. */
+const DEEP = "#0F2B40";
+
+/** The capture's mask: solid at the top, easing out to nothing at the foot
+    over several stops, and softened a touch at either side. */
+const FADE =
+  "linear-gradient(to bottom, #000 0%, #000 35%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0.55) 65%, rgba(0,0,0,0.25) 80%, rgba(0,0,0,0.08) 90%, transparent 100%), linear-gradient(to right, rgba(0,0,0,0.75), #000 18%, #000 82%, rgba(0,0,0,0.75))";
+
+/** Each row's accent, the logo's colours in turn: its number chip, its left
+    edge and its sector label. */
+const ACCENTS = [
+  { chip: "bg-azure-50 text-azure-ink ring-azure-100", edge: "bg-azure", text: "text-azure-600" },
+  { chip: "bg-amber-50 text-amber-ink ring-amber-100", edge: "bg-amber", text: "text-amber-ink" },
+  { chip: "bg-steel-50 text-steel-ink ring-steel-100", edge: "bg-steel", text: "text-steel" },
+];
+
 const CARD =
-  "group relative flex h-full overflow-hidden rounded-lg bg-paper-white ring-1 ring-line outline-none transition-[box-shadow,transform] duration-500 ease-smooth hover:-translate-y-1 hover:shadow-[0_30px_60px_-34px_rgba(15,23,42,0.35)] hover:ring-azure/50 focus-visible:ring-2 focus-visible:ring-azure";
+  "group relative flex h-full overflow-hidden rounded-lg outline-none transition-[box-shadow,transform] duration-500 ease-smooth hover:-translate-y-1 focus-visible:ring-2 focus-visible:ring-azure focus-visible:ring-offset-2 focus-visible:ring-offset-paper";
 
 function Featured({ project }: { project: WorkProject }) {
   const shot = shotOf(project);
@@ -119,20 +135,46 @@ function Featured({ project }: { project: WorkProject }) {
     <Link
       href={`/case-studies/${project.slug}`}
       aria-label={`${project.title} — view details`}
-      className={`${CARD} flex-col`}
+      className={`${CARD} isolate flex-col transform-gpu [backface-visibility:hidden] hover:shadow-[0_30px_60px_-28px_rgba(15,43,64,0.65)]`}
+      style={{ background: DEEP }}
     >
-      <div className="relative aspect-[16/7] overflow-hidden bg-paper-deep">
+      {/* The ground: the dark grid, an azure glow low on the right and a
+          touch of amber low on the left. */}
+      <span aria-hidden className="pointer-events-none absolute inset-0 grid-paper-dark opacity-40" />
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-70 transition-opacity duration-500 group-hover:opacity-100"
+        style={{
+          background:
+            "radial-gradient(60% 55% at 100% 100%, rgba(68,158,216,0.35), transparent 70%), radial-gradient(40% 40% at 0% 100%, rgba(245,159,19,0.12), transparent 70%)",
+        }}
+      />
+
+      {/* The capture, full bleed, masked to transparent at the foot and a
+          little at the sides, so the ground itself shows through the fade —
+          glow, grid and all — and there is no seam. */}
+      <div className="relative aspect-[16/8]">
         {shot ? (
-          <Image
-            src={shot.src}
-            alt={shot.alt}
-            fill
-            quality={90}
-            sizes="(max-width: 1024px) 92vw, 720px"
-            className="object-cover object-left-top transition-transform duration-[900ms] ease-expo group-hover:scale-[1.04]"
-          />
+          <div
+            className="absolute inset-0"
+            style={{
+              maskImage: FADE,
+              WebkitMaskImage: FADE,
+              maskComposite: "intersect",
+              WebkitMaskComposite: "source-in",
+            }}
+          >
+            <Image
+              src={shot.src}
+              alt={shot.alt}
+              fill
+              quality={90}
+              sizes="(max-width: 1024px) 92vw, 720px"
+              className="object-cover object-left-top opacity-85 transition-opacity duration-700 ease-smooth group-hover:opacity-100"
+            />
+          </div>
         ) : (
-          <span className="absolute inset-0 grid-paper" />
+          <span className="absolute inset-0 grid-paper-dark" />
         )}
         <span className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-paper-white py-1 pl-1 pr-3.5 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-ink shadow-[0_8px_24px_-10px_rgba(15,23,42,0.5)] ring-1 ring-line">
           <span className="flex h-6 w-6 items-center justify-center rounded-full bg-azure text-paper">
@@ -142,16 +184,17 @@ function Featured({ project }: { project: WorkProject }) {
         </span>
       </div>
 
-      <div className="flex flex-1 items-end gap-4 p-4 lg:p-5">
+      {/* The copy, pulled up over the fade. */}
+      <div className="relative -mt-14 flex flex-1 items-end gap-4 p-4 lg:-mt-16 lg:p-6">
         <div className="min-w-0 flex-1">
-          <span className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-azure-600">
-            <span aria-hidden className="h-px w-6 flex-none bg-azure" />
+          <span className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-azure-300">
+            <span aria-hidden className="h-px w-6 flex-none bg-current" />
             {sectorOf(project)}
           </span>
-          <h3 className="mt-3 line-clamp-2 text-[17px] font-medium leading-[1.3] tracking-[-0.015em] text-ink lg:text-[19px]">
+          <h3 className="mt-3 line-clamp-2 text-[18px] font-medium leading-[1.3] tracking-[-0.015em] text-paper lg:text-[21px]">
             {project.title}
           </h3>
-          <p className="mt-2 line-clamp-1 max-w-[56ch] text-[13.5px] leading-[1.6] text-ink-500">
+          <p className="mt-2 line-clamp-1 max-w-[56ch] text-[13.5px] leading-[1.6] text-paper/65">
             {project.tagline}
           </p>
           {project.tags.length > 0 && (
@@ -159,7 +202,7 @@ function Featured({ project }: { project: WorkProject }) {
               {project.tags.map((tag) => (
                 <li
                   key={tag}
-                  className="rounded-full border border-line-strong px-2.5 py-1 text-[11px] leading-none text-ink-500"
+                  className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-[11px] leading-none text-paper/75"
                 >
                   {tag}
                 </li>
@@ -167,7 +210,7 @@ function Featured({ project }: { project: WorkProject }) {
             </ul>
           )}
         </div>
-        <CardArrow large />
+        <CardArrow onDark large />
       </div>
     </Link>
   );
@@ -175,14 +218,23 @@ function Featured({ project }: { project: WorkProject }) {
 
 function Row({ project, index }: { project: WorkProject; index: number }) {
   const shot = shotOf(project);
+  const accent = ACCENTS[(index - 2) % ACCENTS.length];
 
   return (
     <Link
       href={`/case-studies/${project.slug}`}
       aria-label={`${project.title} — view details`}
-      className={`${CARD} items-center gap-3.5 p-3 sm:gap-4`}
+      className={`${CARD} items-center gap-3.5 bg-paper-white p-3 ring-1 ring-line hover:shadow-[0_30px_60px_-34px_rgba(15,23,42,0.35)] hover:ring-line-strong sm:gap-4`}
     >
-      <span className="hidden w-6 flex-none font-mono text-[13px] tabular-nums tracking-[0.08em] text-ink-400 transition-colors duration-300 group-hover:text-azure-600 sm:block">
+      {/* The accent's edge, drawing down on hover. */}
+      <span
+        aria-hidden
+        className={`absolute inset-y-0 left-0 w-[3px] origin-top scale-y-0 transition-transform duration-500 ease-expo group-hover:scale-y-100 ${accent.edge}`}
+      />
+
+      <span
+        className={`hidden h-8 w-8 flex-none items-center justify-center rounded-full font-mono text-[12px] tabular-nums ring-1 sm:flex ${accent.chip}`}
+      >
         {String(index).padStart(2, "0")}
       </span>
 
@@ -209,7 +261,7 @@ function Row({ project, index }: { project: WorkProject; index: number }) {
         >
           {project.title}
         </h3>
-        <span className="mt-1.5 block truncate font-mono text-[9.5px] uppercase tracking-[0.2em] text-azure-600">
+        <span className={`mt-1.5 block truncate font-mono text-[9.5px] uppercase tracking-[0.2em] ${accent.text}`}>
           {sectorOf(project)}
         </span>
       </div>

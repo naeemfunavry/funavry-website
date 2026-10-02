@@ -90,7 +90,7 @@ export default function WorkCard({
               </p>
 
               {project.tags.length > 0 && (
-                <ul className="mt-auto flex flex-wrap gap-1 pt-5">
+                <ul className="mt-auto flex flex-wrap gap-1 pt-2">
                   {project.tags.map((tag) => (
                     <li
                       key={tag}

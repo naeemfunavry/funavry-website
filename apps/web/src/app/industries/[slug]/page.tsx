@@ -10,7 +10,7 @@ import { Wipe } from "@/components/ui/Kinetic";
 import DetailHero from "@/components/ui/DetailHero";
 import WorkTiles from "@/components/work/WorkTiles";
 import PracticesSplit from "@/components/sections/PracticesSplit";
-import IndustryTech from "@/components/sections/IndustryTech";
+import TechStack from "@/components/work/TechStack";
 import { INDUSTRY_OVERVIEWS } from "@/lib/industry-overviews";
 import { INDUSTRY_TECHNOLOGIES } from "@/lib/industry-technologies";
 import { projectsFor, servicesForIndustry } from "@/lib/relations";
@@ -280,10 +280,10 @@ export default async function IndustryDetailPage({
           services={services}
         />
         {/* ------------------------------------------- Technologies ---- */}
-        <IndustryTech
+        <TechStack
           id="industry-tech"
-          industry={industry.name}
-          technologies={INDUSTRY_TECHNOLOGIES[industry.slug] ?? []}
+          lead={`The modern, scalable stack behind our ${industry.name} work — built for performance, security and long-term growth.`}
+          tech={INDUSTRY_TECHNOLOGIES[industry.slug] ?? []}
         />
 
         {/* ------------------------------------------- Selected work ---- */}
