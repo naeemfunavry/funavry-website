@@ -47,7 +47,10 @@ export default function DetailHeading({
         </div>
         {/* Not `cn()`: tailwind-merge reads the custom `text-h3` size and the
             colour as one `text-*` group and drops the size. */}
-        <h2 id={id} className={`mt-6 text-h3 ${dark ? "text-paper" : "text-ink"}`}>
+        <h2
+          id={id}
+          className={`mt-6 text-h3 ${dark ? "text-paper" : "text-ink"}`}
+        >
           {title}
         </h2>
       </div>

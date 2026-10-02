@@ -215,7 +215,7 @@ export default function WorkShowcase({ caseStudies: STUDIES }: { caseStudies: Ca
     <section
       ref={sectionRef}
       id="work"
-      className="relative overflow-hidden bg-paper py-14 lg:py-24"
+      className="relative overflow-hidden bg-paper py-8 sm:py-12 lg:py-14"
     >
       {/* Field: soft radial lift and a whisper of the engineering grid. */}
       <div

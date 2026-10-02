@@ -29,7 +29,7 @@ export default function DirectLine({
 }) {
   return (
     <section className="bg-paper">
-      <Container wide className="py-16 lg:py-20">
+      <Container wide className="py-8 sm:py-12 lg:py-14">
         <div className="relative overflow-hidden border border-line bg-paper-white">
           <svg
             aria-hidden

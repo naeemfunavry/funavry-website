@@ -44,7 +44,7 @@ export default function CeoMessage() {
         }}
       />
 
-      <Container wide className="relative py-16 lg:py-24">
+      <Container wide className="relative py-8 sm:py-12 lg:py-14">
         <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)] lg:gap-20">
           {/* ---- The portrait ---- */}
           <Wipe>

@@ -33,34 +33,36 @@ export default function Leadership({ leaders }: { leaders: LeaderCard[] }) {
   return (
     <section
       aria-labelledby="about-leadership"
-      className="relative overflow-hidden bg-ink-900"
+      className="relative overflow-hidden border-b border-line bg-paper"
     >
+      {/* A light stage: paper under the drafting grid, with soft azure and
+          amber glows. The portraits keep their own dark foot for the name. */}
       <div
         aria-hidden
         className="absolute inset-0"
         style={{
           background: [
-            "radial-gradient(55% 60% at 10% 10%, rgba(68,158,216,0.18), transparent 65%)",
-            "radial-gradient(45% 55% at 95% 95%, rgba(245,159,19,0.10), transparent 65%)",
+            "radial-gradient(55% 60% at 10% 10%, rgba(68,158,216,0.10), transparent 65%)",
+            "radial-gradient(45% 55% at 95% 95%, rgba(245,159,19,0.07), transparent 65%)",
           ].join(","),
         }}
       />
-      <div aria-hidden className="absolute inset-0 grid-paper-dark" />
+      <div aria-hidden className="absolute inset-0 grid-paper opacity-60" />
 
-      <Container wide className="relative py-16 lg:py-24">
+      <Container wide className="relative py-8 sm:py-12 lg:py-14">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="flex items-center gap-3">
               <span aria-hidden className="h-px w-10 flex-none bg-amber" />
-              <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-paper/70">
+              <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-ink-500">
                 Leadership Team
               </span>
             </div>
-            <h2 id="about-leadership" className="mt-6 text-h3 text-paper">
+            <h2 id="about-leadership" className="mt-6 text-h3 text-ink">
               The people who set how we work.
             </h2>
           </div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-paper/45">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-400">
             <span className="[@media(hover:none)]:hidden">Hover</span>
             <span className="hidden [@media(hover:none)]:inline">Tap</span> a
             portrait for more
@@ -80,7 +82,7 @@ export default function Leadership({ leaders }: { leaders: LeaderCard[] }) {
                 <Wipe delay={i * 0.06}>
                   <article
                     tabIndex={0}
-                    className="group relative aspect-square overflow-hidden bg-ink-700 outline-none ring-amber focus-visible:ring-2"
+                    className="group relative aspect-square overflow-hidden rounded-lg bg-[#102e54] shadow-[0_24px_48px_-28px_rgba(16,46,84,0.55)] outline-none ring-amber focus-visible:ring-2"
                   >
                     {photo ? (
                       <Image
@@ -103,11 +105,11 @@ export default function Leadership({ leaders }: { leaders: LeaderCard[] }) {
                         the whole portrait when the record is showing. */}
                     <span
                       aria-hidden
-                      className="absolute inset-0 bg-[linear-gradient(0deg,rgba(33,38,42,0.95)_0%,rgba(33,38,42,0.55)_32%,transparent_60%)] transition-opacity duration-500"
+                      className="absolute inset-0 bg-[linear-gradient(0deg,rgba(16,46,84,0.95)_0%,rgba(16,46,84,0.55)_32%,transparent_60%)] transition-opacity duration-500"
                     />
                     <span
                       aria-hidden
-                      className="absolute inset-0 bg-ink-900/85 opacity-0 backdrop-blur-[2px] transition-opacity duration-500 group-hover:opacity-100 group-focus:opacity-100"
+                      className="absolute inset-0 bg-[#102e54]/90 opacity-0 backdrop-blur-[2px] transition-opacity duration-500 group-hover:opacity-100 group-focus:opacity-100"
                     />
                     <span
                       aria-hidden

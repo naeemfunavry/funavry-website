@@ -79,7 +79,7 @@ export default function KeyFeatures({
             "radial-gradient(45% 55% at 90% 8%, rgba(68,158,216,0.14), transparent 70%), radial-gradient(35% 50% at 86% 78%, rgba(68,158,216,0.16), transparent 70%)",
         }}
       />
-      <Container wide className="relative py-14 lg:py-20">
+      <Container wide className="relative py-8 sm:py-12 lg:py-14">
         <DetailHeading
           id="features-heading"
           eyebrow="Capabilities"

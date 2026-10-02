@@ -128,7 +128,7 @@ export default async function BlogPage() {
 
         {/* -------------------------------------------------- Articles ---- */}
         <section className="border-b border-line bg-paper">
-          <Container wide className="py-16 lg:py-24">
+          <Container wide className="py-8 sm:py-12 lg:py-14">
             <div className="flex items-center justify-between gap-4">
               <Eyebrow label="Latest" />
               <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-400">

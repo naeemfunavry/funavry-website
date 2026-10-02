@@ -35,7 +35,7 @@ export default function ProjectGlance({ rows }: { rows: GlanceRow[] }) {
       className="relative overflow-hidden border-b border-line bg-paper-deep"
     >
       <div aria-hidden className="absolute inset-0 grid-paper opacity-60" />
-      <Container wide className="relative py-12 lg:py-16">
+      <Container wide className="relative py-8 sm:py-12 lg:py-14">
         <DetailHeading
           id="glance-heading"
           eyebrow="Overview"

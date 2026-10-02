@@ -80,7 +80,7 @@ function Row({ ariaHidden = false }: { ariaHidden?: boolean }) {
               decoding="async"
               width={480}
               height={270}
-              className="h-[63px] w-[112px] flex-none object-contain lg:h-[90px] lg:w-[160px]"
+              className="h-[54px] w-[96px] flex-none object-contain lg:h-[76px] lg:w-[136px]"
             />
             {/* A fixed two-line slot, so a long name and a short one leave the
                 marks level across the strip. Narrower than the cell, to stay

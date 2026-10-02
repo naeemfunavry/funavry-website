@@ -224,6 +224,7 @@ export default async function ServiceDetailPage({
         {/* ------------------------------------------- Selected work ---- */}
         <WorkTiles
           id="service-work"
+          ground="azure"
           title="Selected Work"
           body={
             workCount > work.length

@@ -293,7 +293,7 @@ export default function Insights({ posts }: InsightsProps) {
       />
       <div aria-hidden className="absolute inset-0 grid-paper opacity-[0.5]" />
 
-      <Container wide className="relative z-10 py-16 sm:py-24 lg:py-32">
+      <Container wide className="relative z-10 py-8 sm:py-12 lg:py-14">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <div className="flex items-center gap-3">

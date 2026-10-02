@@ -228,7 +228,7 @@ export default async function IndustryDetailPage({
                 aria-hidden
                 className="absolute inset-0 grid-paper opacity-60"
               />
-              <Container wide className="relative z-10 py-16 lg:py-20">
+              <Container wide className="relative z-10 py-8 sm:py-12 lg:py-14">
                 <div className="mx-auto max-w-[860px] text-center">
                   <h2 className="text-h3 text-ink">
                     {industry.name} Expertise
@@ -289,6 +289,7 @@ export default async function IndustryDetailPage({
         {/* ------------------------------------------- Selected work ---- */}
         <WorkTiles
           id="industry-work"
+          ground="azure"
           title="Selected Work"
           body={
             workCount > work.length

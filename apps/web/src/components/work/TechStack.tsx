@@ -56,14 +56,14 @@ export default function TechStack({
   return (
     <section
       aria-labelledby={id}
-      className="relative overflow-hidden bg-ink-900"
+      className="relative overflow-hidden bg-[#102e54]"
     >
       <div
         aria-hidden
         className="absolute inset-0 bg-[radial-gradient(60%_90%_at_10%_0%,rgba(68,158,216,0.18),transparent_70%)]"
       />
       <div aria-hidden className="absolute inset-0 grid-paper-dark" />
-      <Container wide className="relative py-14 lg:py-16">
+      <Container wide className="relative py-8 sm:py-12 lg:py-14">
         <DetailHeading
           id={id}
           eyebrow="Technology"

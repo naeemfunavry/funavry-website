@@ -92,7 +92,7 @@ export default function HomeWork({
     <section
       ref={sectionRef}
       id="work"
-      className="relative overflow-hidden bg-paper py-12 sm:py-16 lg:py-20"
+      className="relative overflow-hidden bg-paper py-8 sm:py-12 lg:py-14"
     >
       {/* <div
         aria-hidden
@@ -132,7 +132,7 @@ export default function HomeWork({
             </p>
             {/* Right-aligned from lg, under the intro's right edge. */}
             <div className="mt-6 flex lg:justify-end">
-              <Button href="/case-studies" variant="primary" size="md" arrow>
+              <Button href="/case-studies" variant="accent" size="md" arrow>
                 View All Projects
               </Button>
             </div>
@@ -164,7 +164,7 @@ export default function HomeWork({
             swipeFrom.current = null;
             if (Math.abs(dx) > 50) go(active + (dx < 0 ? 1 : -1));
           }}
-          className="relative mt-6 touch-pan-y overflow-hidden rounded-2xl bg-ink-900 p-5 outline-none focus-visible:ring-2 focus-visible:ring-azure focus-visible:ring-offset-4 focus-visible:ring-offset-paper sm:p-7 lg:mt-8 lg:p-10"
+          className="relative mt-6 touch-pan-y overflow-hidden rounded-2xl bg-[#102e54] p-5 outline-none focus-visible:ring-2 focus-visible:ring-azure focus-visible:ring-offset-4 focus-visible:ring-offset-paper sm:p-7 lg:mt-8 lg:p-10"
         >
           <p id="home-work-hint" className="sr-only">
             Use the left and right arrow keys, or the arrow buttons, to move

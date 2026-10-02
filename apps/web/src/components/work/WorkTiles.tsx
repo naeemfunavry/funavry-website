@@ -25,7 +25,11 @@ export default function WorkTiles({
   body,
   projects,
   more = { label: "View All Projects", href: "/case-studies" },
+  ground = "paper",
 }: {
+  /** The section's ground: paper under the drafting grid, or the Industries
+      We Serve band's pale azure, for a page where the two sit together. */
+  ground?: "paper" | "azure";
   id: string;
   label?: string;
   title: string;
@@ -41,11 +45,31 @@ export default function WorkTiles({
   return (
     <section
       aria-labelledby={id}
-      className="relative overflow-hidden border-b border-line bg-paper"
+      className={`relative overflow-hidden border-b border-line ${
+        ground === "azure"
+          ? "bg-[linear-gradient(180deg,#F8FBFE_0%,#EEF5FC_100%)]"
+          : "bg-paper"
+      }`}
     >
-      {/* The home Industries section's ground: paper under the drafting grid. */}
-      <div aria-hidden className="absolute inset-0 grid-paper opacity-70" />
-      <Container wide className="relative py-10 sm:py-12 lg:py-14">
+      {ground === "azure" ? (
+        <>
+          {/* Industries We Serve's ground: a faint grid under two azure
+              glows. */}
+          <div aria-hidden className="absolute inset-0 grid-paper opacity-40" />
+          <div
+            aria-hidden
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(45% 55% at 90% 8%, rgba(68,158,216,0.14), transparent 70%), radial-gradient(35% 50% at 86% 78%, rgba(68,158,216,0.16), transparent 70%)",
+            }}
+          />
+        </>
+      ) : (
+        /* The home Industries section's ground: paper under the drafting grid. */
+        <div aria-hidden className="absolute inset-0 grid-paper opacity-70" />
+      )}
+      <Container wide className="relative py-8 sm:py-12 lg:py-14">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
           <div>
             <div className="flex items-center gap-3">
@@ -63,7 +87,7 @@ export default function WorkTiles({
           </div>
           <Button
             href={more.href}
-            variant="primary"
+            variant="accent"
             size="md"
             arrow
             className="flex-none self-start lg:self-auto"
@@ -95,7 +119,7 @@ export default function WorkTiles({
 }
 
 /** The site's round arrow, turning a quarter into amber on the card's hover:
-    paper on the dark featured card, ink on the light rows. */
+    paper on the dark cards. */
 function CardArrow({ onDark = false, large = false }: { onDark?: boolean; large?: boolean }) {
   return (
     <span
@@ -109,8 +133,9 @@ function CardArrow({ onDark = false, large = false }: { onDark?: boolean; large?
   );
 }
 
-/** The featured card's deep azure; its capture fades into it. */
-const DEEP = "#0F2B40";
+/** Every card's deep navy, the featured card and the rows alike; the
+    featured capture fades into it. */
+const DEEP = "#102E54";
 
 /** The capture's mask: solid at the top, easing out to nothing at the foot
     over several stops, and softened a touch at either side. */
@@ -120,9 +145,9 @@ const FADE =
 /** Each row's accent, the logo's colours in turn: its number chip, its left
     edge and its sector label. */
 const ACCENTS = [
-  { chip: "bg-azure-50 text-azure-ink ring-azure-100", edge: "bg-azure", text: "text-azure-600" },
-  { chip: "bg-amber-50 text-amber-ink ring-amber-100", edge: "bg-amber", text: "text-amber-ink" },
-  { chip: "bg-steel-50 text-steel-ink ring-steel-100", edge: "bg-steel", text: "text-steel" },
+  { chip: "bg-azure/15 text-azure-300 ring-azure/30", edge: "bg-azure", text: "text-azure-300" },
+  { chip: "bg-amber/15 text-amber-300 ring-amber/30", edge: "bg-amber", text: "text-amber-300" },
+  { chip: "bg-steel-300/15 text-steel-100 ring-steel-300/30", edge: "bg-steel-300", text: "text-steel-100" },
 ];
 
 const CARD =
@@ -135,7 +160,7 @@ function Featured({ project }: { project: WorkProject }) {
     <Link
       href={`/case-studies/${project.slug}`}
       aria-label={`${project.title} — view details`}
-      className={`${CARD} isolate flex-col transform-gpu [backface-visibility:hidden] hover:shadow-[0_30px_60px_-28px_rgba(15,43,64,0.65)]`}
+      className={`${CARD} isolate flex-col transform-gpu [backface-visibility:hidden] hover:shadow-[0_30px_60px_-28px_rgba(16,46,84,0.65)]`}
       style={{ background: DEEP }}
     >
       {/* The ground: the dark grid, an azure glow low on the right and a
@@ -224,8 +249,18 @@ function Row({ project, index }: { project: WorkProject; index: number }) {
     <Link
       href={`/case-studies/${project.slug}`}
       aria-label={`${project.title} — view details`}
-      className={`${CARD} items-center gap-3.5 bg-paper-white p-3 ring-1 ring-line hover:shadow-[0_30px_60px_-34px_rgba(15,23,42,0.35)] hover:ring-line-strong sm:gap-4`}
+      className={`${CARD} isolate items-center gap-3.5 p-3 ring-1 ring-white/10 hover:shadow-[0_30px_60px_-30px_rgba(16,46,84,0.65)] hover:ring-white/25 sm:gap-4`}
+      style={{ background: DEEP }}
     >
+      {/* The same ground as the featured card: the dark grid and an azure
+          glow, here on the right. */}
+      <span aria-hidden className="pointer-events-none absolute inset-0 grid-paper-dark opacity-40" />
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-60 transition-opacity duration-500 group-hover:opacity-100"
+        style={{ background: "radial-gradient(50% 120% at 100% 50%, rgba(68,158,216,0.28), transparent 70%)" }}
+      />
+
       {/* The accent's edge, drawing down on hover. */}
       <span
         aria-hidden
@@ -233,12 +268,12 @@ function Row({ project, index }: { project: WorkProject; index: number }) {
       />
 
       <span
-        className={`hidden h-8 w-8 flex-none items-center justify-center rounded-full font-mono text-[12px] tabular-nums ring-1 sm:flex ${accent.chip}`}
+        className={`relative hidden h-8 w-8 flex-none items-center justify-center rounded-full font-mono text-[12px] tabular-nums ring-1 sm:flex ${accent.chip}`}
       >
         {String(index).padStart(2, "0")}
       </span>
 
-      <div className="relative aspect-[4/3] w-[30%] max-w-[118px] flex-none overflow-hidden rounded-md bg-paper-deep ring-1 ring-line">
+      <div className="relative aspect-[4/3] w-[30%] max-w-[118px] flex-none overflow-hidden rounded-md bg-white/5 ring-1 ring-white/10">
         {shot && (
           <Image
             src={shot.src}
@@ -254,10 +289,10 @@ function Row({ project, index }: { project: WorkProject; index: number }) {
         )}
       </div>
 
-      <div className="min-w-0 flex-1">
+      <div className="relative min-w-0 flex-1">
         <h3
           title={project.title}
-          className="line-clamp-2 text-[15px] font-medium leading-[1.3] tracking-[-0.01em] text-ink lg:text-[15.5px]"
+          className="line-clamp-2 text-[15px] font-medium leading-[1.3] tracking-[-0.01em] text-paper lg:text-[15.5px]"
         >
           {project.title}
         </h3>
@@ -266,7 +301,7 @@ function Row({ project, index }: { project: WorkProject; index: number }) {
         </span>
       </div>
 
-      <CardArrow />
+      <CardArrow onDark />
     </Link>
   );
 }

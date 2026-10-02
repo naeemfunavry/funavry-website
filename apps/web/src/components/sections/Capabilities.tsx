@@ -177,7 +177,7 @@ export default function Capabilities({ services: SERVICES }: { services: Service
     <section id="capabilities" className="relative overflow-hidden border-t border-line">
       <div aria-hidden className="absolute inset-0 grid-paper opacity-70" />
 
-      <Container wide className="relative z-10 py-16 sm:py-24 lg:py-32">
+      <Container wide className="relative z-10 py-8 sm:py-12 lg:py-14">
         {/* Header. */}
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)] lg:items-end lg:gap-20">
           <div>

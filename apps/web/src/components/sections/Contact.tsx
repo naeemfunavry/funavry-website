@@ -73,7 +73,7 @@ export default function Contact({
   return (
     <section
       id="contact"
-      className="relative overflow-hidden border-t border-paper/10 bg-ink-900 text-paper"
+      className="relative overflow-hidden border-t border-paper/10 bg-[#102e54] text-paper"
     >
       {/* Background Engineering Grids and Textures */}
       <div
@@ -127,7 +127,7 @@ export default function Contact({
           "relative z-10",
           page
             ? "pb-16 pt-[120px] sm:pb-20 lg:pb-24 lg:pt-[150px]"
-            : "py-14 sm:py-16 lg:py-20",
+            : "py-8 sm:py-12 lg:py-14",
         )}
       >
         <div className="grid gap-14 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,540px)] lg:gap-20 xl:gap-24 items-start">
@@ -255,8 +255,10 @@ export default function Contact({
           {/* Right Column — The Glassmorphic Engineering Console */}
           <Wipe delay={0.18}>
             {/* No backdrop blur: at this opacity it was all but invisible, and
-                a panel this large re-blurred its backdrop on every scrolled frame. */}
-            <div className="relative rounded-2xl border border-paper/15 bg-ink-900/90 p-6 sm:p-8 lg:p-9 shadow-2xl shadow-black/60 overflow-hidden">
+                a panel this large re-blurred its backdrop on every scrolled frame.
+                A deeper shade of the section's own navy, so the panel and its
+                fields read as one with the ground. */}
+            <div className="relative overflow-hidden rounded-2xl border border-paper/15 bg-[#0B2342]/90 p-6 shadow-[0_40px_80px_-30px_rgba(4,14,30,0.85)] sm:p-8 lg:p-9">
               {/* Glowing Top Accent Rim */}
               <div
                 aria-hidden
@@ -315,7 +317,7 @@ export default function Contact({
                         autoComplete="name"
                         required
                         placeholder="e.g. Elena Rostova"
-                        className="w-full rounded-lg border border-paper/15 bg-paper/[0.03] px-3.5 py-3 text-[14.5px] text-paper placeholder:text-paper/25 outline-none transition-all duration-200 hover:border-paper/25 focus:border-azure focus:bg-paper/[0.06] focus:ring-1 focus:ring-azure/40"
+                        className="w-full rounded-lg border border-paper/15 bg-[#081C36]/80 px-3.5 py-3 text-[14.5px] text-paper placeholder:text-paper/35 outline-none transition-all duration-200 hover:border-paper/30 focus:border-azure focus:bg-[#0A2546] focus:ring-1 focus:ring-azure/40"
                       />
                     </div>
 
@@ -333,7 +335,7 @@ export default function Contact({
                         autoComplete="email"
                         required
                         placeholder="name@company.com"
-                        className="w-full rounded-lg border border-paper/15 bg-paper/[0.03] px-3.5 py-3 text-[14.5px] text-paper placeholder:text-paper/25 outline-none transition-all duration-200 hover:border-paper/25 focus:border-azure focus:bg-paper/[0.06] focus:ring-1 focus:ring-azure/40"
+                        className="w-full rounded-lg border border-paper/15 bg-[#081C36]/80 px-3.5 py-3 text-[14.5px] text-paper placeholder:text-paper/35 outline-none transition-all duration-200 hover:border-paper/30 focus:border-azure focus:bg-[#0A2546] focus:ring-1 focus:ring-azure/40"
                       />
                     </div>
                   </div>
@@ -351,7 +353,7 @@ export default function Contact({
                       name="message"
                       rows={5}
                       placeholder="Share current challenges, architecture, or scaling objectives..."
-                      className="w-full resize-none rounded-lg border border-paper/15 bg-paper/[0.03] px-3.5 py-3 text-[14.5px] text-paper placeholder:text-paper/25 outline-none transition-all duration-200 hover:border-paper/25 focus:border-azure focus:bg-paper/[0.06] focus:ring-1 focus:ring-azure/40"
+                      className="w-full resize-none rounded-lg border border-paper/15 bg-[#081C36]/80 px-3.5 py-3 text-[14.5px] text-paper placeholder:text-paper/35 outline-none transition-all duration-200 hover:border-paper/30 focus:border-azure focus:bg-[#0A2546] focus:ring-1 focus:ring-azure/40"
                     />
                   </div>
 

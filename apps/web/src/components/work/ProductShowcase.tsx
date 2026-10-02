@@ -5,10 +5,10 @@ import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Container from "@/components/ui/Container";
+import { KineticWords } from "@/components/ui/Kinetic";
 import { cn } from "@/lib/utils";
 import type { ShowcaseView } from "@/lib/case-study-view";
 import type { Shot } from "@/lib/work-model";
-import DetailHeading from "./DetailHeading";
 
 const EASE = [0.19, 1, 0.22, 1] as const;
 
@@ -56,23 +56,43 @@ export default function ProductShowcase({
             "radial-gradient(45% 55% at 90% 8%, rgba(68,158,216,0.14), transparent 70%), radial-gradient(35% 50% at 86% 78%, rgba(68,158,216,0.16), transparent 70%)",
         }}
       />
-      <Container wide className="relative py-14 lg:py-20">
-        <DetailHeading
-          id="showcase-heading"
-          eyebrow="The Product"
-          title="Product Showcase"
-          lead={lead}
-          aside={
-            many && (
-              <div className="hidden flex-none items-center lg:flex">
-                <DeckButton dir="prev" onClick={() => step(-1)} />
-                <DeckButton dir="next" onClick={() => step(1)} />
-              </div>
-            )
-          }
-        />
+      <Container wide className="relative py-8 sm:py-12 lg:py-14">
+        {/* The head, in the home Industries section's form: eyebrow and the
+            heading on the left, the lead on the right, and the deck arrows
+            parked under it. */}
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] lg:items-end lg:gap-20">
+          <div>
+            <div className="flex items-center gap-3">
+              <span aria-hidden className="h-px w-10 flex-none bg-azure" />
+              <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-ink-500">
+                The Product
+              </span>
+            </div>
+            <h2 id="showcase-heading" className="mt-6 text-h3 text-ink">
+              <KineticWords text="Product Showcase" />
+            </h2>
+          </div>
 
-        <div className="relative mt-10 overflow-hidden rounded-lg bg-paper-white ring-1 ring-line lg:mt-12">
+          {lead && (
+            <p className="max-w-[52ch] text-[15px] leading-[1.7] text-ink-500">
+              {lead}
+            </p>
+          )}
+        </div>
+
+        {many && (
+          <div className="mt-6 hidden items-center justify-end lg:flex">
+            <DeckButton dir="prev" onClick={() => step(-1)} />
+            <DeckButton dir="next" onClick={() => step(1)} />
+          </div>
+        )}
+
+        <div
+          className={cn(
+            "relative mt-10 overflow-hidden rounded-lg bg-paper-white ring-1 ring-line",
+            many ? "lg:mt-4" : "lg:mt-12",
+          )}
+        >
           {/* The bar: views as tabs on the left, the count on the right. */}
           <div className="flex items-center justify-between gap-4 border-b border-line px-4 py-3 sm:px-6">
             {many ? (

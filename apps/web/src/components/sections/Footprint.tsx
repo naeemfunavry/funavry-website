@@ -33,7 +33,7 @@ export default function Footprint({
 }: FootprintProps) {
   return (
     <section className="border-y border-line bg-paper-deep">
-      <Container wide className="py-16 lg:py-24">
+      <Container wide className="py-8 sm:py-12 lg:py-14">
         <div
           className={`grid gap-12 lg:items-center lg:gap-12 ${
             showOffices

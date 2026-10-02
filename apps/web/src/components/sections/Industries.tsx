@@ -367,7 +367,7 @@ export default function Industries({ industries }: IndustriesProps) {
           onBlurCapture={() => (paused.current = false)}
           onTouchStart={holdTouch}
           onTouchEnd={releaseTouch}
-          className="scrollbar-hide mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth lg:mt-8"
+          className="scrollbar-hide mt-2 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth lg:mt-4"
         >
           {SLIDES.map((industry, i) => (
             <div

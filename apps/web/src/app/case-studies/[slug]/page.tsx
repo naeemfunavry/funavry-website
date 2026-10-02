@@ -13,11 +13,7 @@ import ProductShowcase from "@/components/work/ProductShowcase";
 import KeyFeatures from "@/components/work/KeyFeatures";
 import TechStack from "@/components/work/TechStack";
 import WorkCard from "@/components/work/WorkCard";
-import {
-  getCaseStudyDetail,
-  getCaseStudySlugs,
-  getWorkIndex,
-} from "@/lib/api";
+import { getCaseStudyDetail, getCaseStudySlugs, getWorkIndex } from "@/lib/api";
 import {
   buildWorkProjects,
   getProjectShots,
@@ -103,11 +99,17 @@ export default async function CaseStudyDetailPage({
   const features = detail.challenges.map(featureOf);
   const related = getRelatedProjects(projects, slug);
   /* The brief's opening sentence introduces the product on its devices. */
-  const showcaseLead = (detail.intro[0] ?? detail.summary).match(/^.*?[.!?](?=\s|$)/)?.[0];
+  const showcaseLead = (detail.intro[0] ?? detail.summary).match(
+    /^.*?[.!?](?=\s|$)/,
+  )?.[0];
 
   return (
     <>
-      <Nav services={chrome.services} industries={chrome.industries} socials={chrome.socials} />
+      <Nav
+        services={chrome.services}
+        industries={chrome.industries}
+        socials={chrome.socials}
+      />
       <main id="main">
         <CaseStudyHero project={project} hasShowcase={views.length > 0} />
 
@@ -116,7 +118,10 @@ export default async function CaseStudyDetailPage({
         <ProductShowcase views={views} lead={showcaseLead} />
 
         <TechStack
-          tech={techStack(detail, workIndex.industriesByProject.get(slug) ?? [])}
+          tech={techStack(
+            detail,
+            workIndex.industriesByProject.get(slug) ?? [],
+          )}
         />
 
         <KeyFeatures
@@ -131,8 +136,11 @@ export default async function CaseStudyDetailPage({
             aria-labelledby="related-heading"
             className="relative overflow-hidden bg-paper-deep"
           >
-            <div aria-hidden className="absolute inset-0 grid-paper opacity-60" />
-            <Container wide className="relative py-14 lg:py-20">
+            <div
+              aria-hidden
+              className="absolute inset-0 grid-paper opacity-60"
+            />
+            <Container wide className="relative py-8 sm:py-12 lg:py-14">
               <DetailHeading
                 id="related-heading"
                 eyebrow="More Work"
@@ -140,7 +148,7 @@ export default async function CaseStudyDetailPage({
                 aside={
                   <Button
                     href="/case-studies"
-                    variant="primary"
+                    variant="accent"
                     size="md"
                     arrow
                     className="flex-none self-start lg:self-auto"
@@ -149,7 +157,7 @@ export default async function CaseStudyDetailPage({
                   </Button>
                 }
               />
-              <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
+              <ul className="mt-4 grid gap-5 sm:grid-cols-2 lg:mt-6 lg:grid-cols-3">
                 {related.map((p, i) => (
                   <WorkCard key={p.slug} project={p} delay={i * 0.06} compact />
                 ))}

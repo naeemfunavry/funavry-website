@@ -49,7 +49,7 @@ export default function WorkHero({
   return (
     <section
       id="top"
-      className="relative overflow-hidden bg-ink-900 pb-16 pt-[130px] lg:flex lg:min-h-[92svh] lg:flex-col lg:justify-center lg:pb-24"
+      className="relative overflow-hidden bg-[#102e54] pb-16 pt-[130px] lg:flex lg:min-h-[92svh] lg:flex-col lg:justify-center lg:pb-24"
     >
       {/* Aurora — desktop, animated. */}
       <div
@@ -123,7 +123,7 @@ export default function WorkHero({
           whatever capture drifts behind it. */}
       {/* <div
         aria-hidden
-        className="absolute inset-0 hidden bg-[linear-gradient(90deg,rgba(33,38,42,0.92)_0%,rgba(33,38,42,0.7)_38%,transparent_62%)] lg:block"
+        className="absolute inset-0 hidden bg-[linear-gradient(90deg,rgba(16,46,84,0.92)_0%,rgba(16,46,84,0.7)_38%,transparent_62%)] lg:block"
       /> */}
 
       <Container wide className="relative z-10">

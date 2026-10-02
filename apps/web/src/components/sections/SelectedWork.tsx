@@ -29,7 +29,7 @@ export default function SelectedWork({
 
   return (
     <section className={cn("bg-paper", className)}>
-      <Container wide className="py-16 lg:py-24">
+      <Container wide className="py-8 sm:py-12 lg:py-14">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)] lg:gap-16">
           <div>
             <Eyebrow label={eyebrow} />

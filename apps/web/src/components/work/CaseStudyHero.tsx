@@ -25,7 +25,7 @@ export default function CaseStudyHero({
   return (
     <section
       id="top"
-      className="relative overflow-hidden bg-ink-900 pb-20 pt-[150px] lg:flex lg:min-h-[720px] lg:items-center lg:pb-24"
+      className="relative overflow-hidden bg-[#102e54] pb-20 pt-[150px] lg:flex lg:min-h-[720px] lg:items-center lg:pb-24"
     >
       {/* The lead screen fills the right, as the industry page's photograph
           does, anchored top-left so the product's header stays in view. */}
@@ -46,7 +46,7 @@ export default function CaseStudyHero({
           a phone the screen sits behind everything, so it is dimmed evenly. */}
       <div
         aria-hidden
-        className="absolute inset-0 bg-ink-900/85 lg:bg-transparent lg:bg-[linear-gradient(90deg,#21262A_0%,#21262A_34%,rgba(33,38,42,0.82)_46%,rgba(33,38,42,0.25)_72%,rgba(33,38,42,0.05)_100%)]"
+        className="absolute inset-0 bg-[#102e54]/85 lg:bg-transparent lg:bg-[linear-gradient(90deg,#102E54_0%,#102E54_34%,rgba(16,46,84,0.82)_46%,rgba(16,46,84,0.25)_72%,rgba(16,46,84,0.05)_100%)]"
       />
       <div
         aria-hidden

@@ -77,7 +77,7 @@ export default function WhyWorkWithUs({ id = "why-us" }: { id?: string }) {
     >
       <div aria-hidden className="absolute inset-0 grid-paper opacity-60" />
 
-      <Container wide className="relative z-10 py-16 lg:py-24">
+      <Container wide className="relative z-10 py-8 sm:py-12 lg:py-14">
         {/* Heading row. */}
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
           <div>

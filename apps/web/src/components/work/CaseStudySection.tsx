@@ -51,7 +51,7 @@ export default function CaseStudySection({
         <div aria-hidden className="absolute inset-0 grid-paper-dark opacity-40" />
       )}
 
-      <Container wide className="relative py-16 lg:py-24">
+      <Container wide className="relative py-8 sm:py-12 lg:py-14">
         <div className="grid gap-6 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] lg:gap-20">
           <div>
             <div className="flex items-center gap-3">

@@ -26,7 +26,7 @@ import Button from "@/components/ui/Button";
 import type { Service } from "@/lib/services";
 import type { Industry } from "@/lib/industries";
 import { socialIcon, type SocialLink } from "@/lib/socials";
-import { PHASE, SERVICE_ICONS, SERVICE_IMAGES } from "@/lib/service-style";
+import { SERVICE_ICONS, SERVICE_IMAGES } from "@/lib/service-style";
 import { cn } from "@/lib/utils";
 
 const EXPO = [0.19, 1, 0.22, 1] as const;
@@ -114,8 +114,11 @@ const INDUSTRY_ICONS: Record<string, LucideIcon> = {
   agriculture: Sprout,
 };
 
-/* The three logo hues, cycled down the industry list. */
-const TINTS = ["68,158,216", "245,159,19", "55,96,121"] as const;
+/* The home Services section's two hues: azure for technology & engineering,
+   amber for global business services. The mega menus use only these — by
+   group for the services, alternating down the industry list. */
+const HUE = { tech: "68,158,216", gbs: "245,159,19" } as const;
+const TINTS = [HUE.tech, HUE.gbs] as const;
 
 /* The Services card's photograph before anything is hovered, and for a
    practice with none of its own (the business services). */
@@ -297,7 +300,7 @@ function ServicesMega({
       <MegaItem
         href={`/services/${s.slug}`}
         Icon={SERVICE_ICONS[s.icon] ?? LayoutGrid}
-        tint={PHASE[s.phase].tint}
+        tint={HUE[s.group]}
         title={s.title}
         sub={s.phase}
         onNavigate={onNavigate}

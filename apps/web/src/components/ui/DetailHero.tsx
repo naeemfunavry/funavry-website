@@ -27,7 +27,7 @@ export default function DetailHero({
   return (
     <section
       id="top"
-      className="relative overflow-hidden bg-ink-900 pb-20 pt-[150px] lg:flex lg:min-h-[640px] lg:items-center lg:pb-24"
+      className="relative overflow-hidden bg-[#102e54] pb-20 pt-[150px] lg:flex lg:min-h-[640px] lg:items-center lg:pb-24"
     >
       <div aria-hidden className="absolute inset-0 lg:left-[34%]">
         <Image
@@ -44,7 +44,7 @@ export default function DetailHero({
           evenly instead. */}
       <div
         aria-hidden
-        className="absolute inset-0 bg-ink-900/80 lg:bg-transparent lg:bg-[linear-gradient(90deg,#21262A_0%,#21262A_34%,rgba(33,38,42,0.82)_38%,rgba(33,38,42,0.25)_52%,rgba(33,38,42,0.05)_100%)]"
+        className="absolute inset-0 bg-[#102e54]/80 lg:bg-transparent lg:bg-[linear-gradient(90deg,#102E54_0%,#102E54_34%,rgba(16,46,84,0.82)_38%,rgba(16,46,84,0.25)_52%,rgba(16,46,84,0.05)_100%)]"
       />
       <div
         aria-hidden

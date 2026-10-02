@@ -61,7 +61,7 @@ export default function WorkShowcase({
     <section
       id="work"
       aria-labelledby="work-list-heading"
-      className="relative scroll-mt-24 overflow-hidden bg-paper pt-16 lg:pt-20"
+      className="relative scroll-mt-24 overflow-hidden bg-paper"
     >
       {/* Field: soft radial lift and a whisper of the engineering grid — the
           same ground as the home page's Work section. */}
@@ -75,7 +75,7 @@ export default function WorkShowcase({
       />
       <div aria-hidden className="absolute inset-0 grid-paper opacity-[0.5]" />
 
-      <Container wide className="relative pb-20 lg:pb-28">
+      <Container wide className="relative py-8 sm:py-12 lg:py-14">
         {/* Heading, the range line and the filter pills. */}
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] lg:items-end lg:gap-20">
           <div>
@@ -97,7 +97,7 @@ export default function WorkShowcase({
           </p>
         </div>
 
-        <div className="mt-10 border-b border-line pb-8 lg:mt-12">
+        <div className="mt-10 pb-8 lg:mt-12">
           <div
             role="group"
             aria-label="Filter projects by category"
@@ -157,10 +157,7 @@ export default function WorkShowcase({
           }projects.`}
         </p>
 
-        <ul
-          key={active}
-          className="mt-10 grid gap-5 sm:grid-cols-2 lg:mt-12 xl:grid-cols-4"
-        >
+        <ul key={active} className="grid gap-7 sm:grid-cols-2 xl:grid-cols-4">
           {visible.map((project, i) => (
             <WorkCard
               key={project.slug}
