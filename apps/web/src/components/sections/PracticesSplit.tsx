@@ -117,7 +117,7 @@ export default function PracticesSplit({
                     </span>
                     <span
                       className={cn(
-                        "hidden flex-none font-mono text-[9.5px] uppercase tracking-[0.18em] sm:block",
+                        "hidden flex-none font-mono text-[10px] uppercase tracking-[0.18em] sm:block",
                         phase.text,
                       )}
                     >

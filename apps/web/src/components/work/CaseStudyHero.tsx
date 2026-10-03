@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
+import HeroActions from "@/components/ui/HeroActions";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
 import type { WorkProject } from "@/lib/work-model";
 
@@ -79,7 +80,7 @@ export default function CaseStudyHero({
               ))}
             </ul>
           )}
-          <div className="mt-9 flex flex-wrap items-center gap-3">
+          <HeroActions className="mt-9">
             <Button
               href={hasShowcase ? "#showcase" : "/contact"}
               variant="accent"
@@ -88,7 +89,7 @@ export default function CaseStudyHero({
             >
               {hasShowcase ? "View Live Demo" : "Discuss your project"}
             </Button>
-          </div>
+          </HeroActions>
         </div>
       </Container>
     </section>

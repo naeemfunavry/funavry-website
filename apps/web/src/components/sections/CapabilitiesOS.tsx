@@ -1310,7 +1310,7 @@ function CapabilityCard({
           <span className="block text-sm font-medium leading-snug tracking-[-0.01em] text-ink line-clamp-2">
             {short(service)}
           </span>
-          {/* <span className="mt-0.5 block font-mono text-[9px] uppercase tracking-[0.16em] text-ink-400">
+          {/* <span className="mt-0.5 block font-mono text-[10px] uppercase tracking-[0.16em] text-ink-400">
             {service.phase} · {service.subs.length} services
           </span> */}
         </span>
@@ -1360,7 +1360,7 @@ function CapabilityCard({
             <button
               type="button"
               onClick={() => onSelect(service.n)}
-              className="mt-2.5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 font-mono text-[9.5px] uppercase tracking-[0.16em] transition-transform duration-300 ease-expo hover:translate-x-0.5"
+              className="mt-2.5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-transform duration-300 ease-expo hover:translate-x-0.5"
               style={{
                 background: `rgba(${hue.rgb},0.1)`,
                 boxShadow: `inset 0 0 0 1px rgba(${hue.rgb},0.3)`,
@@ -1512,7 +1512,7 @@ function Drawer({
                 <span aria-hidden className="h-px w-3 bg-line-strong" />
                 <span
                   className={cn(
-                    "font-mono text-[9.5px] uppercase tracking-[0.16em]",
+                    "font-mono text-[10px] uppercase tracking-[0.16em]",
                     hue.text,
                   )}
                 >
@@ -1592,7 +1592,7 @@ function Drawer({
                 )}
               >
                 <span
-                  className="mt-0.5 flex h-7 w-7 flex-none items-center justify-center rounded-[9px] font-mono text-[9.5px]"
+                  className="mt-0.5 flex h-7 w-7 flex-none items-center justify-center rounded-[9px] font-mono text-[10px]"
                   style={{
                     background: `rgba(${hue.rgb},0.1)`,
                     color: hue.hex,
@@ -1934,7 +1934,7 @@ export default function CapabilitiesOS({ services }: CapabilitiesOSProps) {
                 phone this measure is ~40 characters, and justifying that
                 stretches word spacing into visible rivers — the one place
                 justified text reliably looks worse than ragged-right. */}
-            <p className="text-[18px] leading-[1.75] text-ink-500 lg:text-justify">
+            <p className="text-[18px] leading-[1.75] text-ink-500">
               Engineering and Global Business Services, mapped to a single
               delivery chain. Each practice sits where it creates value across{" "}
               <span className="font-medium text-azure">build</span>,{" "}

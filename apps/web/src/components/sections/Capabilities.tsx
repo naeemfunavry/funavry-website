@@ -105,11 +105,11 @@ function ServiceCard({ service, onOpen }: { service: Service; onOpen: () => void
       <div className="mt-auto flex items-center justify-between gap-3 pt-6">
         <span className="flex items-center gap-2">
           <span aria-hidden className={cn("h-1 w-1 rounded-full", phase.dot)} />
-          <span className={cn("font-mono text-[9.5px] uppercase tracking-[0.16em]", phase.text)}>
+          <span className={cn("font-mono text-[10px] uppercase tracking-[0.16em]", phase.text)}>
             {service.phase}
           </span>
         </span>
-        <span className="flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-[0.14em] text-ink-400 transition-colors group-hover/frame:text-ink">
+        <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400 transition-colors group-hover/frame:text-ink">
           {service.subs.length} services
           <ArrowUpRight
             size={12}
@@ -137,7 +137,7 @@ function ServiceCard({ service, onOpen }: { service: Service; onOpen: () => void
             <ul className="space-y-2">
               {service.subs.slice(0, 3).map((sub, i) => (
                 <li key={sub.title} className="flex items-baseline gap-2.5">
-                  <span className="font-mono text-[9.5px] text-ink-400">
+                  <span className="font-mono text-[10px] text-ink-400">
                     {service.n}.{i + 1}
                   </span>
                   <span className="text-[12px] leading-[1.45] text-ink-500">{sub.title}</span>
@@ -146,7 +146,7 @@ function ServiceCard({ service, onOpen }: { service: Service; onOpen: () => void
             </ul>
 
             {service.subs.length > 3 && (
-              <p className="mt-2 pl-[26px] font-mono text-[9.5px] uppercase tracking-[0.14em] text-ink-400">
+              <p className="mt-2 pl-[26px] font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400">
                 +{service.subs.length - 3} more
               </p>
             )}

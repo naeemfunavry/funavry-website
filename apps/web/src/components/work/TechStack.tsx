@@ -20,7 +20,7 @@ function Pass({ tech, ariaHidden = false }: { tech: string[]; ariaHidden?: boole
               size={22}
               onDark
               className="flex-none"
-              monoClassName="flex h-6 min-w-[24px] flex-none items-center justify-center rounded-sm bg-paper/10 px-1 font-mono text-[9px] font-semibold uppercase leading-none text-paper/75"
+              monoClassName="flex h-6 min-w-[24px] flex-none items-center justify-center rounded-sm bg-paper/10 px-1 font-mono text-[10px] font-semibold uppercase leading-none text-paper/75"
             />
             <span className="whitespace-nowrap text-[14px] font-medium text-paper/85">
               {name}

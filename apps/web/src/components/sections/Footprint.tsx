@@ -61,7 +61,7 @@ export default function Footprint({
                   key={s.label}
                   className="flex flex-col-reverse justify-end"
                 >
-                  <dt className="mt-2 font-mono text-[9.5px] uppercase tracking-[0.16em] text-ink-400">
+                  <dt className="mt-2 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-400">
                     {s.label}
                   </dt>
                   <dd className="text-[40px] font-semibold leading-none tracking-[-0.03em] text-ink">

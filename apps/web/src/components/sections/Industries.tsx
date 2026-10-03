@@ -139,7 +139,7 @@ const Tile = memo(function Tile({
           )}
         />
 
-        {/* <span className="absolute left-4 top-4 border border-paper/20 bg-ink-900/50 px-2 py-1 font-mono text-[9.5px] uppercase tracking-[0.16em] text-paper backdrop-blur-sm">
+        {/* <span className="absolute left-4 top-4 border border-paper/20 bg-ink-900/50 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-paper backdrop-blur-sm">
           {String(index + 1).padStart(2, "0")}
         </span> */}
 
@@ -335,7 +335,7 @@ export default function Industries({ industries }: IndustriesProps) {
         </div>
         {/* <Rule className="mt-14 lg:mt-16" /> */}
         {/* Deck controls, parked at the top right of the section. */}
-        <div className="flex flex-none items-center lg:justify-end">
+        <div className="mt-6 flex flex-none items-center lg:mt-4 lg:justify-end">
           <button
             type="button"
             onClick={() => go(-1)}
@@ -367,7 +367,7 @@ export default function Industries({ industries }: IndustriesProps) {
           onBlurCapture={() => (paused.current = false)}
           onTouchStart={holdTouch}
           onTouchEnd={releaseTouch}
-          className="scrollbar-hide mt-2 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth lg:mt-4"
+          className="scrollbar-hide mt-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth"
         >
           {SLIDES.map((industry, i) => (
             <div

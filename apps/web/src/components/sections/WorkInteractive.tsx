@@ -104,7 +104,7 @@ function Metric({ value, detail }: { value: string; detail: string }) {
       <div className="text-[22px] font-medium leading-[1.1] tracking-[-0.025em] text-ink lg:text-[26px]">
         {value}
       </div>
-      <div className="mt-1.5 font-mono text-[9px] uppercase tracking-[0.14em] text-ink-500">
+      <div className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-500">
         {detail}
       </div>
     </div>

@@ -134,6 +134,24 @@
     font-feature-settings: "ss01", "cv01";
   }
 
+  /* No lone word on a heading's last line, and fewer one-word last lines in
+     body copy. Both are progressive: browsers without `text-wrap` support
+     simply wrap as before. Headlines set line by line (the home hero) are
+     unaffected — each line is its own block. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p,
+  li,
+  dd,
+  blockquote {
+    text-wrap: pretty;
+  }
+
   :focus-visible {
     outline: none;
     box-shadow:

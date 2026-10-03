@@ -142,7 +142,7 @@ function Row({ service, onOpen }: { service: Service; onOpen: () => void }) {
             ~430px there, and this label eats ~90px of it, which is the
             difference between the longest title wrapping to two lines and
             three. It returns once the columns have the room. */}
-        <span className="hidden font-mono text-[9.5px] uppercase tracking-[0.14em] text-ink-400 sm:inline lg:hidden 2xl:inline">
+        <span className="hidden font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400 sm:inline lg:hidden 2xl:inline">
           {service.subs.length} sub-services
         </span>
 
@@ -170,7 +170,7 @@ function Row({ service, onOpen }: { service: Service; onOpen: () => void }) {
                 a code with nothing on the row to break it. */}
             <span
               className={cn(
-                "font-mono text-[9.5px] uppercase tracking-[0.18em]",
+                "font-mono text-[10px] uppercase tracking-[0.18em]",
                 phase.text,
               )}
             >
@@ -204,7 +204,7 @@ function Row({ service, onOpen }: { service: Service; onOpen: () => void }) {
             <button
               type="button"
               onClick={onOpen}
-              className="group/cta mt-5 inline-flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-[0.16em] text-ink transition-colors duration-300 hover:text-azure-ink"
+              className="group/cta mt-5 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-ink transition-colors duration-300 hover:text-azure-ink"
             >
               Open sub-services
               <ArrowUpRight
@@ -364,7 +364,7 @@ export default function CapabilitiesIndex({ services: SERVICES }: { services: Se
                       />
 
                       <div className="flex items-center gap-3">
-                        <span className="font-mono text-[9.5px] tabular-nums tracking-[0.16em] text-ink-400">
+                        <span className="font-mono text-[10px] tabular-nums tracking-[0.16em] text-ink-400">
                           {String(i + 1).padStart(2, "0")}
                         </span>
                         <span
@@ -386,7 +386,7 @@ export default function CapabilitiesIndex({ services: SERVICES }: { services: Se
                         {p.line}
                       </p>
 
-                      <p className="mt-5 font-mono text-[9.5px] uppercase tracking-[0.16em] text-ink-400">
+                      <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-400">
                         {String(count).padStart(2, "0")} practices
                       </p>
 

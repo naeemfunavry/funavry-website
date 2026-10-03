@@ -169,39 +169,43 @@ export default function Contact({
             {/* Direct Email Card with Interactive Copy */}
             <Wipe delay={0.24}>
               {/* Both controls share one fixed height so they sit on a single
-                  line, edge to edge, rather than centring against each other. */}
-              <div className="mt-9 flex flex-wrap items-center gap-3.5">
+                  line, edge to edge, rather than centring against each other.
+                  They never wrap: on a phone the address takes the spare width
+                  and Copy collapses to its icon, where a wrapping row dropped
+                  Copy under the address as a mismatched second line. */}
+              <div className="mt-9 flex items-center gap-2.5 sm:gap-3.5">
                 <a
                   href="mailto:hello@funavry.com"
-                  className="group inline-flex h-14 items-center gap-3.5 rounded-xl border border-paper/15 bg-paper/[0.04] px-5 backdrop-blur-md transition-all duration-300 hover:border-azure/50 hover:bg-paper/[0.08] hover:shadow-[0_0_20px_rgba(68,158,216,0.2)]"
+                  className="group inline-flex h-14 min-w-0 flex-1 items-center gap-3 rounded-xl border px-4 sm:flex-none sm:gap-3.5 sm:px-5 border-paper/15 bg-paper/[0.04] backdrop-blur-md transition-all duration-300 hover:border-azure/50 hover:bg-paper/[0.08] hover:shadow-[0_0_20px_rgba(68,158,216,0.2)]"
                 >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-azure/15 text-azure transition-colors group-hover:bg-azure group-hover:text-white">
+                  <div className="hidden h-8 w-8 flex-none items-center justify-center rounded-lg bg-azure/15 min-[380px]:flex text-azure transition-colors group-hover:bg-azure group-hover:text-white">
                     <Mail size={16} />
                   </div>
-                  <span className="text-[17px] font-medium tracking-tight text-paper sm:text-[19px]">
+                  <span className="truncate text-[17px] font-medium tracking-tight text-paper sm:text-[19px]">
                     hello@funavry.com
                   </span>
                   <ArrowRight
                     size={16}
-                    className="ml-2 text-paper/40 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-azure"
+                    className="ml-auto hidden flex-none text-paper/40 transition-transform sm:ml-2 sm:block duration-300 group-hover:translate-x-1 group-hover:text-azure"
                   />
                 </a>
 
                 <button
                   type="button"
                   onClick={copyEmail}
-                  className="inline-flex h-14 items-center gap-2 rounded-xl border border-paper/15 bg-paper/[0.04] px-4 font-mono text-[11px] uppercase tracking-wider text-paper/70 backdrop-blur-md transition-all hover:border-azure/40 hover:bg-paper/[0.08] hover:text-paper active:scale-95"
+                  aria-label={copied ? "Email address copied" : "Copy email address"}
+                  className="inline-flex h-14 w-14 flex-none items-center justify-center gap-2 rounded-xl border border-paper/15 bg-paper/[0.04] font-mono sm:w-auto sm:px-4 text-[11px] uppercase tracking-wider text-paper/70 backdrop-blur-md transition-all hover:border-azure/40 hover:bg-paper/[0.08] hover:text-paper active:scale-95"
                   title="Copy email to clipboard"
                 >
                   {copied ? (
                     <>
                       <CheckCheck size={15} className="text-azure" />
-                      <span className="text-azure">Copied</span>
+                      <span className="hidden text-azure sm:inline">Copied</span>
                     </>
                   ) : (
                     <>
                       <Copy size={15} />
-                      <span>Copy</span>
+                      <span className="hidden sm:inline">Copy</span>
                     </>
                   )}
                 </button>
@@ -317,7 +321,7 @@ export default function Contact({
                         autoComplete="name"
                         required
                         placeholder="e.g. Elena Rostova"
-                        className="w-full rounded-lg border border-paper/15 bg-[#081C36]/80 px-3.5 py-3 text-[14.5px] text-paper placeholder:text-paper/35 outline-none transition-all duration-200 hover:border-paper/30 focus:border-azure focus:bg-[#0A2546] focus:ring-1 focus:ring-azure/40"
+                        className="w-full rounded-lg border border-paper/15 bg-[#081C36]/80 px-3.5 py-3 text-[16px] text-paper sm:text-[14.5px] placeholder:text-paper/35 outline-none transition-all duration-200 hover:border-paper/30 focus:border-azure focus:bg-[#0A2546] focus:ring-1 focus:ring-azure/40"
                       />
                     </div>
 
@@ -335,7 +339,7 @@ export default function Contact({
                         autoComplete="email"
                         required
                         placeholder="name@company.com"
-                        className="w-full rounded-lg border border-paper/15 bg-[#081C36]/80 px-3.5 py-3 text-[14.5px] text-paper placeholder:text-paper/35 outline-none transition-all duration-200 hover:border-paper/30 focus:border-azure focus:bg-[#0A2546] focus:ring-1 focus:ring-azure/40"
+                        className="w-full rounded-lg border border-paper/15 bg-[#081C36]/80 px-3.5 py-3 text-[16px] text-paper sm:text-[14.5px] placeholder:text-paper/35 outline-none transition-all duration-200 hover:border-paper/30 focus:border-azure focus:bg-[#0A2546] focus:ring-1 focus:ring-azure/40"
                       />
                     </div>
                   </div>
@@ -353,14 +357,14 @@ export default function Contact({
                       name="message"
                       rows={5}
                       placeholder="Share current challenges, architecture, or scaling objectives..."
-                      className="w-full resize-none rounded-lg border border-paper/15 bg-[#081C36]/80 px-3.5 py-3 text-[14.5px] text-paper placeholder:text-paper/35 outline-none transition-all duration-200 hover:border-paper/30 focus:border-azure focus:bg-[#0A2546] focus:ring-1 focus:ring-azure/40"
+                      className="w-full resize-none rounded-lg border border-paper/15 bg-[#081C36]/80 px-3.5 py-3 text-[16px] text-paper sm:text-[14.5px] placeholder:text-paper/35 outline-none transition-all duration-200 hover:border-paper/30 focus:border-azure focus:bg-[#0A2546] focus:ring-1 focus:ring-azure/40"
                     />
                   </div>
 
                   {/* High-Impact Submit Button */}
                   <button
                     type="submit"
-                    className="group relative flex ms-auto items-center gap-2.5 overflow-hidden rounded-lg bg-azure px-5 py-2.5 font-medium text-white shadow-[0_0_24px_rgba(68,158,216,0.35)] transition-all duration-300 hover:bg-azure-600 hover:shadow-[0_0_36px_rgba(68,158,216,0.55)] active:scale-[0.99]"
+                    className="group relative flex min-h-[46px] w-full items-center justify-center gap-2.5 overflow-hidden rounded-lg bg-azure px-5 py-2.5 font-medium text-ink-900 shadow-[0_0_24px_rgba(68,158,216,0.35)] transition-all duration-300 hover:bg-azure-300 sm:ms-auto sm:w-auto hover:shadow-[0_0_36px_rgba(68,158,216,0.55)] active:scale-[0.99]"
                   >
                     <span className="text-[14px] font-semibold tracking-[-0.01em]">
                       Send Query

@@ -8,6 +8,7 @@ import { getPosts } from "@/lib/api";
 import Contact from "@/components/sections/Contact";
 import Container from "@/components/ui/Container";
 import Frame from "@/components/ui/Frame";
+import { Eyebrow } from "@/components/ui/SectionLabel";
 import { KineticWords, Wipe, Rule } from "@/components/ui/Kinetic";
 import type { Post } from "@/lib/posts";
 import { cn } from "@/lib/utils";
@@ -18,17 +19,6 @@ export const metadata: Metadata = {
   description:
     "Engineering and AI writing from the Funavry team — production agentic AI, document intelligence, retrieval that cites its sources, and news from our Global Capability Center advisory practice.",
 };
-
-function Eyebrow({ label }: { label: string }) {
-  return (
-    <div className="flex items-center gap-3">
-      <span aria-hidden className="h-px w-10 flex-none bg-azure" />
-      <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-ink-500">
-        {label}
-      </span>
-    </div>
-  );
-}
 
 const KIND_ICON = {
   Blog: PenLine,
@@ -62,14 +52,14 @@ function BlogCard({ post }: { post: Post }) {
         />
         <span className="absolute left-4 top-4 flex items-center gap-2 border border-paper-white/25 bg-ink-900/55 px-2.5 py-1 backdrop-blur-sm">
           <Icon size={13} strokeWidth={1.8} className="text-paper-white" />
-          <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-paper-white">
+          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-paper-white">
             {post.kind}
           </span>
         </span>
       </div>
 
       <div className="flex flex-1 flex-col p-6 lg:p-8">
-        <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-ink-400">
+        <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400">
           {post.date}
         </span>
         <h2 className="mt-4 text-[20px] font-medium leading-[1.22] tracking-[-0.025em] text-ink lg:text-[22px]">
@@ -95,28 +85,37 @@ export default async function BlogPage() {
       <Nav services={chrome.services} industries={chrome.industries} socials={chrome.socials} />
       <main id="main">
         {/* ---------------------------------------------------- Hero ---- */}
-        <section className="relative overflow-hidden border-b border-line bg-paper-deep pt-[130px]">
-          <div aria-hidden className="absolute inset-0 grid-paper opacity-60" />
+        {/* The navy stage every other page opens on, so the nav takes its
+            on-dark style here too (`id="top"`) and the blog no longer reads
+            as a page from another site. */}
+        <section
+          id="top"
+          className="relative overflow-hidden bg-[#102e54] pb-20 pt-[150px] lg:pb-24"
+        >
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-[radial-gradient(60%_80%_at_12%_30%,rgba(68,158,216,0.22),transparent_70%),radial-gradient(40%_60%_at_85%_60%,rgba(245,159,19,0.08),transparent_70%)]"
+          />
+          <div aria-hidden className="absolute inset-0 grid-paper-dark" />
 
-          <Container
-            wide
-            className="relative z-10 pb-16 pt-14 lg:pb-20 lg:pt-20"
-          >
-            <Eyebrow label="Blog & News" />
+          <Container wide className="relative z-10">
+            <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-amber">
+              Blog &amp; News
+            </span>
 
-            <h1 className="mt-6 max-w-[16ch] text-h1 text-ink">
+            <h1 className="mt-5 max-w-[16ch] text-h2 text-paper">
               <KineticWords text="What we're" trigger="mount" />
               <br />
               <KineticWords
                 text="thinking about"
                 delay={0.12}
                 trigger="mount"
-                wordClassName="text-sweep"
+                wordClassName="text-sweep-dark"
               />
             </h1>
 
             <Wipe delay={0.15}>
-              <p className="mt-10 max-w-[62ch] text-[16px] leading-[1.8] text-ink-500 lg:text-[17px]">
+              <p className="mt-6 max-w-[60ch] text-[17px] leading-[1.7] text-paper/70">
                 Engineering and AI writing from the team — how we put agentic AI
                 into production, ground retrieval in its sources, and run
                 document intelligence at scale, plus news from across the

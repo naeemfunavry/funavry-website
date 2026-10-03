@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Container from "@/components/ui/Container";
+import HeroActions from "@/components/ui/HeroActions";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
 
 /**
@@ -66,9 +67,7 @@ export default function DetailHero({
             </p>
           </Wipe>
           {actions && (
-            <div className="mt-9 flex flex-wrap items-center gap-3">
-              {actions}
-            </div>
+            <HeroActions className="mt-9">{actions}</HeroActions>
           )}
         </div>
       </Container>

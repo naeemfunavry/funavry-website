@@ -108,7 +108,7 @@ function IndustryCard({ industry }: { industry: Industry }) {
               aria-hidden
               className="h-1 w-1 flex-none rounded-full bg-azure"
             />
-            <span className="truncate font-mono text-[9.5px] uppercase tracking-[0.14em] text-paper/55">
+            <span className="truncate font-mono text-[10px] uppercase tracking-[0.14em] text-paper/55">
               {industry.proof}
             </span>
           </span>

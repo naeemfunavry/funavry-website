@@ -296,7 +296,7 @@ function Row({ project, index }: { project: WorkProject; index: number }) {
         >
           {project.title}
         </h3>
-        <span className={`mt-1.5 block truncate font-mono text-[9.5px] uppercase tracking-[0.2em] ${accent.text}`}>
+        <span className={`mt-1.5 block truncate font-mono text-[10px] uppercase tracking-[0.2em] ${accent.text}`}>
           {sectorOf(project)}
         </span>
       </div>

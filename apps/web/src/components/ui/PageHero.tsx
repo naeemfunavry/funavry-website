@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Container from "@/components/ui/Container";
+import HeroActions from "@/components/ui/HeroActions";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
 
 /**
@@ -73,7 +74,7 @@ export default function PageHero({
             </p>
           </Wipe>
           {actions && (
-            <div className="mt-9 flex flex-wrap items-center gap-3">{actions}</div>
+            <HeroActions className="mt-9">{actions}</HeroActions>
           )}
           {children}
         </div>
@@ -89,7 +90,7 @@ export function HeroStats({ stats }: { stats: { value: string; label: string }[]
     <dl className="mt-12 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-paper/15 pt-8 sm:grid-cols-4">
       {stats.map((stat) => (
         <div key={stat.label} className="flex flex-col">
-          <dt className="order-2 mt-2.5 font-mono text-[9.5px] uppercase leading-[1.5] tracking-[0.16em] text-paper/55 sm:text-[10px]">
+          <dt className="order-2 mt-2.5 font-mono text-[10px] uppercase leading-[1.5] tracking-[0.16em] text-paper/55">
             {stat.label}
           </dt>
           <dd className="order-1 text-[clamp(24px,2.6vw,34px)] font-semibold leading-none tracking-[-0.03em] text-paper">

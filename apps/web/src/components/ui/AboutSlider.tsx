@@ -100,7 +100,9 @@ export default function AboutSlider({ slides }: { slides: AboutSlide[] }) {
                   aria-label={`Show slide ${i + 1}`}
                   aria-current={i === index}
                   className={cn(
-                    "h-1.5 rounded-full transition-all duration-500 ease-expo",
+                    // A 6px dot is too small to tap; the pseudo-element widens the
+                    // hit area to ~30px tall without changing what's drawn.
+                    "relative h-1.5 rounded-full transition-all duration-500 ease-expo before:absolute before:-inset-x-1 before:-inset-y-3 before:content-['']",
                     i === index
                       ? "w-6 bg-paper"
                       : "w-1.5 bg-paper/50 hover:bg-paper/80",

@@ -131,7 +131,7 @@ export default function ScreenshotGallery({
                 </div>
               </button>
 
-              <figcaption className="mt-3 flex items-center gap-2 font-mono text-[9.5px] uppercase tracking-[0.14em] text-ink-400">
+              <figcaption className="mt-3 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400">
                 <span aria-hidden className="h-px w-4 flex-none bg-line-strong" />
                 {s.alt}
               </figcaption>

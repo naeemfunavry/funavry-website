@@ -119,16 +119,18 @@ export default function Footer({ offices, socials }: FooterProps) {
             className="lg:border-l lg:border-line lg:px-12"
           >
             <ColumnTitle>Company</ColumnTitle>
-            <ul className="mt-6 space-y-3.5">
+            {/* Padded links on a tighter list: the same 33px pitch as before,
+                but each row is now a ~31px tap target instead of 19px. */}
+            <ul className="mt-4 space-y-0.5">
               {COMPANY_LINKS.map((link) => (
                 <li key={link.label}>
                   <a
                     href={link.href}
-                    className="group inline-flex items-center gap-2 text-[14px] leading-snug text-ink-400 transition-colors duration-200 hover:text-ink"
+                    className="group inline-flex items-center py-1.5 text-[14px] leading-snug text-ink-400 transition-colors duration-200 hover:text-ink"
                   >
                     <span
                       aria-hidden
-                      className="h-px w-0 flex-none bg-ink transition-all duration-400 ease-expo group-hover:w-3"
+                      className="h-px w-0 flex-none bg-ink transition-all duration-400 ease-expo group-hover:mr-2 group-hover:w-3"
                     />
                     {link.label}
                   </a>
@@ -189,7 +191,7 @@ export default function Footer({ offices, socials }: FooterProps) {
           <p className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-400">
             © {new Date().getFullYear()} Funavry Technologies
           </p>
-          <ul className="flex flex-wrap items-center gap-y-2">
+          <ul className="flex flex-wrap items-center">
             {LEGAL_LINKS.map((link, i) => (
               <li key={link.label} className="flex items-center">
                 {i > 0 && (
@@ -197,7 +199,7 @@ export default function Footer({ offices, socials }: FooterProps) {
                 )}
                 <a
                   href={link.href}
-                  className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-500 transition-colors duration-200 hover:text-ink"
+                  className="inline-block py-2 font-mono text-[10.5px] uppercase tracking-[0.14em] text-ink-500 transition-colors duration-200 hover:text-ink"
                 >
                   {link.label}
                 </a>

@@ -157,7 +157,7 @@ export default function Moments({ moments }: { moments: Moment[] }) {
                   className="absolute left-0 top-0 h-[3px] w-0 bg-amber transition-all duration-500 ease-expo group-hover:w-16"
                 />
                 <div className="absolute inset-x-0 bottom-0 p-4 lg:p-5">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-amber-300 sm:text-[9.5px]">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-amber-300">
                     {m.category}
                   </span>
                   <p

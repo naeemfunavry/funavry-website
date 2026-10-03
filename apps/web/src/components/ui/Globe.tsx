@@ -413,7 +413,7 @@ export default function Globe({
                   loading="lazy"
                   className="h-3 w-[18px] flex-none object-cover ring-1 ring-line-strong/70"
                 />
-                <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-ink-500">
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-500">
                   {o.city}
                 </span>
                 <span className="sr-only">— {o.role}</span>

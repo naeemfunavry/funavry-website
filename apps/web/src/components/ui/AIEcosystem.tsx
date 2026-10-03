@@ -445,7 +445,7 @@ function Capsule({
                   chip because bare text has to survive passing over the core's
                   bloom, where the stage is no longer dark. */}
               <motion.span
-                className="pointer-events-none absolute top-full mt-3 whitespace-nowrap rounded-full border border-paper/15 bg-ink-900/70 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.12em] text-paper shadow-[0_10px_24px_-10px_rgba(0,0,0,0.8)] backdrop-blur-md"
+                className="pointer-events-none absolute top-full mt-3 whitespace-nowrap rounded-full border border-paper/15 bg-ink-900/70 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-paper shadow-[0_10px_24px_-10px_rgba(0,0,0,0.8)] backdrop-blur-md"
                 initial={false}
                 animate={{
                   opacity: hover ? 1 : 0,

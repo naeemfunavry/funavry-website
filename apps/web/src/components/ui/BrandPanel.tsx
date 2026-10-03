@@ -90,7 +90,7 @@ export default function BrandPanel({
               </>
             )}
 
-            <div className="absolute left-5 right-5 top-5 flex items-center gap-3 font-mono text-[9.5px] uppercase tracking-[0.2em] text-paper/60 sm:left-7 sm:top-7">
+            <div className="absolute left-5 right-5 top-5 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-paper/60 sm:left-7 sm:top-7">
               <span className="relative flex h-1.5 w-1.5 flex-none">
                 <span className="absolute inline-flex h-full w-full animate-ping-soft rounded-full bg-azure" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-azure" />
@@ -108,7 +108,7 @@ export default function BrandPanel({
         </div>
 
         {caption && (
-          <figcaption className="mt-1 flex items-center gap-2 px-6 font-mono text-[9.5px] uppercase tracking-[0.16em] text-ink-400 sm:px-8">
+          <figcaption className="mt-1 flex items-center gap-2 px-6 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-400 sm:px-8">
             <span aria-hidden className="h-px w-4 flex-none bg-line-strong" />
             {caption}
           </figcaption>

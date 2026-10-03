@@ -48,7 +48,7 @@ export default function ProjectFilter({
                 )}
               >
                 {option.label}
-                <span className="text-[9px] tabular-nums tracking-normal text-ink-400">
+                <span className="text-[10px] tabular-nums tracking-normal text-ink-400">
                   {option.count}
                 </span>
                 {on && (

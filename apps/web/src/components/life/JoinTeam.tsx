@@ -1,5 +1,6 @@
 import { Send } from "lucide-react";
 import Button from "@/components/ui/Button";
+import HeroActions from "@/components/ui/HeroActions";
 import Container from "@/components/ui/Container";
 import { Wipe } from "@/components/ui/Kinetic";
 
@@ -67,14 +68,14 @@ export default function JoinTeam() {
                   Grow with a team that values people, innovation and real
                   impact. Tell us about yourself — we&apos;d love to hear from you.
                 </p>
-                <div className="mt-8 flex flex-wrap gap-3">
+                <HeroActions className="mt-8">
                   <Button href="/contact" variant="accent" size="md" arrow>
                     Join our team
                   </Button>
                   <Button href="/about" variant="outline" size="md">
                     About Funavry
                   </Button>
-                </div>
+                </HeroActions>
               </div>
 
               <ul className="flex flex-wrap gap-x-6 gap-y-3 lg:flex-col lg:gap-3">

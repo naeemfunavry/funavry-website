@@ -59,6 +59,11 @@ const LINKS: Link[] = [
         href: "/about",
         desc: "Who we are and how we deliver",
       },
+      {
+        label: "Life @ Funavry",
+        href: "/life-at-funavry",
+        desc: "Our people, values and culture",
+      },
       { label: "Contact Us", href: "/contact", desc: "Talk to our team" },
       {
         label: "Careers",
@@ -66,11 +71,6 @@ const LINKS: Link[] = [
         desc: "Build with a team of 200+",
       },
       { label: "Blog", href: "", desc: "Engineering & AI writing" },
-      {
-        label: "Life @ Funavry",
-        href: "/life-at-funavry",
-        desc: "Our people, values and culture",
-      },
     ],
   },
 ];
@@ -204,7 +204,7 @@ function FeatureCard({
               {body}
             </p>
             {meta && (
-              <p className="mt-3 font-mono text-[9.5px] uppercase tracking-[0.16em] text-paper/45">
+              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.16em] text-paper/45">
                 {meta}
               </p>
             )}
@@ -265,7 +265,7 @@ function MegaItem({
           {title}
         </span>
         {/* {sub && (
-          <span className="mt-0.5 block truncate font-mono text-[9.5px] uppercase tracking-[0.14em] text-ink-400">
+          <span className="mt-0.5 block truncate font-mono text-[10px] uppercase tracking-[0.14em] text-ink-400">
             {sub}
           </span>
         )} */}

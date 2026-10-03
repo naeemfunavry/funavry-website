@@ -199,7 +199,7 @@ export default function Testimonials({ testimonials: TESTIMONIALS }: Testimonial
                     {active.role} · {active.company}
                   </p>
                   {/* {active.pending && (
-                    <span className="border border-amber/40 bg-amber-50 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.14em] text-amber-ink">
+                    <span className="border border-amber/40 bg-amber-50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-amber-ink">
                       Placeholder
                     </span>
                   )} */}

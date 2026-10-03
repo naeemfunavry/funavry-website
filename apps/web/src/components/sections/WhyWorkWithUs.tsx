@@ -133,7 +133,7 @@ export default function WhyWorkWithUs({ id = "why-us" }: { id?: string }) {
                         i > 0 ? "flex flex-col-reverse border-l border-paper/15 pl-5" : "flex flex-col-reverse"
                       }
                     >
-                      <dt className="mt-2 font-mono text-[9.5px] uppercase tracking-[0.16em] text-paper/55">
+                      <dt className="mt-2 font-mono text-[10px] uppercase tracking-[0.16em] text-paper/55">
                         {f.label}
                       </dt>
                       <dd className="text-[30px] font-semibold leading-none tracking-[-0.03em] text-paper lg:text-[34px]">

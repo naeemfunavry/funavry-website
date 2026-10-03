@@ -69,7 +69,7 @@ export default function SelectedWork({
                         </Link>
                       </h3>
                       <div className="mt-auto flex items-center justify-between gap-3 pt-4">
-                        <span className="flex items-center gap-2 font-mono text-[9.5px] uppercase tracking-[0.16em]">
+                        <span className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em]">
                           <span className="text-ink-400">{study.sector}</span>
                           <span aria-hidden className="h-px w-3 bg-line-strong" />
                           <span className={phase.text}>{study.phase}</span>

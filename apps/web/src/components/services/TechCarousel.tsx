@@ -267,7 +267,7 @@ function Panel({
         >
           <span className="flex items-center gap-2">
             <span aria-hidden className={cn("h-1 w-1 rounded-full", phase.dot)} />
-            <span className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-paper/70">
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-paper/70">
               {service.phase}
             </span>
           </span>

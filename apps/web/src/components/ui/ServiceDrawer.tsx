@@ -95,7 +95,7 @@ export default function ServiceDrawer({
                 <span aria-hidden className="h-px w-4 bg-line-strong" />
                 <span
                   className={cn(
-                    "font-mono text-[9.5px] uppercase tracking-[0.16em]",
+                    "font-mono text-[10px] uppercase tracking-[0.16em]",
                     phase.text,
                   )}
                 >

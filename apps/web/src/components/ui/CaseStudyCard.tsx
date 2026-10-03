@@ -50,7 +50,7 @@ export default function CaseStudyCard({ study }: { study: CaseStudy }) {
             />
             <span
               className={cn(
-                "font-mono text-[9.5px] uppercase tracking-[0.16em]",
+                "font-mono text-[10px] uppercase tracking-[0.16em]",
                 phase.text,
               )}
             >
@@ -58,7 +58,7 @@ export default function CaseStudyCard({ study }: { study: CaseStudy }) {
             </span>
           </span>
           <span aria-hidden className="h-px w-4 bg-line-strong" />
-          <span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-ink-400">
+          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-400">
             {study.sector}
           </span>
         </div>
@@ -87,7 +87,7 @@ export default function CaseStudyCard({ study }: { study: CaseStudy }) {
           {study.capabilities.map((capability) => (
             <li
               key={capability}
-              className="border border-line bg-paper px-2.5 py-1 font-mono text-[9.5px] uppercase tracking-[0.12em] text-ink-500"
+              className="border border-line bg-paper px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-500"
             >
               {capability}
             </li>

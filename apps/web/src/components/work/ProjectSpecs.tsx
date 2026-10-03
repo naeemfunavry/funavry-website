@@ -59,7 +59,7 @@ export function HeroSpecs({
         <dl className="grid grid-cols-3 gap-x-6">
           {stats.slice(0, 3).map((stat) => (
             <div key={stat.label} className="flex flex-col">
-              <dt className="order-2 mt-2.5 font-mono text-[9.5px] uppercase leading-[1.5] tracking-[0.16em] text-paper/55 sm:text-[10.5px]">
+              <dt className="order-2 mt-2.5 font-mono text-[10px] uppercase leading-[1.5] tracking-[0.16em] text-paper/55 sm:text-[10.5px]">
                 {stat.label}
               </dt>
               <dd className="order-1 text-[clamp(22px,2.6vw,36px)] font-semibold leading-none tracking-[-0.03em] text-paper">
@@ -72,7 +72,7 @@ export function HeroSpecs({
 
       {services.length > 0 && (
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-baseline sm:gap-5">
-          <span className="flex-none font-mono text-[9.5px] uppercase tracking-[0.2em] text-paper/45">
+          <span className="flex-none font-mono text-[10px] uppercase tracking-[0.2em] text-paper/45">
             Delivered as
           </span>
           <ul className="flex flex-wrap gap-2">
@@ -90,7 +90,7 @@ export function HeroSpecs({
 
       {tech.length > 0 && (
         <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
-          <span className="flex-none font-mono text-[9.5px] uppercase tracking-[0.2em] text-paper/45">
+          <span className="flex-none font-mono text-[10px] uppercase tracking-[0.2em] text-paper/45">
             Built with
           </span>
           <ul className="flex flex-wrap gap-2">
