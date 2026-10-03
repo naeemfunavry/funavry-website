@@ -44,6 +44,7 @@ export default async function ContactPage() {
           deliveryCountries={chrome.deliveryCountries}
           eyebrow="Map & Locations"
           title="Where to find us."
+          showOffices={false}
         />
 
         <WhyWorkWithUs />

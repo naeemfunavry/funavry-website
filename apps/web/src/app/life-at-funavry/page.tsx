@@ -48,30 +48,6 @@ const MOMENTS: Moment[] = [
     caption: "Celebrating at the office",
     category: "Team Events",
   },
-  {
-    src: "/about/1.webp",
-    alt: "The Funavry team seated and standing in rows before a Funavry and P@SHA backdrop at an outdoor event",
-    caption: "The Funavry team",
-    category: "Team Events",
-  },
-  {
-    src: "/about/3.webp",
-    alt: "The team gathered on a lakeside lawn with hills behind",
-    caption: "By the lake",
-    category: "Outings",
-  },
-  {
-    src: "/about/4.webp",
-    alt: "A volleyball match on a lakeside court, with colleagues watching from the side",
-    caption: "Volleyball by the lake",
-    category: "Outings",
-  },
-  {
-    src: "/about/10.webp",
-    alt: "Colleagues on the lawn watching the games from their chairs",
-    caption: "Games on the lawn",
-    category: "Outings",
-  },
 ];
 
 /**

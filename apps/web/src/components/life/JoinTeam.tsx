@@ -69,7 +69,7 @@ export default function JoinTeam() {
                   impact. Tell us about yourself — we&apos;d love to hear from you.
                 </p>
                 <HeroActions className="mt-8">
-                  <Button href="/contact" variant="accent" size="md" arrow>
+                  <Button href="/careers" variant="accent" size="md" arrow>
                     Join our team
                   </Button>
                   <Button href="/about" variant="outline" size="md">

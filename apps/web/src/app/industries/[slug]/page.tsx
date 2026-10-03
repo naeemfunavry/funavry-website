@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
 import { getChrome } from "@/lib/chrome";
-import Contact from "@/components/sections/Contact";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import { Wipe } from "@/components/ui/Kinetic";
@@ -64,7 +63,6 @@ export async function generateMetadata({
  * An industry:
  *
  *   hero → expertise → practices we bring → technologies → selected work
- *   → contact
  *
  * The copy is the industry's CMS entry; the work and practices come from
  * `relations.ts`, read off the case study briefs. Nothing on the page is
@@ -298,8 +296,6 @@ export default async function IndustryDetailPage({
           }
           projects={work}
         />
-
-        <Contact />
       </main>
       <Footer
         offices={chrome.offices}

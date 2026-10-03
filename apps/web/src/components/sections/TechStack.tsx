@@ -601,16 +601,18 @@ export default function TechStack() {
                       aria-selected={isActive}
                       onClick={() => setActive(i)}
                       className={cn(
-                        "flex min-h-[44px] shrink-0 snap-start items-center gap-2 whitespace-nowrap px-4 py-2 text-[12.5px] font-medium transition-colors duration-300 lg:min-h-0 lg:shrink",
+                        "flex min-h-[44px] rounded-sm shrink-0 snap-start items-center gap-2 whitespace-nowrap px-4 py-2 text-[12.5px] font-medium transition-colors duration-300 lg:min-h-0 lg:shrink",
                         isActive
-                          ? "bg-ink text-paper"
+                          ? "bg-[#102e54] text-paper"
                           : "border border-line bg-paper-white text-ink-500 hover:border-line-strong hover:text-ink",
                       )}
                     >
                       <Icon
                         size={14}
                         strokeWidth={1.7}
-                        className={cn(isActive ? "text-amber" : "text-ink-400")}
+                        className={cn(
+                          isActive ? "text-amber" : "text-ink-400",
+                        )}
                       />
                       {d.short ? (
                         <>

@@ -33,7 +33,7 @@ function orderOffices(offices: Office[]): Office[] {
 const COMPANY_LINKS = [
   { label: "About Us", href: "/about" },
   { label: "Our Entities", href: "#" },
-  { label: "Careers", href: "#careers" },
+  { label: "Careers", href: "/careers" },
   { label: "Blog & News", href: "/blog" },
 ];
 

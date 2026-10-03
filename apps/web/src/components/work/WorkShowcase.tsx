@@ -116,7 +116,7 @@ export default function WorkShowcase({
                         setActive(option.id);
                       }}
                       className={cn(
-                        "relative flex h-10 items-center gap-2 rounded-full border px-4 text-[13.5px] font-medium transition-colors duration-300",
+                        "relative flex h-10 rounded-sm items-center gap-2 border px-4 text-[13.5px] font-medium transition-colors duration-300",
                         on
                           ? "border-transparent text-paper"
                           : "border-azure/45 text-ink-500 hover:border-azure hover:text-ink",
@@ -126,7 +126,7 @@ export default function WorkShowcase({
                         <motion.span
                           layoutId="showcase-filter-pill"
                           aria-hidden
-                          className="absolute -inset-px rounded-full bg-amber"
+                          className="absolute -inset-px rounded-sm bg-[#102e54]"
                           transition={
                             reduce
                               ? { duration: 0 }
@@ -134,11 +134,13 @@ export default function WorkShowcase({
                           }
                         />
                       )}
-                      <span className="relative text-ink">{option.label}</span>
+                      <span className={cn("relative", on ? "text-paper" : "text-ink")}>
+                        {option.label}
+                      </span>
                       <span
                         className={cn(
                           "relative text-[11px] tabular-nums",
-                          on ? "text-ink/50" : "text-ink-400",
+                          on ? "text-amber" : "text-ink-400",
                         )}
                       >
                         {option.count}

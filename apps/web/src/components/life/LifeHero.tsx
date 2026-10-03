@@ -39,7 +39,7 @@ export default function LifeHero() {
           <Button href="#moments" variant="accent" size="md" arrow>
             See the moments
           </Button>
-          <Button href="/contact" variant="outline" size="md">
+          <Button href="/careers" variant="outline" size="md">
             Join our team
           </Button>
         </>

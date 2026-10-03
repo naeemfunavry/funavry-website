@@ -42,7 +42,7 @@ export default function WorkCard({
       <Link
         href={`/case-studies/${project.slug}`}
         aria-label={`${project.title} — view details`}
-        className="group flex h-full flex-col overflow-hidden rounded-lg bg-paper-white ring-1 ring-line transition-[box-shadow,transform] duration-500 ease-smooth hover:-translate-y-1 hover:shadow-[0_30px_60px_-30px_rgba(15,23,42,0.35)] hover:ring-azure/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azure"
+        className="group flex h-full flex-col overflow-hidden rounded-sm bg-paper-white ring-1 ring-line transition-[box-shadow,transform] duration-500 ease-smooth hover:-translate-y-1 hover:shadow-[0_30px_60px_-30px_rgba(15,23,42,0.35)] hover:ring-azure/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azure"
       >
         <div className="relative aspect-[16/9] overflow-hidden bg-paper-deep">
           {cover ? (

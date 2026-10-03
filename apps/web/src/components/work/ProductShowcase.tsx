@@ -112,7 +112,7 @@ export default function ProductShowcase({
                       aria-controls="showcase-stage"
                       onClick={() => setIndex(i)}
                       className={cn(
-                        "relative h-9 flex-none rounded px-4 text-[13px] font-medium transition-colors duration-300",
+                        "relative h-9 flex-none rounded-sm px-4 text-[13px] font-medium transition-colors duration-300",
                         on ? "text-paper" : "text-ink-500 hover:bg-paper-deep hover:text-ink",
                       )}
                     >
@@ -120,7 +120,7 @@ export default function ProductShowcase({
                         <motion.span
                           layoutId="showcase-tab"
                           aria-hidden
-                          className="absolute inset-0 rounded bg-azure-600"
+                          className="absolute inset-0 rounded-sm bg-[#102e54]"
                           transition={reduce ? { duration: 0 } : { duration: 0.45, ease: EASE }}
                         />
                       )}

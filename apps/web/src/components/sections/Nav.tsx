@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import {
   ArrowRight,
   Building2,
@@ -64,16 +65,30 @@ const LINKS: Link[] = [
         href: "/life-at-funavry",
         desc: "Our people, values and culture",
       },
-      { label: "Contact Us", href: "/contact", desc: "Talk to our team" },
       {
         label: "Careers",
-        href: "/#careers",
+        href: "/careers",
         desc: "Build with a team of 200+",
       },
       { label: "Blog", href: "", desc: "Engineering & AI writing" },
+      { label: "Contact Us", href: "/contact", desc: "Talk to our team" },
     ],
   },
 ];
+
+/** Whether a top-level link owns the current page, so it keeps the hover
+    underline while you are on it. A mega owns its detail pages; a dropdown
+    owns the pages its items route to (not in-page anchors). */
+function isLinkActive(link: Link, pathname: string): boolean {
+  const owns = (href: string) =>
+    href.startsWith("/") &&
+    !href.startsWith("/#") &&
+    (pathname === href || pathname.startsWith(`${href}/`));
+  if (link.mega === "services") return pathname.startsWith("/services/");
+  if (link.mega === "industries") return pathname.startsWith("/industries/");
+  if (link.children) return link.children.some((c) => owns(c.href));
+  return owns(link.href);
+}
 
 /** Flat sub-item list for the mobile accordion, derived from either a mega or a
     small dropdown. */
@@ -430,7 +445,15 @@ function IndustriesMega({
 /*  Small "Company" dropdown                                                  */
 /* -------------------------------------------------------------------------- */
 
-function Dropdown({ link, onDark }: { link: Link; onDark: boolean }) {
+function Dropdown({
+  link,
+  onDark,
+  active,
+}: {
+  link: Link;
+  onDark: boolean;
+  active: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<number | undefined>(undefined);
   const reduce = useReducedMotion();
@@ -459,8 +482,12 @@ function Dropdown({ link, onDark }: { link: Link; onDark: boolean }) {
           className={cn(
             "text-[14.5px] font-medium tracking-[-0.01em] transition-colors",
             onDark
-              ? "text-paper/70 group-hover:text-paper"
-              : "text-ink-500 group-hover:text-ink",
+              ? active
+                ? "text-paper"
+                : "text-paper/70 group-hover:text-paper"
+              : active
+                ? "text-ink"
+                : "text-ink-500 group-hover:text-ink",
           )}
         >
           {link.label}
@@ -475,7 +502,10 @@ function Dropdown({ link, onDark }: { link: Link; onDark: boolean }) {
         />
         <span
           aria-hidden
-          className="absolute -bottom-0.5 left-0 h-px w-[calc(100%-18px)] origin-right scale-x-0 bg-azure transition-transform duration-500 ease-expo group-hover:origin-left group-hover:scale-x-100"
+          className={cn(
+            "absolute -bottom-0.5 left-0 h-px w-[calc(100%-18px)] origin-right bg-azure transition-transform duration-500 ease-expo group-hover:origin-left group-hover:scale-x-100",
+            active || open ? "scale-x-100" : "scale-x-0",
+          )}
         />
       </button>
 
@@ -551,6 +581,7 @@ export default function Nav({ services, industries, socials }: NavProps) {
   const [mega, setMega] = useState<null | "services" | "industries">(null);
   const megaTimer = useRef<number | undefined>(undefined);
   const reduce = useReducedMotion();
+  const pathname = usePathname() ?? "/";
 
   const openMega = (k: "services" | "industries") => {
     window.clearTimeout(megaTimer.current);
@@ -676,28 +707,42 @@ export default function Nav({ services, industries, socials }: NavProps) {
 
         <nav className="hidden items-center gap-9 lg:flex">
           {LINKS.map((link) => {
+            const active = isLinkActive(link, pathname);
             if (link.children) {
-              return <Dropdown key={link.label} link={link} onDark={onDark} />;
+              return (
+                <Dropdown
+                  key={link.label}
+                  link={link}
+                  onDark={onDark}
+                  active={active}
+                />
+              );
             }
             if (link.mega) {
               const isOpen = mega === link.mega;
+              /* A trigger, not a link: it only opens its panel, and every
+                 destination lives inside the panel. */
               return (
-                <a
+                <button
                   key={link.label}
-                  href={link.href}
+                  type="button"
                   onMouseEnter={() => openMega(link.mega!)}
                   onMouseLeave={closeMega}
                   onFocus={() => openMega(link.mega!)}
-                  onClick={() => setMega(null)}
+                  onClick={() => openMega(link.mega!)}
                   aria-expanded={isOpen}
-                  className="group relative flex items-center gap-1.5 py-2"
+                  className="group relative flex cursor-default items-center gap-1.5 py-2"
                 >
                   <span
                     className={cn(
                       "text-[14.5px] font-medium tracking-[-0.01em] transition-colors",
                       onDark
-                        ? "text-paper/70 group-hover:text-paper"
-                        : "text-ink-500 group-hover:text-ink",
+                        ? active
+                          ? "text-paper"
+                          : "text-paper/70 group-hover:text-paper"
+                        : active
+                          ? "text-ink"
+                          : "text-ink-500 group-hover:text-ink",
                     )}
                   >
                     {link.label}
@@ -714,10 +759,10 @@ export default function Nav({ services, industries, socials }: NavProps) {
                     aria-hidden
                     className={cn(
                       "absolute -bottom-0.5 left-0 h-px w-[calc(100%-18px)] origin-right bg-azure transition-transform duration-500 ease-expo group-hover:origin-left group-hover:scale-x-100",
-                      isOpen ? "scale-x-100" : "scale-x-0",
+                      isOpen || active ? "scale-x-100" : "scale-x-0",
                     )}
                   />
-                </a>
+                </button>
               );
             }
             return (
@@ -726,21 +771,29 @@ export default function Nav({ services, industries, socials }: NavProps) {
                 href={link.href}
                 target={link.newTab ? "_blank" : undefined}
                 rel={link.newTab ? "noopener noreferrer" : undefined}
+                aria-current={active ? "page" : undefined}
                 className="group relative py-2"
               >
                 <span
                   className={cn(
                     "text-[14.5px] font-medium tracking-[-0.01em] transition-colors",
                     onDark
-                      ? "text-paper/70 group-hover:text-paper"
-                      : "text-ink-500 group-hover:text-ink",
+                      ? active
+                        ? "text-paper"
+                        : "text-paper/70 group-hover:text-paper"
+                      : active
+                        ? "text-ink"
+                        : "text-ink-500 group-hover:text-ink",
                   )}
                 >
                   {link.label}
                 </span>
                 <span
                   aria-hidden
-                  className="absolute -bottom-0.5 left-0 h-px w-full origin-right scale-x-0 bg-azure transition-transform duration-500 ease-expo group-hover:origin-left group-hover:scale-x-100"
+                  className={cn(
+                    "absolute -bottom-0.5 left-0 h-px w-full origin-right bg-azure transition-transform duration-500 ease-expo group-hover:origin-left group-hover:scale-x-100",
+                    active ? "scale-x-100" : "scale-x-0",
+                  )}
                 />
               </a>
             );

@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
 import { getChrome } from "@/lib/chrome";
-import Contact from "@/components/sections/Contact";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import { Wipe } from "@/components/ui/Kinetic";
@@ -66,7 +65,7 @@ export async function generateMetadata({
  * A practice, drawn like an industry page:
  *
  *   hero → expertise (with what's included) → governance → selected work →
- *   industries served → contact
+ *   industries served
  *
  * The copy is the practice's CMS entry; the work and industry links come from
  * `relations.ts`, read off the case study briefs. Sections with nothing to
@@ -236,8 +235,6 @@ export default async function ServiceDetailPage({
 
         {/* --------------------------------------------- Industries ---- */}
         <ServiceIndustries id="service-industries" industries={industries} />
-
-        <Contact />
       </main>
       <Footer
         offices={chrome.offices}

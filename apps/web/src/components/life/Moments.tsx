@@ -102,9 +102,9 @@ export default function Moments({ moments }: { moments: Moment[] }) {
                 aria-pressed={on}
                 onClick={() => setActive(c)}
                 className={cn(
-                  "inline-flex items-center gap-2 border px-4 py-2.5 font-mono text-[10.5px] uppercase tracking-[0.16em] transition-colors duration-300",
+                  "inline-flex items-center rounded-sm gap-2 border px-4 py-2.5 font-mono text-[10.5px] uppercase tracking-[0.16em] transition-colors duration-300",
                   on
-                    ? "border-ink bg-ink text-paper"
+                    ? "border-[#102e54] bg-[#102e54] text-paper"
                     : "border-line-strong bg-paper-white text-ink-500 hover:border-ink hover:text-ink",
                 )}
               >
@@ -132,7 +132,7 @@ export default function Moments({ moments }: { moments: Moment[] }) {
                 exit={{ opacity: 0, scale: 0.97 }}
                 transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
                 className={cn(
-                  "group relative overflow-hidden bg-ink-900",
+                  "group relative overflow-hidden rounded-sm bg-ink-900",
                   spanFor(i, shown.length),
                 )}
               >
