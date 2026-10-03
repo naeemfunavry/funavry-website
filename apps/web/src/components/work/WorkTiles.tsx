@@ -133,8 +133,7 @@ function CardArrow({ onDark = false, large = false }: { onDark?: boolean; large?
   );
 }
 
-/** Every card's deep navy, the featured card and the rows alike; the
-    featured capture fades into it. */
+/** The featured card's deep navy; its capture fades into it. */
 const DEEP = "#102E54";
 
 /** The capture's mask: solid at the top, easing out to nothing at the foot
@@ -142,12 +141,31 @@ const DEEP = "#102E54";
 const FADE =
   "linear-gradient(to bottom, #000 0%, #000 35%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0.55) 65%, rgba(0,0,0,0.25) 80%, rgba(0,0,0,0.08) 90%, transparent 100%), linear-gradient(to right, rgba(0,0,0,0.75), #000 18%, #000 82%, rgba(0,0,0,0.75))";
 
-/** Each row's accent, the logo's colours in turn: its number chip, its left
-    edge and its sector label. */
+/** Each row's ground and accent in turn — white, sky blue, orange: the
+    card's tint and glow, its number chip, its left edge and its sector label.
+    All three are light, so the rows set dark type. */
 const ACCENTS = [
-  { chip: "bg-azure/15 text-azure-300 ring-azure/30", edge: "bg-azure", text: "text-azure-300" },
-  { chip: "bg-amber/15 text-amber-300 ring-amber/30", edge: "bg-amber", text: "text-amber-300" },
-  { chip: "bg-steel-300/15 text-steel-100 ring-steel-300/30", edge: "bg-steel-300", text: "text-steel-100" },
+  {
+    ground: "#FFFFFF",
+    glow: "rgba(68,158,216,0.12)",
+    chip: "bg-azure-50 text-azure-ink ring-azure/30",
+    edge: "bg-azure",
+    text: "text-azure-ink",
+  },
+  {
+    ground: "#DDEEF9",
+    glow: "rgba(68,158,216,0.28)",
+    chip: "bg-paper-white/70 text-azure-ink ring-azure/40",
+    edge: "bg-azure-ink",
+    text: "text-azure-ink",
+  },
+  {
+    ground: "#FDEBCF",
+    glow: "rgba(245,159,19,0.28)",
+    chip: "bg-paper-white/70 text-amber-ink ring-amber/40",
+    edge: "bg-amber",
+    text: "text-amber-ink",
+  },
 ];
 
 const CARD =
@@ -249,16 +267,16 @@ function Row({ project, index }: { project: WorkProject; index: number }) {
     <Link
       href={`/case-studies/${project.slug}`}
       aria-label={`${project.title} — view details`}
-      className={`${CARD} isolate items-center gap-3.5 p-3 ring-1 ring-white/10 hover:shadow-[0_30px_60px_-30px_rgba(16,46,84,0.65)] hover:ring-white/25 sm:gap-4`}
-      style={{ background: DEEP }}
+      className={`${CARD} isolate items-center gap-3.5 p-3 ring-1 ring-line hover:shadow-[0_30px_60px_-30px_rgba(16,46,84,0.4)] hover:ring-line-strong sm:gap-4`}
+      style={{ background: accent.ground }}
     >
-      {/* The same ground as the featured card: the dark grid and an azure
-          glow, here on the right. */}
-      <span aria-hidden className="pointer-events-none absolute inset-0 grid-paper-dark opacity-40" />
+      {/* The row's tint under the light drafting grid, with its glow on the
+          right. */}
+      <span aria-hidden className="pointer-events-none absolute inset-0 grid-paper opacity-40" />
       <span
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-60 transition-opacity duration-500 group-hover:opacity-100"
-        style={{ background: "radial-gradient(50% 120% at 100% 50%, rgba(68,158,216,0.28), transparent 70%)" }}
+        style={{ background: `radial-gradient(50% 120% at 100% 50%, ${accent.glow}, transparent 70%)` }}
       />
 
       {/* The accent's edge, drawing down on hover. */}
@@ -273,7 +291,7 @@ function Row({ project, index }: { project: WorkProject; index: number }) {
         {String(index).padStart(2, "0")}
       </span>
 
-      <div className="relative aspect-[4/3] w-[30%] max-w-[118px] flex-none overflow-hidden rounded-md bg-white/5 ring-1 ring-white/10">
+      <div className="relative aspect-[4/3] w-[30%] max-w-[118px] flex-none overflow-hidden rounded-md bg-paper-deep ring-1 ring-line">
         {shot && (
           <Image
             src={shot.src}
@@ -292,7 +310,7 @@ function Row({ project, index }: { project: WorkProject; index: number }) {
       <div className="relative min-w-0 flex-1">
         <h3
           title={project.title}
-          className="line-clamp-2 text-[15px] font-medium leading-[1.3] tracking-[-0.01em] text-paper lg:text-[15.5px]"
+          className="line-clamp-2 text-[15px] font-medium leading-[1.3] tracking-[-0.01em] text-ink lg:text-[15.5px]"
         >
           {project.title}
         </h3>
@@ -301,7 +319,7 @@ function Row({ project, index }: { project: WorkProject; index: number }) {
         </span>
       </div>
 
-      <CardArrow onDark />
+      <CardArrow />
     </Link>
   );
 }
