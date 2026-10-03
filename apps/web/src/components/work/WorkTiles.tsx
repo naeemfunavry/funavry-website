@@ -5,6 +5,7 @@ import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
 import { Wipe } from "@/components/ui/Kinetic";
 import type { WorkProject } from "@/lib/work-model";
+import ProjectMockup from "./ProjectMockup";
 
 const sectorOf = (p: WorkProject) => p.sector.split("·")[0].trim();
 const shotOf = (p: WorkProject) => p.media.primary ?? p.media.phones[0] ?? null;
@@ -136,11 +137,6 @@ function CardArrow({ onDark = false, large = false }: { onDark?: boolean; large?
 /** The featured card's deep navy; its capture fades into it. */
 const DEEP = "#102E54";
 
-/** The capture's mask: solid at the top, easing out to nothing at the foot
-    over several stops, and softened a touch at either side. */
-const FADE =
-  "linear-gradient(to bottom, #000 0%, #000 35%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0.55) 65%, rgba(0,0,0,0.25) 80%, rgba(0,0,0,0.08) 90%, transparent 100%), linear-gradient(to right, rgba(0,0,0,0.75), #000 18%, #000 82%, rgba(0,0,0,0.75))";
-
 /** Each row's ground and accent in turn — white, sky blue, orange: the
     card's tint and glow, its number chip, its left edge and its sector label.
     All three are light, so the rows set dark type. */
@@ -172,8 +168,6 @@ const CARD =
   "group relative flex h-full overflow-hidden rounded-lg outline-none transition-[box-shadow,transform] duration-500 ease-smooth hover:-translate-y-1 focus-visible:ring-2 focus-visible:ring-azure focus-visible:ring-offset-2 focus-visible:ring-offset-paper";
 
 function Featured({ project }: { project: WorkProject }) {
-  const shot = shotOf(project);
-
   return (
     <Link
       href={`/case-studies/${project.slug}`}
@@ -193,32 +187,14 @@ function Featured({ project }: { project: WorkProject }) {
         }}
       />
 
-      {/* The capture, full bleed, masked to transparent at the foot and a
-          little at the sides, so the ground itself shows through the fade —
-          glow, grid and all — and there is no seam. */}
-      <div className="relative aspect-[16/8]">
-        {shot ? (
-          <div
-            className="absolute inset-0"
-            style={{
-              maskImage: FADE,
-              WebkitMaskImage: FADE,
-              maskComposite: "intersect",
-              WebkitMaskComposite: "source-in",
-            }}
-          >
-            <Image
-              src={shot.src}
-              alt={shot.alt}
-              fill
-              quality={90}
-              sizes="(max-width: 1024px) 92vw, 720px"
-              className="object-cover object-left-top opacity-85 transition-opacity duration-700 ease-smooth group-hover:opacity-100"
-            />
-          </div>
-        ) : (
-          <span className="absolute inset-0 grid-paper-dark" />
-        )}
+      {/* The project's mockup (Style A), standing on the card's own navy
+          ground — glow, grid and all — so there is no second backdrop. */}
+      <div className="relative">
+        <ProjectMockup
+          project={project}
+          ground="none"
+          sizes="(max-width: 1024px) 92vw, 720px"
+        />
         <span className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-paper-white py-1 pl-1 pr-3.5 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-ink shadow-[0_8px_24px_-10px_rgba(15,23,42,0.5)] ring-1 ring-line">
           <span className="flex h-6 w-6 items-center justify-center rounded-full bg-azure text-paper">
             <Star size={11} fill="currentColor" aria-hidden />
@@ -227,8 +203,8 @@ function Featured({ project }: { project: WorkProject }) {
         </span>
       </div>
 
-      {/* The copy, pulled up over the fade. */}
-      <div className="relative -mt-14 flex flex-1 items-end gap-4 p-4 lg:-mt-16 lg:p-6">
+      {/* The copy, under the device's floor line. */}
+      <div className="relative -mt-2 flex flex-1 items-end gap-4 p-4 pt-0 lg:-mt-4 lg:p-6 lg:pt-0">
         <div className="min-w-0 flex-1">
           <span className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-azure-300">
             <span aria-hidden className="h-px w-6 flex-none bg-current" />

@@ -98,6 +98,43 @@
   }
 }
 
+/* ── Portfolio mockups ──────────────────────────────────────────────────────
+   `--mk-h` is a scene's hover, 0 at rest and 1 under the pointer. Registered,
+   so it interpolates: every device's transform and shadow reads it, and one
+   transition on the stage moves the whole scene together — lift, turn and
+   shadow on the same curve — with no JavaScript. */
+@property --mk-h {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+.mk-stage {
+  --mk-h: 0;
+  transition: --mk-h 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.group:hover .mk-stage,
+.group:focus-visible .mk-stage {
+  --mk-h: 1;
+}
+
+/* Still under reduced motion: the scene rests where it is. */
+@media (prefers-reduced-motion: reduce) {
+  .group:hover .mk-stage,
+  .group:focus-visible .mk-stage {
+    --mk-h: 0;
+  }
+}
+
+/* On a small card the third device of a busy scene would be a thumbnail of a
+   thumbnail; the scene drops it and keeps its two leads. */
+@container mk (max-width: 360px) {
+  .mk-tertiary {
+    display: none;
+  }
+}
+
 /* Drifting motes in the Case Studies field — transform/opacity only, so they
    stay on the compositor. Per-mote duration and delay are set inline; reduced
    motion drops them entirely at the component (they aren't rendered). */
@@ -569,5 +606,13 @@
   .scroll-cue-caret {
     background-color: #f59f13;
     opacity: 1;
+  }
+}
+
+/* A small card turns its scene less: at phone width the interface faces the
+   viewer almost square on. Set on the camera, inside the `mk` container. */
+@container mk (max-width: 440px) {
+  .mk-camera {
+    --mk-turn: 0.45;
   }
 }

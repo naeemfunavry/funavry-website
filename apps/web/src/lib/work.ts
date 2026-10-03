@@ -12,6 +12,7 @@
  * one curated input is `FEATURED_SLUGS`.
  */
 import mediaManifest from "./case-study-media.json";
+import { planMockups } from "./mockup-assign";
 import type { CaseStudyDetail, DetailScreenshot } from "./case-study-details";
 import {
   PROJECT_CATEGORIES,
@@ -52,6 +53,27 @@ function classify(width: number, height: number): ShotKind {
   return "crop";
 }
 
+/** Captures that are already composed renders — a laptop, a plant, floating
+    cards — rather than screens. The CMS has no field for this, so they are
+    named here by the end of their path; give the CMS a flag and this list can
+    go. A new render only needs adding if it would otherwise lead a project. */
+const PRESENTED_CAPTURES = [
+  "/Integrated_Healthcare_Practice/ihp.webp",
+  "/AI-Powered_Medical_Billing/ai-powered-mb.webp",
+  "/MedSim/medsim.webp",
+];
+
+const isPresented = (src: string) =>
+  PRESENTED_CAPTURES.some((tail) => decodeURIComponent(src).endsWith(tail));
+
+/** Captures chosen to lead their project's visual, where the CMS hasn't
+    flagged one. Same as above: give the CMS's `lead` flag priority and these
+    can go once it is set there. */
+const LEAD_CAPTURES = ["/AI-Powered_Medical_Billing/ai-powered-mb.webp"];
+
+const isLead = (src: string) =>
+  LEAD_CAPTURES.some((tail) => decodeURIComponent(src).endsWith(tail));
+
 function resolveShot(shot: DetailScreenshot): Shot {
   /* The manifest first, then the size the CMS recorded on upload. A capture
      known to neither is treated as a 16:10 desktop screen — the commonest
@@ -66,22 +88,28 @@ function resolveShot(shot: DetailScreenshot): Shot {
     height,
     ratio: width / height,
     kind: classify(width, height),
-    lead: shot.lead,
+    lead: shot.lead || isLead(shot.src) || undefined,
+    presented: isPresented(shot.src) || undefined,
   };
 }
 
 function composeMedia(shots: Shot[]): ProjectMedia {
   /* A capture the brief marks `lead` goes first. Otherwise the widest desktop
      capture leads; within 10% of each other, the brief's own order decides,
-     since it lists the key screen first. */
+     since it lists the key screen first. A full raw screen (1100px and up)
+     beats a composed render (`presented`); a narrow panel does not — the
+     render is the better lead than a 700px strip of a form. */
+  const widest = (candidates: Shot[]) =>
+    candidates.reduce<Shot | null>(
+      (best, s) => (!best || s.width > best.width * 1.1 ? s : best),
+      null,
+    );
+  const desktops = shots.filter((s) => s.kind === "desktop");
   const primary =
     shots.find((s) => s.lead && s.kind !== "mobile") ??
-    shots
-      .filter((s) => s.kind === "desktop")
-      .reduce<Shot | null>(
-        (best, s) => (!best || s.width > best.width * 1.1 ? s : best),
-        null,
-      ) ??
+    widest(desktops.filter((s) => !s.presented && s.width >= 1100)) ??
+    widest(desktops.filter((s) => s.presented)) ??
+    widest(desktops) ??
     shots.find((s) => s.kind === "crop") ??
     null;
 
@@ -198,6 +226,9 @@ function tagsFor(d: CaseStudyDetail, categories: ProjectCategory[]): string[] {
   return tags.length > 0 ? tags : [d.sector.split("·")[0].trim()];
 }
 
+/** Placeholder until `planMockups` has seen the whole set. */
+const UNPLANNED: WorkProject["mockup"] = { scene: "floating-laptop", ground: "navy", mirror: false };
+
 function toWorkProject(d: CaseStudyDetail): WorkProject {
   const shots = d.screenshots.map(resolveShot);
   const categories = categorize(d, shots);
@@ -212,6 +243,7 @@ function toWorkProject(d: CaseStudyDetail): WorkProject {
     tags: tagsFor(d, categories),
     media: composeMedia(shots),
     hasVisuals: shots.length > 0,
+    mockup: UNPLANNED,
   };
 }
 
@@ -222,8 +254,19 @@ function toWorkProject(d: CaseStudyDetail): WorkProject {
  * of reaching for an import.
  */
 
-export const buildWorkProjects = (details: CaseStudyDetail[]): WorkProject[] =>
-  details.map(toWorkProject);
+export function buildWorkProjects(details: CaseStudyDetail[]): WorkProject[] {
+  const projects = details.map(toWorkProject);
+  /* Scenes are planned over the order the portfolio grid shows — featured
+     first, then those with captures — so neighbours on the page are the ones
+     kept apart. Every page builds from the same set, so a project wears the
+     same scene wherever it appears. */
+  const featured = buildFeaturedProjects(projects);
+  const plans = planMockups([
+    ...featured,
+    ...byVisuals(projects).filter((p) => !featured.includes(p)),
+  ]);
+  return projects.map((p) => ({ ...p, mockup: plans.get(p.slug) ?? UNPLANNED }));
+}
 
 export const buildFeaturedProjects = (projects: WorkProject[]): WorkProject[] =>
   FEATURED_SLUGS.map((slug) => projects.find((p) => p.slug === slug)).filter(

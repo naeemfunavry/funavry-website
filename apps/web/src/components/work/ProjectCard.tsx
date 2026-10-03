@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { WorkProject } from "@/lib/work-model";
-import ProjectVisual from "./ProjectVisual";
+import ProjectMockup from "./ProjectMockup";
 
 /**
  * A project in the More Work grid: the product visual, then category, name,
@@ -15,12 +15,8 @@ export default function ProjectCard({ project }: { project: WorkProject }) {
       aria-label={`${project.title} — view details`}
       className="group flex h-full flex-col"
     >
-      <ProjectVisual
-        media={project.media}
-        title={project.title}
-        sector={project.sector}
-        phase={project.phase}
-        variant="card"
+      <ProjectMockup
+        project={project}
       />
 
       <span className="mt-5 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-400">

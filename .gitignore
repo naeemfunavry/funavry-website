@@ -37,6 +37,7 @@ yarn-error.log*
 
 # uploaded media — served from disk in dev, object storage in production
 apps/api/uploads/
+apps/api/uploads-originals/
 
 # runtime logs
 logs/

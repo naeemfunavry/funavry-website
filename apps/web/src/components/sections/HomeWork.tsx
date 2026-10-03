@@ -9,6 +9,7 @@ import { useInView } from "@/lib/use-in-view";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
+import { DeviceScreen } from "@/components/work/ProjectMockup";
 import { CASE_PHASE, type CaseStudy } from "@/lib/case-studies";
 import { cn } from "@/lib/utils";
 
@@ -352,24 +353,28 @@ function DeckCard({
   const { width, height } = study.image;
   const wide = width && height ? width / height > 16 / 9 : false;
 
+  /* The portfolio devices' screen — bezel, glass, shadow — without a laptop
+     body: a fanned stack of laptops would stop reading as a deck. */
   const screen = (
-    <span className="relative block aspect-[16/9] overflow-hidden rounded-xl border border-paper/10 bg-paper-white shadow-[0_30px_60px_-24px_rgba(0,0,0,0.7)]">
-      <Image
-        src={study.image}
-        alt={front ? `${study.title} — interface` : ""}
-        fill
-        quality={90}
-        priority={priority}
-        sizes={
-          front
-            ? "(max-width: 1024px) 88vw, 760px"
-            : "(max-width: 1024px) 60vw, 560px"
-        }
-        className={
-          wide ? "object-contain object-center" : "object-cover object-top"
-        }
-      />
-    </span>
+    <DeviceScreen>
+      <span className="relative block aspect-[16/9]">
+        <Image
+          src={study.image}
+          alt={front ? `${study.title} — interface` : ""}
+          fill
+          quality={90}
+          priority={priority}
+          sizes={
+            front
+              ? "(max-width: 1024px) 88vw, 760px"
+              : "(max-width: 1024px) 60vw, 560px"
+          }
+          className={
+            wide ? "object-contain object-center" : "object-cover object-top"
+          }
+        />
+      </span>
+    </DeviceScreen>
   );
 
   if (front) return screen;

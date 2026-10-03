@@ -13,9 +13,9 @@ import {
 } from "@/lib/work-model";
 
 /** How many cards show before "Load more", and how many each press adds —
-    whole rows of the four-column grid. */
+    whole rows of both the two- and three-column grids. */
 const FIRST_PAGE = 12;
-const PAGE_STEP = 8;
+const PAGE_STEP = 12;
 
 const EASE = [0.19, 1, 0.22, 1] as const;
 
@@ -159,19 +159,16 @@ export default function WorkShowcase({
           }projects.`}
         </p>
 
-        <ul key={active} className="grid gap-7 sm:grid-cols-2 xl:grid-cols-4">
+        {/* Three across at most: each card's 3D scene is the hero of the card,
+            and needs the width to read. */}
+        <ul key={active} className="grid gap-7 sm:grid-cols-2 xl:grid-cols-3">
           {visible.map((project, i) => (
             <WorkCard
               key={project.slug}
               project={project}
-              /* Each row staggers left to right; cards from "Load more"
-                 stagger from the first new one. */
-              delay={
-                reduce
-                  ? 0
-                  : (i < FIRST_PAGE ? i % 4 : (i - FIRST_PAGE) % PAGE_STEP) *
-                    0.06
-              }
+              /* Each row staggers left to right, cards from "Load more"
+                 included. */
+              delay={reduce ? 0 : (i % 3) * 0.06}
             />
           ))}
         </ul>

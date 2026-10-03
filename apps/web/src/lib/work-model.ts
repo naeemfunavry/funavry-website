@@ -32,6 +32,10 @@ export type Shot = {
   kind: ShotKind;
   /** The brief chose this capture to lead the product visual. */
   lead?: boolean;
+  /** Already a composed presentation (a marketing render with its own device
+      and backdrop), not a raw screen. Shown as it is, never put inside
+      another device; a raw screen of the same project is preferred to it. */
+  presented?: boolean;
 };
 
 /** A project's captures, arranged for a product visual. */
@@ -58,4 +62,44 @@ export type WorkProject = {
   tags: string[];
   media: ProjectMedia;
   hasVisuals: boolean;
+  /** How the portfolio presents it — see `lib/mockup-assign.ts`. */
+  mockup: ProjectMockupPlan;
+};
+
+/** The portfolio's 3D scenes. Each is a different arrangement of the same
+    devices; which ones a project may use depends on the captures it has. */
+export const MOCKUP_SCENES = [
+  "floating-laptop",
+  "desktop-monitor",
+  "floating-browser",
+  "multi-screen",
+  "offset-laptop",
+  "laptop-mobile",
+  "stacked-screens",
+  "floating-dashboard",
+  "full-bleed",
+  "device-collage",
+] as const;
+
+export type MockupScene = (typeof MOCKUP_SCENES)[number];
+
+/** The backdrops a scene sits on — a dark cinematic family from the brand's
+    navy, steel and ink, kept quieter than any screen placed on them, so a page
+    of different scenes still reads as one portfolio. */
+export const MOCKUP_GROUNDS = [
+  "navy",
+  "midnight",
+  "steel",
+  "charcoal",
+  "graphite",
+  "abyss",
+] as const;
+
+export type MockupGround = (typeof MOCKUP_GROUNDS)[number];
+
+export type ProjectMockupPlan = {
+  scene: MockupScene;
+  ground: MockupGround;
+  /** Turn the scene the other way — so a scene used twice never repeats. */
+  mirror: boolean;
 };

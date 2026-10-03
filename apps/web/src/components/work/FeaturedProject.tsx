@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import type { WorkProject } from "@/lib/work-model";
 import { cn } from "@/lib/utils";
 import FactLine from "./FactLine";
-import ProjectVisual from "./ProjectVisual";
+import ProjectMockup from "./ProjectMockup";
 
 /**
  * A flagship project, given a full row: the number and text on one side, the
@@ -27,13 +27,10 @@ export default function FeaturedProject({
   const flip = index % 2 === 1;
 
   const visual = (
-    <ProjectVisual
-      media={project.media}
-      title={project.title}
-      sector={project.sector}
-      phase={project.phase}
-      variant="featured"
+    <ProjectMockup
+      project={project}
       priority={first}
+      sizes="(max-width: 1024px) 92vw, 640px"
     />
   );
 

@@ -1,20 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
-import { cn } from "@/lib/utils";
-import type { Shot, WorkProject } from "@/lib/work-model";
-
-/** The capture a card leads with: the lead screen, else a phone. */
-const coverOf = (p: WorkProject): Shot | null =>
-  p.media.primary ?? p.media.phones[0] ?? null;
+import type { WorkProject } from "@/lib/work-model";
+import ProjectMockup from "./ProjectMockup";
 
 const EASE = [0.19, 1, 0.22, 1] as const;
 
 /**
- * One project, one card: the capture, then an amber-ticked sector, the title
+ * One project, one card: its mockup (Style A — the real capture on a laptop,
+ * on the navy stage), then an amber-ticked sector, the title
  * beside a round arrow, the tagline and the tags. The whole card is the link.
  *
  * `compact` drops the tagline and tags — for the case study's Related
@@ -30,7 +26,6 @@ export default function WorkCard({
   compact?: boolean;
 }) {
   const reduce = useReducedMotion();
-  const cover = coverOf(project);
 
   return (
     <motion.li
@@ -44,24 +39,10 @@ export default function WorkCard({
         aria-label={`${project.title} — view details`}
         className="group flex h-full flex-col overflow-hidden rounded-sm bg-paper-white ring-1 ring-line transition-[box-shadow,transform] duration-500 ease-smooth hover:-translate-y-1 hover:shadow-[0_30px_60px_-30px_rgba(15,23,42,0.35)] hover:ring-azure/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azure"
       >
-        <div className="relative aspect-[16/9] overflow-hidden bg-paper-deep">
-          {cover ? (
-            <Image
-              src={cover.src}
-              alt={cover.alt}
-              fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 360px"
-              className={cn(
-                "transition-transform duration-700 ease-smooth group-hover:scale-[1.04]",
-                cover.kind === "mobile"
-                  ? "object-contain p-3"
-                  : "object-cover object-top",
-              )}
-            />
-          ) : (
-            <div className="absolute inset-0 bg-[radial-gradient(70%_70%_at_50%_40%,rgba(68,158,216,0.25),transparent)]" />
-          )}
-        </div>
+        <ProjectMockup
+          project={project}
+          sizes="(max-width: 640px) 92vw, (max-width: 1280px) 46vw, 420px"
+        />
 
         <div className="flex flex-1 flex-col p-5 lg:p-6">
           <span className="flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-[0.2em] text-ink-400">
