@@ -1,4 +1,10 @@
-import { Briefcase, Building2, Globe2, Users, type LucideIcon } from "lucide-react";
+import {
+  Briefcase,
+  Building2,
+  Globe2,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import Container from "@/components/ui/Container";
 import type { Glance } from "@/lib/case-study-view";
 import DetailHeading from "./DetailHeading";
@@ -27,7 +33,9 @@ export default function ProjectGlance({ glance }: { glance: Glance }) {
 
         <div
           className={`mt-5 grid overflow-hidden rounded-xl bg-paper-white shadow-[0_18px_40px_-24px_rgba(15,23,42,0.35)] ring-1 ring-line lg:mt-6 ${
-            highlights.length > 0 ? "lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]" : ""
+            highlights.length > 0
+              ? "lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]"
+              : ""
           }`}
         >
           {/* ---------------------------------------------------- Facts -- */}
@@ -70,7 +78,7 @@ export default function ProjectGlance({ glance }: { glance: Glance }) {
 
           {/* ----------------------------------------------- Highlights -- */}
           {highlights.length > 0 && (
-            <div className="relative isolate overflow-hidden bg-ink-900 px-5 py-5 sm:px-6 lg:px-7 lg:py-6">
+            <div className="relative isolate overflow-hidden bg-[#102e54] px-5 py-5 sm:px-6 lg:px-7 lg:py-6">
               {/* Ambient glow and a faint grid, so the panel reads as lit
                   rather than flat. */}
               <div
@@ -95,7 +103,10 @@ export default function ProjectGlance({ glance }: { glance: Glance }) {
 
               <ul className="mt-4 grid gap-4 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-paper/10">
                 {highlights.map((h, i) => (
-                  <li key={h.value + i} className="sm:px-5 sm:first:pl-0 sm:last:pr-0">
+                  <li
+                    key={h.value + i}
+                    className="sm:px-5 sm:first:pl-0 sm:last:pr-0"
+                  >
                     <p
                       className={`text-[clamp(18px,1.7vw,24px)] font-semibold leading-[1.15] tracking-[-0.02em] ${
                         i === 0 ? "text-amber" : "text-paper"
