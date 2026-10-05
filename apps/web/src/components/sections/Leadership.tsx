@@ -72,7 +72,9 @@ export default function Leadership({ leaders }: { leaders: LeaderCard[] }) {
         {/* One row on a wide screen, however many leaders there are. */}
         <ul
           className={`mt-10 grid gap-5 sm:grid-cols-2 lg:mt-12 ${
-            leaders.length >= 5 ? "sm:grid-cols-3 lg:grid-cols-5" : "lg:grid-cols-4"
+            leaders.length >= 5
+              ? "sm:grid-cols-3 lg:grid-cols-5"
+              : "lg:grid-cols-4"
           }`}
         >
           {leaders.map((leader, i) => {
@@ -119,7 +121,7 @@ export default function Leadership({ leaders }: { leaders: LeaderCard[] }) {
                     {/* The whole card is the stage, so the record can never
                         grow past its top: it takes what room is left above
                         the name, and scrolls in the rare case it needs more. */}
-                    <div className="absolute inset-0 flex flex-col justify-end p-5 lg:p-6">
+                    <div className="absolute inset-0 flex flex-col justify-end p-4 lg:p-5">
                       {/* The record — collapsed to nothing at rest. */}
                       <div className="grid min-h-0 grid-rows-[minmax(0,0fr)] transition-[grid-template-rows] duration-500 ease-expo group-hover:grid-rows-[minmax(0,1fr)] group-focus:grid-rows-[minmax(0,1fr)]">
                         <div className="min-h-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -149,7 +151,7 @@ export default function Leadership({ leaders }: { leaders: LeaderCard[] }) {
                         {leader.points.length > 0 && (
                           <span
                             aria-hidden
-                            className="flex h-8 w-8 flex-none items-center justify-center border border-paper/25 text-paper transition-all duration-500 ease-expo group-hover:rotate-45 group-hover:border-amber group-hover:bg-amber group-hover:text-ink-900 group-focus:rotate-45 group-focus:border-amber group-focus:bg-amber group-focus:text-ink-900"
+                            className="flex h-6 w-6 flex-none items-center justify-center border border-paper/25 text-paper transition-all duration-500 ease-expo group-hover:rotate-45 group-hover:border-amber group-hover:bg-amber group-hover:text-ink-900 group-focus:rotate-45 group-focus:border-amber group-focus:bg-amber group-focus:text-ink-900"
                           >
                             <Plus size={15} />
                           </span>

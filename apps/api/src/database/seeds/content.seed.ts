@@ -60,6 +60,8 @@ interface DetailStudy {
   sector: string;
   phase: string;
   summary: string;
+  client?: string;
+  team?: string;
   stats: { value: string; label: string }[];
   meta: { label: string; value: string }[];
   introHeading: string;
@@ -265,8 +267,8 @@ export async function seedContent(
           deck?.surface === "site" ? CaseStudySurface.SITE : CaseStudySurface.APP,
         frame: deck?.frame === "laptop" ? CaseStudyFrame.LAPTOP : CaseStudyFrame.WINDOW,
         summary: detail.summary,
-        client: deck?.client ?? null,
-        team: deck?.team ?? null,
+        client: deck?.client ?? detail.client ?? null,
+        team: deck?.team ?? detail.team ?? null,
         featured: deck?.featured ?? false,
         introHeading: detail.introHeading,
         challengesLead: detail.challengesLead,

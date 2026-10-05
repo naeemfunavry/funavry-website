@@ -143,8 +143,9 @@ export function TrustedStrip({ className }: { className?: string }) {
       {/* The fixed plate. */}
       <div className="flex flex-none items-center border-b border-line pr-5 py-6 sm:border-b-0 sm:border-r sm:pr-10 sm:py-8 lg:max-w-[300px]">
         <p className="text-[14px] font-medium leading-[1.55] text-ink lg:text-[15px]">
-          Trusted by <span className="text-amber-ink">enterprise teams</span>
-          <br className="hidden sm:block" /> across four continents
+          Trusted by <br className="" />
+          <span className="text-amber-ink">Leading Organizations</span>
+          {/* <br className="hidden sm:block" /> across four continents */}
         </p>
       </div>
 

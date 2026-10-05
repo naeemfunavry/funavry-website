@@ -165,8 +165,8 @@ export default function Governance({
                     : "text-[16px] leading-[1.8] lg:text-[17px]",
                 )}
               >
-                We embed security, quality and responsible governance into how
-                we design, develop and deliver technology.
+                Security, quality and regulatory compliance backed by
+                internationally recognized standards.
               </p>
             </Wipe>
           </div>
@@ -175,7 +175,10 @@ export default function Governance({
               the heading rather than the label above it. */}
           <ul className="grid grid-cols-2 gap-y-8 sm:grid-cols-4 lg:mt-10">
             {PILLARS.map(({ title, desc, icon: Icon }, i) => (
-              <li key={title} className="group/pillar border-l border-azure/15 pl-5 pr-3">
+              <li
+                key={title}
+                className="group/pillar border-l border-azure/15 pl-5 pr-3"
+              >
                 <Wipe delay={i * 0.06}>
                   <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-b from-white to-azure-50 text-azure-ink shadow-[0_10px_24px_-12px_rgba(42,115,184,0.45)] ring-1 ring-azure/15 transition-transform duration-500 ease-expo group-hover/pillar:-translate-y-1">
                     <Icon size={20} strokeWidth={1.7} aria-hidden />
@@ -271,15 +274,52 @@ function Seal({ kind }: { kind: string }) {
           </linearGradient>
         </defs>
         <circle cx="32" cy="32" r="30" fill="url(#seal-soc)" />
-        <circle cx="32" cy="32" r="25.5" fill="none" stroke="#FFFFFF" strokeOpacity="0.45" strokeWidth="1" />
-        <text x="32" y="33" textAnchor="middle" fill="#FFFFFF" fontSize="14" fontWeight="700" fontFamily="inherit">SOC 2</text>
-        <text x="32" y="44" textAnchor="middle" fill="#FFFFFF" fillOpacity="0.8" fontSize="6.5" fontWeight="600" letterSpacing="1" fontFamily="inherit">TYPE II</text>
+        <circle
+          cx="32"
+          cy="32"
+          r="25.5"
+          fill="none"
+          stroke="#FFFFFF"
+          strokeOpacity="0.45"
+          strokeWidth="1"
+        />
+        <text
+          x="32"
+          y="33"
+          textAnchor="middle"
+          fill="#FFFFFF"
+          fontSize="14"
+          fontWeight="700"
+          fontFamily="inherit"
+        >
+          SOC 2
+        </text>
+        <text
+          x="32"
+          y="44"
+          textAnchor="middle"
+          fill="#FFFFFF"
+          fillOpacity="0.8"
+          fontSize="6.5"
+          fontWeight="600"
+          letterSpacing="1"
+          fontFamily="inherit"
+        >
+          TYPE II
+        </text>
       </svg>
     );
   }
   return (
     <svg viewBox="0 0 64 64" aria-hidden className="h-16 w-16 flex-none">
-      <circle cx="32" cy="32" r="30" fill="#FFFFFF" stroke="#CFE4F5" strokeWidth="2" />
+      <circle
+        cx="32"
+        cy="32"
+        r="30"
+        fill="#FFFFFF"
+        stroke="#CFE4F5"
+        strokeWidth="2"
+      />
       <circle cx="32" cy="32" r="25" fill="#F1F8FE" />
       {/* The globe, faint behind the monogram. */}
       <g fill="none" stroke="#449ED8" strokeOpacity="0.35" strokeWidth="1">
@@ -287,7 +327,18 @@ function Seal({ kind }: { kind: string }) {
         <ellipse cx="32" cy="32" rx="8" ry="18" />
         <path d="M14 32 H50 M17 23 H47 M17 41 H47" />
       </g>
-      <text x="32" y="38" textAnchor="middle" fill="#1F5F9E" fontSize="17" fontWeight="800" letterSpacing="-0.5" fontFamily="inherit">ISO</text>
+      <text
+        x="32"
+        y="38"
+        textAnchor="middle"
+        fill="#1F5F9E"
+        fontSize="17"
+        fontWeight="800"
+        letterSpacing="-0.5"
+        fontFamily="inherit"
+      >
+        ISO
+      </text>
     </svg>
   );
 }
@@ -354,24 +405,92 @@ function ShieldArt({ className }: { className?: string }) {
       <circle cx="180" cy="160" r="160" fill="url(#gov-halo)" />
 
       {/* Frosted glass panels behind the shield. */}
-      <rect x="196" y="34" width="112" height="160" rx="14" fill="url(#gov-glass)" stroke="#FFFFFF" strokeOpacity="0.9" transform="rotate(6 252 114)" />
-      <rect x="214" y="58" width="104" height="150" rx="14" fill="url(#gov-glass)" stroke="#FFFFFF" strokeOpacity="0.9" opacity="0.8" transform="rotate(10 266 133)" />
+      <rect
+        x="196"
+        y="34"
+        width="112"
+        height="160"
+        rx="14"
+        fill="url(#gov-glass)"
+        stroke="#FFFFFF"
+        strokeOpacity="0.9"
+        transform="rotate(6 252 114)"
+      />
+      <rect
+        x="214"
+        y="58"
+        width="104"
+        height="150"
+        rx="14"
+        fill="url(#gov-glass)"
+        stroke="#FFFFFF"
+        strokeOpacity="0.9"
+        opacity="0.8"
+        transform="rotate(10 266 133)"
+      />
 
       {/* Orbit rings. */}
-      <ellipse cx="180" cy="256" rx="168" ry="44" fill="none" stroke="#449ED8" strokeOpacity="0.28" />
-      <ellipse cx="180" cy="256" rx="132" ry="32" fill="none" stroke="#449ED8" strokeOpacity="0.35" strokeDasharray="3 6" />
+      <ellipse
+        cx="180"
+        cy="256"
+        rx="168"
+        ry="44"
+        fill="none"
+        stroke="#449ED8"
+        strokeOpacity="0.28"
+      />
+      <ellipse
+        cx="180"
+        cy="256"
+        rx="132"
+        ry="32"
+        fill="none"
+        stroke="#449ED8"
+        strokeOpacity="0.35"
+        strokeDasharray="3 6"
+      />
 
       {/* Ground and the two-tier plinth, its top rims lit. */}
       <ellipse cx="180" cy="304" rx="150" ry="20" fill="url(#gov-ground)" />
-      <path d="M72 276 a108 26 0 0 0 216 0 v-16 a108 26 0 0 1 -216 0 z" fill="url(#gov-plinth-side)" />
-      <ellipse cx="180" cy="260" rx="108" ry="26" fill="url(#gov-plinth-top)" stroke="#8CC8F5" strokeWidth="1.5" />
-      <path d="M106 256 a74 17 0 0 0 148 0 v-12 a74 17 0 0 1 -148 0 z" fill="url(#gov-plinth-side)" />
-      <ellipse cx="180" cy="244" rx="74" ry="17" fill="url(#gov-plinth-top)" stroke="#8CC8F5" strokeWidth="1.5" />
+      <path
+        d="M72 276 a108 26 0 0 0 216 0 v-16 a108 26 0 0 1 -216 0 z"
+        fill="url(#gov-plinth-side)"
+      />
+      <ellipse
+        cx="180"
+        cy="260"
+        rx="108"
+        ry="26"
+        fill="url(#gov-plinth-top)"
+        stroke="#8CC8F5"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M106 256 a74 17 0 0 0 148 0 v-12 a74 17 0 0 1 -148 0 z"
+        fill="url(#gov-plinth-side)"
+      />
+      <ellipse
+        cx="180"
+        cy="244"
+        rx="74"
+        ry="17"
+        fill="url(#gov-plinth-top)"
+        stroke="#8CC8F5"
+        strokeWidth="1.5"
+      />
 
       {/* The shield: a glass back plate, the glossy face, its sheen and rim. */}
-      <path d={shield} fill="#CFE4F5" opacity="0.75" transform="translate(12 8)" />
+      <path
+        d={shield}
+        fill="#CFE4F5"
+        opacity="0.75"
+        transform="translate(12 8)"
+      />
       <path d={shield} fill="url(#gov-face)" />
-      <path d="M180 52 L110 78 V134 C110 176 136 208 180 230 Z" fill="url(#gov-sheen)" />
+      <path
+        d="M180 52 L110 78 V134 C110 176 136 208 180 230 Z"
+        fill="url(#gov-sheen)"
+      />
       <path
         d="M180 54 L249 79 V134 C249 178 220 208 180 228 C140 208 111 178 111 134 V79 Z"
         fill="none"
@@ -381,24 +500,104 @@ function ShieldArt({ className }: { className?: string }) {
       />
 
       {/* The lock, with a soft shadow under its body. */}
-      <path d="M163 132 v-14 a17 17 0 0 1 34 0 v14" fill="none" stroke="#FFFFFF" strokeWidth="8" strokeLinecap="round" />
-      <rect x="151" y="134" width="58" height="48" rx="9" fill="#10365F" opacity="0.25" transform="translate(0 4)" />
-      <rect x="151" y="130" width="58" height="48" rx="9" fill="url(#gov-lock)" />
+      <path
+        d="M163 132 v-14 a17 17 0 0 1 34 0 v14"
+        fill="none"
+        stroke="#FFFFFF"
+        strokeWidth="8"
+        strokeLinecap="round"
+      />
+      <rect
+        x="151"
+        y="134"
+        width="58"
+        height="48"
+        rx="9"
+        fill="#10365F"
+        opacity="0.25"
+        transform="translate(0 4)"
+      />
+      <rect
+        x="151"
+        y="130"
+        width="58"
+        height="48"
+        rx="9"
+        fill="url(#gov-lock)"
+      />
       <circle cx="180" cy="150" r="6.5" fill="#1F5F9E" />
       <rect x="177" y="153" width="6" height="13" rx="3" fill="#1F5F9E" />
 
       {/* Floating tiles: a document, and the people who hold it to account. */}
       <g transform="rotate(-9 64 128)">
-        <rect x="34" y="88" width="62" height="80" rx="12" fill="url(#gov-glass)" stroke="#FFFFFF" strokeWidth="1.5" />
-        <rect x="49" y="104" width="32" height="44" rx="5" fill="none" stroke="#2A73B8" strokeWidth="2.5" />
-        <path d="M56 116 h18 M56 124 h18 M56 132 h11" stroke="#2A73B8" strokeWidth="2.5" strokeLinecap="round" />
+        <rect
+          x="34"
+          y="88"
+          width="62"
+          height="80"
+          rx="12"
+          fill="url(#gov-glass)"
+          stroke="#FFFFFF"
+          strokeWidth="1.5"
+        />
+        <rect
+          x="49"
+          y="104"
+          width="32"
+          height="44"
+          rx="5"
+          fill="none"
+          stroke="#2A73B8"
+          strokeWidth="2.5"
+        />
+        <path
+          d="M56 116 h18 M56 124 h18 M56 132 h11"
+          stroke="#2A73B8"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        />
       </g>
       <g transform="rotate(8 300 172)">
-        <rect x="268" y="136" width="64" height="74" rx="12" fill="url(#gov-glass)" stroke="#FFFFFF" strokeWidth="1.5" />
-        <circle cx="292" cy="163" r="7.5" fill="none" stroke="#2A73B8" strokeWidth="2.5" />
-        <path d="M279 189 a13 11 0 0 1 26 0" fill="none" stroke="#2A73B8" strokeWidth="2.5" strokeLinecap="round" />
-        <circle cx="310" cy="159" r="6.5" fill="none" stroke="#2A73B8" strokeWidth="2.5" />
-        <path d="M305 178 a10 9 0 0 1 16 5" fill="none" stroke="#2A73B8" strokeWidth="2.5" strokeLinecap="round" />
+        <rect
+          x="268"
+          y="136"
+          width="64"
+          height="74"
+          rx="12"
+          fill="url(#gov-glass)"
+          stroke="#FFFFFF"
+          strokeWidth="1.5"
+        />
+        <circle
+          cx="292"
+          cy="163"
+          r="7.5"
+          fill="none"
+          stroke="#2A73B8"
+          strokeWidth="2.5"
+        />
+        <path
+          d="M279 189 a13 11 0 0 1 26 0"
+          fill="none"
+          stroke="#2A73B8"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        />
+        <circle
+          cx="310"
+          cy="159"
+          r="6.5"
+          fill="none"
+          stroke="#2A73B8"
+          strokeWidth="2.5"
+        />
+        <path
+          d="M305 178 a10 9 0 0 1 16 5"
+          fill="none"
+          stroke="#2A73B8"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        />
       </g>
 
       {/* Glowing spheres. */}

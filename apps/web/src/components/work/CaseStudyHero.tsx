@@ -68,7 +68,7 @@ export default function CaseStudyHero({
               {project.tagline}
             </p>
           </Wipe>
-          {project.tags.length > 0 && (
+          {/* {project.tags.length > 0 && (
             <ul className="mt-7 flex flex-wrap gap-2">
               {project.tags.map((tag) => (
                 <li
@@ -89,7 +89,7 @@ export default function CaseStudyHero({
             >
               {hasShowcase ? "View Live Demo" : "Discuss your project"}
             </Button>
-          </HeroActions>
+          </HeroActions> */}
         </div>
       </Container>
     </section>

@@ -236,14 +236,15 @@
     },
     {
       "name": "Irfan Ayub",
-      "role": "Managing Director",
+      "role": "Managing Director — Saudi Arabia",
       "initials": "IA",
       "photo": "/team/irfan-ayub.webp",
       "points": [
-        "15+ years in business & operations leadership",
-        "Leads delivery, operations & day-to-day execution",
-        "Client partnerships across the US, GCC & Asia",
-        "Drives operational excellence & sustainable growth"
+        "M.Sc. Economics · Quaid-i-Azam University",
+        "20+ years of entrepreneurial and business leadership experience",
+        "Leads Funavry's operations and strategic partnerships across KSA",
+        "Advises enterprises on AI and digital innovation initiatives",
+        "Leadership across construction, manufacturing, fintech, and technology"
       ]
     }
   ],
@@ -268,7 +269,7 @@
   "caseStudyDeck": [
     {
       "slug": "qfs",
-      "title": "QFS — Quality Inspection & Food Safety",
+      "title": "QFS — Quality Inspection & Food Safety Application",
       "tagline": "A quality inspection & food safety application",
       "sector": "Manufacturing",
       "phase": "Operate",
@@ -391,7 +392,7 @@
     },
     {
       "slug": "contxtual",
-      "title": "Contxtual — Shoppable Video Commerce",
+      "title": "Contxtual — Shoppable Video Commerce Platform",
       "tagline": "A shoppable video commerce platform",
       "sector": "Media",
       "phase": "Automate",
@@ -430,11 +431,13 @@
           }
         }
       ],
-      "image": "/case-studies/optimized/contxtual.webp"
+      "image": "/case-studies/optimized/contxtual.webp",
+      "client": "United States",
+      "team": "10+ Engineers"
     },
     {
       "slug": "skillyah",
-      "title": "SkillYah — One-to-One Tutoring Marketplace",
+      "title": "SkillYah — Online One-to-One Tutoring Marketplace",
       "tagline": "An online one-to-one tutoring marketplace",
       "sector": "Education",
       "phase": "Build",
@@ -474,7 +477,9 @@
           }
         }
       ],
-      "image": "/case-studies/optimized/skillyah.webp"
+      "image": "/case-studies/optimized/skillyah.webp",
+      "client": "US · Japan",
+      "team": "5 Engineers"
     },
     {
       "slug": "cnbc-arabia",
@@ -550,7 +555,7 @@
   "caseStudyDetails": [
     {
       "slug": "integrated-healthcare-platform",
-      "title": "Integrated Healthcare Practice & Clinical Management Platform",
+      "title": "Integrated Healthcare & Clinical Management Platform",
       "tagline": "A unified platform for practice administration, clinical care & revenue cycle management",
       "sector": "Healthcare & Life Sciences",
       "phase": "Build",
@@ -566,7 +571,7 @@
         },
         {
           "value": "HIPAA · HL7",
-          "label": "eRx + 2FA · Standards-Aligned"
+          "label": "eRx + 2FA · Standards-aligned"
         }
       ],
       "meta": [
@@ -597,27 +602,27 @@
         {
           "title": "Fragmented Practice & Patient Data",
           "challenge": "Patient registration, demographics, and case data injuries, treatments, conditions, insurance, attorney, employer, responsible party were scattered across multiple practices, locations, and departments.",
-          "solution": "Centralized Practice & Patient Administration that manages all practices, locations, departments, and provider assignments with comprehensive, unified patient case management."
+          "solution": "Practice & Patient Administration — Multi-site practices, locations, and patient registration."
         },
         {
           "title": "Rigid, Hard-Coded Workflows",
           "challenge": "Specialties, case types, visit types, insurance rules, and billing codes required code changes and new deployments to update, slowing operational agility.",
-          "solution": "Configurable Master Data architecture that lets specialties, case types, visit types, insurance, and billing codes be set up and adjusted system-wide no code changes or redeployment needed."
+          "solution": "Configurable Master Data — Specialties, case types, and codes — no-code changes."
         },
         {
           "title": "Disconnected Clinical Documentation & Billing",
           "challenge": "Scheduling, clinical notes, and billing codes lived in separate systems, creating rework and increasing the risk of billing errors.",
-          "solution": "Integrated Clinical Workflows (EHR) that connect provider availability and appointment scheduling directly to structured clinical encounters capturing provider notes, ICD diagnosis codes, CPT procedure codes, and specialty-specific forms for both care delivery and accurate billing."
+          "solution": "Clinical Workflows (EHR) — Scheduling to structured encounters with ICD/CPT capture."
         },
         {
           "title": "Manual, Non-Compliant Prescribing",
           "challenge": "Paper-based or loosely controlled prescribing processes carried compliance risk and offered no built-in safeguards against drug interactions or unauthorized access.",
-          "solution": "Electronic Prescribing (eRx) with direct, paperless routing to pharmacies, drug-interaction alerts, and provider two-factor authentication following identity proofing aligned to DEA/SureScripts requirements for controlled substances."
+          "solution": "Electronic Prescribing (eRx) — Paperless routing, drug-interaction alerts, and 2FA."
         },
         {
           "title": "Slow, Fragmented Revenue Cycle",
           "challenge": "Billing across insurance carriers, attorneys, employers, and self-pay patients was handled inconsistently, delaying reimbursement and creating reconciliation gaps.",
-          "solution": "End-to-end Revenue Cycle Management (RCM) covering payment posting, eligibility verification, Explanation of Reimbursement (EOR) review, and denial management maximizing reimbursement and revenue capture."
+          "solution": "Revenue Cycle Management — Billing across payers with posting and denial management."
         }
       ],
       "resultsLead": "The outcomes the healthcare organization achieved after consolidating practice, clinical, and billing operations onto one platform.",
@@ -649,11 +654,13 @@
           "src": "/case-studies/optimized/Integrated Healthcare Practice/Bill Creation.png",
           "alt": "Bill creation in the revenue cycle module"
         }
-      ]
+      ],
+      "client": "United States",
+      "team": "30+ Engineers"
     },
     {
       "slug": "ai-medical-billing-automation",
-      "title": "AI-Powered Medical Billing & Insurance Automation",
+      "title": "AI-Powered Financial Document Processing & Reconciliation",
       "tagline": "Turning unstructured insurance documents into an automated, reconciled billing pipeline",
       "sector": "Healthcare · FinTech",
       "phase": "Automate",
@@ -700,27 +707,27 @@
         {
           "title": "High-Volume, High-Variability Document Intake",
           "challenge": "Scanned insurance documents arrived from 150+ carriers in more than 1,000 different formats, making manual data entry slow, inconsistent, and impossible to scale.",
-          "solution": "Automated ingestion pipeline using an enterprise-grade OCR and document-intelligence platform to process documents at scale across every carrier and format."
+          "solution": "Large-Scale Document Processing — OCR ingestion across 150+ carriers and 1,000+ formats."
         },
         {
           "title": "Unstructured, Unclassified Documents",
           "challenge": "Incoming documents weren't pre-sorted policies, denials, payments, and verifications were mixed together with no structured way to identify or route them.",
-          "solution": "An AI-powered classification engine that automatically identifies and categorizes each document type, then extracts and normalizes the data into standardized insurance records."
+          "solution": "AI Classification & Extraction — Auto-categorizes policies, denials, and payments."
         },
         {
           "title": "Slow, Sequential Processing",
           "challenge": "Processing documents one step at a time scan, read, classify, validate created a throughput bottleneck that couldn't keep pace with incoming volume.",
-          "solution": "A multi-processing architecture that runs image preprocessing, OCR, classification, extraction, and validation in parallel built for high throughput and horizontal scalability."
+          "solution": "High-Performance Pipeline — Parallel preprocessing, OCR, and validation at scale."
         },
         {
           "title": "Accuracy Risk in Fully Automated Extraction",
           "challenge": "Fully automated extraction alone risked silent errors on edge cases and low-confidence reads, which is unacceptable in billing and financial reconciliation.",
-          "solution": "Confidence scoring with human-in-the-loop review validation rules route only exceptions to staff, improving accuracy while minimizing manual processing effort."
+          "solution": "Confidence Scoring & Human-in-Loop — Routes only exceptions to staff for review."
         },
         {
           "title": "Disconnected Reconciliation Against AMS360",
           "challenge": "Even after data was extracted, matching carrier-statement transactions against the agency management system (AMS360) was a separate, manual reconciliation step prone to missed or duplicated entries.",
-          "solution": "An intelligent policy-matching engine that classifies carrier-statement transactions, partial, or no match and guides users through exception handling delivering a complete direct-bill reconciliation pipeline from statement ingestion through commission reconciliation to final posting."
+          "solution": "Automated Reconciliation (AMS360) — Matches carrier statements from ingestion to posting."
         }
       ],
       "resultsLead": "The outcomes achieved by replacing manual insurance billing and reconciliation with an AI-driven, end-to-end pipeline.",
@@ -744,11 +751,13 @@
           "src": "/case-studies/optimized/AI-Powered Medical Billing/Screenshot 2026-06-30 181037.png",
           "alt": "Reconciliation view"
         }
-      ]
+      ],
+      "client": "United States",
+      "team": "7+ Engineers"
     },
     {
       "slug": "normies",
-      "title": "Normies",
+      "title": "Banking & Crypto App",
       "tagline": "A self-custody banking & crypto super-app",
       "sector": "FinTech",
       "phase": "Build",
@@ -795,27 +804,27 @@
         {
           "title": "Fragmented View of Money Across Tools",
           "challenge": "Users typically track checking, savings, crypto, brokerages, and real-world assets across multiple disconnected apps, with no single view of their actual net worth.",
-          "solution": "Unified Accounts & Net Worth checking, savings, and crypto accounts in one app, with aggregation of external banks, brokerages, crypto wallets, and real-world assets such estate into a single, real-time net-worth view."
+          "solution": "Unified Accounts & Net Worth — Banking, crypto, and assets in one real-time view."
         },
         {
           "title": "Limited, Slow Money Movement",
           "challenge": "Moving money domestically or internationally often requires separate banking apps, wire processes, or exchanges, each with its own delays and fees.",
-          "solution": "Global Banking Rails supporting local and international money movement through ACH, wires, and SWIFT, direct deposit, and pay-by-link requests, alongside stablecoin transfers."
+          "solution": "Global Banking Rails — ACH, wire, SWIFT, direct deposit, and stablecoins."
         },
         {
           "title": "Opaque Card Fees & Limited Spending Control",
           "challenge": "Traditional cards offer little transparency on fees and minimal control over how and where spending happens, especially for privacy-conscious or budget-conscious users.",
-          "solution": "Cards & Spending debit cards accepted anywhere with cashback rewards, unlimited per-merchant virtual cards for privacy, and transparent fees shown before confirmation."
+          "solution": "Cards & Spending — Debit cards, cashback, and unlimited virtual cards."
         },
         {
           "title": "Crypto Self-Custody Is Intimidating for Mainstream Users",
           "challenge": "Traditional self-custody requires managing seed phrases and understanding gas fees a barrier that keeps mainstream, non-crypto-native users away from true ownership of their assets.",
-          "solution": "Simplified Self-Custody with a no-seed-phrase onboarding experience and network (gas) fees abstracted and shown up front removing common crypto friction while keeping assets fully in the user's control."
+          "solution": "Simplified Self-Custody — No seed phrase; gas fees abstracted and shown upfront."
         },
         {
           "title": "No Easy Way to Grow Idle Balances",
           "challenge": "Cash and crypto sitting idle in most banking or wallet apps earns nothing, and accessing yield or trading typically requires yet another platform.",
-          "solution": "Yield & Trading built directly into the app auto-yield savings on stablecoins and crypto, instant trading, and access to tokenized real-world assets."
+          "solution": "Yield & Trading — Auto-yield savings, instant trading, tokenized assets."
         }
       ],
       "resultsLead": "The capabilities Normies delivers by unifying banking and self-custody crypto in one consumer app.",
@@ -841,11 +850,13 @@
           "alt": "Gifting a friend's first $5 in cash, crypto or savings",
           "fit": "contain"
         }
-      ]
+      ],
+      "client": "United States",
+      "team": "15+ Engineers"
     },
     {
       "slug": "ai-tax-assistant",
-      "title": "AI-Powered Tax Assistant",
+      "title": "AI-Powered Tax & Regulatory Intelligence",
       "tagline": "Source-grounded Australian tax research, in conversation",
       "sector": "FinTech",
       "phase": "Automate",
@@ -856,7 +867,7 @@
           "label": "Tax Documents"
         },
         {
-          "value": "RAG + Vector Search",
+          "value": "RAG + Vector",
           "label": "Azure AI Search"
         },
         {
@@ -896,27 +907,27 @@
         {
           "title": "Complex Tax Scenarios Demand Deep Expertise",
           "challenge": "Advanced scenarios Division 7A calculations, company tax and base-rate-entity determinations, tax distribution optimization are time-consuming and error-prone to work through manually.",
-          "solution": "Tax Guidance & Complex Calculations that helps users interpret tax rules and handles these advanced scenarios directly within the conversational interface."
+          "solution": "Tax Guidance & Calculations — Interprets rules; handles Division 7A and more."
         },
         {
           "title": "Relevant Guidance Is Buried in a Massive Corpus",
           "challenge": "The relevant provisions, rulings, and guidance for any given question are scattered across a body of tax law far too large to search manually in a reasonable time.",
-          "solution": "A RAG pipeline built on Azure AI Search and LangChain, using semantic and vector search across 230,000+ tax documents to surface the most relevant material for each query."
+          "solution": "RAG over 230K+ Documents — Azure AI Search across the tax knowledge base."
         },
         {
           "title": "Research Is Disconnected From Filing Work",
           "challenge": "Tax research typically happens in a separate tool from tax preparation and lodgement, breaking the practitioner's workflow.",
-          "solution": "Integration with tax compliance and lodgement systems, fitting the assistant directly into practitioners' existing preparation and submission workflows."
+          "solution": "Compliance & Lodgement Integration — Fits existing preparation and submission workflows."
         },
         {
           "title": "Navigating Dense Legal Content Is Slow",
           "challenge": "Tax-law content is dense and hard to navigate quickly, even once the right document is found.",
-          "solution": "An intuitive, purpose-built research interface that lets users quickly navigate complex tax-law content, significantly cutting time spent on manual research."
+          "solution": "Intuitive Research Interface — Navigates complex tax law in a fraction of the time."
         },
         {
           "title": "Corpus and User Base Are Growing",
           "challenge": "As the document corpus and number of concurrent users grow, performance and reliability become harder to sustain.",
-          "solution": "A scalable, cloud-based architecture that supports a growing document corpus and concurrent users while maintaining fast, reliable performance."
+          "solution": "Scalable Cloud Architecture — Grows with the corpus and concurrent users."
         }
       ],
       "resultsLead": "The capabilities delivered by grounding tax research in a large, continuously updated source corpus.",
@@ -936,11 +947,13 @@
           "src": "/case-studies/optimized/AI-Powered Tax Assistant/2.png",
           "alt": "Conversational, step-by-step tax guidance with cited sources"
         }
-      ]
+      ],
+      "client": "Australia",
+      "team": "6 Engineers"
     },
     {
       "slug": "qfs",
-      "title": "QFS",
+      "title": "QFS — Quality Inspection & Food Safety Application",
       "tagline": "A quality inspection & food safety application",
       "sector": "Manufacturing",
       "phase": "Operate",
@@ -987,27 +1000,27 @@
         {
           "title": "Every Facility Needs Different Forms",
           "challenge": "Compliance requirements vary by facility and region, but building and maintaining custom inspection forms for each one through code changes doesn't scale.",
-          "solution": "A No-Code Template Builder a drag-and-drop configurator that lets admins design, edit, and deploy custom inspection check-sheets (text fields, dropdowns, radio buttons, checkboxes), so each facility builds forms that match its own compliance requirements without code or rework."
+          "solution": "No-Code Template Builder — Drag-and-drop inspection check-sheets per facility."
         },
         {
           "title": "Paper Forms Allow Bad Data Through",
           "challenge": "Manual, paper-based forms have no built-in validation, so out-of-range values or missing fields can go unnoticed until it's too late to act.",
-          "solution": "Validation & Conditional Logic that enforces data-type and range validations dates, numbers, images, text and automatically triggers corrective actions or alerts when a threshold is breached."
+          "solution": "Validation & Conditional Logic — Range checks trigger corrective actions and alerts."
         },
         {
           "title": "Inspectors Work in Areas Without Reliable Connectivity",
           "challenge": "Production floors and receiving areas often have poor or no network connectivity, making cloud-only data entry unreliable for frontline inspectors.",
-          "solution": "Web & Offline Mobile Apps QA managers configure and review on the web while inspectors capture data on Android devices, with offline entry and automatic synchronization when connectivity returns."
+          "solution": "Web & Offline Mobile Apps — Field inspectors capture data offline, then sync."
         },
         {
           "title": "Incidents and Corrective Actions Get Lost in Paper Trails",
           "challenge": "Non-conformance incidents and their corrective/preventive actions are hard to track and follow up on when logged on paper across multiple sites.",
-          "solution": "Inspection & Incident Workflows covering inbound raw-material checks, daily process monitoring, finished-goods and metal-detection verification, non-conformance (NCR) incident reporting, pre-submission correction, corrective and preventive actions, and collaborative multi-inspector form completion."
+          "solution": "Inspection & Incident Workflows — Inbound, in-process, NCR, and corrective actions."
         },
         {
           "title": "No Real-Time Visibility Across Plants",
           "challenge": "Leadership had no consolidated, real-time view of quality performance, deviations, or trends across facilities visibility only existed after manual report compilation.",
-          "solution": "Dashboards, Deviations & ERP Integration real-time unit-level and master dashboards tracking deviations, corrective actions, and form-completion trends, with e-signatures, automated deviation alerts, role- and facility-based access, and SAP/ERP integration via Active Directory."
+          "solution": "Dashboards & ERP Integration — Real-time deviation tracking with SAP/ERP sync."
         }
       ],
       "resultsLead": "The scale QFS has reached in standardizing food-safety inspection across a multi-region plant network.",
@@ -1032,7 +1045,9 @@
           "alt": "Offline-capable mobile inspection app",
           "fit": "contain"
         }
-      ]
+      ],
+      "client": "US · UAE · KSA",
+      "team": "10+ Engineers"
     },
     {
       "slug": "transportation-management-system",
@@ -1087,27 +1102,27 @@
         {
           "title": "Manual Truck Assignment Doesn't Scale",
           "challenge": "Matching available trucks to farm requests by hand across one-to-one, one-to-many, and many-to-many farm-provider relationships is slow and error-prone.",
-          "solution": "Centralized Truck Assignment that automates allocation with FIFO and dynamic assignment, prioritizing available trucks over providers and auto-reassigning requests when a provider has none."
+          "solution": "Centralized Truck Assignment — FIFO and dynamic allocation with auto-reassignment."
         },
         {
           "title": "No Single Source of Truth for Suppliers & Fleet",
           "challenge": "Supplier, truck, and driver information was tracked inconsistently, with no centralized compliance or zone-access record.",
-          "solution": "Supplier, Truck & Driver Registration that onboards suppliers, farms, zones, trucks, and drivers with full company, fleet, insurance, and compliance details, plus zone-based access control."
+          "solution": "Supplier, Truck & Driver Registration — Onboards fleets with zone-based access control."
         },
         {
           "title": "Expired Documents Slip Through",
           "challenge": "Trucks or drivers with expired inspections, insurance, or licenses could still be assigned without a systematic check.",
-          "solution": "Compliance & Document Validation that checks truck and driver documents before assignment, with automatic expiry alerts, restrictions on expired or missing documents, blacklisting, and full audit logs."
+          "solution": "Compliance & Document Validation — Gates assignments on valid, unexpired documents."
         },
         {
           "title": "No Structured Handoff Between Farms, Depots & Providers",
           "challenge": "Requests moved between farms, depots, and providers informally, with no clear approval or role structure.",
-          "solution": "A Service-Request Workflow & Roles system where farms raise requests, depots assign trucks, and providers manage drivers, with structured approvals and Azure AD (LDAP) authentication."
+          "solution": "Service-Request Workflow & Roles — Role-based approvals with Azure AD and bilingual UI."
         },
         {
           "title": "No Visibility Into Operational Performance",
           "challenge": "Leadership had no consolidated way to track travel times, waiting times, or trips per truck across the network.",
-          "solution": "Dashboards, KPIs & Integration with exportable Excel/CSV reports, in-app notifications, and integration with internal enterprise platforms for centralized transport data."
+          "solution": "Dashboards, KPIs & Integration — Trip analytics with exportable reports and feeds."
         }
       ],
       "resultsLead": "The capabilities delivered by replacing manual dispatch with an automated, compliance-driven TMS.",
@@ -1127,7 +1142,9 @@
           "src": "/case-studies/optimized/Transportation Management System/Picture14.jpg",
           "alt": "Truck registry with document status and compliance filters"
         }
-      ]
+      ],
+      "client": "US · Costa Rica",
+      "team": "8+ Engineers"
     },
     {
       "slug": "cnbc-arabia",
@@ -1138,8 +1155,8 @@
       "summary": "Delivering breaking business and financial news at scale with live market data and stock quotes, in both Arabic and English requires infrastructure built for sustained, high-volume traffic. Funavry built the CNBC Arabia news portal, engineered to scale to over a million hits per day, on a custom content management system with Elasticsearch and capital-market integrations.",
       "stats": [
         {
-          "value": "1M+ Hits/Day",
-          "label": "High-Traffic Portal"
+          "value": "1M+",
+          "label": "Hits per Day"
         },
         {
           "value": "Live Market Data",
@@ -1182,27 +1199,27 @@
         {
           "title": "Editorial Teams Need Fast, Flexible Publishing Tools",
           "challenge": "Generic content platforms don't fit the speed and structure required for high-volume financial news publishing.",
-          "solution": "A Custom Content Management System purpose-built for editorial teams to publish, organize, and manage news, articles, and multimedia across the portal and mobile apps."
+          "solution": "Custom Content Management System — Editorial publishing across web and mobile."
         },
         {
           "title": "Readers Need to Find News & Market Data Instantly",
           "challenge": "At high content volume, slow or irrelevant search results directly undermine the reader experience for a news-driven audience.",
-          "solution": "Elasticsearch-Powered Search delivering fast, relevant search across news content and live stock quotes."
+          "solution": "Elasticsearch-Powered Search — Instant search across news and stock quotes."
         },
         {
           "title": "Market Data Needs to Be Live, Not Delayed",
           "challenge": "Financial news readers expect tickers, indices, and market movers to update in real time, not on a publishing delay.",
-          "solution": "Capital Markets & Streaming Integration providing real-time data feeds and streaming services powering live tickers, indices, market movers, and video."
+          "solution": "Capital-Markets Integration — Live tickers, indices, and market movers."
         },
         {
           "title": "Readers Split Across Web and Mobile",
           "challenge": "Readers expect a consistent experience whether they're on desktop, mobile web, or the native app.",
-          "solution": "Unified Web & Mobile Applications delivering news and market data consistently across responsive web and native mobile apps."
+          "solution": "Web & Mobile Applications — Unified news and market data on any device."
         },
         {
           "title": "Serving Two Languages and Reading Directions",
           "challenge": "Arabic (right-to-left) and English (left-to-right) content, search, and market data all need to work seamlessly in the same platform.",
-          "solution": "A Dual-Language Experience with full bilingual support across content, search, and market data for both reading directions."
+          "solution": "Dual-Language Experience — Full Arabic (RTL) and English (LTR) support."
         }
       ],
       "resultsLead": "The scale and performance the CNBC Arabia portal was engineered to deliver.",
@@ -1228,11 +1245,13 @@
           "alt": "CNBC Arabia mobile experience",
           "fit": "contain"
         }
-      ]
+      ],
+      "client": "United States",
+      "team": "10+ Engineers"
     },
     {
       "slug": "smart-municipality",
-      "title": "Smart Municipality",
+      "title": "Smart Municipality — Citizen Services & Municipal CRM",
       "tagline": "A citizen services & municipal CRM platform",
       "sector": "Public Sector",
       "phase": "Build",
@@ -1283,27 +1302,27 @@
         {
           "title": "In-Person Service Requests Are Slow and Repetitive",
           "challenge": "Residents needed to visit counters and re-submit the same documentation for every service request.",
-          "solution": "A Citizen Service Portal (App & Web) where residents browse services, view requirements and fees, and submit applications with a favorites list and autofill of previously uploaded documents for quick re-applying."
+          "solution": "Citizen Service Portal (App & Web) — Bilingual catalogue of municipal services."
         },
         {
           "title": "Identity Verification and Payment Were Separate, Manual Steps",
           "challenge": "Verifying identity and collecting payment for services typically required separate, disconnected processes.",
-          "solution": "Secure Onboarding & Payments via UAE Pass digital-identity login and an integrated Tahseel payment gateway with automatic payment links and real-time confirmations."
+          "solution": "Secure Onboarding & Payments — UAE Pass login with integrated payment gateway."
         },
         {
           "title": "Requests Had No Structured Routing Across Departments",
           "challenge": "Service requests moving between departments manually created delays and inconsistent handling.",
-          "solution": "A Municipal CRM & Multi-Level Workflow that routes every request from a central supervisor to the relevant department, with a configurable, role-based approval chain and automatic re-assignment when staff are unavailable."
+          "solution": "Municipal CRM & Workflow — Multi-level, role-based approval and routing."
         },
         {
           "title": "No Easy Way to Report City Issues",
           "challenge": "Residents had no simple channel to report issues like potholes or traffic incidents without a formal account or login.",
-          "solution": "A No-Login Instant-Reporting System for city issues, alongside community features news, events, tourism information, and emergency contacts that keep citizens informed."
+          "solution": "Instant Reporting & Community — No-login issue reporting plus city updates."
         },
         {
           "title": "Leadership Lacked Visibility Into Service Performance",
           "challenge": "Supervisors and department heads had no consolidated view of request volume, processing time, or team activity.",
-          "solution": "Role-Based Access, Notifications & Analytics with multi-channel notifications and configurable dashboards giving full visibility of service performance and team activity."
+          "solution": "Roles, Notifications & Analytics — Multi-channel alerts and leadership dashboards."
         }
       ],
       "resultsLead": "The capabilities the Smart Municipality platform delivers by moving citizen services online.",
@@ -1319,11 +1338,13 @@
           "src": "/case-studies/optimized/smart-municipality.webp",
           "alt": "Citizen service portal with service search and quick actions"
         }
-      ]
+      ],
+      "client": "United Arab Emirates",
+      "team": "10+ Engineers"
     },
     {
       "slug": "launchpad",
-      "title": "Launchpad",
+      "title": "Launchpad — Web3 Token Launch & Community Platform",
       "tagline": "A Web3 token launch & community distribution platform",
       "sector": "FinTech · Web3",
       "phase": "Build",
@@ -1370,27 +1391,27 @@
         {
           "title": "One-Size-Fits-All Launch Models Don't Fit Every Project",
           "challenge": "Different projects need different fundraising and distribution mechanics open subscription, structured allocation rounds, community engagement campaigns, or reward-based giveaways but most platforms only support one format.",
-          "solution": "Multiple Launch Formats including Public Sales with open subscription and post-sale allocation, tiered Standard IDOs with structured guaranteed and first-come rounds, Buzz Campaigns for community engagement, and Launchdrops and giveaways for reward-based distribution."
+          "solution": "Multiple Launch Formats — Public sales, IDOs, buzz campaigns, launchdrops."
         },
         {
           "title": "No Way to Reward Early or Loyal Participants",
           "challenge": "Treating every participant identically gives project teams no way to reward engagement, loyalty, or early support with better access or terms.",
-          "solution": "Tiered Allocation & Membership a tiered membership model that unlocks participation eligibility, early-access windows, allocation boosts, and reduced or zero fees for qualifying participants."
+          "solution": "Tiered Allocation & Membership — Tiers unlock early access and fee reductions."
         },
         {
           "title": "Compliance Risk in Open Token Sales",
           "challenge": "Running token sales without proper identity verification and region-based controls exposes both the platform and project teams to significant regulatory risk.",
-          "solution": "Compliant Onboarding with integrated KYC/AML verification, region and eligibility controls, and per-campaign rule enforcement to support credible, standards-aware launches."
+          "solution": "Compliant Onboarding — KYC/AML with region and eligibility controls."
         },
         {
           "title": "Fragmented Wallet Support Limits Participation",
           "challenge": "Restricting participation to a single blockchain or wallet type excludes large segments of the Web3 community and limits a project's total addressable audience.",
-          "solution": "Multi-Chain Wallet Integration with unified wallet connection across EVM chains and Solana, on-chain participation, vesting-based token claims, and a flexible refund system for oversubscribed or refundable sales."
+          "solution": "Multi-Chain Wallet Integration — EVM and Solana with vesting-based claims."
         },
         {
           "title": "Distribution Growth Requires Manual Community Effort",
           "challenge": "Growing a launch's reach beyond a project's existing community typically requires manual outreach and influencer coordination with no built-in tracking.",
-          "solution": "Community Growth Tooling with referral and ambassador (KOL) programs that broaden distribution, drive engagement, and extend campaign reach."
+          "solution": "Community Growth Tooling — Referral and ambassador (KOL) programs."
         }
       ],
       "resultsLead": "Platform traction Launchpad has delivered since launching in 2023.",
@@ -1430,11 +1451,13 @@
           "src": "/case-studies/optimized/Launchpad/image (11).png",
           "alt": "Admin pool management console"
         }
-      ]
+      ],
+      "client": "US · UAE",
+      "team": "15+ Engineers"
     },
     {
       "slug": "contxtual",
-      "title": "Contxtual",
+      "title": "Contxtual — Shoppable Video Commerce Platform",
       "tagline": "A shoppable video commerce platform",
       "sector": "Media · Commerce",
       "phase": "Automate",
@@ -1450,7 +1473,7 @@
         },
         {
           "value": "New Revenue",
-          "label": "For Streamers"
+          "label": "for Streamers"
         }
       ],
       "meta": [
@@ -1481,27 +1504,27 @@
         {
           "title": "Viewers Can't Shop What They See On Screen",
           "challenge": "There's no built-in way for a viewer to identify or purchase clothing and accessories worn by characters in a show or movie.",
-          "solution": "In-Video Product Discovery that lets viewers browse and buy products that visually match on-screen clothing and accessories, turning passive watching into intent-driven shopping."
+          "solution": "In-Video Product Discovery — Shop items characters wear, on screen."
         },
         {
           "title": "Identifying On-Screen Items Requires Manual Tagging",
           "challenge": "Manually tagging every item worn by every character across hours of video content doesn't scale.",
-          "solution": "Computer-Vision Scene Analysis that detects actors and identifies their clothing and accessories frame by frame across the video content."
+          "solution": "Computer-Vision Scene Analysis — Detects actors and apparel frame by frame."
         },
         {
           "title": "On-Screen Items Aren't Available for Direct Purchase",
           "challenge": "Even once an item is identified, the exact product usually isn't sold anywhere there's no direct path to purchase.",
-          "solution": "AI Visual Similarity Matching that matches on-screen items to look-alike products available across retail stores and catalogs."
+          "solution": "AI Visual Similarity Matching — Matches on-screen items to shoppable products."
         },
         {
           "title": "Streamers Have Limited Ways to Monetize Content",
           "challenge": "Adding more commercials or raising subscription fees are the two default (and viewer-unfriendly) ways streamers monetize content.",
-          "solution": "New Revenue for Streamers by capturing incremental revenue and first-party purchase-intent data without adding commercials or raising subscription fees."
+          "solution": "New Revenue for Streamers — Incremental revenue without ads or fee hikes."
         },
         {
           "title": "Advertisers Lack Contextually Relevant Placement",
           "challenge": "Traditional ad targeting isn't tied to what's actually happening on screen, limiting relevance.",
-          "solution": "High-Relevance Ad Targeting that gives advertisers context-aware product targeting, positioning video alternative to social and search advertising."
+          "solution": "High-Relevance Ad Targeting — Context-aware product targeting for advertisers."
         }
       ],
       "resultsLead": "The capabilities Contxtual delivers by turning streaming video into a shoppable experience.",
@@ -1527,23 +1550,25 @@
           "alt": "Scene indexing with visual product markers",
           "fit": "contain"
         }
-      ]
+      ],
+      "client": "United States",
+      "team": "10+ Engineers"
     },
     {
       "slug": "skillyah",
-      "title": "SkillYah",
+      "title": "SkillYah — Online One-to-One Tutoring Marketplace",
       "tagline": "An online one-to-one tutoring marketplace",
       "sector": "Education",
       "phase": "Build",
       "summary": "Finding a qualified, available tutor and managing scheduling, payment, and lesson delivery traditionally means juggling multiple tools with no single system tying it together. Funavry designed and developed SkillYah, an online marketplace connecting students with expert tutors for one-to-one live lessons, managing the full journey from discovery through post-lesson review.",
       "stats": [
         {
-          "value": "3 Role-Based Portals",
+          "value": "3 Portals",
           "label": "Student · Tutor · Admin"
         },
         {
-          "value": "Live 1-to-1 Lessons",
-          "label": "Scheduling + Booking"
+          "value": "Live 1-to-1",
+          "label": "Lessons + Booking"
         },
         {
           "value": "Marketplace",
@@ -1582,27 +1607,27 @@
         {
           "title": "Different Users Need Fundamentally Different Experiences",
           "challenge": "Students, tutors, and administrators have very different needs, but most marketplace platforms force everyone through the same generic interface.",
-          "solution": "Role-Based Portals separate web portals for students, tutors, and administrators, each with its own registration, authentication, dashboard, and feature set."
+          "solution": "Role-Based Portals — Dedicated student, tutor, and admin experiences."
         },
         {
           "title": "Finding the Right Tutor Is Hard Without Good Filtering",
           "challenge": "Students need a reliable way to find a tutor who fits their subject, budget, and schedule not just a long, unfiltered list.",
-          "solution": "Tutor Discovery & Booking with search and filtering by subject, hourly rate, education level, background check, and availability, plus sorting by price or rating and full tutor profiles."
+          "solution": "Tutor Discovery & Booking — Search, filter, and request preferred slots."
         },
         {
           "title": "Booking and Delivering Lessons Was Fragmented",
           "challenge": "Confirming a lesson time and then actually delivering it reliably required stitching together separate scheduling and video tools.",
-          "solution": "Scheduling & Live Lessons through a request-accept/reschedule workflow with one-to-one classes delivered live through Zoom and optional lesson recordings."
+          "solution": "Scheduling & Live Lessons — Request-accept flow with live Zoom classes."
         },
         {
           "title": "Payments and Cancellations Needed Clear Rules",
           "challenge": "Handling payment collection, transaction history, and cancellations informally created disputes and inconsistency.",
-          "solution": "Payments & Transactions with integrated payment-gateway checkout, full transaction histories, and policy-based cancellation handling such fees."
+          "solution": "Payments & Transactions — Gateway checkout with full transaction history."
         },
         {
           "title": "No Way to Build Trust Between Students and Tutors",
           "challenge": "Without reviews, messaging, or verified profiles, students had little basis for trusting an unfamiliar tutor.",
-          "solution": "Messaging, Reviews & Profiles with in-app message threads, post-lesson ratings and reviews, and managed tutor profiles including intro videos and certifications requiring admin approval."
+          "solution": "Messaging, Reviews & Profiles — In-app chat, ratings, and vetted profiles."
         }
       ],
       "resultsLead": "The capabilities SkillYah delivers role-based, end-to-end tutoring marketplace.",
@@ -1618,11 +1643,13 @@
           "src": "/case-studies/optimized/skillyah.webp",
           "alt": "SkillYah admin management portal"
         }
-      ]
+      ],
+      "client": "US · Japan",
+      "team": "5 Engineers"
     },
     {
       "slug": "medsim",
-      "title": "MedSim",
+      "title": "MedSim — VR Medical Simulation & Training Platform",
       "tagline": "A VR medical simulation & training platform",
       "sector": "Healthcare · Education",
       "phase": "Build",
@@ -1673,27 +1700,27 @@
         {
           "title": "Limited Hands-On Practice for High-Stakes Procedures",
           "challenge": "Trainees have few safe opportunities to practice critical procedures CPR, defibrillation, ventilator setup before encountering them in real, high-pressure clinical situations.",
-          "solution": "Procedure-Based VR Scenarios covering critical procedures including CPR, ECG, defibrillation, SpO₂ oximetry, NIBP blood-pressure measurement, Ambu-bag ventilation, and ventilator setup each within a realistic clinical environment."
+          "solution": "Procedure-Based VR Scenarios — CPR, ECG, defibrillation, and more, risk-free."
         },
         {
           "title": "No Central Way to Configure or Run Training Sessions",
           "challenge": "Instructors needed a way to build scenarios and control live sessions without requiring VR expertise or manual configuration for every enterprise and user group.",
-          "solution": "A Web-Based Admin & LMS a learning-management system and trainer panel that builds scenarios, controls live sessions, and administers multiple enterprises and users from a single web interface."
+          "solution": "Web-Based Admin & LMS — Builds scenarios and manages users and sessions."
         },
         {
           "title": "Admin and VR Environment Falling Out of Sync",
           "challenge": "Live training sessions require the instructor's controls and the trainee's VR environment to stay perfectly aligned in real time any lag or desync breaks the simulation's realism and usefulness.",
-          "solution": "Real-Time Synchronization via low-latency, MQTT-based messaging that keeps the admin panel and VR environment instantly in sync, with reconnection and state-recovery mechanisms for resilience against network instability."
+          "solution": "Real-Time Synchronization — Low-latency MQTT sync with state recovery."
         },
         {
           "title": "Motion Sickness & Broken Immersion at Low Frame Rates",
           "challenge": "VR training is only effective if it feels real low or inconsistent frame rates break immersion and can cause motion sickness, undermining the training's value.",
-          "solution": "High-Fidelity 90+ FPS VR through performance-optimized rendering that sustains 90+ frames per second across headsets such and HTC Vive, preserving realism and preventing motion sickness."
+          "solution": "High-Fidelity 90+ FPS VR — Smooth rendering across Oculus and HTC Vive."
         },
         {
           "title": "Rigid, Non-Conversational Interaction with Simulated Patients",
           "challenge": "Scripted, menu-driven interactions with a simulated patient don't reflect how clinicians actually communicate during a real emergency.",
-          "solution": "Medical NLU & Intent Mapping natural-language understanding that interprets spoken queries in a medical context and maps recognized intent to dynamic mannequin responses and patient-state changes."
+          "solution": "Medical NLU & Intent Mapping — Spoken queries drive patient-state changes."
         }
       ],
       "resultsLead": "The capabilities MedSim delivers for safe, realistic, and centrally-managed clinical training.",
@@ -1717,11 +1744,13 @@
           "src": "/case-studies/optimized/MedSim/Screenshot 2026-06-19 224828.png",
           "alt": "Vital-sign and assessment controls driving the simulation"
         }
-      ]
+      ],
+      "client": "United Arab Emirates",
+      "team": "25+ Engineers"
     },
     {
       "slug": "style-bytes",
-      "title": "Style Bytes",
+      "title": "Style Bytes — AI-Powered Virtual Try-On",
       "tagline": "AI-powered virtual try-on for online fashion",
       "sector": "Commerce",
       "phase": "Build",
@@ -1772,27 +1801,27 @@
         {
           "title": "Shoppers Can't Visualize Their Own Fit",
           "challenge": "Static product photos on a model give shoppers no sense of how an item will actually look and fit on their own body.",
-          "solution": "3D Avatar & Body Profiling that generates a realistic personal avatar and accurate body measurements from a few phone or webcam photos plus basic inputs, using 3D Morphable Models, CNNs, and anthropometric modelling."
+          "solution": "3D Avatar & Body Profiling — Realistic avatar and measurements from photos."
         },
         {
           "title": "Accurate Body Scanning Usually Requires Special Hardware",
           "challenge": "Precise body measurement traditionally requires range cameras or dedicated 3D scanners most shoppers don't have.",
-          "solution": "Hardware-Free Body Capture through a guided, on-device 360° scan, making accurate sizing accessible on everyday mobile and web cameras."
+          "solution": "Hardware-Free Body Capture — Guided on-device 360° scan, no scanners."
         },
         {
           "title": "3D Garment Models Don't Scale Across Catalogs",
           "challenge": "Building a dedicated 3D model for every SKU in a retailer's catalog is prohibitively expensive and slow.",
-          "solution": "2D-to-3D Cloth Draping that drapes garments onto the avatar directly from 2D patterns, using finite-element simulation for realistic wrinkles and folds no per-SKU 3D models required."
+          "solution": "2D-to-3D Cloth Draping — Drapes garments from 2D patterns with realistic fit."
         },
         {
           "title": "Sizing Advice Is Based on Averages, Not the Individual",
           "challenge": "Generic size charts reflect collection-wide averages, not how a garment will fit a specific shopper's body.",
-          "solution": "An AI Stylist ('Alice') built on RNN/LSTM models that delivers size and style recommendations grounded in the shopper's individual measurements and each garment's true dimensions."
+          "solution": "AI Stylist “Alice” — Size and style advice from true measurements."
         },
         {
           "title": "Supporting Many Brands at Scale Requires Real Infrastructure",
           "challenge": "Making virtual try-on work reliably across many designers and brands' catalogs demands serious backend scalability.",
-          "solution": "A Scalable Commerce Platform with a Spring Boot Java microservices backend, TensorFlow/Keras/Blender processing on AWS, Angular web and React Native mobile apps, and WebGL/Metal 3D rendering, integrating retailers via RESTful APIs."
+          "solution": "Scalable Commerce Platform — Java micro-services with an AWS AI pipeline."
         }
       ],
       "resultsLead": "The capabilities Style Bytes delivers hardware-free, AI-powered virtual try-on platform.",
@@ -1817,7 +1846,9 @@
           "alt": "Guided body-scan assistant",
           "fit": "contain"
         }
-      ]
+      ],
+      "client": "United States",
+      "team": "20+ Engineers"
     },
     {
       "slug": "global-claims",
@@ -1868,27 +1899,27 @@
         {
           "title": "Claims Had No Consistent Lifecycle",
           "challenge": "Claims raised from different sources customers, sales, QA, inland teams followed inconsistent, spreadsheet-tracked paths with no clear status.",
-          "solution": "An End-to-End Claim Lifecycle managing claims from creation through review, survey, approval, and settlement, with a clear status flow and multiple defined initiation paths."
+          "solution": "End-to-End Claim Lifecycle — Creation through review, approval, and settlement."
         },
         {
           "title": "Routing Between Departments Was Manual",
           "challenge": "Moving a claim between Sales, QA, Procurement, Regional Office, Surveyors, and Finance required manual coordination and follow-up.",
-          "solution": "Role-Based Workflow & Routing that automatically routes claims across all relevant departments, with role-specific tabs and task lists."
+          "solution": "Role-Based Workflow & Routing — Routes across QA, procurement, and finance."
         },
         {
           "title": "Approval Authority Wasn't Systematically Enforced",
           "challenge": "Determining who needed to approve a claim based on amount, currency, region, and product category was handled inconsistently.",
-          "solution": "A Configurable Approval Matrix that directs claims to the right approvers by amount, currency, region, country, site, and product category, with sequential multi-level sign-off and email notifications."
+          "solution": "Configurable Approval Matrix — Multi-level sign-off by amount, region, and site."
         },
         {
           "title": "Claim Evidence Was Scattered",
           "challenge": "Quality defects, shipping details, vessel data, and surveyor reports were recorded in disconnected files rather than tied to the claim itself.",
-          "solution": "Quality, Shipping & Surveyor Capture that records defects, shipping and product details, vessel data, evidence, and independent surveyor reports, auto-calculating discounts and claim values."
+          "solution": "Quality & Surveyor Capture — Defects, evidence, and independent survey reports."
         },
         {
           "title": "No Global View of Claim Activity",
           "challenge": "Leadership had no consolidated, filterable view of claims across regions and sites.",
-          "solution": "A Dynamic Dashboard and Reporting system with real-time dashboards, filterable claim lists, one-click PDF export, and an admin portal for roles, approvals, and Active Directory-based provisioning."
+          "solution": "Dynamic Dashboards & Reports — Real-time metrics with one-click PDF export."
         }
       ],
       "resultsLead": "The capabilities delivered by replacing Excel-based claim tracking with a standardized, global workflow system.",
@@ -1916,11 +1947,13 @@
           "src": "/case-studies/optimized/Global Claims Management System/image (13).png",
           "alt": "Filterable claims list with status tracking"
         }
-      ]
+      ],
+      "client": "United States",
+      "team": "6+ Engineers"
     },
     {
       "slug": "travel-expense-management",
-      "title": "Travel & Expense Management System",
+      "title": "AI-Powered Travel & Expense Management",
       "tagline": "One platform for travel booking, approvals & reimbursement",
       "sector": "Enterprise",
       "phase": "Automate",
@@ -1931,8 +1964,8 @@
           "label": "Flights · Hotels · Cars"
         },
         {
-          "value": "Multi-Level Approvals",
-          "label": "Policy-Validated"
+          "value": "Multi-Level",
+          "label": "Policy-Validated Approvals"
         },
         {
           "value": "OCR Receipts",
@@ -1967,27 +2000,27 @@
         {
           "title": "Travel Booking Was Split Across Multiple Tools",
           "challenge": "Employees had to use separate tools for flights, hotels, and car rentals, each with its own checkout and no combined view of trip cost.",
-          "solution": "An End-to-End Travel Lifecycle managing the full journey: profile setup, travel requests (one-way, round-trip, multi-city), flight, hotel, and car booking, advances, and reimbursement tracking."
+          "solution": "End-to-End Travel Lifecycle — Requests, bookings, advances, and reimbursement."
         },
         {
           "title": "No Combined View of Trip Cost Before Booking",
           "challenge": "Employees couldn't see total trip cost across flights, hotels, and cars until after everything was already booked separately.",
-          "solution": "A Unified Travel Cart consolidating flights, hotels, and car rentals into one itinerary with cumulative cost, edit/remove controls, real-time policy validation, and a review step before submission."
+          "solution": "Unified Travel Cart — Flights, hotels, and cars in one validated itinerary."
         },
         {
           "title": "Approval Routing Was Inconsistent",
           "challenge": "Who needed to approve a trip, and under what conditions, wasn't consistently or automatically enforced.",
-          "solution": "Multi-Level Approval Workflows with configurable manager-, cost-, and region-based hierarchies, budget-range routing, over-budget justification, escalation, and delegated approvers for absences."
+          "solution": "Multi-Level Approval Workflows — Manager, cost, and region-based routing."
         },
         {
           "title": "Policy Violations Were Caught Too Late",
           "challenge": "Overspending on flights, hotels, or per-diem limits was often only discovered after the trip, not before booking.",
-          "solution": "Budget & Policy Control enforcing flight, hotel, rental-car, and per-diem limits and cost-center budgets in real time, keeping every request compliant with travel policy."
+          "solution": "Budget & Policy Control — Enforces per-diem and cost-center limits."
         },
         {
           "title": "Expense Reporting Was Manual and Slow",
           "challenge": "Employees manually entered receipt data and finance manually verified it before reimbursement, slowing the whole cycle.",
-          "solution": "Expense Capture & Finance Verification with OCR/scan-based receipt capture that auto-fills expense details, draft saving, finance verification, and automated reimbursement processing."
+          "solution": "Expense Capture & Verification — OCR receipts with automated reimbursement."
         }
       ],
       "resultsLead": "The capabilities delivered by centralizing travel booking, approvals, and reimbursement in one platform.",
@@ -2013,11 +2046,13 @@
           "alt": "Car and hotel booking with stay details",
           "fit": "contain"
         }
-      ]
+      ],
+      "client": "United States",
+      "team": "6 Engineers"
     },
     {
       "slug": "aivm",
-      "title": "AIVM",
+      "title": "Decentralized AI Blockchain Infrastructure",
       "tagline": "A decentralized AI blockchain infrastructure",
       "sector": "Web3 · AI",
       "phase": "Build",
@@ -2068,27 +2103,27 @@
         {
           "title": "No Way to Verify AI Outputs Are Genuine",
           "challenge": "Centralized AI platforms ask users to trust that outputs came from the claimed model, with no independent way to verify it.",
-          "solution": "Verifiable AI Execution using cryptographic proofs of model execution to restore trust in AI outputs."
+          "solution": "Verifiable AI Execution — Cryptographic proofs of model execution restore trust in AI outputs."
         },
         {
           "title": "Compute Access Is Gatekept by Cloud Providers",
           "challenge": "Accessing AI compute typically requires going through centralized cloud intermediaries, limiting openness and pricing competition.",
-          "solution": "A Decentralized Resource Marketplace offering permissionless global compute access, cutting out cloud intermediaries."
+          "solution": "Decentralized Resource Marketplace — Permissionless global compute access, cutting out cloud intermediaries."
         },
         {
           "title": "Large Models Can't Run Fully On-Chain",
           "challenge": "Large language models are too resource-intensive to execute directly on-chain, but off-chain execution alone loses verifiability.",
-          "solution": "Dual-Path Execution with on-chain execution for simple models and verified off-chain execution for large language models."
+          "solution": "Dual-Path Execution — On-chain for simple models; verified off-chain for LLMs."
         },
         {
           "title": "A Single Validator Type Can't Cover Every Function",
           "challenge": "Consensus, model execution, compute provisioning, and data integrity each require different validation logic.",
-          "solution": "Specialized Validators with separate validator tracks for consensus, model, compute, and data."
+          "solution": "Specialized Validators — Separate tracks for consensus, model, compute, and data."
         },
         {
           "title": "Isolated Chains Limit Ecosystem Reach",
           "challenge": "A blockchain that can't communicate with others limits which assets, users, and applications can participate.",
-          "solution": "Cross-Chain Interoperability with native IBC support, and EVM bridging on the roadmap."
+          "solution": "Cross-Chain Interoperability — Native IBC support, with EVM bridging on the roadmap."
         }
       ],
       "resultsLead": "The capabilities AIVM delivers verifiable, decentralized AI blockchain infrastructure.",
@@ -2110,11 +2145,13 @@
           "alt": "Signal-scanning view of the network interface",
           "fit": "contain"
         }
-      ]
+      ],
+      "client": "United States",
+      "team": "15+ Engineers"
     },
     {
       "slug": "ai-trading-assistant",
-      "title": "AI Trading Assistant",
+      "title": "AI Trading Assistant — Real-Time Crypto Market Intelligence",
       "tagline": "Real-time crypto market intelligence, in plain language",
       "sector": "FinTech · Web3",
       "phase": "Automate",
@@ -2125,18 +2162,18 @@
           "label": "Tokens Scanned"
         },
         {
-          "value": "15m – 1D",
-          "label": "Multi-Timeframe"
+          "value": "Multi-Timeframe",
+          "label": "15m – 1D"
         },
         {
-          "value": "Automated",
-          "label": "Pattern Recognition"
+          "value": "Pattern Recognition",
+          "label": "Automated"
         }
       ],
       "meta": [
         {
           "label": "Industry",
-          "value": "Financial Services & FinTech · Blockchain & Digital Assets"
+          "value": "Financial Services & FinTech · Enterprise Business Systems"
         },
         {
           "label": "Service",
@@ -2161,27 +2198,27 @@
         {
           "title": "Technical Analysis Doesn't Scale Across Thousands of Assets",
           "challenge": "Manually charting and analyzing patterns across thousands of trading pairs and multiple timeframes is not feasible for individual traders or small teams.",
-          "solution": "AI-Powered Technical Analysis that detects chart patterns across thousands of trading pairs and timeframes automatically, continuously, and in parallel."
+          "solution": "AI-Powered Technical Analysis — Detects chart patterns across thousands of pairs and timeframes."
         },
         {
           "title": "Reactive, Not Predictive, Chart Reading",
           "challenge": "Traders typically only see patterns after they've fully formed, missing the window to act on an emerging setup.",
-          "solution": "Predictive Chart Forecasting that projects likely price formations for blue-chip tokens such and ETH, surfacing setups develop rather than after the fact."
+          "solution": "Predictive Chart Forecasting — Projects likely formations for blue-chip tokens like BTC and ETH."
         },
         {
           "title": "Indicator Overload Without Synthesis",
           "challenge": "Dozens of individual indicators RSI, EMA, SMA, Bollinger Bands each tell part of the story, but manually cross-referencing all of them for every asset is slow and error-prone.",
-          "solution": "Deep Indicator Analysis that combines RSI, EMA, SMA, Bollinger Bands, on-chain data, and derivatives data into a single synthesized read per asset."
+          "solution": "Deep Indicator Analysis — RSI, EMA, SMA, Bollinger Bands, on-chain and derivatives data."
         },
         {
           "title": "Blind Spots on Large-Player Activity",
           "challenge": "Retail traders typically have no visibility into large transactions or exchange flows that can signal major market moves before they show up in price.",
-          "solution": "Smart Money & Whale Tracking that surfaces large transactions and exchange flow signals, giving users visibility into activity that typically precedes major price moves."
+          "solution": "Smart Money & Whale Tracking — Surfaces large transactions and exchange flow signals."
         },
         {
           "title": "Technical Jargon Is a Barrier to Everyday Traders",
           "challenge": "Raw indicator data and pattern terminology are inaccessible to traders without a technical-analysis background, limiting who can actually use the insights.",
-          "solution": "A Conversational Chat Interface that delivers plain-language, actionable chart analysis in seconds no technical-analysis background required to understand the output."
+          "solution": "Conversational Chat Interface — Plain-language, actionable chart analysis in seconds."
         }
       ],
       "resultsLead": "The capabilities delivered by turning hours of manual technical analysis into instant, conversational market intelligence.",
@@ -2213,11 +2250,13 @@
           "alt": "Mobile launch screen showing bullish, neutral, and bearish read-outs on a tracked asset",
           "fit": "contain"
         }
-      ]
+      ],
+      "client": "United States",
+      "team": "6–10 Engineers"
     },
     {
       "slug": "second-brain",
-      "title": "Second Brain",
+      "title": "Second Brain — Governed AI Knowledge Platform",
       "tagline": "A governed AI knowledge platform",
       "sector": "Enterprise · AI",
       "phase": "Build",
@@ -2268,27 +2307,27 @@
         {
           "title": "AI Answers Aren't Grounded in Real Sources",
           "challenge": "Ungrounded AI knowledge tools risk confidently generating plausible-sounding but incorrect answers.",
-          "solution": "Governed Knowledge Retrieval that grounds every answer in real, connected sources rather than guesses."
+          "solution": "Governed Knowledge Retrieval — Answers are grounded in real, connected sources, not guesses."
         },
         {
           "title": "AI Tools Risk Exposing Information Users Shouldn't See",
           "challenge": "Connecting AI to company knowledge without respecting existing access permissions creates a serious data-exposure risk.",
-          "solution": "Permission-Aware Access ensuring each person and AI agent sees only what they are cleared to see."
+          "solution": "Permission-Aware Access — Each person and agent sees only what they're cleared to see."
         },
         {
           "title": "Organizations Get Locked Into a Single AI Vendor",
           "challenge": "Building knowledge infrastructure around one specific AI model creates vendor lock-in and limits flexibility.",
-          "solution": "Any-Framework Connectivity that works with Claude, OpenAI, Gemini, or an organization's own models."
+          "solution": "Any-Framework Connectivity — Works with Claude, OpenAI, Gemini, or your own models."
         },
         {
           "title": "No Way to Audit Who Accessed What",
           "challenge": "Without a verifiable access record, organizations can't confidently answer compliance or security questions about AI knowledge use.",
-          "solution": "A Tamper-Evident Audit Log that records and independently verifies every access."
+          "solution": "Tamper-Evident Audit Log — Every access is recorded and independently verifiable."
         },
         {
           "title": "Knowledge Is Scattered Across Many Tools",
           "challenge": "Relevant information lives across many disconnected tools, making it hard to build a single, coherent knowledge layer.",
-          "solution": "Enterprise-Grade Connectors integrating with Slack, GitHub, Drive, Notion, Confluence, Salesforce, and more."
+          "solution": "Enterprise-Grade Connectors — Slack, GitHub, Drive, Notion, Confluence, Salesforce, and more."
         }
       ],
       "resultsLead": "The capabilities Second Brain delivers governed, model-agnostic AI knowledge platform.",
@@ -2309,11 +2348,13 @@
           "src": "/case-studies/optimized/Brain/image (3).jpeg",
           "alt": "Control Center dashboard with the living knowledge graph"
         }
-      ]
+      ],
+      "client": "United States",
+      "team": "10–12 Engineers"
     },
     {
       "slug": "ai-nft-generator",
-      "title": "AI NFT Generator",
+      "title": "AI-Powered NFT Marketplace",
       "tagline": "A prompt-to-mint NFT creation platform",
       "sector": "Web3",
       "phase": "Build",
@@ -2335,7 +2376,7 @@
       "meta": [
         {
           "label": "Industry",
-          "value": "Blockchain & Digital Assets · Media & Broadcasting"
+          "value": "Commerce, Retail & Digital Marketplaces · Financial Services & FinTech"
         },
         {
           "label": "Service",
@@ -2360,27 +2401,27 @@
         {
           "title": "Artistic Skill Barrier to Entry",
           "challenge": "Creating original NFT artwork traditionally requires design skill or hiring an artist, excluding the vast majority of people who might otherwise want to create and mint.",
-          "solution": "AI-Powered Art Generation where NLP-driven prompts generate unique, high-quality artwork from a simple text description no design skill required."
+          "solution": "AI-Powered Art Generation — NLP-driven prompts generate unique, high-quality artwork."
         },
         {
           "title": "Minting Requires Smart-Contract Knowledge",
           "challenge": "Turning generated art into an actual NFT normally requires understanding smart contracts and metadata standards, a steep technical barrier for non-developers.",
-          "solution": "One-Click On-Chain Minting that produces mint-ready metadata automatically, with no smart-contract coding required from the user."
+          "solution": "One-Click On-Chain Minting — Mint-ready metadata, no smart contract code required."
         },
         {
           "title": "Building a Full Collection Is Slow and Repetitive",
           "challenge": "Creators launching a true NFT collection need many consistent, unique pieces generating and minting each one individually doesn't scale to collection-sized launches.",
-          "solution": "Full Collection Creation that generates entire collections of up to 10,000 images at once, ready for collection-scale launches."
+          "solution": "Full Collection Creation — Generate entire collections of up to 10,000 images at once."
         },
         {
           "title": "Chain Fragmentation Limits Reach",
           "challenge": "Restricting minting to a single blockchain limits which wallets, marketplaces, and buyers a creator's NFTs can reach.",
-          "solution": "Multi-Chain Support that mints across 20+ networks, including Ethereum and Polygon, broadening where and how creators' NFTs can be bought and sold."
+          "solution": "Multi-Chain Support — Mint across 20+ networks including Ethereum and Polygon."
         },
         {
           "title": "No Easy Path From Creation to Sale",
           "challenge": "Even after minting, creators need a separate marketplace and process to actually list, discover, and sell their NFTs.",
-          "solution": "An Integrated Marketplace that lets users buy, sell, and discover NFTs directly, connected with OpenSea for broader market reach."
+          "solution": "Integrated Marketplace — Buy, sell, and discover NFTs, connected with OpenSea."
         }
       ],
       "resultsLead": "The scale the AI NFT Generator has reached by removing every traditional barrier to NFT creation and minting.",
@@ -2401,11 +2442,13 @@
           "alt": "Minted AI-generated NFT detail card",
           "fit": "contain"
         }
-      ]
+      ],
+      "client": "US · UAE",
+      "team": "10–12 Engineers"
     },
     {
       "slug": "crypto-ai-hub",
-      "title": "Crypto AI Hub",
+      "title": "AI Hub — Intelligent Crypto Platform",
       "tagline": "A unified blockchain AI platform",
       "sector": "Web3 · AI",
       "phase": "Build",
@@ -2413,11 +2456,11 @@
       "stats": [
         {
           "value": "7 Tools",
-          "label": "Unified Intelligence"
+          "label": "One Hub"
         },
         {
-          "value": "Crypto & Web3",
-          "label": "One Hub"
+          "value": "Unified Intelligence",
+          "label": "Crypto & Web3"
         },
         {
           "value": "API & SDK",
@@ -2427,7 +2470,7 @@
       "meta": [
         {
           "label": "Industry",
-          "value": "Blockchain & Digital Assets · Financial Services & FinTech"
+          "value": "Financial Services & FinTech · Enterprise Business Systems"
         },
         {
           "label": "Service",
@@ -2452,27 +2495,27 @@
         {
           "title": "Users Need a Reliable Way to Understand Web3 Concepts",
           "challenge": "Protocols, tokenomics, DeFi, and DAOs are complex topics with no single, always-available place to get clear answers.",
-          "solution": "An AI Crypto Chatbot an always-on Web3 assistant explaining protocols, tokenomics, DeFi, and DAOs."
+          "solution": "AI Crypto Chatbot — Always-on Web3 assistant explaining protocols, tokenomics, DeFi, and DAOs."
         },
         {
           "title": "Auditing and Generating Smart Contracts Are Separate Steps",
           "challenge": "Generating a contract and then getting it audited traditionally means two disconnected processes and toolsets.",
-          "solution": "A Smart Contract Generator & Auditor that generates and audits Solidity contracts in a single flow."
+          "solution": "Smart Contract Generator & Auditor — Generate and audit Solidity contracts in one flow."
         },
         {
           "title": "Manual Chart Analysis Doesn't Scale for Active Traders",
           "challenge": "Actively monitoring markets and reading charts manually across many assets is time-intensive and inconsistent.",
-          "solution": "AI Trading Intelligence delivering real-time technical analysis and predictive chart scenarios."
+          "solution": "AI Trading Intelligence — Real-time technical analysis and predictive chart scenarios."
         },
         {
           "title": "Regulatory Requirements Vary Widely by Region",
           "challenge": "Crypto projects need to understand licensing, AML/KYC, and tax obligations that differ significantly across jurisdictions.",
-          "solution": "Regulatory Compliance Guidance covering licensing, AML/KYC, and tax guidance across 100+ regions."
+          "solution": "Regulatory Compliance Guidance — Licensing, AML/KYC, and tax guidance across 100+ regions."
         },
         {
           "title": "Market-Moving Events Are Easy to Miss",
           "challenge": "Significant price moves can happen quickly, and users without constant monitoring tools can miss them entirely.",
-          "solution": "Real-Time Crypto Alerts with AI-explained price moves paired with proprietary Bullishness Scores."
+          "solution": "Real-Time Crypto Alerts — AI-explained price moves with Bullishness Scores."
         }
       ],
       "resultsLead": "The capabilities Crypto AI Hub delivers by unifying seven crypto-AI tools into one platform.",
@@ -2498,7 +2541,9 @@
           "alt": "AI chat mode picker listing the seven tools, from trading assistant to smart-contract auditor",
           "fit": "contain"
         }
-      ]
+      ],
+      "client": "US · UAE",
+      "team": "10–15 Engineers"
     },
     {
       "slug": "systematic-review-platform",
@@ -2524,7 +2569,7 @@
       "meta": [
         {
           "label": "Industry",
-          "value": "Healthcare & Life Sciences · Clinical & Medical Research"
+          "value": "Healthcare & Life Sciences · Enterprise Business Systems"
         },
         {
           "label": "Service",
@@ -2532,7 +2577,7 @@
         },
         {
           "label": "Client",
-          "value": "Mayo Clinic · United States · 10 Engineers"
+          "value": "United States · 10 Engineers"
         }
       ],
       "introHeading": "What does this platform do?",
@@ -2545,27 +2590,27 @@
         {
           "title": "Research Questions Need a Consistent, Locked Framework",
           "challenge": "Without a fixed, upfront plan, research questions and scope can drift during the review, undermining transparency.",
-          "solution": "Research Question & Protocol tooling that frames objectives using PICO and locks a fixed plan upfront to keep the review honest and open."
+          "solution": "Research Question & Protocol — Frames objectives with PICO and locks a fixed plan upfront to keep the review honest and open."
         },
         {
           "title": "Literature Searches Risk Missing Relevant Studies",
           "challenge": "Manually searching multiple scientific databases with consistent, precise keywords is easy to do inconsistently.",
-          "solution": "Comprehensive Literature Search that queries major scientific databases with precise keywords to capture every relevant study."
+          "solution": "Comprehensive Literature Search — Queries major scientific databases with precise keywords to capture every relevant study."
         },
         {
           "title": "Single-Reviewer Screening Risks Selection Bias",
           "challenge": "Having only one person screen retrieved papers introduces subjectivity and risk of missed or wrongly excluded studies.",
-          "solution": "Dual Independent Screening where two reviewers assess retrieved papers separately to select the strongest evidence."
+          "solution": "Dual Independent Screening — Two reviewers assess retrieved papers separately to select the strongest evidence."
         },
         {
           "title": "Study Quality Isn't Always Consistently Assessed",
           "challenge": "Not every included study is equally reliable, but manually assessing bias and quality for each one is easy to skip or do unevenly.",
-          "solution": "A Risk-of-Bias Quality Check that tests each included study for errors and bias."
+          "solution": "Risk-of-Bias Quality Check — Tests each included study for errors and bias."
         },
         {
           "title": "Synthesizing Findings Across Studies Is Complex",
           "challenge": "Combining findings from many different studies into a coherent conclusion, including statistically, requires careful, structured synthesis.",
-          "solution": "Data Synthesis & Meta-Analysis that combines findings, including statistical meta-analysis where appropriate."
+          "solution": "Data Synthesis & Meta-Analysis — Combines findings, including statistical meta-analysis where appropriate."
         }
       ],
       "resultsLead": "The capabilities delivered by structuring the systematic review lifecycle for Mayo Clinic research teams.",
@@ -2586,11 +2631,13 @@
           "alt": "Living evidence synthesis site with searchable review projects, their systematic review questions, and the continuous-update method",
           "fit": "contain"
         }
-      ]
+      ],
+      "client": "United States",
+      "team": "10 Engineers"
     },
     {
       "slug": "dm-flow",
-      "title": "DM Flow",
+      "title": "Enterprise Workflow & Approval Orchestration",
       "tagline": "An enterprise workflow management system for Del Monte Fresh Produce",
       "sector": "Enterprise",
       "phase": "Automate",
@@ -2612,7 +2659,7 @@
       "meta": [
         {
           "label": "Industry",
-          "value": "Enterprise Business Systems · Food & Agriculture"
+          "value": "Enterprise Business Systems · Consumer Products & Manufacturing"
         },
         {
           "label": "Service",
@@ -2624,7 +2671,7 @@
         },
         {
           "label": "Client",
-          "value": "Del Monte Fresh Produce · US · UAE · KSA · Costa Rica · 8–10 Developers"
+          "value": "US · UAE · KSA · Costa Rica · 8–10 Developers"
         }
       ],
       "introHeading": "What is DM Flow?",
@@ -2637,27 +2684,27 @@
         {
           "title": "Every Region Needs Different Forms and Approval Chains",
           "challenge": "Approval hierarchies and form requirements vary across global regions, but building each one through custom development doesn't scale.",
-          "solution": "Configurable Forms & Workflows that build dynamic forms and templates with configurable approval hierarchies."
+          "solution": "Configurable Forms & Workflows — Builds dynamic forms and templates with configurable approval hierarchies."
         },
         {
           "title": "Approvals Stalled Without Automated Follow-Up",
           "challenge": "Manual approval routing had no built-in reminders or escalation, so requests could stall indefinitely.",
-          "solution": "Automated Approvals & Escalations that route approvals with notifications, reminders, and escalation rules."
+          "solution": "Automated Approvals & Escalations — Routes approvals with notifications, reminders, and escalation rules."
         },
         {
           "title": "Governance Required a Reliable Audit Trail",
           "challenge": "Demonstrating compliance and accountability required a dependable record of who approved what, and when.",
-          "solution": "Audit Trails & Compliance maintaining comprehensive audit trails for governance and accountability."
+          "solution": "Audit Trails & Compliance — Maintains comprehensive audit trails for governance and accountability."
         },
         {
           "title": "Leadership Lacked Real-Time Visibility Into Activity",
           "challenge": "Tracking pending items and overall workflow activity in real time wasn't possible with manual, spreadsheet-based tracking.",
-          "solution": "Executive Dashboards & Analytics tracking activity, statistics, and pending items in real time."
+          "solution": "Executive Dashboards & Analytics — Tracks activity, stats, and pending items in real time."
         },
         {
           "title": "Workflow Data Was Disconnected From Core Enterprise Systems",
           "challenge": "Forms and approvals lived separately from the systems that actually run operations and finance.",
-          "solution": "Enterprise Integration connecting with SAP, Cube, and ProducePro across web and mobile."
+          "solution": "Enterprise Integration — Connects with SAP, Cube, and ProducePro across web and mobile."
         }
       ],
       "resultsLead": "The capabilities DM Flow delivers by automating workflow and approvals for Del Monte Fresh Produce.",
@@ -2668,11 +2715,13 @@
         "Gave leadership real-time dashboards on activity, statistics, and pending items.",
         "Connected workflow data directly to SAP, Cube, and ProducePro across web and mobile."
       ],
-      "screenshots": []
+      "screenshots": [],
+      "client": "US · UAE · KSA · Costa Rica",
+      "team": "8–10 Developers"
     },
     {
       "slug": "restate",
-      "title": "REstate",
+      "title": "REstate — ERP for Management of Land Assets",
       "tagline": "An ERP for managing government land assets",
       "sector": "Public Sector",
       "phase": "Build",
@@ -2694,7 +2743,7 @@
       "meta": [
         {
           "label": "Industry",
-          "value": "Public Sector · Real Estate"
+          "value": "Government & Public Sector · Enterprise Business Systems"
         },
         {
           "label": "Service",
@@ -2702,7 +2751,7 @@
         },
         {
           "label": "Client",
-          "value": "Estate Office, Government of Pakistan · 6–10 Engineers"
+          "value": "Pakistan · 6–10 Engineers"
         }
       ],
       "introHeading": "What is REstate?",
@@ -2715,27 +2764,27 @@
         {
           "title": "No Centralized Record of Units and Assets",
           "challenge": "Residential and commercial units across the government housing portfolio weren't tracked in a single, consistent system.",
-          "solution": "Unit & Asset Management that manages residential and commercial units across the portfolio."
+          "solution": "Unit & Asset Management — Manages residential and commercial units across the portfolio."
         },
         {
           "title": "Allotment and Rent Recovery Were Manual and Inconsistent",
           "challenge": "Assigning buildings to personnel and recovering rent relied on manual, paper-driven processes prone to inconsistency.",
-          "solution": "Allotment & Rent Collection that allots buildings to personnel and manages rent recovery."
+          "solution": "Allotment & Rent Collection — Allots buildings to personnel and manages rent recovery."
         },
         {
           "title": "Waiting Lists Weren't Rule-Based or Transparent",
           "challenge": "Prioritizing applicants for housing without a systematic, rule-based approach risked unfair or inconsistent outcomes.",
-          "solution": "A General Waiting List (GWL) system that manages waiting and priority lists based on business rules."
+          "solution": "General Waiting List (GWL) — Manages waiting and priority lists based on business rules."
         },
         {
           "title": "Legal Cases and Audits Had No Digital Backbone",
           "challenge": "Legal case management and audit reporting to authorities relied on manual record-keeping.",
-          "solution": "Legal Case & Audit Support for legal case management, audits, and reporting to authorities."
+          "solution": "Legal Case & Audit Support — Supports legal case management, audits, and reporting to authorities."
         },
         {
           "title": "Employee Registration Was Paper-Based",
           "challenge": "Federal employees applying for government housing had to navigate a manual registration and application process.",
-          "solution": "Employee Registration & Applications that digitizes federal employee registration and application processing."
+          "solution": "Employee Registration & Applications — Digitizes federal employee registration and application processing."
         }
       ],
       "resultsLead": "The capabilities REstate delivers by digitizing government housing administration.",
@@ -2763,11 +2812,13 @@
           "src": "/case-studies/optimized/Estate Office/Perfrma.png",
           "alt": "Digitized proforma processing"
         }
-      ]
+      ],
+      "client": "Pakistan",
+      "team": "6–10 Engineers"
     },
     {
       "slug": "genai-marketing",
-      "title": "GenAI",
+      "title": "GenAI — Marketing Automation Platform",
       "tagline": "A generative-AI marketing automation platform",
       "sector": "Marketing & AdTech",
       "phase": "Automate",
@@ -2789,7 +2840,7 @@
       "meta": [
         {
           "label": "Industry",
-          "value": "Marketing & AdTech · Enterprise Business Systems"
+          "value": "Media, Broadcasting & Infotainment · Enterprise Business Systems"
         },
         {
           "label": "Service",
@@ -2814,27 +2865,27 @@
         {
           "title": "Content Creation Is a Bottleneck",
           "challenge": "Producing marketing copy for campaigns, emails, blogs, and social media at the pace modern marketing requires strains small teams.",
-          "solution": "AI Content Generation that creates marketing copy for campaigns, emails, blogs, and social media."
+          "solution": "AI Content Generation — Creates marketing copy for campaigns, emails, blogs, and social media."
         },
         {
           "title": "Campaigns Span Multiple Disconnected Channels",
           "challenge": "Planning and executing a campaign across multiple channels typically means managing each channel separately.",
-          "solution": "Campaign Automation that manages multi-channel campaigns from planning to execution."
+          "solution": "Campaign Automation — Manages multi-channel campaigns from planning to execution."
         },
         {
           "title": "Generic Messaging Underperforms Targeted Messaging",
           "challenge": "Sending the same message to an entire audience misses the performance gains of targeted, personalized outreach.",
-          "solution": "Personalization & Segmentation that targets audiences with AI-driven recommendations and data insights."
+          "solution": "Personalization & Segmentation — Targets audiences with AI-driven recommendations and data insights."
         },
         {
           "title": "Social and Email Require Constant Manual Scheduling",
           "challenge": "Manually scheduling social posts and managing lead-nurturing email sequences is time-consuming and easy to fall behind on.",
-          "solution": "Social & Email Marketing that schedules social content and automates lead-nurturing email workflows."
+          "solution": "Social & Email Marketing — Schedules social content and automates lead-nurturing email workflows."
         },
         {
           "title": "Performance and Compliance Are Hard to Track Centrally",
           "challenge": "Without centralized tracking, it's difficult to see what's performing and to enforce content approval and compliance consistently.",
-          "solution": "Analytics & Governance that tracks performance with dashboards, plus content approval and compliance workflows."
+          "solution": "Analytics & Governance — Tracks performance with dashboards, plus content approval and compliance workflows."
         }
       ],
       "resultsLead": "The capabilities GenAI delivers end-to-end generative-AI marketing platform.",
@@ -2870,18 +2921,20 @@
           "src": "/case-studies/optimized/GenAI Marketing/Picture8.png",
           "alt": "Campaign performance-analytics dashboard tracking channel CTR over time"
         }
-      ]
+      ],
+      "client": "United States",
+      "team": "4–5 Engineers"
     },
     {
       "slug": "talentedxpert",
-      "title": "TalentedXpert",
+      "title": "TalentedXpert — Talent as a Service (TaaS) Marketplace",
       "tagline": "A Talent Service (TaaS) marketplace",
       "sector": "HR Tech",
       "phase": "Build",
       "summary": "Finding vetted freelance talent for a specific task, and getting paid reliably for completed work, usually means navigating marketplaces that weren't designed with accessibility or trust in mind. Funavry built TalentedXpert, a global talent marketplace that connects businesses with vetted freelance experts enabling clients to post tasks, hire talent, and pay securely.",
       "stats": [
         {
-          "value": "Talent Service",
+          "value": "Talent as a Service",
           "label": "Global Marketplace"
         },
         {
@@ -2896,7 +2949,7 @@
       "meta": [
         {
           "label": "Industry",
-          "value": "Marketplace & Gig Economy · HR Tech & Workforce Solutions"
+          "value": "Commerce, Retail & Digital Marketplaces · Education & Workforce Development"
         },
         {
           "label": "Service",
@@ -2921,27 +2974,27 @@
         {
           "title": "Finding the Right Talent for a Specific Task Is Hard",
           "challenge": "Businesses need a reliable way to find talent matched to a specific role, skill, or task locally or online.",
-          "solution": "Talent & Task Matching that provides localized matching for onsite and online tasks by role, skill, or keyword."
+          "solution": "Talent & Task Matching — Localized matching for onsite and online tasks by role, skill, or keyword."
         },
         {
           "title": "Talent and Businesses Need Different Experiences",
           "challenge": "Freelancers and the businesses hiring them have fundamentally different needs from the same marketplace.",
-          "solution": "A Dual-Sided Marketplace offering separate TalentedXpert and TalentRequestor experiences for talent and businesses."
+          "solution": "Dual-Sided Marketplace — Separate TalentedXpert and TalentRequestor experiences for talent and businesses."
         },
         {
           "title": "Payment and Trust Are Persistent Marketplace Risks",
           "challenge": "Without secure payment handling and verified reputation signals, both sides of a marketplace face real risk.",
-          "solution": "Secure Payments & Reviews delivering secure payment processing with verified reviews and ratings."
+          "solution": "Secure Payments & Reviews — Secure payment processing with verified reviews and ratings."
         },
         {
           "title": "Tracking Active Work Across Many Tasks Is Hard",
           "challenge": "Freelancers juggling multiple proposals and tasks need a single place to track everything, not scattered emails and messages.",
-          "solution": "Task & Proposal Management tracking active tasks, sent proposals, and opportunities in one dashboard."
+          "solution": "Task & Proposal Management — Tracks active tasks, sent proposals, and opportunities in one dashboard."
         },
         {
           "title": "Most Marketplaces Aren't Built for Accessibility",
           "challenge": "Freelancers with disabilities are often underserved by marketplaces that don't design for their needs from the start.",
-          "solution": "Inclusive & Accessible Design with built-in disability inclusion filters and accessibility features."
+          "solution": "Inclusive & Accessible Design — Built-in disability inclusion filters and accessibility features."
         }
       ],
       "resultsLead": "The capabilities TalentedXpert delivers inclusive, dual-sided talent marketplace.",
@@ -2966,19 +3019,21 @@
           "src": "/case-studies/optimized/Talented Expert/Talented Xperts_tasks.png",
           "alt": "Task detail with requirements, budget and proposal submission"
         }
-      ]
+      ],
+      "client": "TalentedXpert",
+      "team": "6–10 Engineers"
     },
     {
       "slug": "ai-orchestration-platform",
-      "title": "AI Orchestration Platform",
+      "title": "AI Orchestration Platform — Business Brain & Autonomous Agents",
       "tagline": "A Business Brain and specialized AI agents that execute business processes",
       "sector": "Enterprise · AI",
       "phase": "Automate",
       "summary": "Enterprises run on hundreds of disconnected systems, and the context needed to complete a piece of work is spread across all of them. Funavry built an enterprise AI orchestration platform that connects 700+ CRM, finance, and enterprise systems through a Business Brain and specialized AI agents that execute business processes end to end on schedule or on business event, pausing for human approval where it matters.",
       "stats": [
         {
-          "value": "700+",
-          "label": "CRM, Finance & Enterprise Integrations"
+          "value": "700+ Integrations",
+          "label": "CRM, Finance & Enterprise"
         },
         {
           "value": "Multi-Agent AI",
@@ -3013,27 +3068,27 @@
         {
           "title": "Enterprise Systems Don't Share Context",
           "challenge": "CRM, finance, and operational systems each hold part of the picture, so no single tool has enough context to complete a business process on its own.",
-          "solution": "Unified Enterprise Integration that connects 700+ CRM, finance, and enterprise systems into one unified intelligence layer."
+          "solution": "Unified Enterprise Integration — Connects 700+ CRM, finance and enterprise systems into a unified intelligence layer."
         },
         {
           "title": "Information Without Meaning Can't Be Reasoned Over",
           "challenge": "Raw records pulled from many systems are not the same understanding an agent needs context, not just rows.",
-          "solution": "A Business Brain that centralizes enterprise context so information can be understood, enriched, and reasoned over before any action is taken."
+          "solution": "Business Brain — Centralizes enterprise context so information can be understood, enriched and reasoned over."
         },
         {
           "title": "One General Assistant Can't Cover Every Function",
           "challenge": "Finance, CRM, research, reporting, and outreach each demand different knowledge and different actions a single generalist agent handles none of them well.",
-          "solution": "Multi-Agent Orchestration that coordinates specialized agents across finance, CRM, research, reporting, and outreach."
+          "solution": "Multi-Agent Orchestration — Coordinates specialized agents across finance, CRM, research, reporting and outreach."
         },
         {
           "title": "Work Still Waited for Someone to Start It",
           "challenge": "Even automated steps sat idle until a person remembered to trigger them, leaving the process slowest human handoff.",
-          "solution": "Autonomous Execution that runs orchestrations automatically based on schedules or defined business events."
+          "solution": "Autonomous Execution — Runs orchestrations automatically based on schedules or defined business events."
         },
         {
           "title": "Full Autonomy Is Unacceptable for Sensitive Actions",
           "challenge": "Payments, exceptions, and other sensitive steps cannot be handed to an agent without a control point, however capable the automation is.",
-          "solution": "Human-in-the-Loop control that pauses sensitive or exception-based actions for approval and resumes execution once authorized."
+          "solution": "Human-in-the-Loop — Pauses sensitive or exception-based actions for approval and resumes after authorization."
         }
       ],
       "resultsLead": "What the orchestration platform delivers once agents, systems, and enterprise context are connected.",
@@ -3044,7 +3099,9 @@
         "Enabled autonomous execution of orchestrations on defined schedules or business events.",
         "Kept sensitive and exception-based actions under human control, pausing for approval and resuming after authorization."
       ],
-      "screenshots": []
+      "screenshots": [],
+      "client": "United States",
+      "team": "10+ Engineers"
     },
     {
       "slug": "pharma-sales-intelligence",
@@ -3091,27 +3148,27 @@
         {
           "title": "Leadership Saw Sales Performance Too Late",
           "challenge": "Revenue, gross sales, discounts, and profitability were assembled manually, so executives reviewed performance well after the period it described.",
-          "solution": "Executive Sales Intelligence presenting revenue, gross sales, discounts, and profitability in one live executive view."
+          "solution": "Executive Sales Intelligence — Revenue, gross sales, discounts, and profitability."
         },
         {
           "title": "One Total Hides Where Performance Comes From",
           "challenge": "A single headline sales figure said nothing about which company, product, city, area, or channel was actually driving or dragging the number.",
-          "solution": "Multi-Dimensional Sales Analytics that break performance down by company, product, city, area, and channel."
+          "solution": "Multi-Dimensional Sales Analytics — Sales by company, product, city, area, and channel."
         },
         {
           "title": "Volume Was Mistaken for Profitability",
           "challenge": "The best-selling products were not necessarily the most profitable ones, and nothing in the reporting made that distinction visible.",
-          "solution": "Product Performance Intelligence that identifies top products alongside profitability trends."
+          "solution": "Product Performance Intelligence — Identifies top products and profitability trends."
         },
         {
           "title": "No Reliable Basis for Comparison",
           "challenge": "Without consistent period-over-period views, it was difficult to separate genuine movement from ordinary seasonal variation.",
-          "solution": "Comparative Business Analysis covering month-over-month and year-over-year performance."
+          "solution": "Comparative Business Analysis — Month-over-month and year-over-year performance."
         },
         {
           "title": "Every New Question Needed an Analyst",
           "challenge": "Any question the standard report did not answer became a request to the reporting team, adding days to each decision.",
-          "solution": "Interactive Executive Reporting with self-service analytics for strategic sales planning."
+          "solution": "Interactive Executive Reporting — Self-service analytics for strategic sales planning."
         }
       ],
       "resultsLead": "The visibility leadership gained once commercial performance moved into a single real-time platform.",
@@ -3122,7 +3179,9 @@
         "Enabled month-over-month and year-over-year comparison of commercial performance.",
         "Replaced analyst-dependent reporting with self-service analytics for strategic sales planning."
       ],
-      "screenshots": []
+      "screenshots": [],
+      "client": "Saudi Arabia",
+      "team": "2+ Engineers"
     },
     {
       "slug": "virtual-gym-trainer",
@@ -3134,7 +3193,7 @@
       "stats": [
         {
           "value": "Personalized",
-          "label": "Fitness Programmes"
+          "label": "Fitness programs"
         },
         {
           "value": "Workout + Meal",
@@ -3142,7 +3201,7 @@
         },
         {
           "value": "Wearables",
-          "label": "Real-Time Statistics"
+          "label": "Real-time statistics"
         }
       ],
       "meta": [
@@ -3169,27 +3228,27 @@
         {
           "title": "Training Without Structure Is Hard to Sustain",
           "challenge": "Users starting out have no clear programme to follow and no reliable way to see whether they are actually progressing.",
-          "solution": "Programme Enrollment & Progress, letting users enroll in fitness programmes and monitor their progress over time."
+          "solution": "Program Enrollment & Progress — Users enroll in fitness programmes and monitor progress over time."
         },
         {
           "title": "Choosing the Right Workout Plan Is Its Own Problem",
           "challenge": "The number of available routines is itself a barrier most users cannot tell which plan actually suits their goal.",
-          "solution": "Workout Guidance that assists users in selecting the workout plan that fits their goals."
+          "solution": "Workout Guidance — Assists users in selecting the workout plan that fits their goals."
         },
         {
           "title": "Training and Nutrition Are Planned Separately",
           "challenge": "Meal planning typically lives in a different app from the training routine, so the two are never planned against each other.",
-          "solution": "Meal Planning that supports meal-plan selection alongside the training routine, in the same app."
+          "solution": "Meal Planning — Supports meal-plan selection alongside the training routine."
         },
         {
           "title": "Users Can't Tell Whether It Is Working",
           "challenge": "Without periodic assessment, there is nothing to confirm progress or prompt a change of approach.",
-          "solution": "Periodic Fitness Feedback providing recurring feedback on the user's fitness status."
+          "solution": "Periodic Fitness Feedback — Provides recurring feedback on the user's fitness status."
         },
         {
           "title": "Self-Reported Activity Is Incomplete",
           "challenge": "Manually logged activity misses most of what a user actually does in a day, leaving progress tracking based on partial data.",
-          "solution": "Wearable Integration that connects with smart watches to gather real-time activity statistics."
+          "solution": "Wearable Integration — Connects with smart watches to gather real-time activity statistics."
         }
       ],
       "resultsLead": "What the application delivers by bringing training, nutrition, and wearable data together.",
@@ -3200,7 +3259,9 @@
         "Provided recurring feedback on each user's fitness status.",
         "Integrated smart watches to gather real-time activity statistics."
       ],
-      "screenshots": []
+      "screenshots": [],
+      "client": "United Arab Emirates",
+      "team": "5 Engineers"
     },
     {
       "slug": "construction-intelligence",
@@ -3247,27 +3308,27 @@
         {
           "title": "No Single View of the Portfolio",
           "challenge": "Projects, contracts, and their performance were tracked separately, so no one could see the portfolio whole without assembling it by hand.",
-          "solution": "Executive Portfolio Intelligence delivering a live view of projects, contracts, and performance in one place."
+          "solution": "Executive Portfolio Intelligence — Live view of projects, contracts, and performance."
         },
         {
           "title": "Contract Progress Was Hard to Track",
           "challenge": "Progress against each contract timelines, current status, milestones lived with individual project teams rather than in a shared record.",
-          "solution": "Contract Performance Monitoring that tracks progress, timelines, status, and milestones across every contract."
+          "solution": "Contract Performance Monitoring — Tracks progress, timelines, status, and milestones."
         },
         {
           "title": "Commercial Position Lagged Operational Reality",
           "challenge": "Committed cost, contract value, and net proceeds were reconciled periodically, so the financial picture always trailed the work on site.",
-          "solution": "Financial & Commercial Analytics covering committed cost, contract value, and net proceeds."
+          "solution": "Financial & Commercial Analytics — Committed cost, contract value, and net proceeds."
         },
         {
           "title": "Billing and Payment Status Were Opaque",
           "challenge": "What had been billed, what was payable, and which construction stage each amount belonged to required chasing across teams.",
-          "solution": "Billing & Payment Intelligence showing payable status and billing by construction stage."
+          "solution": "Billing & Payment Intelligence — Payable status and billing by construction stage."
         },
         {
           "title": "Governance Ran on Backward-Looking Reports",
           "challenge": "Executive oversight depended on compiled reports, which supported review but not forecasting or early intervention.",
-          "solution": "Portfolio Governance Insights presenting executive KPIs for forecasting and governance."
+          "solution": "Portfolio Governance Insights — Executive KPIs for forecasting and governance."
         }
       ],
       "resultsLead": "The oversight leadership gained once the construction portfolio was consolidated into one platform.",
@@ -3278,11 +3339,13 @@
         "Made payable status and billing by construction stage visible without chasing teams.",
         "Delivered executive KPIs supporting forecasting and portfolio governance."
       ],
-      "screenshots": []
+      "screenshots": [],
+      "client": "Saudi Arabia",
+      "team": "3+ Engineers"
     },
     {
       "slug": "ai-nigraan",
-      "title": "AI Nigraan",
+      "title": "AI Nigraan — AI Narrative & Sentiment Intelligence Platform",
       "tagline": "An AI narrative and sentiment intelligence platform for public conversation",
       "sector": "Public Sector · Media",
       "phase": "Automate",
@@ -3325,27 +3388,27 @@
         {
           "title": "Individual Posts Don't Show the Story",
           "challenge": "Reading posts one at a time reveals volume but not the narratives forming across them, or how much support each is gathering.",
-          "solution": "Narrative Intelligence that clusters related posts into distinct narratives with participation and sentiment attached."
+          "solution": "Narrative Intelligence — Clusters related posts into distinct narratives with participation and sentiment."
         },
         {
           "title": "The Conversation Isn't in One Language",
           "challenge": "Public discussion runs simultaneously in several languages, and monitoring only one of them gives a partial and misleading reading.",
-          "solution": "Multilingual Analysis covering English, Urdu, Sindhi, Punjabi, Pashto, and Balochi."
+          "solution": "Multilingual Analysis — English, Urdu, Sindhi, Punjabi, Pashto and Balochi."
         },
         {
           "title": "Unusual Activity Is Noticed Too Late",
           "challenge": "By the time a shift in narrative activity is spotted manually, the window to respond to it has usually closed.",
-          "solution": "Real-Time Monitoring & Smart Alerts that track topics continuously and flag unusual narrative activity emerges."
+          "solution": "Real-Time Monitoring & Smart Alerts — Tracks topics continuously and flags unusual narrative activity."
         },
         {
           "title": "Analysis Still Had to Be Written Up by Hand",
           "challenge": "Turning monitoring output into something a decision-maker can act on meant an analyst summarizing it manually, every time.",
-          "solution": "Executive Briefings plain-language summaries generated directly from the underlying data."
+          "solution": "Executive Briefings — Plain-language summaries generated from the underlying data."
         },
         {
           "title": "Dashboards Require Interpretation",
           "challenge": "Charts and filters put the burden of forming the question, and of reading the answer, back on the user.",
-          "solution": "Ask the Data, replacing dashboard interpretation with natural-language querying."
+          "solution": "Ask the Data — Natural-language querying instead of dashboards to interpret."
         }
       ],
       "resultsLead": "What the platform delivers real-time narrative and sentiment intelligence layer.",
@@ -3361,7 +3424,9 @@
           "src": "/case-studies/optimized/AI Nigran/Picture1.png",
           "alt": "Current picture narratives, sentiment breakdown, and active alerts"
         }
-      ]
+      ],
+      "client": "Pakistan",
+      "team": "2 Engineers (MVP)"
     },
     {
       "slug": "digital-agriculture-platform",
@@ -3387,7 +3452,7 @@
       "meta": [
         {
           "label": "Industry",
-          "value": "AgriTech · Industrial IoT & Automation · Supply Chain, Logistics & Operations"
+          "value": "AgriTech · Industrial IoT, Automation & Connected Operations · Supply Chain, Logistics & Operations"
         },
         {
           "label": "Service",
@@ -3408,27 +3473,27 @@
         {
           "title": "General AI Advice Isn't Safe Agronomy Advice",
           "challenge": "Ungrounded model output cannot be trusted for decisions that affect a season's yield, where a wrong recommendation carries real cost.",
-          "solution": "An AI Advisory Engine delivering LLM advisory grounded on the agronomy knowledge base via RAG."
+          "solution": "AI Advisory Engine — LLM advisory grounded on the agronomy knowledge base via RAG."
         },
         {
           "title": "Diagnosing Crop Problems Requires an Expert on Site",
           "challenge": "Disease, pest damage, and nutrient deficiency all present visually, but telling them apart needs expertise the farmer rarely reaches in time.",
-          "solution": "Crop Diagnostics using computer vision for disease, pest, and nutrient-deficiency detection."
+          "solution": "Crop Diagnostics — Computer vision for disease, pest and nutrient-deficiency detection."
         },
         {
           "title": "Field Stress Is Noticed Only When It Is Visible",
           "challenge": "By the time stress shows up on a walk through the field, the yield impact is already underway.",
-          "solution": "Geospatial Intelligence, where satellite and NDVI analytics flag field stress before it becomes visible."
+          "solution": "Geospatial Intelligence — Satellite and NDVI analytics flag field stress before it is visible."
         },
         {
           "title": "Input Decisions Are Made on Rules of Thumb",
           "challenge": "Fertilizer type, quantity, and timing are commonly decided by habit rather than by field condition, affecting both yield and margin.",
-          "solution": "Fertilizer & Yield Optimization recommending type, quantity, and timing, and forecasting yield and margin."
+          "solution": "Fertilizer & Yield Optimization — Recommends type, quantity and timing; forecasts yield and margin."
         },
         {
           "title": "An App Alone Doesn't Reach the Farmer",
           "challenge": "A platform that assumes a literate smartphone user excludes a large share of the farmers it is built to serve.",
-          "solution": "Farmer Engagement across app, WhatsApp, and multilingual Voice AI, designed to reach low-literacy farmers."
+          "solution": "Farmer Engagement — App, WhatsApp and multilingual Voice AI reach low-literacy farmers."
         }
       ],
       "resultsLead": "What the concept sets out to deliver connected agriculture platform.",
@@ -3449,11 +3514,13 @@
           "alt": "Farmer app home photo screening, advisor, and seven-day weather alerts",
           "fit": "contain"
         }
-      ]
+      ],
+      "client": "Pakistan",
+      "team": "2+ Engineers (MVP)"
     },
     {
       "slug": "secure-home",
-      "title": "Secure Home",
+      "title": "Secure Home — AI Perimeter Security",
       "tagline": "AI perimeter security with event-based recording and real-time object alerts",
       "sector": "IoT · Security",
       "phase": "Build",
@@ -3461,7 +3528,7 @@
       "stats": [
         {
           "value": "Event-Based",
-          "label": "Video Recording"
+          "label": "Video recording"
         },
         {
           "value": "Real-Time Alerts",
@@ -3475,7 +3542,7 @@
       "meta": [
         {
           "label": "Industry",
-          "value": "Industrial IoT & Automation"
+          "value": "Industrial IoT, Automation & Connected Operations"
         },
         {
           "label": "Service",
@@ -3496,32 +3563,32 @@
         {
           "title": "Continuous Recording Buries the Events That Matter",
           "challenge": "Recording around the clock produces hours of footage in which nothing happens, and the few relevant seconds are the hardest part to find.",
-          "solution": "Event-Based Recording that captures relevant security events instead of continuous noise."
+          "solution": "Event-Based Recording — Captures relevant security events instead of continuous noise."
         },
         {
           "title": "Motion Alerts Train Owners to Ignore Them",
           "challenge": "Wind, animals, and passing shadows all trigger motion-based systems, and an alert stream full of false positives stops being read.",
-          "solution": "Intelligent Noise Rejection that filters non-actionable activity to reduce unnecessary recordings."
+          "solution": "Intelligent Noise Rejection — Filters non-actionable activity to reduce unnecessary recordings."
         },
         {
           "title": "An Alert Without Classification Says Nothing",
           "challenge": "Knowing that something moved is not the same whether a person or a vehicle entered the perimeter.",
-          "solution": "Real-Time Alerts generated specifically for detected humans and vehicles."
+          "solution": "Real-Time Alerts — Generates alerts for detected humans and vehicles."
         },
         {
           "title": "Cloud Footage Is a Privacy Exposure",
           "challenge": "Routing household video to third-party storage creates a privacy risk that many owners are unwilling to accept.",
-          "solution": "Local Recording, keeping footage on site so the data stays private and secure."
+          "solution": "Local Recording — Footage is recorded on site, keeping data private and secure."
         },
         {
           "title": "Detection Needs Grow After Deployment",
           "challenge": "A system fixed to one set of detectable objects has to be replaced rather than extended when requirements change.",
-          "solution": "Expandable Classification, with an architecture that supports additional object classifications."
+          "solution": "Expandable Classification — Architecture supports additional object classifications."
         },
         {
           "title": "One Camera Doesn't Cover a Perimeter",
           "challenge": "A single viewpoint leaves blind spots, but a separate processing unit per camera makes full coverage expensive.",
-          "solution": "A Multi-Camera Edge Box a single Smart Box connecting up to four IP cameras."
+          "solution": "Multi-Camera Edge Box — A Smart Box can connect up to four IP cameras."
         }
       ],
       "resultsLead": "What the solution delivers edge-based perimeter security system.",
@@ -3533,7 +3600,9 @@
         "Built an architecture that supports additional object classifications grow.",
         "Covered a perimeter from one Smart Box connecting up to four IP cameras."
       ],
-      "screenshots": []
+      "screenshots": [],
+      "client": "Pakistan",
+      "team": "4 Engineers"
     },
     {
       "slug": "ai-vehicle-classification",
@@ -3545,21 +3614,21 @@
       "stats": [
         {
           "value": "Simple IP Cameras",
-          "label": "Low Hardware Overhead"
+          "label": "Low hardware overhead"
         },
         {
           "value": "Real-Time",
           "label": "Classification"
         },
         {
-          "value": "Motorbikes → Trucks",
-          "label": "Broad Vehicle Categories"
+          "value": "Broad Categories",
+          "label": "Motorbikes → Trucks"
         }
       ],
       "meta": [
         {
           "label": "Industry",
-          "value": "Industrial IoT & Automation"
+          "value": "Industrial IoT, Automation & Connected Operations"
         },
         {
           "label": "Service",
@@ -3580,27 +3649,27 @@
         {
           "title": "Classification Lagged Behind the Traffic",
           "challenge": "Batch review of recorded footage cannot support workflows that need a decision while the vehicle is still at the point of capture.",
-          "solution": "Real-Time Classification directly from live IP-camera feeds."
+          "solution": "Real-Time Classification — Classifies vehicles directly from live IP-camera feeds."
         },
         {
           "title": "Narrow Category Coverage Limits Usefulness",
           "challenge": "A model that recognizes only a few vehicle types leaves the rest of the traffic mix unclassified and the count incomplete.",
-          "solution": "Wide Vehicle Coverage supporting categories from motorbikes through large trucks."
+          "solution": "Wide Vehicle Coverage — Supports categories from motorbikes through large trucks."
         },
         {
           "title": "Specialized Hardware Restricts Deployment",
           "challenge": "Purpose-built capture equipment raises the cost of every additional site and constrains where classification can be introduced.",
-          "solution": "Standard Camera Hardware the system works with simple IP cameras rather than specialized capture hardware."
+          "solution": "Standard Camera Hardware — Works with simple IP cameras rather than specialized capture hardware."
         },
         {
           "title": "Manual Tolling Classification Doesn't Scale",
           "challenge": "Classifying vehicles by hand for tolling is slow at volume and inconsistent between operators.",
-          "solution": "Toll Collection support, providing automated classification for tolling workflows."
+          "solution": "Toll Collection — Supports automated classification for tolling workflows."
         },
         {
           "title": "Operational Counts Had No Independent Check",
           "challenge": "Where classification feeds revenue or reporting, a single source of truth leaves no way to verify what was recorded.",
-          "solution": "Audit & Verification, providing an independent visual classification layer for operational audit."
+          "solution": "Audit & Verification — Provides an independent visual classification layer for operational audit."
         }
       ],
       "resultsLead": "What the system delivers camera-based vehicle classification layer.",
@@ -3611,7 +3680,9 @@
         "Supported automated vehicle classification for tolling workflows.",
         "Provided an independent visual classification layer for operational audit."
       ],
-      "screenshots": []
+      "screenshots": [],
+      "client": "Pakistan",
+      "team": "2 Engineers"
     },
     {
       "slug": "airline-financial-planning",
@@ -3658,27 +3729,27 @@
         {
           "title": "Fuel Cost Was Analyzed After the Fact",
           "challenge": "Consumption, cost trends, uplift stations, and variance were reviewed retrospectively, well after the operating decisions they should have shaped.",
-          "solution": "Fuel Performance Analytics covering consumption, cost trends, uplift stations, and variance."
+          "solution": "Fuel Performance Analytics — Consumption, cost trends, uplift stations, variance."
         },
         {
           "title": "Forecasting Ran on Manual Models",
           "challenge": "Rolling forecasts and P&L projections were rebuilt by hand each cycle, which limited how often they could be refreshed.",
-          "solution": "Financial Planning & Forecasting with rolling forecasts, P&L projections, and modelling built into the platform."
+          "solution": "Financial Planning & Forecasting — Rolling forecasts, P&L projections, and modelling."
         },
         {
           "title": "Board Reporting Was Assembled by Hand",
           "challenge": "Operational and financial KPIs came from different sources and had to be reconciled before every board pack.",
-          "solution": "Executive KPI Reporting bringing operational and financial KPIs together for board reporting."
+          "solution": "Executive KPI Reporting — Operational and financial KPIs for board reporting."
         },
         {
           "title": "The Effect of a Fuel Price Move Was Unknown",
           "challenge": "Without a modelling capability, the impact of a change in fuel price or operating assumptions could not be tested before it happened.",
-          "solution": "Scenario & What-If Analysis that models fuel price and operating assumption impact."
+          "solution": "Scenario & What-If Analysis — Models fuel price and operating assumption impact."
         },
         {
           "title": "Financial Statements Sat Outside the Analytics",
           "challenge": "Balance sheet, income statement, and cashflow views lived apart from operational analysis, splitting the financial picture in two.",
-          "solution": "Enterprise Financial Reporting with balance sheet, income statement, and cashflow views in the same platform."
+          "solution": "Enterprise Financial Reporting — Balance sheet, income statement, and cashflow views."
         }
       ],
       "resultsLead": "The planning capability the airline gained from consolidating operational and financial data.",
@@ -3689,7 +3760,9 @@
         "Enabled scenario and what-if modelling of fuel price and operating assumption impact.",
         "Added balance sheet, income statement, and cashflow reporting alongside operational analysis."
       ],
-      "screenshots": []
+      "screenshots": [],
+      "client": "Saudi Arabia",
+      "team": "4+ Engineers"
     }
   ],
   "services": [

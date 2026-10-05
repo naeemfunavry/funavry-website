@@ -149,6 +149,17 @@ const LEAD_IN =
   /^(?:that|which|with|where|through|including|offering|delivering|providing|covering|supporting|using|via|for|to|a|an|the|by|so)\s+/i;
 
 export function featureOf(challenge: DetailChallenge): Feature {
+  /* "Name — what it does": the brief names the feature itself. */
+  const named = challenge.solution.trim().match(/^(.+?)\s+—\s+([\s\S]+)$/);
+  if (named && named[1].split(/\s+/).length <= 8) {
+    return {
+      title: named[1],
+      description: named[2],
+      challenge: challenge.challenge,
+      challengeTitle: challenge.title,
+    };
+  }
+
   const words = challenge.solution.trim().split(/\s+/);
   if (/^(?:A|An|The)$/.test(words[0] ?? "")) words.shift();
 
