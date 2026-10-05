@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Container from "@/components/ui/Container";
@@ -14,13 +13,11 @@ export type Moment = {
   category: string;
 };
 
-const ALL = "All";
-
 /**
  * The span of each tile in the bento. The first tile is the 2×2 lead; the rest
  * are single cells that fill rows of four beside and under it, and whatever
- * is left over on the last row stretches to close the gap — so any filter
- * lands on a full rectangle.
+ * is left over on the last row stretches to close the gap — so the grid
+ * always lands on a full rectangle.
  */
 function spanFor(i: number, n: number): string {
   if (i === 0) return "col-span-2 row-span-2";
@@ -40,19 +37,12 @@ function spanFor(i: number, n: number): string {
 }
 
 /**
- * Life at Funavry as a filterable bento of the company's own photographs: a
- * row of category chips over a grid whose first photo leads at twice the size.
+ * Life at Funavry as a bento of the company's own photographs, the first
+ * leading at twice the size.
  */
 export default function Moments({ moments }: { moments: Moment[] }) {
   const reduce = useReducedMotion();
-  const [active, setActive] = useState(ALL);
-
-  const categories = useMemo(
-    () => [ALL, ...Array.from(new Set(moments.map((m) => m.category)))],
-    [moments],
-  );
-  const shown =
-    active === ALL ? moments : moments.filter((m) => m.category === active);
+  const shown = moments;
 
   if (moments.length === 0) return null;
 
@@ -83,44 +73,10 @@ export default function Moments({ moments }: { moments: Moment[] }) {
           </p>
         </div>
 
-        {/* ---- The filters ---- */}
-        <div
-          role="group"
-          aria-label="Filter photographs"
-          className="mt-8 flex flex-wrap gap-2 lg:mt-10"
-        >
-          {categories.map((c) => {
-            const on = c === active;
-            const count =
-              c === ALL
-                ? moments.length
-                : moments.filter((m) => m.category === c).length;
-            return (
-              <button
-                key={c}
-                type="button"
-                aria-pressed={on}
-                onClick={() => setActive(c)}
-                className={cn(
-                  "inline-flex items-center rounded-sm gap-2 border px-4 py-2.5 font-mono text-[10.5px] uppercase tracking-[0.16em] transition-colors duration-300",
-                  on
-                    ? "border-[#102e54] bg-[#102e54] text-paper"
-                    : "border-line-strong bg-paper-white text-ink-500 hover:border-ink hover:text-ink",
-                )}
-              >
-                {c}
-                <span className={on ? "text-amber" : "text-ink-400"}>
-                  {count}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
         {/* ---- The bento ---- */}
         <motion.ul
           layout={!reduce}
-          className="mt-6 grid auto-rows-[150px] grid-cols-2 gap-3 sm:auto-rows-[200px] sm:gap-4 lg:auto-rows-[220px] lg:grid-cols-4"
+          className="mt-8 grid auto-rows-[150px] grid-cols-2 lg:mt-10 gap-3 sm:auto-rows-[200px] sm:gap-4 lg:auto-rows-[220px] lg:grid-cols-4"
         >
           <AnimatePresence mode="popLayout" initial={false}>
             {shown.map((m, i) => (

@@ -5,7 +5,6 @@ import Button from "@/components/ui/Button";
 import Container from "@/components/ui/Container";
 import { Wipe } from "@/components/ui/Kinetic";
 import type { WorkProject } from "@/lib/work-model";
-import ProjectMockup from "./ProjectMockup";
 
 const sectorOf = (p: WorkProject) => p.sector.split("·")[0].trim();
 const shotOf = (p: WorkProject) => p.media.primary ?? p.media.phones[0] ?? null;
@@ -48,7 +47,7 @@ export default function WorkTiles({
       aria-labelledby={id}
       className={`relative overflow-hidden border-b border-line ${
         ground === "azure"
-          ? "bg-[linear-gradient(180deg,#F8FBFE_0%,#EEF5FC_100%)]"
+          ? "bg-[linear-gradient(180deg,#EAF4FC_0%,#D6E9F8_100%)]"
           : "bg-paper"
       }`}
     >
@@ -62,7 +61,7 @@ export default function WorkTiles({
             className="absolute inset-0"
             style={{
               background:
-                "radial-gradient(45% 55% at 90% 8%, rgba(68,158,216,0.14), transparent 70%), radial-gradient(35% 50% at 86% 78%, rgba(68,158,216,0.16), transparent 70%)",
+                "radial-gradient(45% 55% at 90% 8%, rgba(68,158,216,0.24), transparent 70%), radial-gradient(35% 50% at 86% 78%, rgba(68,158,216,0.26), transparent 70%)",
             }}
           />
         </>
@@ -121,7 +120,13 @@ export default function WorkTiles({
 
 /** The site's round arrow, turning a quarter into amber on the card's hover:
     paper on the dark cards. */
-function CardArrow({ onDark = false, large = false }: { onDark?: boolean; large?: boolean }) {
+function CardArrow({
+  onDark = false,
+  large = false,
+}: {
+  onDark?: boolean;
+  large?: boolean;
+}) {
   return (
     <span
       aria-hidden
@@ -134,33 +139,32 @@ function CardArrow({ onDark = false, large = false }: { onDark?: boolean; large?
   );
 }
 
-/** The featured card's deep navy; its capture fades into it. */
+/** Every card's deep navy, the featured card and the rows alike; the
+    featured capture fades into it. */
 const DEEP = "#102E54";
 
-/** Each row's ground and accent in turn — white, sky blue, orange: the
-    card's tint and glow, its number chip, its left edge and its sector label.
-    All three are light, so the rows set dark type. */
+/** The capture's mask: solid at the top, easing out to nothing at the foot
+    over several stops, and softened a touch at either side. */
+const FADE =
+  "linear-gradient(to bottom, #000 0%, #000 35%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0.55) 65%, rgba(0,0,0,0.25) 80%, rgba(0,0,0,0.08) 90%, transparent 100%), linear-gradient(to right, rgba(0,0,0,0.75), #000 18%, #000 82%, rgba(0,0,0,0.75))";
+
+/** Each row's accent, the logo's colours in turn: its number chip, its left
+    edge and its sector label. */
 const ACCENTS = [
   {
-    ground: "#FFFFFF",
-    glow: "rgba(68,158,216,0.12)",
-    chip: "bg-azure-50 text-azure-ink ring-azure/30",
+    chip: "bg-azure/15 text-azure-300 ring-azure/30",
     edge: "bg-azure",
-    text: "text-azure-ink",
+    text: "text-steel-100",
   },
   {
-    ground: "#DDEEF9",
-    glow: "rgba(68,158,216,0.28)",
-    chip: "bg-paper-white/70 text-azure-ink ring-azure/40",
-    edge: "bg-azure-ink",
-    text: "text-azure-ink",
-  },
-  {
-    ground: "#FDEBCF",
-    glow: "rgba(245,159,19,0.28)",
-    chip: "bg-paper-white/70 text-amber-ink ring-amber/40",
+    chip: "bg-amber/15 text-amber-300 ring-amber/30",
     edge: "bg-amber",
-    text: "text-amber-ink",
+    text: "text-steel-100",
+  },
+  {
+    chip: "bg-steel-300/15 text-steel-100 ring-steel-300/30",
+    edge: "bg-steel-300",
+    text: "text-steel-100",
   },
 ];
 
@@ -168,6 +172,8 @@ const CARD =
   "group relative flex h-full overflow-hidden rounded-lg outline-none transition-[box-shadow,transform] duration-500 ease-smooth hover:-translate-y-1 focus-visible:ring-2 focus-visible:ring-azure focus-visible:ring-offset-2 focus-visible:ring-offset-paper";
 
 function Featured({ project }: { project: WorkProject }) {
+  const shot = shotOf(project);
+
   return (
     <Link
       href={`/case-studies/${project.slug}`}
@@ -177,7 +183,10 @@ function Featured({ project }: { project: WorkProject }) {
     >
       {/* The ground: the dark grid, an azure glow low on the right and a
           touch of amber low on the left. */}
-      <span aria-hidden className="pointer-events-none absolute inset-0 grid-paper-dark opacity-40" />
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 grid-paper-dark opacity-40"
+      />
       <span
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-70 transition-opacity duration-500 group-hover:opacity-100"
@@ -187,14 +196,32 @@ function Featured({ project }: { project: WorkProject }) {
         }}
       />
 
-      {/* The project's mockup (Style A), standing on the card's own navy
-          ground — glow, grid and all — so there is no second backdrop. */}
-      <div className="relative">
-        <ProjectMockup
-          project={project}
-          ground="none"
-          sizes="(max-width: 1024px) 92vw, 720px"
-        />
+      {/* The capture, full bleed, masked to transparent at the foot and a
+          little at the sides, so the ground itself shows through the fade —
+          glow, grid and all — and there is no seam. */}
+      <div className="relative aspect-[16/8]">
+        {shot ? (
+          <div
+            className="absolute inset-0"
+            style={{
+              maskImage: FADE,
+              WebkitMaskImage: FADE,
+              maskComposite: "intersect",
+              WebkitMaskComposite: "source-in",
+            }}
+          >
+            <Image
+              src={shot.src}
+              alt={shot.alt}
+              fill
+              quality={90}
+              sizes="(max-width: 1024px) 92vw, 720px"
+              className="object-cover object-left-top opacity-85 transition-opacity duration-700 ease-smooth group-hover:opacity-100"
+            />
+          </div>
+        ) : (
+          <span className="absolute inset-0 grid-paper-dark" />
+        )}
         <span className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full bg-paper-white py-1 pl-1 pr-3.5 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-ink shadow-[0_8px_24px_-10px_rgba(15,23,42,0.5)] ring-1 ring-line">
           <span className="flex h-6 w-6 items-center justify-center rounded-full bg-azure text-paper">
             <Star size={11} fill="currentColor" aria-hidden />
@@ -203,8 +230,8 @@ function Featured({ project }: { project: WorkProject }) {
         </span>
       </div>
 
-      {/* The copy, under the device's floor line. */}
-      <div className="relative -mt-2 flex flex-1 items-end gap-4 p-4 pt-0 lg:-mt-4 lg:p-6 lg:pt-0">
+      {/* The copy, pulled up over the fade. */}
+      <div className="relative -mt-14 flex flex-1 items-end gap-4 p-4 lg:-mt-16 lg:p-6">
         <div className="min-w-0 flex-1">
           <span className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-azure-300">
             <span aria-hidden className="h-px w-6 flex-none bg-current" />
@@ -243,16 +270,22 @@ function Row({ project, index }: { project: WorkProject; index: number }) {
     <Link
       href={`/case-studies/${project.slug}`}
       aria-label={`${project.title} — view details`}
-      className={`${CARD} isolate items-center gap-3.5 p-3 ring-1 ring-line hover:shadow-[0_30px_60px_-30px_rgba(16,46,84,0.4)] hover:ring-line-strong sm:gap-4`}
-      style={{ background: accent.ground }}
+      className={`${CARD} isolate items-center gap-3.5 p-3 ring-1 ring-white/10 hover:shadow-[0_30px_60px_-30px_rgba(16,46,84,0.65)] hover:ring-white/25 sm:gap-4`}
+      style={{ background: DEEP }}
     >
-      {/* The row's tint under the light drafting grid, with its glow on the
-          right. */}
-      <span aria-hidden className="pointer-events-none absolute inset-0 grid-paper opacity-40" />
+      {/* The same ground as the featured card: the dark grid and an azure
+          glow, here on the right. */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 grid-paper-dark opacity-40"
+      />
       <span
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-60 transition-opacity duration-500 group-hover:opacity-100"
-        style={{ background: `radial-gradient(50% 120% at 100% 50%, ${accent.glow}, transparent 70%)` }}
+        style={{
+          background:
+            "radial-gradient(50% 120% at 100% 50%, rgba(68,158,216,0.28), transparent 70%)",
+        }}
       />
 
       {/* The accent's edge, drawing down on hover. */}
@@ -267,7 +300,7 @@ function Row({ project, index }: { project: WorkProject; index: number }) {
         {String(index).padStart(2, "0")}
       </span>
 
-      <div className="relative aspect-[4/3] w-[30%] max-w-[118px] flex-none overflow-hidden rounded-md bg-paper-deep ring-1 ring-line">
+      <div className="relative aspect-[4/3] w-[30%] max-w-[118px] flex-none overflow-hidden rounded-md bg-white/5 ring-1 ring-white/10">
         {shot && (
           <Image
             src={shot.src}
@@ -286,16 +319,18 @@ function Row({ project, index }: { project: WorkProject; index: number }) {
       <div className="relative min-w-0 flex-1">
         <h3
           title={project.title}
-          className="line-clamp-2 text-[15px] font-medium leading-[1.3] tracking-[-0.01em] text-ink lg:text-[15.5px]"
+          className="line-clamp-2 text-[15px] font-medium leading-[1.3] tracking-[-0.01em] text-paper lg:text-[15.5px]"
         >
           {project.title}
         </h3>
-        <span className={`mt-1.5 block truncate font-mono text-[10px] uppercase tracking-[0.2em] ${accent.text}`}>
+        <span
+          className={`mt-1.5 block truncate font-mono text-[10px] uppercase tracking-[0.2em] ${accent.text}`}
+        >
           {sectorOf(project)}
         </span>
       </div>
 
-      <CardArrow />
+      <CardArrow onDark />
     </Link>
   );
 }
