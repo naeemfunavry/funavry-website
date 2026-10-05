@@ -22,7 +22,7 @@ import {
 } from "@/lib/work";
 import {
   featureOf,
-  glanceRows,
+  glanceOf,
   showcaseViews,
   techStack,
 } from "@/lib/case-study-view";
@@ -113,7 +113,7 @@ export default async function CaseStudyDetailPage({
       <main id="main">
         <CaseStudyHero project={project} hasShowcase={views.length > 0} />
 
-        <ProjectGlance rows={glanceRows(detail, project)} />
+        <ProjectGlance glance={glanceOf(detail, project)} />
 
         <ProductShowcase views={views} lead={showcaseLead} />
 

@@ -5,7 +5,7 @@ import { TECH_LOGOS } from "./tech-logos";
 import { TECH_MARKS } from "./tech-marks";
 import { TECH_MARKS_EXTRA } from "./tech-marks-extra";
 import { metaParts } from "./work";
-import type { ProjectPhase, Shot, WorkProject } from "./work-model";
+import type { Shot, WorkProject } from "./work-model";
 
 /*
  * What the case study page shows, read from the brief. Nothing here is
@@ -16,79 +16,40 @@ import type { ProjectPhase, Shot, WorkProject } from "./work-model";
 const metaValue = (d: CaseStudyDetail, label: RegExp) =>
   d.meta.find((m) => label.test(m.label))?.value ?? "";
 
-/** The kind of engagement each phase stands for. */
-const ENGAGEMENT: Record<ProjectPhase, string> = {
-  Build: "Product Development",
-  Automate: "AI & Automation",
-  Operate: "Platform Operations",
+export type Glance = {
+  industries: string[];
+  highlights: { value: string; label: string }[];
+  /** The client, or the region where the brief names one instead. */
+  client: { label: "Client" | "Region"; value: string } | null;
+  team: string | null;
 };
 
-export type GlanceRow = {
-  key: "industry" | "engagement" | "platform" | "services" | "duration" | "client" | "region";
-  label: string;
-  /** One or more lines. */
-  values: string[];
-};
+/** Project at a Glance, as the brief lays it out: industries, highlights,
+    the client (or region) and the dev team size. The Client / Region row
+    reads "<who> · <team>", the team always its last part. */
+export function glanceOf(detail: CaseStudyDetail, project: WorkProject): Glance {
+  const industries = metaParts(metaValue(detail, /^industry$/i));
 
-/** Where the project was delivered: web, mobile or both, from its captures
-    and categories. `null` when neither applies (a vision system, say). */
-function platformOf(project: WorkProject): string | null {
-  const web = project.categories.includes("web");
-  const mobile = project.categories.includes("mobile");
-  if (web && mobile) return "Web + Mobile";
-  if (mobile) return "Mobile";
-  if (web) return "Web";
-  return null;
-}
-
-/** Project at a Glance: industry, engagement, platform and services, then
-    the duration where the brief records one — else its client or region —
-    so the strip always closes on a fact rather than a gap. */
-export function glanceRows(
-  detail: CaseStudyDetail,
-  project: WorkProject,
-): GlanceRow[] {
-  const rows: GlanceRow[] = [];
-
-  const industry = metaParts(metaValue(detail, /^industry$/i));
-  rows.push({
-    key: "industry",
-    label: "Industry",
-    values: [industry[0] ?? project.sector.split("·")[0].trim()],
-  });
-
-  rows.push({
-    key: "engagement",
-    label: "Engagement",
-    values: [ENGAGEMENT[project.phase]],
-  });
-
-  const platform = platformOf(project);
-  if (platform) rows.push({ key: "platform", label: "Platform", values: [platform] });
-
-  const services = metaParts(metaValue(detail, /^service$/i)).map((s) =>
-    s.replace(/\s+Development$/i, ""),
-  );
-  if (services.length > 0) {
-    rows.push({ key: "services", label: "Services", values: services.slice(0, 2) });
+  let client: Glance["client"] = null;
+  let team: string | null = null;
+  const whoRow = detail.meta.find((m) => /^(client|region)$/i.test(m.label));
+  if (whoRow) {
+    const parts = whoRow.value.split("·").map((p) => p.trim()).filter(Boolean);
+    if (parts.length > 1 && /engineer|developer/i.test(parts.at(-1)!)) team = parts.pop()!;
+    if (parts.length > 0) {
+      client = {
+        label: /^region$/i.test(whoRow.label) ? "Region" : "Client",
+        value: parts.join(" · "),
+      };
+    }
   }
 
-  const durationRow = detail.meta.find((m) => /duration|timeline|live since/i.test(m.label));
-  const client = metaValue(detail, /^client$/i);
-  const region = metaValue(detail, /^region$/i);
-  if (durationRow) {
-    rows.push({
-      key: "duration",
-      label: /live since/i.test(durationRow.label) ? "Live Since" : "Duration",
-      values: [metaParts(durationRow.value)[0]],
-    });
-  } else if (client) {
-    rows.push({ key: "client", label: "Client", values: [metaParts(client)[0]] });
-  } else if (region) {
-    rows.push({ key: "region", label: "Region", values: [metaParts(region)[0]] });
-  }
-
-  return rows;
+  return {
+    industries: industries.length > 0 ? industries : [project.sector.split("·")[0].trim()],
+    highlights: detail.stats.map((s) => ({ value: s.value, label: s.label })),
+    client,
+    team,
+  };
 }
 
 /** Every technology the site has artwork for, longest name first so "Azure AI
