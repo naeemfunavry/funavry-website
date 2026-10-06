@@ -552,7 +552,7 @@ export default function TechStack() {
           </div>
 
           <Wipe delay={0.2}>
-            <p className="text-lg leading-[1.75] text-ink-500">
+            <p className="text-lg leading-[1.75] text-ink-500 lg:text-right">
               We bring together world-class AI models, enterprise-grade
               infrastructure, cloud platforms, data systems, automation
               frameworks, and modern engineering practices to build intelligent

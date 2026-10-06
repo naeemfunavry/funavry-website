@@ -8,7 +8,8 @@ const NAVY = "16,46,84"; // #102e54
 type Statement = {
   key: string;
   label: string;
-  title: string;
+  /** Optional — the statement can stand on its own. */
+  title?: string;
   body: string;
   icon: LucideIcon;
   /** The accent, as "r,g,b", and its text class for the label. */
@@ -18,24 +19,34 @@ type Statement = {
 
 const STATEMENTS: Statement[] = [
   {
-    key: "vision",
-    label: "Our Vision",
-    title: "A Smarter, More Connected Digital Future",
-    body: "To be a global leader in AI-powered digital transformation, enabling organizations to unlock new possibilities and create a smarter, more connected and sustainable future.",
-    icon: Eye,
-    accent: "68,158,216",
-    text: "text-azure-300",
-  },
-  {
-    key: "mission",
-    label: "Our Mission",
-    title: "Empowering Businesses, Enabling People",
-    body: "To design, build and operate innovative software solutions that combine human expertise with AI, empowering businesses to achieve greater efficiency, resilience and growth.",
+    key: "purpose",
+    label: "Our Purpose",
+    body: "To transform enterprises through intelligent technology, engineering excellence, and business services.",
     icon: Target,
     accent: "245,159,19",
     text: "text-amber-300",
   },
+  {
+    key: "vision",
+    label: "Our Vision",
+    body: "To be the trusted global partner redefining how enterprises innovate, operate, and grow in the age of AI.",
+    icon: Eye,
+    accent: "68,158,216",
+    text: "text-azure-300",
+  },
 ];
+
+const VALUES = [
+  { title: "AI-Driven Innovation", desc: "AI built into how we work." },
+  {
+    title: "Client-Centric Mindset",
+    desc: "Your outcomes set our priorities.",
+  },
+  { title: "Engineering Excellence", desc: "Rigorous, production-grade work." },
+  { title: "Trust & Integrity", desc: "We do what we say — securely." },
+  { title: "Ownership & Accountability", desc: "We own outcomes, end to end." },
+  { title: "Continuous Learning", desc: "Always sharpening our craft." },
+] as const;
 
 /**
  * Vision & Mission, as one navy band: the head on the left, the two
@@ -91,18 +102,18 @@ export default function VisionMission() {
       </div>
 
       <Container wide className="relative py-8 sm:py-12 lg:py-14">
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,330px)_minmax(0,1fr)] lg:gap-12 lg:pr-[24%] xl:gap-16">
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,330px)_minmax(0,1fr)] lg:gap-12 lg:pr-[14%] xl:gap-16">
           {/* ---- The head ---- */}
           <div>
             <div className="flex items-center gap-3">
               <span aria-hidden className="h-px w-10 flex-none bg-azure" />
               <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-paper/60">
-                Our Purpose
+                Purpose &amp; Values
               </span>
             </div>
             <h2 id="about-vision" className="mt-6 text-h3 text-paper">
-              Vision that guides us,{" "}
-              <span className="text-sweep-dark">a mission that drives us.</span>
+              A purpose that guides us,{" "}
+              <span className="text-sweep-dark">a vision that drives us.</span>
             </h2>
             <p className="mt-5 max-w-[42ch] text-[15px] leading-[1.7] text-paper/70">
               We&apos;re building a technology-driven future where innovation
@@ -111,13 +122,38 @@ export default function VisionMission() {
             </p>
           </div>
 
-          {/* ---- The statements ---- */}
-          <div className="grid gap-4 md:grid-cols-2 lg:gap-5">
-            {STATEMENTS.map((s, i) => (
-              <Wipe key={s.key} delay={0.08 + i * 0.08} className="h-full">
-                <StatementCard statement={s} index={i + 1} />
-              </Wipe>
-            ))}
+          <div>
+            {/* ---- The statements ---- */}
+            <div className="grid gap-4 md:grid-cols-2 lg:gap-5">
+              {STATEMENTS.map((s, i) => (
+                <Wipe key={s.key} delay={0.08 + i * 0.08} className="h-full">
+                  <StatementCard statement={s} index={i + 1} />
+                </Wipe>
+              ))}
+            </div>
+
+            {/* ---- The values, under the statements in the cards' label
+                style. ---- */}
+            <Wipe delay={0.24}>
+              <div className="mt-8 flex items-center gap-3">
+                <span className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em] text-azure-300">
+                  Our Values
+                </span>
+                <span aria-hidden className="h-px flex-1 bg-paper/15" />
+              </div>
+              <ul className="mt-5 grid gap-x-8 gap-y-5 sm:grid-cols-2 xl:grid-cols-3">
+                {VALUES.map((v) => (
+                  <li key={v.title}>
+                    <p className="text-[15px] font-semibold tracking-[-0.01em] text-paper">
+                      {v.title}
+                    </p>
+                    <p className="mt-1 text-[13px] leading-[1.6] text-paper/60">
+                      {v.desc}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </Wipe>
           </div>
         </div>
       </Container>
@@ -170,9 +206,11 @@ function StatementCard({
         <span aria-hidden className="h-px flex-1 bg-paper/15" />
       </div>
 
-      <h3 className="relative mt-3 text-[19px] font-semibold leading-[1.3] tracking-[-0.015em] text-paper lg:text-[20px]">
-        {s.title}
-      </h3>
+      {s.title && (
+        <h3 className="relative mt-3 text-[19px] font-semibold leading-[1.3] tracking-[-0.015em] text-paper lg:text-[20px]">
+          {s.title}
+        </h3>
+      )}
       <span
         aria-hidden
         className="relative mt-4 block h-[2px] w-8 transition-all duration-500 ease-expo group-hover:w-14"

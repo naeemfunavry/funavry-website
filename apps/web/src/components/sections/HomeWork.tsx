@@ -127,7 +127,7 @@ export default function HomeWork({
             </h2>
           </div>
           <Wipe delay={0.2}>
-            <p className="text-lg leading-[1.75] text-ink-500">
+            <p className="text-lg leading-[1.75] text-ink-500 lg:text-right">
               Web and enterprise platforms built end-to-end. Browse the deck, or
               open one for the full case study.
             </p>
@@ -294,7 +294,9 @@ export default function HomeWork({
                   {String(active + 1).padStart(2, "0")} /{" "}
                   {String(count).padStart(2, "0")}
                 </span>
-                {!reduce && count > 1 && (
+                {/* Pause button hidden for now — the deck still holds on
+                    hover and focus. Flip `false` back to restore it. */}
+                {false && !reduce && count > 1 && (
                   <button
                     type="button"
                     onClick={() => setPaused((p) => !p)}

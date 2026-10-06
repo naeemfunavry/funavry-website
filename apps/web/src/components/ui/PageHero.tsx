@@ -18,6 +18,7 @@ export default function PageHero({
   body,
   actions,
   children,
+  footer,
 }: {
   image: { src: string; position?: string };
   eyebrow: string;
@@ -26,6 +27,8 @@ export default function PageHero({
   body: React.ReactNode;
   actions?: React.ReactNode;
   children?: React.ReactNode;
+  /** Under the copy, wider than its column — room for a full stats row. */
+  footer?: React.ReactNode;
 }) {
   return (
     <section
@@ -78,6 +81,7 @@ export default function PageHero({
           )}
           {children}
         </div>
+        {footer && <div className="max-w-[860px]">{footer}</div>}
       </Container>
     </section>
   );

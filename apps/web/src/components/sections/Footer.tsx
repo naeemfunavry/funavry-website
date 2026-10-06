@@ -77,9 +77,9 @@ export default function Footer({ offices, socials }: FooterProps) {
     <footer className="relative overflow-hidden border-t border-line bg-paper">
       <Container wide className="relative z-10 pt-16 lg:pt-20">
         {/* Identity | Company | Offices, split by hairlines from lg. */}
-        <div className="grid gap-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:grid-cols-[minmax(0,340px)_minmax(0,200px)_minmax(0,1fr)] lg:gap-0">
+        <div className="grid gap-12 md:grid-cols-[minmax(0,100px)_minmax(0,1fr)] lg:grid-cols-[minmax(0,280px)_minmax(0,170px)_minmax(0,1fr)] lg:gap-0">
           {/* Identity. */}
-          <div className="md:col-span-2 lg:col-span-1 lg:pr-12">
+          <div className="md:col-span-2 lg:col-span-1 lg:pr-6">
             <a
               href="/"
               aria-label="Funavry Technologies home"
@@ -116,7 +116,7 @@ export default function Footer({ offices, socials }: FooterProps) {
           {/* Company. */}
           <nav
             aria-label="Company"
-            className="lg:border-l lg:border-line lg:px-12"
+            className="lg:border-l lg:border-line lg:px-6"
           >
             <ColumnTitle>Company</ColumnTitle>
             {/* Padded links on a tighter list: the same 33px pitch as before,
@@ -140,7 +140,7 @@ export default function Footer({ offices, socials }: FooterProps) {
           </nav>
 
           {/* Offices. */}
-          <div className="lg:border-l lg:border-line lg:pl-12">
+          <div className="lg:border-l lg:border-line md:pl-6 lg:pl-6">
             <ColumnTitle>Our Global Offices</ColumnTitle>
             <div className="mt-6 grid gap-8 sm:grid-cols-3 sm:gap-6 xl:gap-10">
               {orderOffices(offices).map((o) => (

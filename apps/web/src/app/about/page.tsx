@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
 import { getChrome } from "@/lib/chrome";
-import { getLeaders, getStats } from "@/lib/api";
+import { getLeaders } from "@/lib/api";
 import Contact from "@/components/sections/Contact";
 import Footprint from "@/components/sections/Footprint";
 import Gallery, { type GalleryPhoto } from "@/components/sections/Gallery";
@@ -10,7 +10,8 @@ import Leadership from "@/components/sections/Leadership";
 import CeoMessage, { CEO_NAME } from "@/components/sections/CeoMessage";
 import VisionMission from "@/components/sections/VisionMission";
 import Button from "@/components/ui/Button";
-import PageHero, { HeroStats } from "@/components/ui/PageHero";
+import PageHero from "@/components/ui/PageHero";
+import CompanyStats from "@/components/ui/CompanyStats";
 
 export const metadata: Metadata = {
   /* The root layout appends " — Funavry Technologies" via its title template. */
@@ -101,11 +102,7 @@ const GALLERY: GalleryPhoto[] = [
  * the CEO's message, then lean sections under the site's section label.
  */
 export default async function AboutPage() {
-  const [chrome, STATS, LEADERS] = await Promise.all([
-    getChrome(),
-    getStats("about"),
-    getLeaders(),
-  ]);
+  const [chrome, LEADERS] = await Promise.all([getChrome(), getLeaders()]);
 
   return (
     <>
@@ -133,9 +130,9 @@ export default async function AboutPage() {
               </Button>
             </>
           }
-        >
-          <HeroStats stats={STATS} />
-        </PageHero>
+          /* The home hero's figures, so the two pages state them alike. */
+          footer={<CompanyStats className="mt-14 lg:mt-16" />}
+        />
 
         {/* ----------------------------------- Message from the CEO ---- */}
         <CeoMessage />

@@ -325,7 +325,7 @@ export default function Industries({ industries }: IndustriesProps) {
 
           <div className="flex flex-col gap-8">
             <Wipe delay={0.2}>
-              <p className="text-lg leading-[1.75] text-ink-500">
+              <p className="text-lg leading-[1.75] text-ink-500 lg:text-right">
                 Eleven industries, five hundred delivered projects. We speak the
                 regulatory language, the data models, and the operational
                 reality of each.

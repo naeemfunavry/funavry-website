@@ -1039,7 +1039,12 @@ const AICore = ({
                    Below sm (`flex flex-col`): everything comes back into flow
                    and the whole group is centred, because the core is 310px
                    there and a hung caption would drop off its slab. */
-                className="pointer-events-none absolute left-1/2 flex w-[88%] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-3 text-center sm:block sm:gap-0"
+                className={cn(
+                  "pointer-events-none absolute left-1/2 flex w-[88%] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-3 text-center sm:mt-0 sm:block sm:gap-0",
+                  // Below sm the hidden caption still takes space in the
+                  // centred group, lifting the name off its slab — drop it back.
+                  s.iconAbove ? "mt-4" : "mt-5",
+                )}
                 style={{ top: `${(labelY(s) / VB_H) * 100}%` }}
                 initial={false}
                 animate={{ opacity: litPhase && !lit ? 0.7 : 1 }}
@@ -1730,7 +1735,7 @@ function Drawer({
                 onClick={onClose}
                 className="flex items-center justify-center gap-2 rounded-[12px] border border-line-strong px-4 py-3 text-[13px] font-medium text-ink transition-colors duration-300 hover:border-ink hover:bg-paper"
               >
-                Schedule a call
+                Send a Message
               </Link>
             </div>
           </motion.div>
