@@ -1,24 +1,24 @@
 import {
-  BookOpen,
-  BrainCircuit,
-  Flag,
+  Eye,
   Handshake,
-  ShieldCheck,
-  Wrench,
+  Sparkles,
+  Target,
+  TrendingUp,
+  Users,
   type LucideIcon,
 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import PageHero from "@/components/ui/PageHero";
 
-/** What the team works by, set under the hero's actions where the About
-    page carries its figures. */
+/** What the team works by — the same six values as the Core Values cards,
+    set under the hero's actions where the About page carries its figures. */
 const VALUES: { title: string; icon: LucideIcon; text: string }[] = [
-  { title: "AI-Driven Innovation", icon: BrainCircuit, text: "text-azure-300" },
-  { title: "Client-Centric Mindset", icon: Handshake, text: "text-amber" },
-  { title: "Engineering Excellence", icon: Wrench, text: "text-azure-300" },
-  { title: "Trust & Integrity", icon: ShieldCheck, text: "text-amber" },
-  { title: "Ownership & Accountability", icon: Flag, text: "text-azure-300" },
-  { title: "Continuous Learning", icon: BookOpen, text: "text-amber" },
+  { title: "Talent", icon: Users, text: "text-amber" },
+  { title: "Vision", icon: Eye, text: "text-azure-300" },
+  { title: "Innovation", icon: Sparkles, text: "text-amber" },
+  { title: "Connection", icon: Handshake, text: "text-azure-300" },
+  { title: "Impact", icon: Target, text: "text-amber" },
+  { title: "Growth", icon: TrendingUp, text: "text-azure-300" },
 ];
 
 /**
