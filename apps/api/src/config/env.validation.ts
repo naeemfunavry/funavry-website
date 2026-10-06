@@ -84,6 +84,11 @@ export class EnvironmentVariables {
   @IsString()
   DB_SSL_CA?: string;
 
+  /** The CA certificate itself, for hosts with no files to mount. Wins over DB_SSL_CA. */
+  @IsOptional()
+  @IsString()
+  DB_SSL_CA_PEM?: string;
+
   /* ----------------------------------------------------------------- auth */
 
   /**

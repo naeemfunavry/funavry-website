@@ -28,6 +28,8 @@ export function buildLoggerConfig(opts: {
   const targets: { target: string; level: string; options: Record<string, unknown> }[] = [];
 
   if (opts.isProduction) {
+    /* Only needed alongside the file targets below — on its own, stdout is
+       pino's default and needs no transport (see the return). */
     targets.push({
       target: "pino/file",
       level: opts.level,
@@ -83,7 +85,11 @@ export function buildLoggerConfig(opts: {
     pinoHttp: {
       level: opts.level,
 
-      transport: { targets },
+      /* Production stdout-only logging skips transports entirely. Transports
+         load their targets by name in a worker thread, which serverless
+         bundlers (Vercel's file tracing) can't see, so the target is missing at
+         runtime. Plain stdout needs no worker and is what the host collects. */
+      transport: opts.isProduction && !opts.toFile ? undefined : { targets },
 
       genReqId: (req, res) => {
         const existing = req.headers["x-request-id"];
