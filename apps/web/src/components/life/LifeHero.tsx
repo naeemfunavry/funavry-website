@@ -1,31 +1,31 @@
 import {
-  BarChart3,
+  BookOpen,
+  BrainCircuit,
+  Flag,
   Handshake,
-  Lightbulb,
-  Sparkles,
-  Sprout,
-  Users,
+  ShieldCheck,
+  Wrench,
   type LucideIcon,
 } from "lucide-react";
 import Button from "@/components/ui/Button";
 import PageHero from "@/components/ui/PageHero";
 
-/** What the team is made of, set under the hero's actions where the About
+/** What the team works by, set under the hero's actions where the About
     page carries its figures. */
-const PILLARS: { label: string; icon: LucideIcon; text: string }[] = [
-  { label: "People", icon: Users, text: "text-azure-300" },
-  { label: "Ideas", icon: Lightbulb, text: "text-amber" },
-  { label: "Collaboration", icon: Handshake, text: "text-azure-300" },
-  { label: "Innovation", icon: Sparkles, text: "text-amber" },
-  { label: "Growth", icon: Sprout, text: "text-azure-300" },
-  { label: "Impact", icon: BarChart3, text: "text-amber" },
+const VALUES: { title: string; icon: LucideIcon; text: string }[] = [
+  { title: "AI-Driven Innovation", icon: BrainCircuit, text: "text-azure-300" },
+  { title: "Client-Centric Mindset", icon: Handshake, text: "text-amber" },
+  { title: "Engineering Excellence", icon: Wrench, text: "text-azure-300" },
+  { title: "Trust & Integrity", icon: ShieldCheck, text: "text-amber" },
+  { title: "Ownership & Accountability", icon: Flag, text: "text-azure-300" },
+  { title: "Continuous Learning", icon: BookOpen, text: "text-amber" },
 ];
 
 /**
  * The Life @ Funavry opener — the shared `PageHero`, so it opens the way the
  * About, industry and service pages do: the team's photograph on the right
- * fading into the navy under the copy, and the six things the team is made of
- * in a row under the actions.
+ * fading into the navy under the copy, and the team's values under the
+ * actions.
  */
 export default function LifeHero() {
   return (
@@ -46,11 +46,11 @@ export default function LifeHero() {
       }
     >
       <ul className="mt-12 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-paper/15 pt-8 sm:grid-cols-3">
-        {PILLARS.map(({ label, icon: Icon, text }) => (
-          <li key={label} className="flex flex-col gap-2.5">
+        {VALUES.map(({ title, icon: Icon, text }) => (
+          <li key={title} className="flex flex-col gap-2.5">
             <Icon size={22} strokeWidth={1.6} aria-hidden className={text} />
-            <span className="font-mono text-[10px] uppercase leading-[1.5] tracking-[0.16em] text-paper/55">
-              {label}
+            <span className="text-[16px] font-semibold leading-snug tracking-[-0.01em] text-paper">
+              {title}
             </span>
           </li>
         ))}

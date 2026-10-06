@@ -7,6 +7,20 @@ export type GallerySlide = {
   alt: string;
   /** What the photo shows, shown over its foot on hover. */
   caption: string;
+  /** The photo's pixel size. Each tile takes the photo's own shape, so
+      nothing is cropped. */
+  width: number;
+  height: number;
+};
+
+/** The strip's height at each breakpoint, matching its `h-[…]` classes. */
+const STRIP = { sm: 280, md: 360, lg: 420 };
+
+/** How wide a tile is drawn at each breakpoint, so the browser fetches a
+    file sharp enough for it rather than for a fixed narrow tile. */
+const sizesFor = (s: GallerySlide) => {
+  const r = s.width / s.height;
+  return `(max-width: 640px) ${Math.round(STRIP.sm * r)}px, (max-width: 1024px) ${Math.round(STRIP.md * r)}px, ${Math.round(STRIP.lg * r)}px`;
 };
 
 /** Each tile's height within the strip, in turn: tall, short and in
@@ -30,13 +44,16 @@ function Pass({
           key={`${s.src}-${i}`}
           className={cn("flex-none pr-3 lg:pr-5", HEIGHTS[i % HEIGHTS.length])}
         >
-          <div className="group relative aspect-[4/5] h-full overflow-hidden bg-ink-900">
+          <div
+            className="group relative h-full overflow-hidden bg-ink-900"
+            style={{ aspectRatio: `${s.width} / ${s.height}` }}
+          >
             <Image
               src={s.src}
               alt={ariaHidden ? "" : s.alt}
               fill
-              quality={85}
-              sizes="(max-width: 640px) 60vw, (max-width: 1024px) 35vw, 340px"
+              quality={90}
+              sizes={sizesFor(s)}
               className="object-cover transition-transform duration-[1200ms] ease-expo group-hover:scale-[1.05]"
             />
             <span
