@@ -9,7 +9,7 @@ import {
   CaseStudyParagraphKind,
   type CaseStudyEntity,
   type MediaAssetEntity,
-} from "src/database/entities";
+} from "../../database/entities";
 
 /** Resolves a stored asset into the shape `next/image` can render directly. */
 export function toMediaRef(

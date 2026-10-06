@@ -15,7 +15,7 @@ import {
   MinLength,
 } from "class-validator";
 
-import { PaginationQueryDto } from "src/common/dto/pagination.dto";
+import { PaginationQueryDto } from "../../../common/dto/pagination.dto";
 
 export class CreateUserDto {
   @ApiProperty({ minLength: 3, maxLength: 64 })

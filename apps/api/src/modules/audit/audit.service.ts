@@ -8,10 +8,10 @@ import {
 import { PinoLogger } from "nestjs-pino";
 import { Repository } from "typeorm";
 
-import { AuditLogEntity, LoginAttemptEntity } from "src/database/entities";
-import { describeDevice } from "src/common/utils/client-ip";
-import { getRequestContext } from "src/common/utils/request-context";
-import { redactDeep } from "src/common/utils/redact";
+import { AuditLogEntity, LoginAttemptEntity } from "../../database/entities";
+import { describeDevice } from "../../common/utils/client-ip";
+import { getRequestContext } from "../../common/utils/request-context";
+import { redactDeep } from "../../common/utils/redact";
 
 import { AuditQueryDto } from "./dto/audit-query.dto";
 

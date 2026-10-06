@@ -2,9 +2,9 @@ import { Body, Controller, Delete, Get, Param, Put, Query } from "@nestjs/common
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { type AuthUser, Permission, type Setting } from "@funavry/types";
 
-import { CurrentUser } from "src/common/decorators/current-user.decorator";
-import { Public } from "src/common/decorators/public.decorator";
-import { RequirePermissions } from "src/common/decorators/roles.decorator";
+import { CurrentUser } from "../../common/decorators/current-user.decorator";
+import { Public } from "../../common/decorators/public.decorator";
+import { RequirePermissions } from "../../common/decorators/roles.decorator";
 
 import { UpsertSettingDto } from "./dto/setting.dto";
 import { SettingsService } from "./settings.service";

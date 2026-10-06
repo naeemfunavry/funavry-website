@@ -3,7 +3,7 @@ import { AuditAction, AuditResource } from "@funavry/types";
 import { Transform, Type } from "class-transformer";
 import { IsBoolean, IsDate, IsEnum, IsIP, IsOptional, IsUUID } from "class-validator";
 
-import { PaginationQueryDto } from "src/common/dto/pagination.dto";
+import { PaginationQueryDto } from "../../../common/dto/pagination.dto";
 
 export class AuditQueryDto extends PaginationQueryDto {
   @ApiPropertyOptional({ enum: AuditAction })

@@ -4,8 +4,8 @@ import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { authConfig } from "src/config/configuration";
-import { RefreshTokenEntity, UserEntity } from "src/database/entities";
+import { authConfig } from "../../config/configuration";
+import { RefreshTokenEntity, UserEntity } from "../../database/entities";
 
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";

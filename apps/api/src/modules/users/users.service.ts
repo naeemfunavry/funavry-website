@@ -15,12 +15,12 @@ import {
   InsufficientPermissionException,
   ResourceNotFoundException,
   ValidationException,
-} from "src/common/exceptions/app.exception";
-import { buildDiff } from "src/common/utils/redact";
-import { RoleEntity, UserEntity } from "src/database/entities";
-import { AuditService } from "src/modules/audit/audit.service";
-import { PasswordService } from "src/modules/auth/password.service";
-import { TokenService } from "src/modules/auth/token.service";
+} from "../../common/exceptions/app.exception";
+import { buildDiff } from "../../common/utils/redact";
+import { RoleEntity, UserEntity } from "../../database/entities";
+import { AuditService } from "../audit/audit.service";
+import { PasswordService } from "../auth/password.service";
+import { TokenService } from "../auth/token.service";
 
 import {
   CreateUserDto,

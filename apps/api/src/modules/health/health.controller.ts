@@ -8,8 +8,8 @@ import {
   MemoryHealthIndicator,
 } from "@nestjs/terminus";
 
-import { Public } from "src/common/decorators/public.decorator";
-import { RawResponse } from "src/common/decorators/raw-response.decorator";
+import { Public } from "../../common/decorators/public.decorator";
+import { RawResponse } from "../../common/decorators/raw-response.decorator";
 
 import { HealthExceptionFilter } from "./health-exception.filter";
 

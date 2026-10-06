@@ -12,12 +12,12 @@ import {
   SelectQueryBuilder,
 } from "typeorm";
 
-import type { ContentEntity } from "src/database/entities";
-import type { AuditService } from "src/modules/audit/audit.service";
+import type { ContentEntity } from "../../database/entities";
+import type { AuditService } from "../../modules/audit/audit.service";
 import type {
   CacheTagValue,
   RevalidationService,
-} from "src/modules/revalidation/revalidation.service";
+} from "../../modules/revalidation/revalidation.service";
 
 import type { PaginationQueryDto } from "../dto/pagination.dto";
 import type { ReorderDto } from "../dto/reorder.dto";

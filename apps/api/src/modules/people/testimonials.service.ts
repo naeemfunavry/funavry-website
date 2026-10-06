@@ -3,12 +3,12 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { AuditResource, type Testimonial } from "@funavry/types";
 import { Repository } from "typeorm";
 
-import { SimpleContentService } from "src/common/services/simple-content.service";
-import { TestimonialEntity } from "src/database/entities";
-import { AuditService } from "src/modules/audit/audit.service";
-import { toMediaRef } from "src/modules/case-studies/case-study.mapper";
-import { CacheTag, RevalidationService } from "src/modules/revalidation/revalidation.service";
-import { STORAGE_DRIVER, type StorageDriverPort } from "src/modules/media/storage/storage.interface";
+import { SimpleContentService } from "../../common/services/simple-content.service";
+import { TestimonialEntity } from "../../database/entities";
+import { AuditService } from "../audit/audit.service";
+import { toMediaRef } from "../case-studies/case-study.mapper";
+import { CacheTag, RevalidationService } from "../revalidation/revalidation.service";
+import { STORAGE_DRIVER, type StorageDriverPort } from "../media/storage/storage.interface";
 
 @Injectable()
 export class TestimonialsService extends SimpleContentService<TestimonialEntity, Testimonial> {

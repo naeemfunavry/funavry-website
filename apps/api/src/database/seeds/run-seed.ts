@@ -37,7 +37,7 @@ async function run(): Promise<void> {
     await seedRbac(AppDataSource);
 
     console.log("Master administrator…");
-    const { PasswordService } = await import("src/modules/auth/password.service");
+    const { PasswordService } = await import("../../modules/auth/password.service");
     const passwords = new PasswordService();
 
     const admin = await seedMasterAdmin(

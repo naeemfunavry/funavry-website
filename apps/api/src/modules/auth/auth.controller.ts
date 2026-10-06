@@ -14,11 +14,11 @@ import { Throttle } from "@nestjs/throttler";
 import type { AuthUser, AuthSession } from "@funavry/types";
 import type { Request, Response } from "express";
 
-import { CurrentUser } from "src/common/decorators/current-user.decorator";
-import { Public } from "src/common/decorators/public.decorator";
-import { AuthThrottlerGuard } from "src/common/guards/auth-throttle.guard";
-import { TokenInvalidException } from "src/common/exceptions/app.exception";
-import { resolveClientIp } from "src/common/utils/client-ip";
+import { CurrentUser } from "../../common/decorators/current-user.decorator";
+import { Public } from "../../common/decorators/public.decorator";
+import { AuthThrottlerGuard } from "../../common/guards/auth-throttle.guard";
+import { TokenInvalidException } from "../../common/exceptions/app.exception";
+import { resolveClientIp } from "../../common/utils/client-ip";
 
 import { AuthService, type RequestOrigin } from "./auth.service";
 import { ChangePasswordDto, LoginDto } from "./dto/login.dto";

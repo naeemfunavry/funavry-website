@@ -1,6 +1,6 @@
 import type { AuditLogEntry } from "@funavry/types";
 
-import type { AuditLogEntity } from "src/database/entities";
+import type { AuditLogEntity } from "../../database/entities";
 
 /**
  * Entity → response DTO.

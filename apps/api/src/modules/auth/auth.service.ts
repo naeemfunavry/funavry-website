@@ -11,14 +11,14 @@ import {
 import { PinoLogger } from "nestjs-pino";
 import { Repository } from "typeorm";
 
-import { authConfig } from "src/config/configuration";
-import { UserEntity } from "src/database/entities";
+import { authConfig } from "../../config/configuration";
+import { UserEntity } from "../../database/entities";
 import {
   AccountLockedException,
   InvalidCredentialsException,
   TokenInvalidException,
-} from "src/common/exceptions/app.exception";
-import { AuditService } from "src/modules/audit/audit.service";
+} from "../../common/exceptions/app.exception";
+import { AuditService } from "../audit/audit.service";
 
 import { ChangePasswordDto, LoginDto } from "./dto/login.dto";
 import { PasswordService } from "./password.service";

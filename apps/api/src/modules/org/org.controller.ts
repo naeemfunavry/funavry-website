@@ -13,11 +13,11 @@ import {
   type Technology,
 } from "@funavry/types";
 
-import { createCrudController } from "src/common/controllers/crud.controller";
-import { Audit } from "src/common/decorators/audit.decorator";
-import { CurrentUser } from "src/common/decorators/current-user.decorator";
-import { Public } from "src/common/decorators/public.decorator";
-import { RequirePermissions } from "src/common/decorators/roles.decorator";
+import { createCrudController } from "../../common/controllers/crud.controller";
+import { Audit } from "../../common/decorators/audit.decorator";
+import { CurrentUser } from "../../common/decorators/current-user.decorator";
+import { Public } from "../../common/decorators/public.decorator";
+import { RequirePermissions } from "../../common/decorators/roles.decorator";
 
 import {
   CreateClientDto,

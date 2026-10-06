@@ -14,15 +14,15 @@ import { createHash, randomUUID } from "node:crypto";
 import sharp from "sharp";
 import { Repository } from "typeorm";
 
-import { storageConfig } from "src/config/configuration";
-import { MediaAssetEntity } from "src/database/entities";
+import { storageConfig } from "../../config/configuration";
+import { MediaAssetEntity } from "../../database/entities";
 import {
   PayloadTooLargeException,
   ResourceNotFoundException,
   UnsupportedMediaException,
   ConflictException,
-} from "src/common/exceptions/app.exception";
-import { AuditService } from "src/modules/audit/audit.service";
+} from "../../common/exceptions/app.exception";
+import { AuditService } from "../audit/audit.service";
 
 import { MediaQueryDto, UpdateMediaDto } from "./dto/media.dto";
 import { STORAGE_DRIVER, type StorageDriverPort } from "./storage/storage.interface";

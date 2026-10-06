@@ -1,7 +1,7 @@
 import { Global, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 
-import { appConfig } from "src/config/configuration";
+import { appConfig } from "../../config/configuration";
 
 import { RevalidationService } from "./revalidation.service";
 

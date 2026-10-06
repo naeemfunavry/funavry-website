@@ -8,8 +8,8 @@ import {
   SocialLinkEntity,
   StatEntity,
   TechnologyEntity,
-} from "src/database/entities";
-import { MediaModule } from "src/modules/media/media.module";
+} from "../../database/entities";
+import { MediaModule } from "../media/media.module";
 
 import {
   ClientsController,

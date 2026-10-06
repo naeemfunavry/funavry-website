@@ -24,7 +24,7 @@ import {
   ValidateNested,
 } from "class-validator";
 
-import { PaginationQueryDto } from "src/common/dto/pagination.dto";
+import { PaginationQueryDto } from "../../../common/dto/pagination.dto";
 
 /**
  * The slug rule, applied everywhere a slug is accepted.

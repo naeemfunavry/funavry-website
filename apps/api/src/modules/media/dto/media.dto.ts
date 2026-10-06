@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { MediaPurpose } from "@funavry/types";
 import { IsEnum, IsOptional, IsString, MaxLength } from "class-validator";
 
-import { PaginationQueryDto } from "src/common/dto/pagination.dto";
+import { PaginationQueryDto } from "../../../common/dto/pagination.dto";
 
 export class UploadMediaDto {
   @ApiProperty({ enum: MediaPurpose })

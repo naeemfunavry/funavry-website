@@ -8,7 +8,7 @@ import { Reflector } from "@nestjs/core";
 import type { Request, Response } from "express";
 import { Observable, tap } from "rxjs";
 
-import { AuditService } from "src/modules/audit/audit.service";
+import { AuditService } from "../../modules/audit/audit.service";
 
 import { AUDIT_KEY, type AuditMetadata } from "../decorators/audit.decorator";
 

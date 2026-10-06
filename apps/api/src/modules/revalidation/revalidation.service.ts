@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
 import { PinoLogger } from "nestjs-pino";
 
-import { appConfig } from "src/config/configuration";
+import { appConfig } from "../../config/configuration";
 
 /**
  * Cache tags. Each names a slice of the public site's data, and a page opts

@@ -8,16 +8,16 @@ import {
 } from "@funavry/types";
 import { DataSource, Repository, SelectQueryBuilder } from "typeorm";
 
-import { SimpleContentService } from "src/common/services/simple-content.service";
+import { SimpleContentService } from "../../common/services/simple-content.service";
 import {
   ConflictException,
   ResourceNotFoundException,
-} from "src/common/exceptions/app.exception";
-import { OfficeAddressLineEntity, OfficeEntity } from "src/database/entities";
-import { AuditService } from "src/modules/audit/audit.service";
-import { toMediaRef } from "src/modules/case-studies/case-study.mapper";
-import { CacheTag, RevalidationService } from "src/modules/revalidation/revalidation.service";
-import { STORAGE_DRIVER, type StorageDriverPort } from "src/modules/media/storage/storage.interface";
+} from "../../common/exceptions/app.exception";
+import { OfficeAddressLineEntity, OfficeEntity } from "../../database/entities";
+import { AuditService } from "../audit/audit.service";
+import { toMediaRef } from "../case-studies/case-study.mapper";
+import { CacheTag, RevalidationService } from "../revalidation/revalidation.service";
+import { STORAGE_DRIVER, type StorageDriverPort } from "../media/storage/storage.interface";
 
 import { CreateOfficeDto, UpdateOfficeDto } from "./dto/org.dto";
 

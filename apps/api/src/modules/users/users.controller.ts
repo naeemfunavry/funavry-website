@@ -21,9 +21,9 @@ import {
   UserRole,
 } from "@funavry/types";
 
-import { Audit } from "src/common/decorators/audit.decorator";
-import { CurrentUser } from "src/common/decorators/current-user.decorator";
-import { RequirePermissions, RequireRoles } from "src/common/decorators/roles.decorator";
+import { Audit } from "../../common/decorators/audit.decorator";
+import { CurrentUser } from "../../common/decorators/current-user.decorator";
+import { RequirePermissions, RequireRoles } from "../../common/decorators/roles.decorator";
 
 import {
   CreateUserDto,

@@ -23,11 +23,11 @@ import {
   Permission,
 } from "@funavry/types";
 
-import { Audit } from "src/common/decorators/audit.decorator";
-import { CurrentUser } from "src/common/decorators/current-user.decorator";
-import { Public } from "src/common/decorators/public.decorator";
-import { RequirePermissions } from "src/common/decorators/roles.decorator";
-import { ReorderDto } from "src/common/dto/reorder.dto";
+import { Audit } from "../../common/decorators/audit.decorator";
+import { CurrentUser } from "../../common/decorators/current-user.decorator";
+import { Public } from "../../common/decorators/public.decorator";
+import { RequirePermissions } from "../../common/decorators/roles.decorator";
+import { ReorderDto } from "../../common/dto/reorder.dto";
 
 import {
   CaseStudyQueryDto,

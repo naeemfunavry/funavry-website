@@ -6,11 +6,11 @@ import { Repository } from "typeorm";
 import {
   ResourceNotFoundException,
   ValidationException,
-} from "src/common/exceptions/app.exception";
-import { buildDiff } from "src/common/utils/redact";
-import { SettingEntity } from "src/database/entities";
-import { AuditService } from "src/modules/audit/audit.service";
-import { CacheTag, RevalidationService } from "src/modules/revalidation/revalidation.service";
+} from "../../common/exceptions/app.exception";
+import { buildDiff } from "../../common/utils/redact";
+import { SettingEntity } from "../../database/entities";
+import { AuditService } from "../audit/audit.service";
+import { CacheTag, RevalidationService } from "../revalidation/revalidation.service";
 
 import { UpsertSettingDto } from "./dto/setting.dto";
 

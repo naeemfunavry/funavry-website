@@ -4,8 +4,8 @@ import { PassportStrategy } from "@nestjs/passport";
 import type { AuthUser, JwtPayload } from "@funavry/types";
 import { ExtractJwt, Strategy } from "passport-jwt";
 
-import { authConfig } from "src/config/configuration";
-import { TokenInvalidException } from "src/common/exceptions/app.exception";
+import { authConfig } from "../../../config/configuration";
+import { TokenInvalidException } from "../../../common/exceptions/app.exception";
 
 import { AuthService } from "../auth.service";
 

@@ -9,21 +9,21 @@ import {
 } from "@funavry/types";
 import { DataSource, EntityManager, In, Repository, SelectQueryBuilder } from "typeorm";
 
-import { SimpleContentService } from "src/common/services/simple-content.service";
+import { SimpleContentService } from "../../common/services/simple-content.service";
 import {
   ConflictException,
   ResourceNotFoundException,
   ValidationException,
-} from "src/common/exceptions/app.exception";
+} from "../../common/exceptions/app.exception";
 import {
   CaseStudyEntity,
   ServiceEntity,
   ServiceSubEntity,
-} from "src/database/entities";
-import { AuditService } from "src/modules/audit/audit.service";
-import { toCaseStudySummary } from "src/modules/case-studies/case-study.mapper";
-import { CacheTag, RevalidationService } from "src/modules/revalidation/revalidation.service";
-import { STORAGE_DRIVER, type StorageDriverPort } from "src/modules/media/storage/storage.interface";
+} from "../../database/entities";
+import { AuditService } from "../audit/audit.service";
+import { toCaseStudySummary } from "../case-studies/case-study.mapper";
+import { CacheTag, RevalidationService } from "../revalidation/revalidation.service";
+import { STORAGE_DRIVER, type StorageDriverPort } from "../media/storage/storage.interface";
 
 import { CreateServiceDto, UpdateServiceDto } from "./dto/service.dto";
 

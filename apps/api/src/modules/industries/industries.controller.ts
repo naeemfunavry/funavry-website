@@ -2,9 +2,9 @@ import { Controller, Get, Param } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { AuditResource, type Industry, type IndustryDetail, Permission } from "@funavry/types";
 
-import { createCrudController } from "src/common/controllers/crud.controller";
-import { Public } from "src/common/decorators/public.decorator";
-import { RequirePermissions } from "src/common/decorators/roles.decorator";
+import { createCrudController } from "../../common/controllers/crud.controller";
+import { Public } from "../../common/decorators/public.decorator";
+import { RequirePermissions } from "../../common/decorators/roles.decorator";
 
 import { CreateIndustryDto, UpdateIndustryDto } from "./dto/industry.dto";
 import { IndustriesService } from "./industries.service";

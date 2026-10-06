@@ -16,9 +16,9 @@ import { LessThan, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PinoLogger } from "nestjs-pino";
 
-import { authConfig } from "src/config/configuration";
-import { RefreshTokenEntity } from "src/database/entities";
-import { describeDevice } from "src/common/utils/client-ip";
+import { authConfig } from "../../config/configuration";
+import { RefreshTokenEntity } from "../../database/entities";
+import { describeDevice } from "../../common/utils/client-ip";
 
 export interface IssuedTokens {
   accessToken: string;

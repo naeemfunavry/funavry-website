@@ -4,7 +4,7 @@ import { PinoLogger } from "nestjs-pino";
 import { promises as fs } from "node:fs";
 import * as path from "node:path";
 
-import { storageConfig } from "src/config/configuration";
+import { storageConfig } from "../../../config/configuration";
 
 import type { StorageDriverPort, StoredFile } from "./storage.interface";
 

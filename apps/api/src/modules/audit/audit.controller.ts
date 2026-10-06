@@ -2,7 +2,7 @@ import { Controller, Get, Query } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { type AuditLogEntry, type Paginated, Permission } from "@funavry/types";
 
-import { RequirePermissions } from "src/common/decorators/roles.decorator";
+import { RequirePermissions } from "../../common/decorators/roles.decorator";
 
 import { AuditQueryDto } from "./dto/audit-query.dto";
 import { toAuditLogEntry } from "./audit.mapper";

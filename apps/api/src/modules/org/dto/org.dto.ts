@@ -20,7 +20,7 @@ import {
   MinLength,
 } from "class-validator";
 
-import { SLUG_PATTERN } from "src/modules/case-studies/dto/case-study.dto";
+import { SLUG_PATTERN } from "../../case-studies/dto/case-study.dto";
 
 /* ---------------------------------------------------------------- offices */
 

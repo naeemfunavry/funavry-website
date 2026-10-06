@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
 
-import { storageConfig } from "src/config/configuration";
+import { storageConfig } from "../../../config/configuration";
 
 import type { StorageDriverPort, StoredFile } from "./storage.interface";
 

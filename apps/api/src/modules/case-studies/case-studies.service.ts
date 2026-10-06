@@ -10,12 +10,12 @@ import {
 } from "@funavry/types";
 import { DataSource, EntityManager, In, Repository, SelectQueryBuilder } from "typeorm";
 
-import { BaseContentService } from "src/common/services/base-content.service";
+import { BaseContentService } from "../../common/services/base-content.service";
 import {
   ConflictException,
   ResourceNotFoundException,
   ValidationException,
-} from "src/common/exceptions/app.exception";
+} from "../../common/exceptions/app.exception";
 import {
   CaseStudyCalloutEntity,
   CaseStudyCapabilityEntity,
@@ -28,10 +28,10 @@ import {
   CaseStudyScreenshotEntity,
   CaseStudyStatEntity,
   IndustryEntity,
-} from "src/database/entities";
-import { AuditService } from "src/modules/audit/audit.service";
-import { CacheTag, RevalidationService } from "src/modules/revalidation/revalidation.service";
-import { STORAGE_DRIVER, type StorageDriverPort } from "src/modules/media/storage/storage.interface";
+} from "../../database/entities";
+import { AuditService } from "../audit/audit.service";
+import { CacheTag, RevalidationService } from "../revalidation/revalidation.service";
+import { STORAGE_DRIVER, type StorageDriverPort } from "../media/storage/storage.interface";
 
 import {
   CaseStudyQueryDto,

@@ -14,7 +14,7 @@ import {
   ValidateNested,
 } from "class-validator";
 
-import { SLUG_PATTERN, SeoDto } from "src/modules/case-studies/dto/case-study.dto";
+import { SLUG_PATTERN, SeoDto } from "../../case-studies/dto/case-study.dto";
 
 export class CreateIndustryDto {
   @ApiProperty({ maxLength: 140 })

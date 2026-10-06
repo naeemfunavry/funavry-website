@@ -3,8 +3,8 @@ import { ConfigModule, ConfigType } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { PinoLogger } from "nestjs-pino";
 
-import { storageConfig } from "src/config/configuration";
-import { MediaAssetEntity } from "src/database/entities";
+import { storageConfig } from "../../config/configuration";
+import { MediaAssetEntity } from "../../database/entities";
 
 import { MediaController } from "./media.controller";
 import { MediaService } from "./media.service";

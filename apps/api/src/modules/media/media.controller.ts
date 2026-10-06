@@ -20,9 +20,9 @@ import {
   Permission,
 } from "@funavry/types";
 
-import { CurrentUser } from "src/common/decorators/current-user.decorator";
-import { RequirePermissions } from "src/common/decorators/roles.decorator";
-import { UnsupportedMediaException } from "src/common/exceptions/app.exception";
+import { CurrentUser } from "../../common/decorators/current-user.decorator";
+import { RequirePermissions } from "../../common/decorators/roles.decorator";
+import { UnsupportedMediaException } from "../../common/exceptions/app.exception";
 
 import { MediaQueryDto, UpdateMediaDto, UploadMediaDto } from "./dto/media.dto";
 import { MediaService } from "./media.service";
