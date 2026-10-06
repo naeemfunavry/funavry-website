@@ -1,9 +1,10 @@
 import {
+  BookOpen,
+  BrainCircuit,
   Flag,
-  Scale,
-  Target,
-  TrendingUp,
-  Users,
+  Handshake,
+  ShieldCheck,
+  Wrench,
   type LucideIcon,
 } from "lucide-react";
 import Container from "@/components/ui/Container";
@@ -17,39 +18,45 @@ const STEEL = "55,96,121";
 
 const VALUES: { title: string; body: string; icon: LucideIcon; tint: string }[] = [
   {
-    title: "Ownership",
-    body: "We take responsibility for the outcome and go the extra mile to deliver.",
-    icon: Flag,
-    tint: AMBER,
-  },
-  {
-    title: "People First",
-    body: "We support and respect each other, and grow together as one team.",
-    icon: Users,
+    title: "AI-Driven Innovation",
+    body: "AI built into how we work.",
+    icon: BrainCircuit,
     tint: AZURE,
   },
   {
-    title: "Continuous Growth",
-    body: "We keep learning, keep experimenting and keep improving every day.",
-    icon: TrendingUp,
+    title: "Client-Centric Mindset",
+    body: "Your outcomes set our priorities.",
+    icon: Handshake,
+    tint: AMBER,
+  },
+  {
+    title: "Engineering Excellence",
+    body: "Rigorous, production-grade work.",
+    icon: Wrench,
     tint: STEEL,
   },
   {
-    title: "Impact Driven",
-    body: "We build solutions that create real, measurable value for the business.",
-    icon: Target,
+    title: "Trust & Integrity",
+    body: "We do what we say — securely.",
+    icon: ShieldCheck,
     tint: AMBER,
   },
   {
-    title: "Integrity",
-    body: "We do the right thing, and believe in transparent, honest collaboration.",
-    icon: Scale,
+    title: "Ownership & Accountability",
+    body: "We own outcomes, end to end.",
+    icon: Flag,
     tint: AZURE,
+  },
+  {
+    title: "Continuous Learning",
+    body: "Always sharpening our craft.",
+    icon: BookOpen,
+    tint: STEEL,
   },
 ];
 
 /**
- * The principles the team works by: the heading row, then the five values as
+ * The principles the team works by: the heading row, then the six values as
  * framed cards, each with an icon tile in one of the logo's hues.
  */
 export default function CoreValues() {
@@ -78,7 +85,7 @@ export default function CoreValues() {
           </p>
         </div>
 
-        <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:mt-12 lg:grid-cols-5">
+        <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3 xl:grid-cols-6">
           {VALUES.map(({ title, body, icon: Icon, tint }, i) => (
             <li key={title} className="h-full">
               <Wipe delay={i * 0.06} className="h-full">
