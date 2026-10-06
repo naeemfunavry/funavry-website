@@ -14,14 +14,9 @@ const SLIDES: AboutSlide[] = [
     caption: "The Funavry team",
   },
   {
-    src: "/about/6.webp",
-    alt: "The team standing together on a grassy mountaintop under a blue sky, with forested peaks and clouds behind",
-    caption: "On the mountaintop",
-  },
-  {
-    src: "/about/4.webp",
-    alt: "The team gathered in front of the illuminated Funavry Technologies sign, decorated with green and white balloons",
-    caption: "Celebrating at the office",
+    src: "/about/2.webp",
+    alt: "The open-plan office floor seen through glass partitions, with the team at their desks",
+    caption: "Inside the office",
   },
   {
     src: "/about/3.webp",
@@ -29,15 +24,22 @@ const SLIDES: AboutSlide[] = [
     caption: "Women's Day",
   },
   {
-    src: "/about/2.webp",
-    alt: "The open-plan office floor seen through glass partitions, with the team at their desks",
-    caption: "Inside the office",
+    src: "/about/4.webp",
+    alt: "The team gathered in front of the illuminated Funavry Technologies sign, decorated with green and white balloons",
+    caption: "Celebrating at the office",
   },
   {
     src: "/about/5.webp",
     alt: "Women of the team seated around the boardroom table for a Sip, Sit & Share feedback session",
     caption: "A team session",
   },
+
+  {
+    src: "/about/6.webp",
+    alt: "The team standing together on a grassy mountaintop under a blue sky, with forested peaks and clouds behind",
+    caption: "On the mountaintop",
+  },
+
   {
     src: "/about/7.webp",
     alt: "The team's football side posing together on a floodlit five-a-side pitch at night",
