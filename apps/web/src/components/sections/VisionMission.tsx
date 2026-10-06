@@ -80,12 +80,12 @@ export default function VisionMission() {
         className="absolute inset-y-0 right-0 -z-10 hidden w-[30%] lg:block"
       >
         <Image
-          src="/industries/enterprise.webp"
+          src="/visionmission-bg/office-building.webp"
           alt=""
           fill
           quality={80}
           sizes="30vw"
-          className="object-cover object-[60%_40%]"
+          className="object-cover object-[center_35%]"
         />
         <span
           className="absolute inset-0"

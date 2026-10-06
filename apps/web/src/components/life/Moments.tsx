@@ -37,6 +37,18 @@ function spanFor(i: number, n: number): string {
 }
 
 /**
+ * The `sizes` hint for a tile, derived from the columns its `span` takes, so
+ * `next/image` picks a source that matches how wide the tile actually renders
+ * — the grid is two columns on a phone and four from `lg`.
+ */
+function sizesFor(i: number, span: string): string {
+  if (i === 0) return "(max-width: 1024px) 100vw, 50vw";
+  if (span.includes("lg:col-span-4")) return "100vw";
+  if (span.includes("col-span-2")) return "(max-width: 1024px) 100vw, 50vw";
+  return "(max-width: 1024px) 50vw, 25vw";
+}
+
+/**
  * Life at Funavry as a bento of the company's own photographs, the first
  * leading at twice the size.
  */
@@ -79,7 +91,9 @@ export default function Moments({ moments }: { moments: Moment[] }) {
           className="mt-8 grid auto-rows-[150px] grid-cols-2 lg:mt-10 gap-3 sm:auto-rows-[200px] sm:gap-4 lg:auto-rows-[220px] lg:grid-cols-4"
         >
           <AnimatePresence mode="popLayout" initial={false}>
-            {shown.map((m, i) => (
+            {shown.map((m, i) => {
+              const span = spanFor(i, shown.length);
+              return (
               <motion.li
                 key={m.src}
                 layout={!reduce}
@@ -89,7 +103,7 @@ export default function Moments({ moments }: { moments: Moment[] }) {
                 transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
                 className={cn(
                   "group relative overflow-hidden rounded-sm bg-ink-900",
-                  spanFor(i, shown.length),
+                  span,
                 )}
               >
                 <Image
@@ -97,11 +111,11 @@ export default function Moments({ moments }: { moments: Moment[] }) {
                   alt={m.alt}
                   fill
                   quality={85}
-                  sizes={
-                    i === 0
-                      ? "(max-width: 1024px) 100vw, 50vw"
-                      : "(max-width: 1024px) 50vw, 25vw"
-                  }
+                  /* Tell the browser how wide each tile really renders, so it
+                     loads a matching source: the lead and the full-bleed last
+                     row take half or all of the width, not the 25vw a normal
+                     tile does — otherwise they'd upscale a tile-sized image. */
+                  sizes={sizesFor(i, span)}
                   className="object-cover transition-transform duration-[1200ms] ease-expo group-hover:scale-[1.04]"
                 />
                 <span
@@ -128,7 +142,8 @@ export default function Moments({ moments }: { moments: Moment[] }) {
                   </p>
                 </div>
               </motion.li>
-            ))}
+              );
+            })}
           </AnimatePresence>
         </motion.ul>
       </Container>

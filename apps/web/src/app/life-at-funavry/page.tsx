@@ -17,38 +17,46 @@ export const metadata: Metadata = {
     "Life at Funavry: the people, values and culture behind our work — a team of curious minds and builders who learn, collaborate and grow together.",
 };
 
-/* The company's own photographs, in /public/about (see the README there).
-   The first one leads the bento at twice the size. Captions say what the photo shows and no more. */
+/* Moments that make us — the company's own photographs, in
+   /public/lifefunavry/moments. The first one leads the bento at twice the
+   size. Each caption is the moment's heading; the category is the small label
+   above it. Say only what the picture shows. */
 const MOMENTS: Moment[] = [
   {
-    src: "/about/5.webp",
-    alt: "The whole team on a lawn below green hills on a company outing",
-    caption: "Company day out",
-    category: "Outings",
+    src: "/lifefunavry/moments/vision.webp",
+    alt: "Funavry team members on a panel on stage, in front of a screen about the prospects of local IT startups in Pakistan",
+    caption: "Vision",
+    category: "On the panel",
   },
   {
-    src: "/about/2.webp",
-    alt: "The team gathered on the stairs and marble floor of the office lobby",
-    caption: "The office lobby",
-    category: "Office Life",
+    src: "/lifefunavry/moments/growth.webp",
+    alt: "A group of Funavry colleagues dressed formally, standing together in an office lobby",
+    caption: "Growth",
+    category: "Our people",
   },
   {
-    src: "/about/8.webp",
-    alt: "A table-tennis match at the office, with colleagues crowded on the stairs to watch",
-    caption: "Table tennis at the office",
-    category: "Office Life",
+    src: "/lifefunavry/moments/innovation.webp",
+    alt: "A team member trying a virtual-reality headset at a technology showcase booth",
+    caption: "Innovation",
+    category: "Hands-on",
   },
   {
-    src: "/about/12.webp",
-    alt: "Colleagues in a meeting around the boardroom table",
-    caption: "In the boardroom",
-    category: "Office Life",
+    src: "/lifefunavry/moments/connection.webp",
+    alt: "Two people shaking hands at a signing table under LEAP and Funavry branding at the LEAP technology event",
+    caption: "Connection",
+    category: "At LEAP",
   },
   {
-    src: "/about/7.webp",
-    alt: "The team celebrating in the office under blue and white balloons",
-    caption: "Celebrating at the office",
-    category: "Team Events",
+    src: "/lifefunavry/moments/impact.webp",
+    alt: "Women of the team seated around the boardroom table for a Sip, Sit & Share feedback session",
+    caption: "Impact",
+    category: "Culture",
+  },
+  {
+    src: "/lifefunavry/moments/talent.webp",
+    alt: "Funavry engineers at work across the open-plan office floor, seen through the glass partitions of the workspaces",
+    caption: "Talent",
+    category: "At work",
   },
 ];
 

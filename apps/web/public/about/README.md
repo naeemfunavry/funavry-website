@@ -1,18 +1,17 @@
 # Life at Funavry — company photographs
 
-The company's own photographs. Four places draw from this folder:
+The company's own photographs. Two places draw from this folder:
 
 - **About page gallery** — `GALLERY` in `src/app/about/page.tsx`. Takes any
   number of photos, portrait or landscape; each keeps its own shape, so list
   every photo with its pixel `width` and `height`.
-- **Life @ Funavry page** � `MOMENTS` in `src/app/life-at-funavry/page.tsx`.
-  A filterable bento: the first photo leads at twice the size, the rest are
-  cropped to fill their tiles, and each `category` becomes a filter chip.
 - **Home page slider** — `SLIDES` in `src/components/sections/Proof.tsx`. The
   frame crops to 16:10, so use landscape group shots here.
-- **About page hero** — the `image` passed to `PageHero` in
-  `src/app/about/page.tsx`. Needs a large landscape photo (2000 px wide or
-  more); it sits under a dark wash, so a darker photo holds up best.
+
+The page hero and the Life @ Funavry "Moments" bento no longer draw from
+here — they have their own folders: `public/about-us-bg-cover` (About hero),
+`public/lifefunavry-bg-cover` (Life hero) and `public/lifefunavry/moments`
+(the Moments bento).
 
 ## Adding a photo
 

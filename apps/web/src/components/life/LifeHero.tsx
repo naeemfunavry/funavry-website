@@ -30,7 +30,7 @@ const VALUES: { title: string; icon: LucideIcon; text: string }[] = [
 export default function LifeHero() {
   return (
     <PageHero
-      image={{ src: "/about/5.webp", position: "center 45%" }}
+      image={{ src: "/lifefunavry-bg-cover/life-hero.webp", position: "center" }}
       eyebrow="Life @ Funavry"
       title={["People, ideas and possibilities", "stronger together."]}
       body="At Funavry we are a team of curious minds, problem solvers and builders who believe in using technology to create real impact. We learn, collaborate and grow together — and enjoy the journey along the way."
