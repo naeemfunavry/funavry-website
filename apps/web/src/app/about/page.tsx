@@ -24,8 +24,8 @@ export const metadata: Metadata = {
    photo by dropping it in that folder and listing it here with its pixel
    size; the strip takes any number, portrait or landscape.
 
-   Captions say what the photo shows and no more: the outings are not named
-   by place, because nothing in the pictures says where they were. */
+   Captions say what the photo shows and no more: an event is named only when
+   the picture itself says so (a banner or sign), never guessed. */
 const GALLERY: GalleryPhoto[] = [
   {
     src: "/about/1.webp",
@@ -35,60 +35,46 @@ const GALLERY: GalleryPhoto[] = [
     height: 416,
   },
   {
-    src: "/about/2.webp",
-    alt: "The team gathered on the stairs and marble floor of the office lobby",
-    caption: "The office lobby",
-    width: 4032,
-    height: 3024,
+    src: "/about/6.webp",
+    alt: "The team standing together on a grassy mountaintop under a blue sky, with forested peaks and clouds behind",
+    caption: "On the mountaintop",
+    width: 2000,
+    height: 1493,
+  },
+  {
+    src: "/about/4.webp",
+    alt: "The team gathered in front of the illuminated Funavry Technologies sign, decorated with green and white balloons",
+    caption: "Celebrating at the office",
+    width: 1549,
+    height: 1157,
+  },
+  {
+    src: "/about/3.webp",
+    alt: "Women of the team holding bouquets under a balloon arch beside a Happy Women's Day banner",
+    caption: "Women's Day",
+    width: 1253,
+    height: 940,
   },
   {
     src: "/about/7.webp",
-    alt: "The team celebrating in the office under blue and white balloons",
-    caption: "Celebrating at the office",
+    alt: "The team's football side posing together on a floodlit five-a-side pitch at night",
+    caption: "Football night",
     width: 1280,
     height: 960,
   },
   {
-    src: "/about/12.webp",
-    alt: "Colleagues in a meeting around the boardroom table",
-    caption: "In the boardroom",
-    width: 4032,
-    height: 3024,
-  },
-  {
-    src: "/about/8.webp",
-    alt: "A table-tennis match at the office, with colleagues crowded on the stairs to watch",
-    caption: "Table tennis at the office",
-    width: 4032,
-    height: 3024,
+    src: "/about/2.webp",
+    alt: "The open-plan office floor seen through glass partitions, with the team at their desks",
+    caption: "Inside the office",
+    width: 1280,
+    height: 960,
   },
   {
     src: "/about/5.webp",
-    alt: "The whole team on a lawn below green hills on a company outing",
-    caption: "Company day out",
-    width: 4032,
-    height: 3024,
-  },
-  {
-    src: "/about/3.webp",
-    alt: "The team gathered on a lakeside lawn with hills behind",
-    caption: "By the lake",
-    width: 4032,
-    height: 3024,
-  },
-  {
-    src: "/about/4.webp",
-    alt: "A volleyball match on a lakeside court, with colleagues watching from the side",
-    caption: "Volleyball by the lake",
-    width: 4032,
-    height: 3024,
-  },
-  {
-    src: "/about/10.webp",
-    alt: "Colleagues on the lawn watching the games from their chairs",
-    caption: "Games on the lawn",
-    width: 4032,
-    height: 3024,
+    alt: "Women of the team seated around the boardroom table for a Sip, Sit & Share feedback session",
+    caption: "A team session",
+    width: 1600,
+    height: 1200,
   },
 ];
 
@@ -113,7 +99,7 @@ export default async function AboutPage() {
       />
       <main id="main">
         <PageHero
-          image={{ src: "/about/2.webp", position: "center 40%" }}
+          image={{ src: "/about-us-bg-cover/about-hero.webp", position: "center" }}
           eyebrow="About Funavry"
           title={[
             "An AI-first partner that",

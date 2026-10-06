@@ -103,11 +103,11 @@ export default function WhyWorkWithUs({ id = "why-us" }: { id?: string }) {
             <figure className="relative h-full min-h-[440px] overflow-hidden bg-ink-900">
               <Image
                 src="/about/2.webp"
-                alt="The Funavry team gathered in the office lobby"
+                alt="The Funavry office floor, with the team at their desks behind glass partitions"
                 fill
                 quality={90}
                 sizes="(max-width: 1024px) 100vw, 40vw"
-                className="object-cover object-[center_35%]"
+                className="object-cover object-[center_55%]"
               />
               <span
                 aria-hidden

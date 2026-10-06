@@ -36,7 +36,7 @@ export default async function CareersPage() {
       />
       <main id="main">
         <PageHero
-          image={{ src: "/about/12.webp", position: "center 45%" }}
+          image={{ src: "/about/6.webp", position: "center 40%" }}
           eyebrow="Careers"
           title={["Be part of a team", "that creates impact."]}
           body="We build innovative solutions, solve complex challenges and create opportunities for people to grow and thrive."
