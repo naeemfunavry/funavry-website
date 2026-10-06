@@ -38,6 +38,7 @@ export const databaseConfig = registerAs("database", () => ({
   synchronize: bool(process.env.DB_SYNCHRONIZE),
   logging: bool(process.env.DB_LOGGING),
   ssl: bool(process.env.DB_SSL),
+  sslCa: process.env.DB_SSL_CA || undefined,
 }));
 
 export const authConfig = registerAs("auth", () => ({

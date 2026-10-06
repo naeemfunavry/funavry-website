@@ -2,6 +2,7 @@ import { config as loadEnv } from "dotenv";
 import { DataSource, DataSourceOptions } from "typeorm";
 
 import { ENTITIES } from "./entities";
+import { mysqlSsl } from "./ssl";
 
 /* The TypeORM CLI boots this file directly, outside Nest, so it loads .env
    itself rather than relying on ConfigModule. */
@@ -44,10 +45,7 @@ export const dataSourceOptions: DataSourceOptions = {
       dateStrings: false,
    },
 
-   ssl:
-      process.env.DB_SSL === "true"
-         ? { rejectUnauthorized: true }
-         : undefined,
+   ssl: mysqlSsl(process.env.DB_SSL === "true", process.env.DB_SSL_CA),
 };
 
 export const AppDataSource = new DataSource(dataSourceOptions);

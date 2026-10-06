@@ -79,6 +79,11 @@ export class EnvironmentVariables {
   @IsBoolean()
   DB_SSL: boolean = false;
 
+  /** Path to the CA certificate a managed host signs with. */
+  @IsOptional()
+  @IsString()
+  DB_SSL_CA?: string;
+
   /* ----------------------------------------------------------------- auth */
 
   /**

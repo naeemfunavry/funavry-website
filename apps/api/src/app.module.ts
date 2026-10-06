@@ -22,6 +22,7 @@ import {
 import { validateEnv } from "./config/env.validation";
 import { buildLoggerConfig } from "./config/logger.config";
 import { ENTITIES } from "./database/entities";
+import { mysqlSsl } from "./database/ssl";
 import { AuditModule } from "./modules/audit/audit.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { CaseStudiesModule } from "./modules/case-studies/case-studies.module";
@@ -98,7 +99,7 @@ import { UsersModule } from "./modules/users/users.module";
           supportBigNumbers: true,
           bigNumberStrings: true,
         },
-        ssl: db.ssl ? { rejectUnauthorized: true } : undefined,
+        ssl: mysqlSsl(db.ssl, db.sslCa),
         autoLoadEntities: false,
       }),
     }),
