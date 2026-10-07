@@ -23,10 +23,22 @@ export const metadata: Metadata = {
    above it. Say only what the picture shows. */
 const MOMENTS: Moment[] = [
   {
+    src: "/lifefunavry/moments/connection.webp",
+    alt: "Two people shaking hands at a signing table under LEAP and Funavry branding at the LEAP technology event",
+    caption: "Connection",
+    category: "At LEAP",
+  },
+  {
     src: "/lifefunavry/moments/vision.webp",
     alt: "Funavry team members on a panel on stage, in front of a screen about the prospects of local IT startups in Pakistan",
     caption: "Vision",
     category: "On the panel",
+  },
+  {
+    src: "/lifefunavry/moments/talent.webp",
+    alt: "Funavry engineers at work across the open-plan office floor, seen through the glass partitions of the workspaces",
+    caption: "Talent",
+    category: "At work",
   },
   {
     src: "/lifefunavry/moments/growth.webp",
@@ -41,22 +53,10 @@ const MOMENTS: Moment[] = [
     category: "Hands-on",
   },
   {
-    src: "/lifefunavry/moments/connection.webp",
-    alt: "Two people shaking hands at a signing table under LEAP and Funavry branding at the LEAP technology event",
-    caption: "Connection",
-    category: "At LEAP",
-  },
-  {
     src: "/lifefunavry/moments/impact.webp",
     alt: "Women of the team seated around the boardroom table for a Sip, Sit & Share feedback session",
     caption: "Impact",
     category: "Culture",
-  },
-  {
-    src: "/lifefunavry/moments/talent.webp",
-    alt: "Funavry engineers at work across the open-plan office floor, seen through the glass partitions of the workspaces",
-    caption: "Talent",
-    category: "At work",
   },
 ];
 

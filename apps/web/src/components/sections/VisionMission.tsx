@@ -5,6 +5,13 @@ import { Wipe } from "@/components/ui/Kinetic";
 
 const NAVY = "16,46,84"; // #102e54
 
+/* Feathers the photo's left, top and bottom edges to transparent so it
+   dissolves into the navy band instead of sitting on it as a hard rectangle.
+   The two gradients are intersected — a pixel shows only where both keep it. */
+const VM_FEATHER =
+  "linear-gradient(to right, transparent 0%, #000 42%), " +
+  "linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%)";
+
 type Statement = {
   key: string;
   label: string;
@@ -74,29 +81,29 @@ export default function VisionMission() {
         }}
       />
 
-      {/* The photograph, on the right from lg, fading left into the navy. */}
+      {/* The photograph, whole, on the right from lg. Its left, top and bottom
+          edges feather into the navy with a mask, so it reads as part of the
+          band rather than a pasted rectangle. */}
       <div
         aria-hidden
-        className="absolute inset-y-0 right-0 -z-10 hidden w-[30%] lg:block"
+        className="absolute inset-y-0 right-0 -z-10 hidden lg:block"
       >
         <Image
           src="/visionmission-bg/office-building.webp"
           alt=""
-          fill
+          width={1000}
+          height={1334}
           quality={80}
-          sizes="30vw"
-          className="object-cover object-[center_35%]"
-        />
-        <span
-          className="absolute inset-0"
+          sizes="34vw"
+          /* Sized to the photo's own shape, so its box is the photo (no
+             letterbox) and the mask feathers the real left, top and bottom
+             edges into the navy. */
+          className="ml-auto block h-full w-auto max-w-none object-contain"
           style={{
-            background: `linear-gradient(to right, rgb(${NAVY}) 0%, rgba(${NAVY},0.85) 20%, rgba(${NAVY},0.5) 45%, rgba(${NAVY},0.15) 75%, rgba(${NAVY},0) 100%)`,
-          }}
-        />
-        <span
-          className="absolute inset-0"
-          style={{
-            background: `linear-gradient(to bottom, rgba(${NAVY},0.5) 0%, rgba(${NAVY},0) 30%, rgba(${NAVY},0) 70%, rgba(${NAVY},0.6) 100%)`,
+            maskImage: VM_FEATHER,
+            WebkitMaskImage: VM_FEATHER,
+            maskComposite: "intersect",
+            WebkitMaskComposite: "source-in",
           }}
         />
       </div>
