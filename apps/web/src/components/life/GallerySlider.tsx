@@ -45,7 +45,7 @@ function Pass({
           className={cn("flex-none pr-3 lg:pr-5", HEIGHTS[i % HEIGHTS.length])}
         >
           <div
-            className="group relative h-full overflow-hidden bg-ink-900"
+            className="group relative h-full overflow-hidden bg-ink-900 rounded-sm"
             style={{ aspectRatio: `${s.width} / ${s.height}` }}
           >
             <Image
@@ -54,7 +54,7 @@ function Pass({
               fill
               quality={90}
               sizes={sizesFor(s)}
-              className="object-cover transition-transform duration-[1200ms] ease-expo group-hover:scale-[1.05]"
+              className="object-cover rounded-sm transition-transform duration-[1200ms] ease-expo group-hover:scale-[1.05]"
             />
             <span
               aria-hidden

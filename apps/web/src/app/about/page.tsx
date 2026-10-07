@@ -99,7 +99,13 @@ export default async function AboutPage() {
       />
       <main id="main">
         <PageHero
-          image={{ src: "/about-us-bg-cover/about-hero.webp", position: "center" }}
+          image={{
+            src: "/about-us-bg-cover/about-hero.webp",
+            fit: "contain",
+            position: "right",
+            width: 1107,
+            height: 1502,
+          }}
           eyebrow="About Funavry"
           title={[
             "An AI-first partner that",

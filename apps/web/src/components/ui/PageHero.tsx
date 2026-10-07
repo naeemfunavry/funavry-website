@@ -3,6 +3,14 @@ import Container from "@/components/ui/Container";
 import HeroActions from "@/components/ui/HeroActions";
 import { KineticWords, Wipe } from "@/components/ui/Kinetic";
 
+/* Feathers a contained photo's left, top and bottom edges to transparent, so
+   it dissolves into the ink instead of sitting on it as a hard rectangle. The
+   right edge stays flush with the viewport. The two gradients are intersected,
+   so a pixel shows only where both keep it. */
+const CONTAIN_FEATHER =
+  "linear-gradient(to right, transparent 0%, #000 34%), " +
+  "linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%)";
+
 /**
  * The dark page opener the industry, service and case study pages share: a
  * photograph filling the right and fading into the ink under the copy, an
@@ -20,7 +28,17 @@ export default function PageHero({
   children,
   footer,
 }: {
-  image: { src: string; position?: string };
+  /** `fit: "contain"` shows the whole photo instead of cropping it to fill —
+      for a portrait or otherwise tall photo that cover would gut. It sits at
+      the right and its edges feather into the ink, so it reads as part of the
+      hero rather than a pasted rectangle; pass its pixel `width`/`height`. */
+  image: {
+    src: string;
+    position?: string;
+    fit?: "cover" | "contain";
+    width?: number;
+    height?: number;
+  };
   eyebrow: string;
   /** One line per entry; each rises in after the one before. */
   title: string[];
@@ -36,16 +54,39 @@ export default function PageHero({
       className="relative overflow-hidden bg-[#102e54] pb-20 pt-[150px] lg:flex lg:min-h-[680px] lg:items-center lg:pb-24"
     >
       <div aria-hidden className="absolute inset-0 lg:left-[34%]">
-        <Image
-          src={image.src}
-          alt=""
-          fill
-          priority
-          quality={88}
-          sizes="(max-width: 1024px) 100vw, 66vw"
-          className="object-cover"
-          style={{ objectPosition: image.position ?? "center" }}
-        />
+        {image.fit === "contain" ? (
+          <Image
+            src={image.src}
+            alt=""
+            width={image.width ?? 1200}
+            height={image.height ?? 1600}
+            priority
+            quality={88}
+            sizes="(max-width: 1024px) 100vw, 45vw"
+            /* Sized to the photo's own shape and pinned right, so its box is
+               the photo (no letterbox) and the mask can feather its left,
+               top and bottom edges straight into the ink. */
+            className="ml-auto block h-full w-auto max-w-none object-contain"
+            style={{
+              objectPosition: image.position ?? "right",
+              maskImage: CONTAIN_FEATHER,
+              WebkitMaskImage: CONTAIN_FEATHER,
+              maskComposite: "intersect",
+              WebkitMaskComposite: "source-in",
+            }}
+          />
+        ) : (
+          <Image
+            src={image.src}
+            alt=""
+            fill
+            priority
+            quality={88}
+            sizes="(max-width: 1024px) 100vw, 66vw"
+            className="object-cover"
+            style={{ objectPosition: image.position ?? "center" }}
+          />
+        )}
       </div>
       {/* Ink over the photograph: solid under the copy, clearing to the right.
           On a phone the photograph sits behind everything, dimmed evenly. */}
