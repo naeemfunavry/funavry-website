@@ -39,6 +39,8 @@ type ServiceOverride = {
   hideHeroActions?: boolean;
   /** Replaces the left expertise statement. */
   expertiseBody?: React.ReactNode;
+  /** Give the expertise section a white (paper) ground instead of paper-deep. */
+  expertiseWhiteBg?: boolean;
   /** Replaces each sub-service's description, keyed by sub title. */
   subDescs?: Record<string, string>;
   /** Overrides the Selected Work section's head and portfolio link. */
@@ -61,6 +63,7 @@ type ServiceOverride = {
 const SERVICE_OVERRIDES: Record<string, ServiceOverride> = {
   "ai-automation": {
     hideHeroActions: true,
+    expertiseWhiteBg: true,
     expertiseBody: (
       <>
         We design, build, and deploy intelligent systems that automate complex
@@ -89,7 +92,7 @@ const SERVICE_OVERRIDES: Record<string, ServiceOverride> = {
       label: "Selected Work",
       title: (
         <>
-          Real Solutions. <span className="text-azure">Measurable Impact.</span>
+          Real Solutions. <br /> <span className="">Measurable Impact.</span>
         </>
       ),
       body: "From AI-powered applications to intelligent automation and knowledge systems, we build solutions that solve real business challenges.",
@@ -101,7 +104,7 @@ const SERVICE_OVERRIDES: Record<string, ServiceOverride> = {
         <>
           Transforming Industries
           <br />
-          with <span className="text-azure">AI &amp; Automation</span>
+          with <span className="">AI &amp; Automation</span>
         </>
       ),
       body: "We apply AI, automation, and digital engineering expertise across industries to solve complex operational challenges, improve decision-making, and create scalable digital experiences.",
@@ -231,7 +234,11 @@ export default async function ServiceDetailPage({
             built from what the CMS knows about the practice, and the services
             it covers as an open list on the right — a line each, ruled off
             from the next, no boxes. */}
-        <section className="relative overflow-hidden border-b border-line bg-paper-deep">
+        <section
+          className={`relative overflow-hidden border-b border-line ${
+            override?.expertiseWhiteBg ? "bg-paper" : "bg-paper-deep"
+          }`}
+        >
           <div aria-hidden className="absolute inset-0 grid-paper opacity-60" />
           <Container wide className="relative z-10 py-8 sm:py-12 lg:py-14">
             <div className="grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
