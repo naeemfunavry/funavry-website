@@ -26,6 +26,91 @@ type Params = { slug: string };
 const FALLBACK_PHOTO = "/services/digital-engineering.webp";
 
 /**
+ * Per-practice page copy that the CMS does not model.
+ *
+ * The [slug] template is otherwise driven entirely by the service's CMS entry
+ * and its case-study relations. A practice listed here replaces that generic,
+ * data-derived copy with written-out marketing prose for its own page — the
+ * hero loses its generic actions, and the expertise statement is prose rather
+ * than a case-study tally.
+ */
+type ServiceOverride = {
+  /** Hide the hero's "Discuss your project / All services" actions. */
+  hideHeroActions?: boolean;
+  /** Replaces the left expertise statement. */
+  expertiseBody?: React.ReactNode;
+  /** Replaces each sub-service's description, keyed by sub title. */
+  subDescs?: Record<string, string>;
+  /** Overrides the Selected Work section's head and portfolio link. */
+  work?: {
+    label?: string;
+    title?: React.ReactNode;
+    body?: string;
+    more?: { label: string; href: string };
+  };
+  /** Overrides the Industries We Serve section's head text (cards unchanged). */
+  industries?: {
+    label?: string;
+    title?: React.ReactNode;
+    body?: React.ReactNode;
+    /** Drop the proof point (project tag) from each card. */
+    hideProof?: boolean;
+  };
+};
+
+const SERVICE_OVERRIDES: Record<string, ServiceOverride> = {
+  "ai-automation": {
+    hideHeroActions: true,
+    expertiseBody: (
+      <>
+        We design, build, and deploy intelligent systems that automate complex
+        processes, augment decision-making, and help businesses create new
+        digital capabilities. From AI-powered applications and intelligent
+        automation to enterprise knowledge systems and AI operations, we build
+        solutions that are practical, scalable, and built for real-world impact.
+        <br />
+        <br />
+        Our expertise spans the complete AI lifecycle — from strategy and
+        application development to deployment, optimization, governance, and
+        continuous improvement.
+      </>
+    ),
+    subDescs: {
+      "AI Solutions & Applications":
+        "Build intelligent AI-powered products, enterprise assistants, agentic systems, and generative AI applications.",
+      "Intelligent Automation":
+        "Automate workflows, business processes, operational tasks, and decision-support activities.",
+      "Document & Knowledge Intelligence":
+        "Transform documents and unstructured information into searchable, structured, and actionable business knowledge using OCR, extraction, knowledge systems, and RAG.",
+      "AI Engineering & Operations":
+        "Deploy, monitor, evaluate, optimize, and govern AI systems through MLOps, LLMOps, model evaluation, prompt optimization, and AI governance.",
+    },
+    work: {
+      label: "Selected Work",
+      title: (
+        <>
+          Real Solutions. <span className="text-azure">Measurable Impact.</span>
+        </>
+      ),
+      body: "From AI-powered applications to intelligent automation and knowledge systems, we build solutions that solve real business challenges.",
+      more: { label: "View All Work", href: "/case-studies" },
+    },
+    industries: {
+      label: "Industries We Serve",
+      title: (
+        <>
+          Transforming Industries
+          <br />
+          with <span className="text-azure">AI &amp; Automation</span>
+        </>
+      ),
+      body: "We apply AI, automation, and digital engineering expertise across industries to solve complex operational challenges, improve decision-making, and create scalable digital experiences.",
+      hideProof: true,
+    },
+  },
+};
+
+/**
  * `true`, and it has to be.
  *
  * With `false`, Next serves only the paths that existed at build time and
@@ -88,6 +173,7 @@ export default async function ServiceDetailPage({
   if (!found) notFound();
 
   const service = found.service;
+  const override = SERVICE_OVERRIDES[slug];
 
   const projects = byVisuals(buildWorkProjects(workIndex.details));
   const allWork = projectsFor(projects, found.caseStudySlugs);
@@ -98,6 +184,15 @@ export default async function ServiceDetailPage({
     found.caseStudySlugs,
     workIndex.industriesByProject,
   );
+
+  /* The sub-services, with their descriptions replaced where the page overrides
+     them; titles and order stay as the CMS entry defines. */
+  const subs = override?.subDescs
+    ? service.subs.map((sub) => ({
+        ...sub,
+        desc: override.subDescs?.[sub.title] ?? sub.desc,
+      }))
+    : service.subs;
 
   const workCount = allWork.length;
   const industryCount = industries.length;
@@ -118,14 +213,16 @@ export default async function ServiceDetailPage({
           title={service.title}
           body={service.summary}
           actions={
-            <>
-              <Button href="/contact" variant="accent" size="md" arrow>
-                Discuss your project
-              </Button>
-              <Button href="/#capabilities" variant="outline" size="md">
-                All services
-              </Button>
-            </>
+            override?.hideHeroActions ? undefined : (
+              <>
+                <Button href="/contact" variant="accent" size="md" arrow>
+                  Discuss your project
+                </Button>
+                <Button href="/#capabilities" variant="outline" size="md">
+                  All services
+                </Button>
+              </>
+            )
           }
         />
 
@@ -149,46 +246,52 @@ export default async function ServiceDetailPage({
                   {service.title} Expertise
                 </h2>
                 <p className="mt-6 text-[16px] leading-[1.9] text-ink-500 lg:text-[17px]">
-                  {workCount > 0 && (
+                  {override?.expertiseBody ?? (
                     <>
-                      <strong className="font-semibold text-ink">
-                        {workCount} published{" "}
-                        {workCount === 1 ? "case study" : "case studies"}
-                      </strong>
-                      {industryCount > 0 && (
+                      {workCount > 0 && (
                         <>
-                          {" across "}
                           <strong className="font-semibold text-ink">
-                            {industryCount}{" "}
-                            {industryCount === 1 ? "industry" : "industries"}
+                            {workCount} published{" "}
+                            {workCount === 1 ? "case study" : "case studies"}
                           </strong>
+                          {industryCount > 0 && (
+                            <>
+                              {" across "}
+                              <strong className="font-semibold text-ink">
+                                {industryCount}{" "}
+                                {industryCount === 1
+                                  ? "industry"
+                                  : "industries"}
+                              </strong>
+                            </>
+                          )}
+                          {" — "}
                         </>
                       )}
-                      {" — "}
+                      {workCount > 0 ? "a " : "A "}
+                      <strong className="font-semibold text-ink">
+                        {service.phase}
+                      </strong>{" "}
+                      practice within{" "}
+                      <strong className="font-semibold text-ink">
+                        {HOUSE_LABEL[service.group]}
+                      </strong>
+                      .
                     </>
                   )}
-                  {workCount > 0 ? "a " : "A "}
-                  <strong className="font-semibold text-ink">
-                    {service.phase}
-                  </strong>{" "}
-                  practice within{" "}
-                  <strong className="font-semibold text-ink">
-                    {HOUSE_LABEL[service.group]}
-                  </strong>
-                  .
                 </p>
               </div>
 
               {/* The services, where the industry page lists its offerings.
                   A practice's services carry no icons of their own, so each
                   row leads with its number in the azure the glyphs use. */}
-              {service.subs.length > 0 && (
+              {subs.length > 0 && (
                 <div>
                   <p className="border-b border-line-strong pb-4 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-500">
-                    What&apos;s included
+                    What we do
                   </p>
-                  <ul className="grid sm:grid-cols-2 sm:gap-x-10">
-                    {service.subs.map((sub, i) => (
+                  <ul className="grid sm:grid-cols-1 sm:gap-x-10">
+                    {subs.map((sub, i) => (
                       <li key={sub.title} className="border-b border-line">
                         <Wipe delay={(i % 2) * 0.05}>
                           <div className="flex gap-4 py-5">
@@ -224,17 +327,27 @@ export default async function ServiceDetailPage({
         <WorkTiles
           id="service-work"
           ground="azure"
-          title="Selected Work"
+          label={override?.work?.label}
+          title={override?.work?.title ?? "Selected Work"}
           body={
-            workCount > work.length
+            override?.work?.body ??
+            (workCount > work.length
               ? `Platforms we've designed, engineered and run through this practice — ${work.length} of the ${workCount} in our portfolio.`
-              : "Platforms we've designed, engineered and run through this practice."
+              : "Platforms we've designed, engineered and run through this practice.")
           }
+          more={override?.work?.more}
           projects={work}
         />
 
         {/* --------------------------------------------- Industries ---- */}
-        <ServiceIndustries id="service-industries" industries={industries} />
+        <ServiceIndustries
+          id="service-industries"
+          industries={industries}
+          label={override?.industries?.label}
+          title={override?.industries?.title}
+          body={override?.industries?.body}
+          hideProof={override?.industries?.hideProof}
+        />
       </main>
       <Footer
         offices={chrome.offices}

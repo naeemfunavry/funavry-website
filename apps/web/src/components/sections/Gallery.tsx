@@ -56,7 +56,9 @@ export default function Gallery({
     const el = track.current;
     if (!el) return;
     const first = el.querySelector("li");
-    const by = first ? first.getBoundingClientRect().width + 20 : el.clientWidth * 0.8;
+    const by = first
+      ? first.getBoundingClientRect().width + 20
+      : el.clientWidth * 0.8;
     el.scrollBy({ left: dir * by, behavior: "smooth" });
   };
 
@@ -81,10 +83,18 @@ export default function Gallery({
             </h2>
           </div>
           <div className="flex flex-none gap-2">
-            <ArrowButton label="Previous photo" disabled={atStart} onClick={() => step(-1)}>
+            <ArrowButton
+              label="Previous photo"
+              disabled={atStart}
+              onClick={() => step(-1)}
+            >
               <ArrowLeft size={16} aria-hidden />
             </ArrowButton>
-            <ArrowButton label="Next photo" disabled={atEnd} onClick={() => step(1)}>
+            <ArrowButton
+              label="Next photo"
+              disabled={atEnd}
+              onClick={() => step(1)}
+            >
               <ArrowRight size={16} aria-hidden />
             </ArrowButton>
           </div>
@@ -110,7 +120,7 @@ export default function Gallery({
         onPointerUp={() => (drag.current = null)}
         onPointerLeave={() => (drag.current = null)}
         className={cn(
-          "mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2 lg:mt-12",
+          "mt-6 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2 lg:mt-8",
           "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
           "cursor-grab select-none active:cursor-grabbing",
           "scroll-px-5 px-5 sm:scroll-px-6 sm:px-6 md:scroll-px-10 md:px-10",

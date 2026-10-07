@@ -89,7 +89,7 @@ export default function Moments({ moments }: { moments: Moment[] }) {
                   exit={{ opacity: 0, scale: 0.97 }}
                   transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
                   className={cn(
-                    "group relative aspect-square overflow-hidden rounded-sm bg-ink-900 ring-1 ring-ink/10 transition-shadow duration-500 ease-expo hover:shadow-[0_22px_50px_-28px_rgba(16,46,84,0.45)]",
+                    "group h-full w-full relative aspect-square overflow-hidden rounded-sm bg-ink-900 ring-1 ring-ink/10 transition-shadow duration-500 ease-expo hover:shadow-[0_22px_50px_-28px_rgba(16,46,84,0.45)]",
                     span,
                   )}
                 >
@@ -103,7 +103,7 @@ export default function Moments({ moments }: { moments: Moment[] }) {
                      loads a matching source — a wide tile is two of the four
                      lg columns — instead of upscaling a tile-sized image. */
                     sizes={sizesFor(span)}
-                    className="object-cover object-center transition-transform duration-[1200ms] ease-expo group-hover:scale-[1.05]"
+                    className="object-cover h-full w-full object-center transition-transform duration-[1200ms] ease-expo group-hover:scale-[1.05]"
                   />
 
                   {/* A wash at the foot so the label, always shown, stays legible. */}

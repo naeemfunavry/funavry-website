@@ -109,7 +109,7 @@ export default function VisionMission() {
       </div>
 
       <Container wide className="relative py-8 sm:py-12 lg:py-14">
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,330px)_minmax(0,1fr)] lg:gap-12 lg:pr-[14%] xl:gap-16">
+        <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,300px)_minmax(0,1fr)] lg:gap-6 lg:pr:-[24%] xl:pr-[24%] xl:gap-6">
           {/* ---- The head ---- */}
           <div>
             <div className="flex items-center gap-3">

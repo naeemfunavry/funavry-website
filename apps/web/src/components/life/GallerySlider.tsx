@@ -25,7 +25,7 @@ const sizesFor = (s: GallerySlide) => {
 
 /** Each tile's height within the strip, in turn: tall, short and in
     between, so the row steps along a shared baseline. */
-const HEIGHTS = ["h-full", "h-[86%]", "h-full", "h-[86%]", "h-[64%]"];
+const HEIGHTS = ["h-full", "h-[86%]", "h-full", "h-[86%]", "h-[95%]"];
 
 /** One pass of the strip. Rendered twice so the loop joins without a seam;
     the second copy is hidden from assistive tech. The gap lives inside each

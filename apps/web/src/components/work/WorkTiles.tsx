@@ -32,7 +32,7 @@ export default function WorkTiles({
   ground?: "paper" | "azure";
   id: string;
   label?: string;
-  title: string;
+  title: React.ReactNode;
   body: string;
   /** The lead project first; up to three more follow it. */
   projects: WorkProject[];

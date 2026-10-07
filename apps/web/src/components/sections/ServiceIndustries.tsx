@@ -15,9 +15,21 @@ import type { Industry } from "@/lib/industries";
 export default function ServiceIndustries({
   id,
   industries,
+  label = "Industries",
+  title = "Industries We Serve",
+  body,
+  hideProof = false,
 }: {
   id: string;
   industries: Industry[];
+  /** The section eyebrow. */
+  label?: string;
+  /** The section heading. */
+  title?: React.ReactNode;
+  /** Overrides the default "sectors this practice has delivered…" line. */
+  body?: React.ReactNode;
+  /** Drop the proof point (project tag) from each card. */
+  hideProof?: boolean;
 }) {
   if (industries.length === 0) return null;
 
@@ -34,17 +46,22 @@ export default function ServiceIndustries({
             <div className="flex items-center gap-3">
               <span aria-hidden className="h-px w-10 flex-none bg-azure" />
               <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-ink-500">
-                Industries
+                {label}
               </span>
             </div>
             <h2 id={id} className="mt-6 text-h3 text-ink">
-              Industries We Serve
+              {title}
             </h2>
           </div>
           <p className="max-w-[46ch] text-[15.5px] leading-[1.7] text-ink-500">
-            The sectors this practice has delivered platforms for —{" "}
-            {industries.length}{" "}
-            {industries.length === 1 ? "industry" : "industries"} in production.
+            {body ?? (
+              <>
+                The sectors this practice has delivered platforms for —{" "}
+                {industries.length}{" "}
+                {industries.length === 1 ? "industry" : "industries"} in
+                production.
+              </>
+            )}
           </p>
         </div>
 
@@ -53,7 +70,7 @@ export default function ServiceIndustries({
           {industries.map((industry, i) => (
             <li key={industry.slug}>
               <Wipe delay={(i % 5) * 0.05}>
-                <IndustryCard industry={industry} />
+                <IndustryCard industry={industry} hideProof={hideProof} />
               </Wipe>
             </li>
           ))}
@@ -63,7 +80,13 @@ export default function ServiceIndustries({
   );
 }
 
-function IndustryCard({ industry }: { industry: Industry }) {
+function IndustryCard({
+  industry,
+  hideProof = false,
+}: {
+  industry: Industry;
+  hideProof?: boolean;
+}) {
   return (
     <Link
       href={`/industries/${industry.slug}`}
@@ -102,7 +125,7 @@ function IndustryCard({ industry }: { industry: Industry }) {
             {industry.desc}
           </span>
         )}
-        {industry.proof && (
+        {!hideProof && industry.proof && (
           <span className="mt-3 flex items-center gap-2">
             <span
               aria-hidden
