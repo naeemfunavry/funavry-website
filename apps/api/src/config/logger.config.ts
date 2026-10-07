@@ -1,6 +1,20 @@
 import type { Params } from "nestjs-pino";
 import { randomUUID } from "node:crypto";
 
+/** pino-pretty is a devDependency, so it is absent from production installs. */
+function canResolve(id: string): boolean {
+  try {
+    require.resolve(id);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function isServerless(): boolean {
+  return Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+}
+
 /**
  * Structured logging.
  *
@@ -25,11 +39,13 @@ export function buildLoggerConfig(opts: {
 }): Params {
   /* pino's TransportTargetOptions, kept loose because each target's options
      differ by transport and pino validates them at runtime anyway. */
-  const targets: { target: string; level: string; options: Record<string, unknown> }[] = [];
+  const targets: {
+    target: string;
+    level: string;
+    options: Record<string, unknown>;
+  }[] = [];
 
-  if (opts.isProduction) {
-    /* Only needed alongside the file targets below — on its own, stdout is
-       pino's default and needs no transport (see the return). */
+  if (opts.isProduction || !canResolve("pino-pretty")) {
     targets.push({
       target: "pino/file",
       level: opts.level,
@@ -49,7 +65,9 @@ export function buildLoggerConfig(opts: {
     });
   }
 
-  if (opts.toFile) {
+  /* Serverless filesystems are read-only outside /tmp, and anything written
+     there vanishes with the instance — the platform collects stdout instead. */
+  if (opts.toFile && !isServerless()) {
     /* Rolled daily and capped, so a noisy week cannot fill the disk the
        database is also sitting on. */
     targets.push({
@@ -94,7 +112,10 @@ export function buildLoggerConfig(opts: {
       genReqId: (req, res) => {
         const existing = req.headers["x-request-id"];
         const candidate = Array.isArray(existing) ? existing[0] : existing;
-        const id = candidate && /^[\w-]{8,64}$/.test(candidate) ? candidate : randomUUID();
+        const id =
+          candidate && /^[\w-]{8,64}$/.test(candidate)
+            ? candidate
+            : randomUUID();
         res.setHeader("x-request-id", id);
         return id;
       },

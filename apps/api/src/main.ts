@@ -6,12 +6,17 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import { Logger } from "nestjs-pino";
+import type { IncomingMessage, ServerResponse } from "node:http";
 import { join } from "node:path";
 
 import { AppModule } from "./app.module";
 import { globalValidationPipe } from "./common/pipes/validation.pipe";
 
-async function bootstrap(): Promise<void> {
+/**
+ * Builds and configures the application without binding a port, so the same
+ * setup serves both a long-running server and a serverless handler.
+ */
+async function createApp(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     /* Nest's own logger is buffered until pino takes over, so boot-time errors
        are not lost between the two. */
@@ -23,7 +28,6 @@ async function bootstrap(): Promise<void> {
   const config = app.get(ConfigService);
   const isProduction = config.get<string>("NODE_ENV") === "production";
   const apiPrefix = config.get<string>("API_PREFIX") ?? "api/v1";
-  const port = config.get<number>("PORT") ?? 4000;
 
   /**
    * How many proxy hops to believe when resolving the client IP.
@@ -209,6 +213,41 @@ async function bootstrap(): Promise<void> {
     });
   }
 
+  return app;
+}
+
+/**
+ * Serverless entry point (Vercel).
+ *
+ * The app is built once per instance and reused across warm invocations, so a
+ * request only pays for Nest's boot on a cold start. A failed boot is not
+ * cached — the next request retries rather than failing forever.
+ */
+let server: Promise<(req: IncomingMessage, res: ServerResponse) => void> | undefined;
+
+export default async function handler(req: IncomingMessage, res: ServerResponse): Promise<void> {
+  server ??= createApp()
+    .then(async (app) => {
+      await app.init();
+      return app.getHttpAdapter().getInstance();
+    })
+    .catch((err: unknown) => {
+      server = undefined;
+      throw err;
+    });
+
+  const instance = await server;
+  instance(req, res);
+}
+
+/** Long-running server, for local development and container hosting. */
+async function bootstrap(): Promise<void> {
+  const app = await createApp();
+  const config = app.get(ConfigService);
+  const isProduction = config.get<string>("NODE_ENV") === "production";
+  const apiPrefix = config.get<string>("API_PREFIX") ?? "api/v1";
+  const port = config.get<number>("PORT") ?? 4000;
+
   /* Gives in-flight requests a chance to finish on SIGTERM rather than being
      cut off mid-transaction by an orchestrator's rolling restart. */
   app.enableShutdownHooks();
@@ -222,4 +261,7 @@ async function bootstrap(): Promise<void> {
   );
 }
 
-void bootstrap();
+/* On Vercel the platform owns the socket and calls the exported handler. */
+if (!process.env.VERCEL) {
+  void bootstrap();
+}
