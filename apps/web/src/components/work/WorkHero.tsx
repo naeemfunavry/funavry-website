@@ -189,7 +189,7 @@ export default function WorkHero({
               arrow
               className="w-full sm:w-auto"
             >
-              Explore the Work
+              Explore our Work
             </Button>
             <Button
               variant="outline"
