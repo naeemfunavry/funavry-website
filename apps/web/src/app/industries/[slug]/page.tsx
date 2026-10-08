@@ -7,6 +7,7 @@ import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import { Wipe } from "@/components/ui/Kinetic";
 import DetailHero from "@/components/ui/DetailHero";
+import { INDUSTRY_HERO_IMAGES } from "@/lib/industries";
 import WorkTiles from "@/components/work/WorkTiles";
 import PracticesSplit from "@/components/sections/PracticesSplit";
 import TechStack from "@/components/work/TechStack";
@@ -119,7 +120,7 @@ export default async function IndustryDetailPage({
       <main id="main">
         {/* ------------------------------------------------------ Hero ---- */}
         <DetailHero
-          image={industry.image}
+          image={INDUSTRY_HERO_IMAGES[industry.slug] ?? industry.image}
           eyebrow={`Industry ${index}`}
           title={industry.name}
           body={industry.desc}

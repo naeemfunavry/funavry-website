@@ -15,6 +15,29 @@ export type Industry = {
   blur?: string;
 };
 
+/**
+ * A wide hero photograph per industry, keyed by slug, for the industry detail
+ * page's `DetailHero` only. The `image` on each entry is portrait — it is sized
+ * for the 4:5 tiles in the Industries section and the nav mega-menu, so in the
+ * wide hero it cover-crops to a thin vertical slice. These are 1920×800 (the
+ * hero's shape) so the photo reads whole under the ink-to-clear fade instead.
+ * Same source as `image` (Unsplash, free for commercial use); an industry with
+ * no entry here falls back to its portrait `image`. Files in /public/industries/hero.
+ */
+export const INDUSTRY_HERO_IMAGES: Record<string, string> = {
+  healthcare: "/industries/hero/healthcare.webp",
+  "financial-services": "/industries/hero/financial-services.webp",
+  government: "/industries/hero/government.webp",
+  "industrial-iot": "/industries/hero/industrial-iot.webp",
+  "supply-chain": "/industries/hero/supply-chain.webp",
+  commerce: "/industries/hero/commerce.webp",
+  "enterprise-systems": "/industries/hero/enterprise-systems.webp",
+  media: "/industries/hero/media.webp",
+  education: "/industries/hero/education.webp",
+  manufacturing: "/industries/hero/manufacturing.webp",
+  agriculture: "/industries/hero/agriculture.webp",
+};
+
 export const INDUSTRIES: Industry[] = [
   {
     slug: "healthcare",
