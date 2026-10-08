@@ -61,6 +61,55 @@ type ServiceOverride = {
 };
 
 const SERVICE_OVERRIDES: Record<string, ServiceOverride> = {
+  "digital-engineering": {
+    hideHeroActions: true,
+    expertiseWhiteBg: true,
+    expertiseBody: (
+      <>
+        We build scalable digital products, platforms, and business applications
+        that drive growth and efficiency. From custom software and SaaS
+        platforms to enterprise applications, web and mobile solutions, we help
+        businesses design, develop, and modernize technology that delivers
+        real-world impact.
+        <br />
+        <br />
+        Our expertise covers the complete product lifecycle — from product
+        discovery and design to development, integration, modernization, and
+        ongoing support.
+      </>
+    ),
+    subDescs: {
+      "Product Engineering":
+        "Develop scalable software products, SaaS platforms, and enterprise solutions.",
+      "Web & Mobile Solutions":
+        "Create modern web and mobile experiences across devices and platforms.",
+      "Experience Design": "Design intuitive and engaging user experiences.",
+      "Systems Integration & Modernization":
+        "Connect, modernize, and optimize enterprise technology ecosystems.",
+    },
+    work: {
+      label: "Selected Work",
+      title: (
+        <>
+          Real Solutions. <br /> <span className="">Measurable Impact.</span>
+        </>
+      ),
+      body: "From enterprise platforms to customer-facing applications, we build digital solutions that solve real business challenges.",
+      more: { label: "View All Work", href: "/case-studies" },
+    },
+    industries: {
+      label: "Industries We Serve",
+      title: (
+        <>
+          Transforming Industries
+          <br />
+          with <span className="">Digital Engineering</span>
+        </>
+      ),
+      body: "We apply digital engineering expertise across industries to build innovative products, modernize systems, and create scalable digital experiences.",
+      hideProof: true,
+    },
+  },
   "ai-automation": {
     hideHeroActions: true,
     expertiseWhiteBg: true,
@@ -212,7 +261,7 @@ export default async function ServiceDetailPage({
             The same hero as the industry pages. */}
         <DetailHero
           image={SERVICE_IMAGES[service.slug] ?? FALLBACK_PHOTO}
-          eyebrow={`Service ${service.n}`}
+          eyebrow={`Service ${service.phase}`}
           title={service.title}
           body={service.summary}
           actions={

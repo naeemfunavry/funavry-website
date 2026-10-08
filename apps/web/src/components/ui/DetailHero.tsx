@@ -30,7 +30,7 @@ export default function DetailHero({
       id="top"
       className="relative overflow-hidden bg-[#102e54] pb-20 pt-[150px] lg:flex lg:min-h-[640px] lg:items-center lg:pb-24"
     >
-      <div aria-hidden className="absolute inset-0 lg:left-[34%]">
+      <div aria-hidden className="absolute inset-0 ">
         <Image
           src={image}
           alt=""
@@ -66,9 +66,7 @@ export default function DetailHero({
               {body}
             </p>
           </Wipe>
-          {actions && (
-            <HeroActions className="mt-9">{actions}</HeroActions>
-          )}
+          {actions && <HeroActions className="mt-9">{actions}</HeroActions>}
         </div>
       </Container>
     </section>
