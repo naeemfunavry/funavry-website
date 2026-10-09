@@ -1,6 +1,17 @@
 import { ArrowRight, type LucideIcon } from "lucide-react";
 import Container from "@/components/ui/Container";
 import { Wipe } from "@/components/ui/Kinetic";
+import styles from "./ApproachSteps.module.css";
+
+// Display just the illustration regions of the supplied reference artwork.
+// The original image stays intact; all card text remains accessible HTML.
+const illustrations = [
+  { x: 80, y: 508, width: 210, height: 178 },
+  { x: 640, y: 538, width: 180, height: 148 },
+  { x: 900, y: 532, width: 200, height: 154 },
+  { x: 1440, y: 528, width: 195, height: 158 },
+  { x: 1700, y: 518, width: 210, height: 168 },
+];
 
 export type ApproachStep = {
   title: string;
@@ -9,10 +20,8 @@ export type ApproachStep = {
 };
 
 /**
- * A practice page's process, drawn as a left-to-right run of numbered cards —
- * an azure glyph, the step number, its name and a line of what happens there,
- * with a quiet arrow carrying the eye to the next. The head sits above: eyebrow
- * and title on the left, a short statement on the right.
+ * A practice page's process: numbered, connected cards with blue illustrations.
+ * Cards wrap on smaller screens; the head pairs the title with a short statement.
  */
 export default function ApproachSteps({
   id,
@@ -32,14 +41,10 @@ export default function ApproachSteps({
   if (steps.length === 0) return null;
 
   return (
-    <section
-      aria-labelledby={id}
-      className="relative overflow-hidden border-b border-line bg-paper-deep"
-    >
-      <div aria-hidden className="absolute inset-0 grid-paper opacity-40" />
-      <Container wide className="relative z-10 py-8 sm:py-12 lg:py-14">
+    <section aria-labelledby={id} className={styles.section}>
+      <Container wide className="relative z-10 py-12 sm:py-16 lg:py-20">
         {/* ---- Head ---- */}
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
           <div>
             <div className="flex items-center gap-3">
               <span aria-hidden className="h-px w-10 flex-none bg-azure" />
@@ -47,52 +52,63 @@ export default function ApproachSteps({
                 {label}
               </span>
             </div>
-            <h2 id={id} className="mt-6 text-h3 text-ink">
+            <h2 id={id} className="mt-5 text-h3 text-[#0b153b] xl:text-[40px]">
               {title}
             </h2>
             {subtitle && (
-              <p className="mt-3 text-[16px] leading-[1.6] text-ink-500 lg:text-[17px]">
+              <p className="mt-3 text-[16px] leading-[1.6] text-[#68758f] lg:text-[18px]">
                 {subtitle}
               </p>
             )}
           </div>
           {body && (
-            <p className="max-w-[42ch] text-[14px] leading-[1.7] text-ink-500">
+            <p className="max-w-[42ch] text-[15px] leading-[1.6] text-[#68758f] lg:w-[30%] lg:flex-none">
               {body}
             </p>
           )}
         </div>
 
         {/* ---- Steps ---- */}
-        <ol className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:mt-10 lg:grid-cols-7">
+        <ol className={styles.steps}>
           {steps.map((step, i) => {
             const Icon = step.icon;
             const last = i === steps.length - 1;
+            const illustration = illustrations[i];
             return (
-              <li key={step.title}>
-                <Wipe delay={(i % 7) * 0.05} className="h-full">
-                  <div className="flex h-full flex-col rounded-xl border border-line bg-paper p-5 transition-colors duration-500 hover:border-azure/40">
-                    <div className="flex items-center justify-between">
-                      <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-azure-50 text-azure ring-1 ring-azure-100">
-                        <Icon size={19} strokeWidth={1.7} />
+              <li key={step.title} className={styles.step}>
+                {!last && <span aria-hidden className={styles.connector} />}
+                <Wipe delay={i * 0.05} className="h-full">
+                  <div className={styles.card}>
+                    <div className={styles.cardHead}>
+                      <span className={styles.number}>
+                        {String(i + 1).padStart(2, "0")}
                       </span>
                       {!last && (
-                        <ArrowRight
-                          aria-hidden
-                          size={16}
-                          className="text-ink-400/70"
+                        <span aria-hidden className={styles.arrow}>
+                          <ArrowRight size={16} strokeWidth={2.5} />
+                        </span>
+                      )}
+                    </div>
+                    <h3 className={styles.cardTitle}>{step.title}</h3>
+                    <p className={styles.description}>{step.desc}</p>
+                    <div aria-hidden className={styles.artwork}>
+                      {illustration ? (
+                        <div
+                          className={styles.illustration}
+                          style={{
+                            aspectRatio: `${illustration.width} / ${illustration.height}`,
+                            backgroundSize: `${(1983 / illustration.width) * 100}% ${(793 / illustration.height) * 100}%`,
+                            backgroundPosition: `${(illustration.x / (1983 - illustration.width)) * 100}% ${(illustration.y / (793 - illustration.height)) * 100}%`,
+                          }}
+                        />
+                      ) : (
+                        <Icon
+                          size={80}
+                          strokeWidth={1}
+                          className="text-azure"
                         />
                       )}
                     </div>
-                    <span className="mt-4 font-mono text-[12px] font-semibold tracking-[0.04em] text-ink-400">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <h3 className="mt-1 text-[15px] font-semibold leading-snug tracking-[-0.01em] text-ink">
-                      {step.title}
-                    </h3>
-                    <p className="mt-2 text-[12.5px] leading-[1.6] text-ink-500">
-                      {step.desc}
-                    </p>
                   </div>
                 </Wipe>
               </li>

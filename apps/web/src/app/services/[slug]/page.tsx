@@ -12,12 +12,9 @@ import {
   Sparkles,
   ShieldCheck,
   Search,
-  Settings,
+  Layers,
   Code2,
-  Link2,
-  LineChart,
   UploadCloud,
-  RefreshCw,
   type LucideIcon,
 } from "lucide-react";
 import Nav from "@/components/sections/Nav";
@@ -170,7 +167,7 @@ const SERVICE_OVERRIDES: Record<string, ServiceOverride> = {
     expertiseTitle: (
       <>
         Building intelligent solutions{" "}
-        <span className="text-ink-500">for a smarter tomorrow.</span>
+        <span className="">for a smarter tomorrow.</span>
       </>
     ),
     expertiseBody: (
@@ -205,39 +202,29 @@ const SERVICE_OVERRIDES: Record<string, ServiceOverride> = {
       body: "We work closely with you at every step from identifying opportunities to building, deploying and continuously improving solutions that create measurable value.",
       steps: [
         {
-          title: "Understand",
-          desc: "Identify the business problem, process, information, users, and potential role of AI.",
+          title: "Analyze",
+          desc: "Understand business challenges, user needs, existing processes, data readiness and identify opportunities where AI can deliver measurable value.",
           icon: Search,
         },
         {
-          title: "Architect",
-          desc: "Define the AI approach, data requirements, integrations, application architecture and operational environment.",
-          icon: Settings,
+          title: "Design",
+          desc: "Define the AI approach, select the right models and technologies, design the replication architecture, plan data pipelines and integrations, and establish security, governance and success criteria.",
+          icon: Layers,
         },
         {
           title: "Build",
-          desc: "Develop the AI application, agent, automation workflow, document intelligence system or knowledge capability.",
+          desc: "Develop AI applications, agents, automation workflows and knowledge systems, connecting them with enterprise data, APIs and existing business processes.",
           icon: Code2,
         },
         {
-          title: "Integrate",
-          desc: "Connect with enterprise applications, data sources, workflows and operational systems.",
-          icon: Link2,
-        },
-        {
-          title: "Evaluate",
-          desc: "Assess model behavior, output quality, reliability, performance and business relevance.",
-          icon: LineChart,
-        },
-        {
           title: "Deploy",
-          desc: "Move the solution into production with the right infrastructure, security and controls.",
+          desc: "Test accuracy, reliability, performance and security, refine the solution and deploy it into a production environment with appropriate controls.",
           icon: UploadCloud,
         },
         {
-          title: "Operate & Improve",
-          desc: "Monitor performance, optimize the system, address changing requirements and continuously improve.",
-          icon: RefreshCw,
+          title: "Optimize",
+          desc: "Monitor system performance, usage, costs and business impact. Continuously improve models and workflows, address changing requirements and scale successful solutions.",
+          icon: TrendingUp,
         },
       ],
     },

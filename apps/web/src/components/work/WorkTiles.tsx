@@ -13,7 +13,7 @@ const shotOf = (p: WorkProject) => p.media.primary ?? p.media.phones[0] ?? null;
  * Selected Work: a head in the page's eyebrow-and-title style with the way
  * to the full portfolio beside it, then the lead project as one featured card
  * on the left and up to three more as numbered rows on the right — capture,
- * name, sector, arrow.
+ * name, short description, arrow.
  *
  * Every card is one link; its round arrow answers the card's hover as the
  * site's other arrows do — a quarter turn into amber.
@@ -323,11 +323,11 @@ function Row({ project, index }: { project: WorkProject; index: number }) {
         >
           {project.title}
         </h3>
-        <span
-          className={`mt-1.5 block truncate font-mono text-[10px] uppercase tracking-[0.2em] ${accent.text}`}
-        >
-          {sectorOf(project)}
-        </span>
+        {project.tagline && (
+          <p className="mt-1.5 line-clamp-2 text-[12.5px] leading-[1.5] text-paper/70 sm:text-[13px]">
+            {project.tagline}
+          </p>
+        )}
       </div>
 
       <CardArrow onDark />

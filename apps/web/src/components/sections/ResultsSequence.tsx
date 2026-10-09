@@ -35,7 +35,7 @@ export default function ResultsSequence({
       aria-labelledby={id}
       className="relative overflow-hidden border-b border-line bg-paper-deep"
     >
-      <div aria-hidden className="absolute inset-0 grid-paper opacity-60" />
+      <div aria-hidden className="absolute inset-0 grid-paper opacity-20" />
       {/* A warm wash behind the tower, as in the reference. */}
       <div
         aria-hidden
@@ -68,7 +68,7 @@ export default function ResultsSequence({
               const amber = i % 2 !== 0; // alternate amber-tinted / clear glass
               return (
                 <li key={step.label} className={i > 0 ? "mt-2.5" : ""}>
-                  <Wipe delay={i * 0.06}>
+                  <Wipe delay={i * 0.06} bleed>
                     <div className="flex items-center gap-3 sm:gap-4">
                       {/* Glass plate with the upright glyph over it. */}
                       <div className="relative h-[40px] w-[30px] flex-none sm:w-[50px]">
@@ -88,7 +88,7 @@ export default function ResultsSequence({
                       />
 
                       {/* Label + description. */}
-                      <div className="min-w-0 flex-1 rounded-lg border border-line/70 bg-paper/70 px-4 py-3 backdrop-blur-sm">
+                      <div className="relative min-w-0 flex-1 px-4 py-2.5 after:absolute after:inset-x-0 after:-bottom-[5.5px] after:h-px after:bg-line/80 after:content-['']">
                         <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-ink">
                           {step.label}
                         </h3>
