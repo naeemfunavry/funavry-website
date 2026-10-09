@@ -68,10 +68,10 @@ export default function ResultsSequence({
               const amber = i % 2 !== 0; // alternate amber-tinted / clear glass
               return (
                 <li key={step.label} className={i > 0 ? "mt-2.5" : ""}>
-                  <Wipe delay={i * 0.06} bleed>
+                  <Wipe delay={i * 0.06} bleed className="-mx-2 px-2">
                     <div className="flex items-center gap-3 sm:gap-4">
                       {/* Glass plate with the upright glyph over it. */}
-                      <div className="relative h-[40px] w-[30px] flex-none sm:w-[50px]">
+                      <div className="relative h-10 w-10 flex-none sm:w-[50px]">
                         <span className="absolute left-1/2 top-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl bg-gradient-to-br from-amber to-amber-600 text-white shadow-[0_10px_18px_-10px_rgba(245,159,19,0.9)]">
                           <Icon size={20} strokeWidth={1.9} />
                         </span>
