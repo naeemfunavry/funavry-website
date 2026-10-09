@@ -1,5 +1,25 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import {
+  Cpu,
+  Workflow,
+  FileText,
+  Settings2,
+  Gauge,
+  Lightbulb,
+  FileSearch,
+  TrendingUp,
+  Sparkles,
+  ShieldCheck,
+  Search,
+  Settings,
+  Code2,
+  Link2,
+  LineChart,
+  UploadCloud,
+  RefreshCw,
+  type LucideIcon,
+} from "lucide-react";
 import Nav from "@/components/sections/Nav";
 import Footer from "@/components/sections/Footer";
 import { getChrome } from "@/lib/chrome";
@@ -8,6 +28,12 @@ import Button from "@/components/ui/Button";
 import { Wipe } from "@/components/ui/Kinetic";
 import { HOUSE_LABEL, SERVICE_IMAGES } from "@/lib/service-style";
 import DetailHero from "@/components/ui/DetailHero";
+import ResultsSequence, {
+  type SequenceStep,
+} from "@/components/sections/ResultsSequence";
+import ApproachSteps, {
+  type ApproachStep,
+} from "@/components/sections/ApproachSteps";
 import WorkTiles from "@/components/work/WorkTiles";
 import Governance from "@/components/sections/Governance";
 import ServiceIndustries from "@/components/sections/ServiceIndustries";
@@ -37,12 +63,37 @@ const FALLBACK_PHOTO = "/services/digital-engineering.webp";
 type ServiceOverride = {
   /** Hide the hero's "Discuss your project / All services" actions. */
   hideHeroActions?: boolean;
+  /** Replaces the hero paragraph (default: the service summary). */
+  heroBody?: React.ReactNode;
+  /** Replaces the left eyebrow (default "Expertise"). */
+  expertiseLabel?: string;
+  /** Replaces the left heading (default "<service> Expertise"). */
+  expertiseTitle?: React.ReactNode;
   /** Replaces the left expertise statement. */
   expertiseBody?: React.ReactNode;
   /** Give the expertise section a white (paper) ground instead of paper-deep. */
   expertiseWhiteBg?: boolean;
+  /** Intro paragraph shown above the "What we do" list. */
+  whatWeDoBody?: React.ReactNode;
   /** Replaces each sub-service's description, keyed by sub title. */
   subDescs?: Record<string, string>;
+  /** An icon per sub-service, keyed by sub title; replaces the row number. */
+  subIcons?: Record<string, LucideIcon>;
+  /** A process section ("Our Approach"), shown after the expertise block. */
+  approach?: {
+    label?: string;
+    title?: React.ReactNode;
+    subtitle?: React.ReactNode;
+    body?: React.ReactNode;
+    steps: ApproachStep[];
+  };
+  /** A sequential-outcomes section, shown before Selected Work. */
+  sequence?: {
+    label?: string;
+    title?: React.ReactNode;
+    body?: React.ReactNode;
+    steps: SequenceStep[];
+  };
   /** Overrides the Selected Work section's head and portfolio link. */
   work?: {
     label?: string;
@@ -113,20 +164,30 @@ const SERVICE_OVERRIDES: Record<string, ServiceOverride> = {
   "ai-automation": {
     hideHeroActions: true,
     expertiseWhiteBg: true,
-    expertiseBody: (
+    heroBody:
+      "We design, build and deploy intelligent systems that automate work, enhance decision-making and unlock new opportunities. From AI-powered applications to intelligent automation and data solutions, we help organizations stay competitive in a rapidly evolving world.",
+    expertiseLabel: "Overview",
+    expertiseTitle: (
       <>
-        We design, build, and deploy intelligent systems that automate complex
-        processes, augment decision-making, and help businesses create new
-        digital capabilities. From AI-powered applications and intelligent
-        automation to enterprise knowledge systems and AI operations, we build
-        solutions that are practical, scalable, and built for real-world impact.
-        <br />
-        <br />
-        Our expertise spans the complete AI lifecycle — from strategy and
-        application development to deployment, optimization, governance, and
-        continuous improvement.
+        Building intelligent solutions{" "}
+        <span className="text-ink-500">for a smarter tomorrow.</span>
       </>
     ),
+    expertiseBody: (
+      <>
+        Funavry is a technology and AI solutions company focused on helping
+        businesses turn complex challenges into practical, scalable solutions.
+        We combine deep technical expertise with business understanding to
+        deliver AI, automation and digital transformation solutions that drive
+        real impact.
+      </>
+    ),
+    subIcons: {
+      "AI Solutions & Applications": Cpu,
+      "Intelligent Automation": Workflow,
+      "Document & Knowledge Intelligence": FileText,
+      "AI Engineering & Operations": Settings2,
+    },
     subDescs: {
       "AI Solutions & Applications":
         "Build intelligent AI-powered products, enterprise assistants, agentic systems, and generative AI applications.",
@@ -136,6 +197,110 @@ const SERVICE_OVERRIDES: Record<string, ServiceOverride> = {
         "Transform documents and unstructured information into searchable, structured, and actionable business knowledge using OCR, extraction, knowledge systems, and RAG.",
       "AI Engineering & Operations":
         "Deploy, monitor, evaluate, optimize, and govern AI systems through MLOps, LLMOps, model evaluation, prompt optimization, and AI governance.",
+    },
+    approach: {
+      label: "Our approach",
+      title: "From AI Opportunity to Production",
+      subtitle: "Turning an AI idea into a working business capability.",
+      body: "We work closely with you at every step from identifying opportunities to building, deploying and continuously improving solutions that create measurable value.",
+      steps: [
+        {
+          title: "Understand",
+          desc: "Identify the business problem, process, information, users, and potential role of AI.",
+          icon: Search,
+        },
+        {
+          title: "Architect",
+          desc: "Define the AI approach, data requirements, integrations, application architecture and operational environment.",
+          icon: Settings,
+        },
+        {
+          title: "Build",
+          desc: "Develop the AI application, agent, automation workflow, document intelligence system or knowledge capability.",
+          icon: Code2,
+        },
+        {
+          title: "Integrate",
+          desc: "Connect with enterprise applications, data sources, workflows and operational systems.",
+          icon: Link2,
+        },
+        {
+          title: "Evaluate",
+          desc: "Assess model behavior, output quality, reliability, performance and business relevance.",
+          icon: LineChart,
+        },
+        {
+          title: "Deploy",
+          desc: "Move the solution into production with the right infrastructure, security and controls.",
+          icon: UploadCloud,
+        },
+        {
+          title: "Operate & Improve",
+          desc: "Monitor performance, optimize the system, address changing requirements and continuously improve.",
+          icon: RefreshCw,
+        },
+      ],
+    },
+    sequence: {
+      label: "Outcomes",
+      title: (
+        <>
+          Measurable Results. <span className="">Long-Term Value.</span>
+        </>
+      ),
+      body: (
+        <>
+          <p>
+            Funavry&rsquo;s AI and automation capabilities deliver tangible
+            business outcomes that go beyond efficiency. By reducing{" "}
+            <strong className="font-semibold text-ink">manual work</strong>,{" "}
+            <strong className="font-semibold text-ink">
+              improving decision-making
+            </strong>
+            , and unlocking enterprise knowledge, organizations gain the agility
+            to operate smarter and scale responsibly.
+          </p>
+          <p>
+            Each initiative is designed to enhance operational performance,{" "}
+            <strong className="font-semibold text-ink">
+              create new digital capabilities
+            </strong>
+            , and build a foundation for sustainable growth.
+          </p>
+        </>
+      ),
+      steps: [
+        {
+          label: "Efficiency",
+          icon: Gauge,
+          desc: "Automate processes and eliminate manual work.",
+        },
+        {
+          label: "Insight",
+          icon: Lightbulb,
+          desc: "Turn data into actionable business insights.",
+        },
+        {
+          label: "Knowledge",
+          icon: FileSearch,
+          desc: "Unlock enterprise knowledge across your organization.",
+        },
+        {
+          label: "Optimization",
+          icon: TrendingUp,
+          desc: "Improve operations and maximize business value.",
+        },
+        {
+          label: "Innovation",
+          icon: Sparkles,
+          desc: "Create new digital capabilities and explore new opportunities.",
+        },
+        {
+          label: "Governance",
+          icon: ShieldCheck,
+          desc: "Ensure responsible, secure, and scalable AI adoption.",
+        },
+      ],
     },
     work: {
       label: "Selected Work",
@@ -263,7 +428,7 @@ export default async function ServiceDetailPage({
           image={SERVICE_IMAGES[service.slug] ?? FALLBACK_PHOTO}
           eyebrow={`Service ${service.phase}`}
           title={service.title}
-          body={service.summary}
+          body={override?.heroBody ?? service.summary}
           actions={
             override?.hideHeroActions ? undefined : (
               <>
@@ -295,11 +460,11 @@ export default async function ServiceDetailPage({
                 <div className="flex items-center gap-3">
                   <span aria-hidden className="h-px w-10 flex-none bg-azure" />
                   <span className="font-mono text-[10.5px] uppercase tracking-[0.24em] text-ink-500">
-                    Expertise
+                    {override?.expertiseLabel ?? "Expertise"}
                   </span>
                 </div>
                 <h2 className="mt-6 text-h3 text-ink">
-                  {service.title} Expertise
+                  {override?.expertiseTitle ?? <>{service.title} Expertise</>}
                 </h2>
                 <p className="mt-6 text-[16px] leading-[1.9] text-ink-500 lg:text-[17px]">
                   {override?.expertiseBody ?? (
@@ -343,32 +508,49 @@ export default async function ServiceDetailPage({
                   row leads with its number in the azure the glyphs use. */}
               {subs.length > 0 && (
                 <div>
-                  <p className="border-b border-line-strong pb-4 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-500">
+                  <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-500">
                     What we do
                   </p>
-                  <ul className="grid sm:grid-cols-1 sm:gap-x-10">
-                    {subs.map((sub, i) => (
-                      <li key={sub.title} className="border-b border-line">
-                        <Wipe delay={(i % 2) * 0.05}>
-                          <div className="flex gap-4 py-5">
-                            <span
-                              aria-hidden
-                              className="mt-[3px] w-[22px] flex-none font-mono text-[12px] font-semibold tracking-[0.04em] text-azure"
-                            >
-                              {String(i + 1).padStart(2, "0")}
-                            </span>
-                            <div>
-                              <h3 className="text-[15.5px] font-medium leading-snug tracking-[-0.01em] text-ink">
-                                {sub.title}
-                              </h3>
-                              <p className="mt-1.5 text-[13.5px] leading-[1.6] text-ink-500 first-letter:uppercase">
-                                {sub.desc}
-                              </p>
+                  {override?.whatWeDoBody && (
+                    <p className="mt-4 text-[15px] leading-[1.9] text-ink-500 lg:text-[16px]">
+                      {override.whatWeDoBody}
+                    </p>
+                  )}
+                  <ul className="mt-6 grid border-t border-line-strong sm:grid-cols-1 sm:gap-x-10">
+                    {subs.map((sub, i) => {
+                      const Icon = override?.subIcons?.[sub.title];
+                      return (
+                        <li key={sub.title} className="border-b border-line">
+                          <Wipe delay={(i % 2) * 0.05}>
+                            <div className="flex gap-4 py-5">
+                              {Icon ? (
+                                <Icon
+                                  aria-hidden
+                                  size={22}
+                                  strokeWidth={1.6}
+                                  className="mt-[2px] flex-none text-amber"
+                                />
+                              ) : (
+                                <span
+                                  aria-hidden
+                                  className="mt-[3px] w-[22px] flex-none font-mono text-[12px] font-semibold tracking-[0.04em] text-azure"
+                                >
+                                  {String(i + 1).padStart(2, "0")}
+                                </span>
+                              )}
+                              <div>
+                                <h3 className="text-[15.5px] font-medium leading-snug tracking-[-0.01em] text-ink">
+                                  {sub.title}
+                                </h3>
+                                <p className="mt-1.5 text-[13.5px] leading-[1.6] text-ink-500 first-letter:uppercase">
+                                  {sub.desc}
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                        </Wipe>
-                      </li>
-                    ))}
+                          </Wipe>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}
@@ -378,6 +560,17 @@ export default async function ServiceDetailPage({
 
         {/* ------------------------------------- Compliance & governance ---- */}
         {/* <Governance /> */}
+        {/* ------------------------------------------- Our approach ---- */}
+        {override?.approach && (
+          <ApproachSteps
+            id="service-approach"
+            label={override.approach.label}
+            title={override.approach.title}
+            subtitle={override.approach.subtitle}
+            body={override.approach.body}
+            steps={override.approach.steps}
+          />
+        )}
 
         {/* ------------------------------------------- Selected work ---- */}
         <WorkTiles
@@ -394,6 +587,17 @@ export default async function ServiceDetailPage({
           more={override?.work?.more}
           projects={work}
         />
+
+        {/* ----------------------------------------- Outcomes sequence ---- */}
+        {override?.sequence && (
+          <ResultsSequence
+            id="service-outcomes"
+            label={override.sequence.label}
+            title={override.sequence.title}
+            body={override.sequence.body}
+            steps={override.sequence.steps}
+          />
+        )}
 
         {/* --------------------------------------------- Industries ---- */}
         <ServiceIndustries
