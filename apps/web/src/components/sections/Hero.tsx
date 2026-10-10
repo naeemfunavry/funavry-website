@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { getImageProps } from "next/image";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import MagneticButton from "@/components/ui/MagneticButton";
@@ -52,27 +52,67 @@ const VERBS = [
  */
 const HERO_BG: string | null = "/hero-bg.webp";
 
+/**
+ * The portrait crop served below `md`. The master above is a 16:9 landscape
+ * with its artwork on the right — right for desktop, but a phone could only
+ * ever show a cropped slice of it. This version stacks the same composition
+ * vertically on the picture's own navy, so it covers a portrait screen whole.
+ */
+const HERO_BG_MOBILE = "/hero-bg-mobile.webp";
+
 export default function Hero() {
   const HEADLINE = ["Building the", "Intelligent Enterprise"];
+
+  /* Both crops' optimised props, built here so the markup can art-direct them
+     with a <picture>. `getImageProps` (not <Image>) is what lets a <source>
+     media query pick the file: the phone fetches only the portrait crop, the
+     desktop only the landscape master — never both. */
+  const heroImages = HERO_BG
+    ? {
+        desktop: getImageProps({
+          alt: "",
+          src: HERO_BG,
+          fill: true,
+          priority: true,
+          quality: 90,
+          sizes: "100vw",
+        }).props,
+        mobile: getImageProps({
+          alt: "",
+          src: HERO_BG_MOBILE,
+          fill: true,
+          priority: true,
+          quality: 90,
+          sizes: "100vw",
+        }).props,
+      }
+    : null;
 
   return (
     <section
       id="top"
       className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden bg-ink-900 pb-20 pt-[130px]"
     >
-      {HERO_BG && (
+      {heroImages && (
         <>
-          {/* The photograph. Its artwork sits right and its left is dark, which
-              is where the copy goes. Priority: it is the first thing on the page. */}
-          <Image
-            src={HERO_BG}
-            alt=""
-            fill
-            priority
-            quality={90}
-            sizes="100vw"
-            className="object-cover object-[72%_center]"
-          />
+          {/* The photograph, art-directed. The <img> renders in every case and
+              owns the framing (cover, centred below md, pulled to 72% on the
+              landscape master from md up — desktop/tablet unchanged). The
+              <source> swaps in the landscape file only at md and up, so a phone
+              downloads just the portrait crop. Priority: it is the first thing
+              on the page. */}
+          <picture>
+            <source
+              media="(min-width: 768px)"
+              srcSet={heroImages.desktop.srcSet}
+              sizes={heroImages.desktop.sizes}
+            />
+            <img
+              {...heroImages.mobile}
+              alt=""
+              className="object-cover object-center md:object-[72%_center]"
+            />
+          </picture>
           {/* Keeps the headline crisp: from lg a wash from the left, clearing
               over the globe; below lg, where the copy sits over the picture,
               a steadier darkening. */}

@@ -42,7 +42,7 @@ export default function ApproachSteps({
 
   return (
     <section aria-labelledby={id} className={styles.section}>
-      <Container wide className="relative z-10 py-12 sm:py-16 lg:py-20">
+      <Container wide className="relative z-10 py-8 sm:py-12 lg:py-14">
         {/* ---- Head ---- */}
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
           <div>

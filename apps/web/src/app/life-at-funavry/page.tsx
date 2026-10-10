@@ -160,20 +160,7 @@ const GALLERY: GallerySlide[] = [
     width: 3855,
     height: 2878,
   },
-  {
-    src: "/lifefunavry/12.webp",
-    alt: "Colleagues in a meeting around the boardroom table",
-    caption: "In the boardroom",
-    width: 4032,
-    height: 3024,
-  },
-  {
-    src: "/lifefunavry/8.webp",
-    alt: "A table-tennis match at the office, with colleagues crowded on the stairs to watch",
-    caption: "Table tennis at the office",
-    width: 4032,
-    height: 3024,
-  },
+
   {
     src: "/lifefunavry/5.webp",
     alt: "The whole team on a lawn below green hills on a company outing",

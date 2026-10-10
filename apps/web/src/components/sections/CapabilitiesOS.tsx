@@ -797,7 +797,7 @@ const AICore = ({
         setHot(false);
         setHovered(null);
       }}
-      className="relative aspect-[200/248] w-[310px] shrink-0 sm:w-[400px] lg:w-[350px] xl:w-[480px]"
+      className="relative aspect-[200/248] w-full max-w-[310px] shrink-0 sm:w-[400px] sm:max-w-none lg:w-[350px] xl:w-[480px]"
     >
       {/* Ambient halo — warms toward the hovered pillar's hue, or the hovered
           half of the network. The radial gradient fades to nothing before its
